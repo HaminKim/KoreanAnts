@@ -1,26 +1,52 @@
 'use client';
 
 import { useEffect, useMemo, useRef } from 'react';
-import { createChart, ColorType, CrosshairMode } from 'lightweight-charts';
+import {
+  createChart,
+  ColorType,
+  CrosshairMode,
+  HistogramSeries,
+  LineStyle,
+  type IChartApi,
+  type Time,
+} from 'lightweight-charts';
 
 type Point = { date: string; value: number }; // date: YYYY-MM-DD
+type Side = 'netBuy' | 'netSell';
 
-export default function FlowChart({ series, side }: { series: Point[]; side: 'netBuy' | 'netSell' }) {
-  const ref = useRef<HTMLDivElement | null>(null);
+// lightweight-charts 권장 형태(Time = BusinessDay)
+function toBusinessDay(ymd: string): Time {
+  const [y, m, d] = ymd.split('-').map((n) => parseInt(n, 10));
+  return { year: y, month: m, day: d } as any;
+}
 
-  const data = useMemo(
-    () =>
-      (series ?? []).map((p) => ({
-        time: p.date as any,
-        value: Number(p.value),
-      })),
-    [series]
-  );
+export default function FlowChart({
+  series,
+  side,
+}: {
+  series: Point[];
+  side: Side;
+}) {
+  const hostRef = useRef<HTMLDivElement | null>(null);
+  const chartRef = useRef<IChartApi | null>(null);
+  const histRef = useRef<any>(null);
 
+  // ✅ 막대는 “순매수/순매도 상관없이” 0 기준 색상 적용
+  const histData = useMemo(() => {
+    return (series ?? []).map((p) => {
+      const v = Number(p.value ?? 0);
+      return {
+        time: toBusinessDay(p.date),
+        value: v,
+        color: v >= 0 ? 'rgba(239,68,68,0.65)' : 'rgba(56,189,248,0.70)', // 빨강 / 하늘색
+      };
+    });
+  }, [series]);
+
+  // 1) 차트는 1번만 생성
   useEffect(() => {
-    if (!ref.current) return;
-
-    const el = ref.current;
+    const el = hostRef.current;
+    if (!el || chartRef.current) return;
 
     const chart = createChart(el, {
       layout: {
@@ -40,32 +66,46 @@ export default function FlowChart({ series, side }: { series: Point[]; side: 'ne
       },
       crosshair: {
         mode: CrosshairMode.Normal,
-        vertLine: { color: 'rgba(255,255,255,0.20)' },
-        horzLine: { color: 'rgba(255,255,255,0.20)' },
+        vertLine: { color: 'rgba(255,255,255,0.20)', style: LineStyle.Solid, width: 1 },
+        horzLine: { color: 'rgba(255,255,255,0.20)', style: LineStyle.Solid, width: 1 },
       },
       handleScroll: true,
       handleScale: true,
     });
 
-    // "순매수/순매도" 데이터는 캔들보다는 히스토그램(막대) or 에어리어가 증권사스럽다.
-    const histogram = chart.addHistogramSeries({
-      color: side === 'netBuy' ? 'rgba(239,68,68,0.65)' : 'rgba(59,130,246,0.65)',
+    chartRef.current = chart;
+
+    // ✅ 버전 호환되는 방식
+    const histogram = chart.addSeries(HistogramSeries, {
       priceFormat: { type: 'volume' },
+      lastValueVisible: false,
+      priceLineVisible: false,
     });
 
-    histogram.setData(data);
-    chart.timeScale().fitContent();
+    histRef.current = histogram;
 
+    // 리사이즈 대응
     const ro = new ResizeObserver(() => {
       chart.applyOptions({ width: el.clientWidth, height: el.clientHeight });
+      chart.timeScale().fitContent();
     });
     ro.observe(el);
 
     return () => {
       ro.disconnect();
       chart.remove();
+      chartRef.current = null;
+      histRef.current = null;
     };
-  }, [data, side]);
+  }, []);
 
-  return <div ref={ref} className="w-full h-80" />;
+  // 2) 데이터만 갱신 (차트 재생성 X)
+  useEffect(() => {
+    if (!chartRef.current || !histRef.current) return;
+
+    histRef.current.setData(histData);
+    chartRef.current.timeScale().fitContent();
+  }, [histData, side]);
+
+  return <div ref={hostRef} className="w-full h-80" />;
 }
