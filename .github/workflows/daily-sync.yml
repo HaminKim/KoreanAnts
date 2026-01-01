@@ -41,3 +41,17 @@ jobs:
 
           git commit -m "chore(data): sync all_data_clean.csv"
           git push
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          pip install pandas
+
+      - name: Build JSON
+        run: |
+          python scripts/build_json.py
+
