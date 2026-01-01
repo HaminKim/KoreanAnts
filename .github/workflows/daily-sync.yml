@@ -2,7 +2,7 @@ name: Daily sync all_data_clean.csv
 
 on:
   schedule:
-    - cron: "0 15 * * *"   # 매일 KST 00:00 (UTC 기준)
+    - cron: "0 16 * * *"   # 매일 KST 01:00 (UTC 기준)
   workflow_dispatch: {}
 
 permissions:
