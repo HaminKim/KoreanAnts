@@ -18,8 +18,8 @@ function getDateRange(days: number) {
 
 type TopItem = {
   rank: number;
-  ticker: string;
-  fileTicker?: string;
+  ticker: string;     // 현재 JSON에서는 이게 '원천이름'일 가능성이 큼 (예: ALPHABET INC CL A)
+  fileTicker?: string; // Flow용 티커 (예: GOOGL, IONQ) - 있다면 이걸 우선 사용
   value?: number;
 };
 
@@ -34,8 +34,20 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
+  // ✅ 원천이름 -> 표시이름 alias
+  const [nameAlias, setNameAlias] = useState<Record<string, string>>({});
+
   const isBuy = side === 'netBuy';
 
+  // 1) name_alias.json 로드 (앱 시작 시 1회)
+  useEffect(() => {
+    fetch('/data/name_alias.json', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : {}))
+      .then((data) => setNameAlias(data ?? {}))
+      .catch(() => setNameAlias({}));
+  }, []);
+
+  // 2) TOP 데이터 로드 (side/days 변경 시)
   useEffect(() => {
     async function run() {
       try {
@@ -61,11 +73,32 @@ export default function Home() {
   // ✅ 화면에 표시할 개수만 자르기
   const visibleItems = useMemo(() => items.slice(0, topN), [items, topN]);
 
+  // ✅ 표시 이름 치환: (원천이름이 ticker 필드에 들어온다고 가정)
+  // - 혹시 fileTicker가 원천이름일 수도 있으니, ticker를 우선 raw로 씀
+  const mappedItems = useMemo(() => {
+    return visibleItems.map((it) => {
+      const rawName = it.ticker; // 여기 키가 원천이름(예: ALPHABET INC CL A)이라고 가정
+      const displayTicker = it.fileTicker ?? it.ticker; // 로고/Flow용으로 쓸 "진짜 티커"가 있으면 우선
+      const displayName =
+        nameAlias[rawName]?.trim() ||
+        rawName?.trim() ||
+        it.fileTicker ||
+        it.ticker ||
+        '-';
+      return {
+        ...it,
+        // Top10Grid가 어떤 필드를 쓰는지 모르니,
+        // 안전하게 'ticker'에는 화면에 보여줄 이름을 넣고,
+        // 'fileTicker'에는 실제 티커를 유지하도록 정리
+        ticker: displayName,
+        fileTicker: displayTicker,
+      };
+    });
+  }, [visibleItems, nameAlias]);
+
   return (
     <>
-      <h2 className="text-2xl font-bold mb-4">
-        순매수 · 순매도 TOP{topN}
-      </h2>
+      <h2 className="text-2xl font-bold mb-4">순매수 · 순매도 TOP{topN}</h2>
 
       {/* 순매수/순매도 토글 */}
       <div className="flex gap-2 mb-4">
@@ -94,18 +127,14 @@ export default function Home() {
           <button
             key={d}
             onClick={() => setDays(d)}
-            className={`text-sm transition ${
-              days === d ? 'font-bold text-black' : 'text-gray-400'
-            }`}
+            className={`text-sm transition ${days === d ? 'font-bold text-black' : 'text-gray-400'}`}
           >
             {d}일
           </button>
         ))}
       </div>
 
-      <div className="text-sm text-gray-500 mb-4">
-        기간: {getDateRange(days)}
-      </div>
+      <div className="text-sm text-gray-500 mb-4">기간: {getDateRange(days)}</div>
 
       {/* ✅ TOP 개수 선택 */}
       <div className="flex gap-3 mb-6">
@@ -113,9 +142,7 @@ export default function Home() {
           <button
             key={n}
             onClick={() => setTopN(n as 10 | 20 | 30 | 40)}
-            className={`text-sm transition ${
-              topN === n ? 'font-bold text-black' : 'text-gray-400'
-            }`}
+            className={`text-sm transition ${topN === n ? 'font-bold text-black' : 'text-gray-400'}`}
           >
             TOP{n}
           </button>
@@ -127,7 +154,7 @@ export default function Home() {
       {err && <div className="text-sm text-red-500 mb-4">에러: {err}</div>}
 
       {/* TOP Grid */}
-      <Top10Grid side={side} days={days} items={visibleItems} />
+      <Top10Grid side={side} days={days} items={mappedItems} />
     </>
   );
 }
