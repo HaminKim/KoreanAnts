@@ -1,0 +1,43 @@
+name: Daily sync all_data_clean.csv
+
+on:
+  schedule:
+    - cron: "0 15 * * *"   # 매일 KST 00:00 (UTC 기준)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout korean_ants
+        uses: actions/checkout@v4
+
+      - name: Checkout reant_streamlit
+        uses: actions/checkout@v4
+        with:
+          repository: HaminKim/reant_streamlit
+          path: reant_streamlit
+
+      - name: Copy all_data_clean.csv
+        run: |
+          mkdir -p processed
+          cp reant_streamlit/processed/all_data_clean.csv processed/all_data_clean.csv
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add processed/all_data_clean.csv
+
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+
+          git commit -m "chore(data): sync all_data_clean.csv"
+          git push
