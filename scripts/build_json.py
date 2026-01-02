@@ -24,14 +24,34 @@ latest_df = df[df[DATE] == latest]
 def write(p, o):
     p.write_text(json.dumps(o, ensure_ascii=False, indent=2), encoding="utf-8")
 
-# TOP JSON
+# TOP JSON  (✅ 거래일 기준)
+all_dates = sorted(df[DATE].dropna().dt.normalize().unique())
+
 for days in DAYS:
-    buy = latest_df.sort_values(NET, ascending=False).head(200)
-    sell = latest_df.sort_values(NET, ascending=True).head(200)
+    if len(all_dates) == 0:
+        continue
+
+    use_dates = all_dates[-days:] if len(all_dates) >= days else all_dates[:]
+    start = pd.to_datetime(use_dates[0]).strftime("%Y-%m-%d")
+    end = pd.to_datetime(use_dates[-1]).strftime("%Y-%m-%d")
+
+    window = df[df[DATE].dt.normalize().isin(use_dates)].copy()
+
+    # ✅ 최근 n거래일 "순매수 합"으로 랭킹 산출
+    agg = (
+        window.groupby(NAME, as_index=False)[NET]
+        .sum()
+        .sort_values(NET, ascending=False)
+        .reset_index(drop=True)
+    )
+
+    buy = agg.head(200)
+    sell = agg.sort_values(NET, ascending=True).head(200)
 
     write(TOP_DIR / f"netBuy_{days}.json", {
-        "asOf": latest.strftime("%Y-%m-%d"),
+        "asOf": end,
         "days": days,
+        "range": {"start": start, "end": end, "count": len(use_dates)},
         "items": [
             {"rank": i+1, "ticker": r[NAME], "value": float(r[NET])}
             for i, r in buy.iterrows()
@@ -39,8 +59,9 @@ for days in DAYS:
     })
 
     write(TOP_DIR / f"netSell_{days}.json", {
-        "asOf": latest.strftime("%Y-%m-%d"),
+        "asOf": end,
         "days": days,
+        "range": {"start": start, "end": end, "count": len(use_dates)},
         "items": [
             {"rank": i+1, "ticker": r[NAME], "value": float(r[NET])}
             for i, r in sell.iterrows()
