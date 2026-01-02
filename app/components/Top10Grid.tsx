@@ -87,7 +87,7 @@ export default function Top10Grid({ side, days, topN, items }: Props) {
                   isBuy ? COLORS.netBuy.bg : COLORS.netSell.bg
                 }`}
               >
-                {item.rank ?? i + 1}
+                {i + 1}
               </div>
             </div>
 
