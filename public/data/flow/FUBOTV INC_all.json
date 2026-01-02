@@ -1,1 +1,54 @@
-{"meta": {"ticker": "FUBOTV INC", "fileTicker": "FUBOTV INC", "points": 7}, "series": [{"date": "2025-01-08", "net": 23069943.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-09", "net": 9792874.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-10", "net": -8785530.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-13", "net": 319059.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-14", "net": 555983.0, "ma5": 4990465.8, "ma10": null, "ma20": null}, {"date": "2025-01-15", "net": -4029579.0, "ma5": -429438.6, "ma10": null, "ma20": null}, {"date": "2025-01-16", "net": -4417316.0, "ma5": -3271476.6, "ma10": null, "ma20": null}]}
+{
+  "ticker": "FUBOTV INC",
+  "series": [
+    {
+      "date": "2025-01-08",
+      "net": 23069943.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-09",
+      "net": 9792874.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-10",
+      "net": -8785530.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-13",
+      "net": 319059.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-14",
+      "net": 555983.0,
+      "ma5": 4990465.8,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-15",
+      "net": -4029579.0,
+      "ma5": -429438.6,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-16",
+      "net": -4417316.0,
+      "ma5": -3271476.6,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

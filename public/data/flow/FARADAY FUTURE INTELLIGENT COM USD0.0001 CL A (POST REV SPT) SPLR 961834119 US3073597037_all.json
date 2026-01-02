@@ -1,1 +1,19 @@
-{"meta": {"ticker": "FARADAY FUTURE INTELLIGENT COM USD0.0001 CL A (POST REV SPT) SPLR 961834119 US3073597037", "fileTicker": "FARADAY FUTURE INTELLIGENT COM USD0.0001 CL A (POST REV SPT) SPLR 961834119 US3073597037", "points": 2}, "series": [{"date": "2024-10-15", "net": 60.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-03", "net": 5252478.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "FARADAY FUTURE INTELLIGENT COM USD0.0001 CL A (POST REV SPT) SPLR 961834119 US3073597037",
+  "series": [
+    {
+      "date": "2024-10-15",
+      "net": 60.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-03",
+      "net": 5252478.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

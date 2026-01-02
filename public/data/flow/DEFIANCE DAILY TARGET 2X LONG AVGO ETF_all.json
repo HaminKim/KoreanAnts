@@ -1,1 +1,61 @@
-{"meta": {"ticker": "DEFIANCE DAILY TARGET 2X LONG AVGO ETF", "fileTicker": "DEFIANCE DAILY TARGET 2X LONG AVGO ETF", "points": 8}, "series": [{"date": "2024-12-19", "net": 983033.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-29", "net": 5576981.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-30", "net": 2211834.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-02-03", "net": -187800.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-12-12", "net": 5305634.0, "ma5": 2777936.4, "ma10": null, "ma20": null}, {"date": "2025-12-15", "net": 5623609.0, "ma5": 3706051.6, "ma10": null, "ma20": null}, {"date": "2025-12-16", "net": 7815644.0, "ma5": 4153784.2, "ma10": null, "ma20": null}, {"date": "2025-12-19", "net": 7834168.0, "ma5": 5278251.0, "ma10": null, "ma20": null}]}
+{
+  "ticker": "DEFIANCE DAILY TARGET 2X LONG AVGO ETF",
+  "series": [
+    {
+      "date": "2024-12-19",
+      "net": 983033.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-29",
+      "net": 5576981.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-30",
+      "net": 2211834.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-02-03",
+      "net": -187800.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-12-12",
+      "net": 5305634.0,
+      "ma5": 2777936.4,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-12-15",
+      "net": 5623609.0,
+      "ma5": 3706051.6,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-12-16",
+      "net": 7815644.0,
+      "ma5": 4153784.2,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-12-19",
+      "net": 7834168.0,
+      "ma5": 5278251.0,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

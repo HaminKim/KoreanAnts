@@ -1,1 +1,54 @@
-{"meta": {"ticker": "WERIDE INC ADS", "fileTicker": "WERIDE INC ADS", "points": 7}, "series": [{"date": "2025-02-21", "net": 4812604.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-05-23", "net": -1508492.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-05-30", "net": 3298571.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-07-25", "net": 5922245.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-18", "net": 17759509.0, "ma5": 6056887.4, "ma10": null, "ma20": null}, {"date": "2025-10-01", "net": -19538480.0, "ma5": 1186670.6, "ma10": null, "ma20": null}, {"date": "2025-10-02", "net": -16380372.0, "ma5": -1787705.4, "ma10": null, "ma20": null}]}
+{
+  "ticker": "WERIDE INC ADS",
+  "series": [
+    {
+      "date": "2025-02-21",
+      "net": 4812604.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-05-23",
+      "net": -1508492.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-05-30",
+      "net": 3298571.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-07-25",
+      "net": 5922245.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-18",
+      "net": 17759509.0,
+      "ma5": 6056887.4,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-01",
+      "net": -19538480.0,
+      "ma5": 1186670.6,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-02",
+      "net": -16380372.0,
+      "ma5": -1787705.4,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

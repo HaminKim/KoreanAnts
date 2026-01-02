@@ -1,1 +1,47 @@
-{"meta": {"ticker": "DEFIANCE DLY TRGT 2X SHT PLTR ETF", "fileTicker": "DEFIANCE DLY TRGT 2X SHT PLTR ETF", "points": 6}, "series": [{"date": "2025-08-21", "net": 4775411.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-22", "net": -2120535.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-25", "net": 2771349.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-26", "net": -7195980.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-05", "net": -1069870.0, "ma5": -567925.0, "ma10": null, "ma20": null}, {"date": "2025-09-11", "net": 2442707.0, "ma5": -1034465.8, "ma10": null, "ma20": null}]}
+{
+  "ticker": "DEFIANCE DLY TRGT 2X SHT PLTR ETF",
+  "series": [
+    {
+      "date": "2025-08-21",
+      "net": 4775411.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-22",
+      "net": -2120535.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-25",
+      "net": 2771349.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-26",
+      "net": -7195980.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-05",
+      "net": -1069870.0,
+      "ma5": -567925.0,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-11",
+      "net": 2442707.0,
+      "ma5": -1034465.8,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

@@ -1,1 +1,19 @@
-{"meta": {"ticker": "DIREXION DAILY TSM BULL 2X SHARES", "fileTicker": "DIREXION DAILY TSM BULL 2X SHARES", "points": 2}, "series": [{"date": "2025-01-20", "net": 2572615.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-06-12", "net": -6962894.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "DIREXION DAILY TSM BULL 2X SHARES",
+  "series": [
+    {
+      "date": "2025-01-20",
+      "net": 2572615.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-06-12",
+      "net": -6962894.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

@@ -1,1 +1,54 @@
-{"meta": {"ticker": "DIREXION DAILY AMZN BULL 1.5X SHARES", "fileTicker": "DIREXION DAILY AMZN BULL 1.5X SHARES", "points": 7}, "series": [{"date": "2025-05-06", "net": 335772.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-04", "net": 12772955.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-26", "net": 8833601.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-30", "net": 24883092.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-13", "net": -20644910.0, "ma5": 5236102.0, "ma10": null, "ma20": null}, {"date": "2025-11-03", "net": -16722095.0, "ma5": 1824528.6, "ma10": null, "ma20": null}, {"date": "2025-11-04", "net": -8027561.0, "ma5": -2335574.6, "ma10": null, "ma20": null}]}
+{
+  "ticker": "Direxion Daily AMZN Bull 1.5X Shares",
+  "series": [
+    {
+      "date": "2025-05-06",
+      "net": 335772.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-04",
+      "net": 12772955.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-26",
+      "net": 8833601.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-30",
+      "net": 24883092.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-13",
+      "net": -20644910.0,
+      "ma5": 5236102.0,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-11-03",
+      "net": -16722095.0,
+      "ma5": 1824528.6,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-11-04",
+      "net": -8027561.0,
+      "ma5": -2335574.6,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

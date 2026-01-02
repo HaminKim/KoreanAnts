@@ -1,1 +1,54 @@
-{"meta": {"ticker": "QUANTUM-SI INC CL A", "fileTicker": "QUANTUM-SI INC CL A", "points": 7}, "series": [{"date": "2024-12-31", "net": 7437397.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-01", "net": 2334300.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-03", "net": 4516978.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-06", "net": -7224843.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-07", "net": 3030243.0, "ma5": 2018815.0, "ma10": null, "ma20": null}, {"date": "2025-01-08", "net": 12893734.0, "ma5": 3110082.4, "ma10": null, "ma20": null}, {"date": "2025-01-13", "net": -432720.0, "ma5": 2556678.4, "ma10": null, "ma20": null}]}
+{
+  "ticker": "QUANTUM-SI INC CL A",
+  "series": [
+    {
+      "date": "2024-12-31",
+      "net": 7437397.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-01",
+      "net": 2334300.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-03",
+      "net": 4516978.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-06",
+      "net": -7224843.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-07",
+      "net": 3030243.0,
+      "ma5": 2018815.0,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-08",
+      "net": 12893734.0,
+      "ma5": 3110082.4,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-13",
+      "net": -432720.0,
+      "ma5": 2556678.4,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

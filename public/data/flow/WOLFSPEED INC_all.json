@@ -1,1 +1,33 @@
-{"meta": {"ticker": "WOLFSPEED INC", "fileTicker": "WOLFSPEED INC", "points": 4}, "series": [{"date": "2024-10-17", "net": 5194485.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-10-18", "net": -2244082.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-01", "net": 4617849.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-07-10", "net": 730198.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "WOLFSPEED INC",
+  "series": [
+    {
+      "date": "2024-10-17",
+      "net": 5194485.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-10-18",
+      "net": -2244082.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-01",
+      "net": 4617849.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-07-10",
+      "net": 730198.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

@@ -1,1 +1,33 @@
-{"meta": {"ticker": "FLUENCE ENERGY INC", "fileTicker": "FLUENCE ENERGY INC", "points": 4}, "series": [{"date": "2024-10-15", "net": -43.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-12-26", "net": -32.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-02-13", "net": 5518995.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-11-04", "net": -4189408.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "FLUENCE ENERGY INC",
+  "series": [
+    {
+      "date": "2024-10-15",
+      "net": -43.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-12-26",
+      "net": -32.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-02-13",
+      "net": 5518995.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-11-04",
+      "net": -4189408.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

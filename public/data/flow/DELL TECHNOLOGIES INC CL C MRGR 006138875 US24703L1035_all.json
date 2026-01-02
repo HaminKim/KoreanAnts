@@ -1,1 +1,40 @@
-{"meta": {"ticker": "DELL TECHNOLOGIES INC CL C MRGR 006138875 US24703L1035", "fileTicker": "DELL TECHNOLOGIES INC CL C MRGR 006138875 US24703L1035", "points": 5}, "series": [{"date": "2024-11-01", "net": -1228199.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-11-28", "net": -1052202.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-12-02", "net": 968421.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-12-09", "net": -11627462.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-06", "net": -8298284.0, "ma5": -4247545.2, "ma10": null, "ma20": null}]}
+{
+  "ticker": "DELL TECHNOLOGIES INC CL C MRGR 006138875 US24703L1035",
+  "series": [
+    {
+      "date": "2024-11-01",
+      "net": -1228199.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-11-28",
+      "net": -1052202.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-12-02",
+      "net": 968421.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-12-09",
+      "net": -11627462.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-06",
+      "net": -8298284.0,
+      "ma5": -4247545.2,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

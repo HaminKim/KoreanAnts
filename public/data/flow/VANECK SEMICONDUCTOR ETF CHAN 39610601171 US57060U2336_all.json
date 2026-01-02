@@ -1,1 +1,33 @@
-{"meta": {"ticker": "VANECK SEMICONDUCTOR ETF CHAN 39610601171 US57060U2336", "fileTicker": "VANECK SEMICONDUCTOR ETF CHAN 39610601171 US57060U2336", "points": 4}, "series": [{"date": "2024-10-25", "net": 5173400.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-11-27", "net": -9842733.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-06-04", "net": -9246207.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-26", "net": 1395410.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "VANECK SEMICONDUCTOR ETF CHAN 39610601171 US57060U2336",
+  "series": [
+    {
+      "date": "2024-10-25",
+      "net": 5173400.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-11-27",
+      "net": -9842733.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-06-04",
+      "net": -9246207.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-26",
+      "net": 1395410.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

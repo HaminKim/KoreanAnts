@@ -1,1 +1,33 @@
-{"meta": {"ticker": "BOEING CO", "fileTicker": "BOEING CO", "points": 4}, "series": [{"date": "2024-10-23", "net": 516111.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-10-24", "net": 2042082.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-25", "net": 1956308.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-06-16", "net": -1900999.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "BOEING CO",
+  "series": [
+    {
+      "date": "2024-10-23",
+      "net": 516111.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-10-24",
+      "net": 2042082.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-25",
+      "net": 1956308.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-06-16",
+      "net": -1900999.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

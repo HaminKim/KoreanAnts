@@ -1,1 +1,40 @@
-{"meta": {"ticker": "FERMI INC", "fileTicker": "FERMI INC", "points": 5}, "series": [{"date": "2025-10-03", "net": 34240384.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-06", "net": 14511891.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-07", "net": 5311734.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-30", "net": -62630.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-12-16", "net": 2759995.0, "ma5": 11352274.8, "ma10": null, "ma20": null}]}
+{
+  "ticker": "FERMI INC",
+  "series": [
+    {
+      "date": "2025-10-03",
+      "net": 34240384.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-06",
+      "net": 14511891.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-07",
+      "net": 5311734.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-30",
+      "net": -62630.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-12-16",
+      "net": 2759995.0,
+      "ma5": 11352274.8,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

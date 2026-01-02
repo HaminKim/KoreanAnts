@@ -1,1 +1,40 @@
-{"meta": {"ticker": "ADOBE INC", "fileTicker": "ADOBE INC", "points": 5}, "series": [{"date": "2024-11-26", "net": 35175266.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-12-16", "net": 8330230.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-12-17", "net": 36533455.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-02-26", "net": -62817643.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-15", "net": 4697439.0, "ma5": 4383749.4, "ma10": null, "ma20": null}]}
+{
+  "ticker": "ADOBE INC",
+  "series": [
+    {
+      "date": "2024-11-26",
+      "net": 35175266.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-12-16",
+      "net": 8330230.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-12-17",
+      "net": 36533455.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-02-26",
+      "net": -62817643.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-15",
+      "net": 4697439.0,
+      "ma5": 4383749.4,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

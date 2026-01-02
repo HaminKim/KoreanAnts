@@ -1,1 +1,33 @@
-{"meta": {"ticker": "T-REX 2X LONG HOOD DAILY TARGET ETF", "fileTicker": "T-REX 2X LONG HOOD DAILY TARGET ETF", "points": 4}, "series": [{"date": "2025-08-25", "net": 1471194.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-24", "net": -104040.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-03", "net": -301746.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-08", "net": 1577757.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "T-REX 2X LONG HOOD DAILY TARGET ETF",
+  "series": [
+    {
+      "date": "2025-08-25",
+      "net": 1471194.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-24",
+      "net": -104040.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-03",
+      "net": -301746.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-08",
+      "net": 1577757.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

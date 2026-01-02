@@ -1,1 +1,40 @@
-{"meta": {"ticker": "PHUNWARE INC COM USD0.0001 (POST REV SPLIT) SPLR 953594257 US71948P1003", "fileTicker": "PHUNWARE INC COM USD0.0001 (POST REV SPLIT) SPLR 953594257 US71948P1003", "points": 5}, "series": [{"date": "2024-10-25", "net": 1775393.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-10-28", "net": 3756915.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-10-29", "net": 2332497.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-10-30", "net": 4014811.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-10-31", "net": -883957.0, "ma5": 2199131.8, "ma10": null, "ma20": null}]}
+{
+  "ticker": "PHUNWARE INC COM USD0.0001 (POST REV SPLIT) SPLR 953594257 US71948P1003",
+  "series": [
+    {
+      "date": "2024-10-25",
+      "net": 1775393.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-10-28",
+      "net": 3756915.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-10-29",
+      "net": 2332497.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-10-30",
+      "net": 4014811.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-10-31",
+      "net": -883957.0,
+      "ma5": 2199131.8,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

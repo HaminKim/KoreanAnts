@@ -1,1 +1,54 @@
-{"meta": {"ticker": "MICROALGO INC COM USD0.2 (REV SPT) SPLR 968087131 KYG6077Y2025", "fileTicker": "MICROALGO INC COM USD0.2 (REV SPT) SPLR 968087131 KYG6077Y2025", "points": 7}, "series": [{"date": "2025-03-26", "net": -6435913.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-01", "net": 2275589.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-23", "net": 1444344.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-30", "net": 5098515.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-05-09", "net": 7626132.0, "ma5": 2001733.4, "ma10": null, "ma20": null}, {"date": "2025-05-23", "net": -477879.0, "ma5": 3193340.2, "ma10": null, "ma20": null}, {"date": "2025-05-28", "net": 4903827.0, "ma5": 3718987.8, "ma10": null, "ma20": null}]}
+{
+  "ticker": "MICROALGO INC COM USD0.2 (REV SPT) SPLR 968087131 KYG6077Y2025",
+  "series": [
+    {
+      "date": "2025-03-26",
+      "net": -6435913.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-01",
+      "net": 2275589.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-23",
+      "net": 1444344.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-30",
+      "net": 5098515.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-05-09",
+      "net": 7626132.0,
+      "ma5": 2001733.4,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-05-23",
+      "net": -477879.0,
+      "ma5": 3193340.2,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-05-28",
+      "net": 4903827.0,
+      "ma5": 3718987.8,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

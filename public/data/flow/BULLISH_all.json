@@ -1,1 +1,47 @@
-{"meta": {"ticker": "BULLISH", "fileTicker": "BULLISH", "points": 6}, "series": [{"date": "2025-08-15", "net": 62479866.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-18", "net": 5867809.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-19", "net": 523248.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-20", "net": 728266.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-21", "net": 9973466.0, "ma5": 15914531.0, "ma10": null, "ma20": null}, {"date": "2025-08-25", "net": -1689362.0, "ma5": 3080685.4, "ma10": null, "ma20": null}]}
+{
+  "ticker": "BULLISH",
+  "series": [
+    {
+      "date": "2025-08-15",
+      "net": 62479866.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-18",
+      "net": 5867809.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-19",
+      "net": 523248.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-20",
+      "net": 728266.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-21",
+      "net": 9973466.0,
+      "ma5": 15914531.0,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-25",
+      "net": -1689362.0,
+      "ma5": 3080685.4,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

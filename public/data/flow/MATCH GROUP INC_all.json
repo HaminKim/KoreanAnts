@@ -1,1 +1,19 @@
-{"meta": {"ticker": "MATCH GROUP INC", "fileTicker": "MATCH GROUP INC", "points": 2}, "series": [{"date": "2025-03-31", "net": -5729916.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-04", "net": -20546347.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "MATCH GROUP INC",
+  "series": [
+    {
+      "date": "2025-03-31",
+      "net": -5729916.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-04",
+      "net": -20546347.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

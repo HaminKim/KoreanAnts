@@ -1,1 +1,47 @@
-{"meta": {"ticker": "ISHARES MSCI ACWI ETF", "fileTicker": "ISHARES MSCI ACWI ETF", "points": 6}, "series": [{"date": "2024-11-22", "net": 12733751.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-11", "net": 6538248.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-26", "net": -69762397.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-31", "net": 6183931.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-22", "net": -4951951.0, "ma5": -9851683.6, "ma10": null, "ma20": null}, {"date": "2025-08-06", "net": -21016185.0, "ma5": -16601670.8, "ma10": null, "ma20": null}]}
+{
+  "ticker": "ISHARES MSCI ACWI ETF",
+  "series": [
+    {
+      "date": "2024-11-22",
+      "net": 12733751.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-11",
+      "net": 6538248.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-26",
+      "net": -69762397.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-31",
+      "net": 6183931.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-22",
+      "net": -4951951.0,
+      "ma5": -9851683.6,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-06",
+      "net": -21016185.0,
+      "ma5": -16601670.8,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

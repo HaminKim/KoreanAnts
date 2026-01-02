@@ -1,1 +1,54 @@
-{"meta": {"ticker": "LITHIUM AMERICAS CORP/NEW LITHIUM AMERICAS ARGENTINA COR MRGR 948857551 CA53680Q2071", "fileTicker": "LITHIUM AMERICAS CORP_NEW LITHIUM AMERICAS ARGENTINA COR MRGR 948857551 CA53680Q2071", "points": 7}, "series": [{"date": "2025-09-29", "net": 8575532.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-02", "net": 1906871.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-03", "net": 9510490.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-08", "net": 3190680.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-09", "net": 7313047.0, "ma5": 6099324.0, "ma10": null, "ma20": null}, {"date": "2025-10-10", "net": 2697866.0, "ma5": 4923790.8, "ma10": null, "ma20": null}, {"date": "2025-10-16", "net": -64683.0, "ma5": 4529480.0, "ma10": null, "ma20": null}]}
+{
+  "ticker": "LITHIUM AMERICAS CORP/NEW LITHIUM AMERICAS ARGENTINA COR MRGR 948857551 CA53680Q2071",
+  "series": [
+    {
+      "date": "2025-09-29",
+      "net": 8575532.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-02",
+      "net": 1906871.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-03",
+      "net": 9510490.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-08",
+      "net": 3190680.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-09",
+      "net": 7313047.0,
+      "ma5": 6099324.0,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-10",
+      "net": 2697866.0,
+      "ma5": 4923790.8,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-16",
+      "net": -64683.0,
+      "ma5": 4529480.0,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

@@ -1,1 +1,26 @@
-{"meta": {"ticker": "VANGUARD INTERMEDIATE TERM CORPORATE BOND ETF", "fileTicker": "VANGUARD INTERMEDIATE TERM CORPORATE BOND ETF", "points": 3}, "series": [{"date": "2025-04-16", "net": 17581908.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-17", "net": 17702093.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-24", "net": -35330522.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "VANGUARD INTERMEDIATE TERM CORPORATE BOND ETF",
+  "series": [
+    {
+      "date": "2025-04-16",
+      "net": 17581908.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-17",
+      "net": 17702093.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-24",
+      "net": -35330522.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

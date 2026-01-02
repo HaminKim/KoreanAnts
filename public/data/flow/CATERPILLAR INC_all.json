@@ -1,1 +1,19 @@
-{"meta": {"ticker": "CATERPILLAR INC", "fileTicker": "CATERPILLAR INC", "points": 2}, "series": [{"date": "2025-05-20", "net": 542646.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-21", "net": 42523.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "CATERPILLAR INC",
+  "series": [
+    {
+      "date": "2025-05-20",
+      "net": 542646.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-21",
+      "net": 42523.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

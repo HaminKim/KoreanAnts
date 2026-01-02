@@ -1,1 +1,40 @@
-{"meta": {"ticker": "XPENG INC ADR", "fileTicker": "XPENG INC ADR", "points": 5}, "series": [{"date": "2024-10-15", "net": -25.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-11-29", "net": -12.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-12-26", "net": -65.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-19", "net": 6267690.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-20", "net": 5725627.0, "ma5": 2398643.0, "ma10": null, "ma20": null}]}
+{
+  "ticker": "XPENG INC ADR",
+  "series": [
+    {
+      "date": "2024-10-15",
+      "net": -25.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-11-29",
+      "net": -12.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-12-26",
+      "net": -65.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-19",
+      "net": 6267690.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-20",
+      "net": 5725627.0,
+      "ma5": 2398643.0,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

@@ -1,1 +1,40 @@
-{"meta": {"ticker": "MODERNA INC", "fileTicker": "MODERNA INC", "points": 5}, "series": [{"date": "2025-01-09", "net": 7530036.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-10", "net": 6625135.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-13", "net": 775120.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-15", "net": 2415043.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-05-22", "net": 4457894.0, "ma5": 4360645.6, "ma10": null, "ma20": null}]}
+{
+  "ticker": "MODERNA INC",
+  "series": [
+    {
+      "date": "2025-01-09",
+      "net": 7530036.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-10",
+      "net": 6625135.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-13",
+      "net": 775120.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-15",
+      "net": 2415043.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-05-22",
+      "net": 4457894.0,
+      "ma5": 4360645.6,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

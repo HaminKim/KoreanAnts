@@ -1,1 +1,33 @@
-{"meta": {"ticker": "APPLIED DIGITAL ORD", "fileTicker": "APPLIED DIGITAL ORD", "points": 4}, "series": [{"date": "2025-01-16", "net": 6834474.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-06-06", "net": 939335.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-06-09", "net": -455646.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-06-10", "net": -3129712.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "APPLIED DIGITAL ORD",
+  "series": [
+    {
+      "date": "2025-01-16",
+      "net": 6834474.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-06-06",
+      "net": 939335.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-06-09",
+      "net": -455646.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-06-10",
+      "net": -3129712.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

@@ -1,1 +1,40 @@
-{"meta": {"ticker": "BERKSHIRE HATHAWAY INC CL A", "fileTicker": "BERKSHIRE HATHAWAY INC CL A", "points": 5}, "series": [{"date": "2025-03-19", "net": 3105970.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-25", "net": -778340.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-26", "net": 4739779.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-08", "net": -3839313.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-18", "net": 1586586.0, "ma5": 962936.4, "ma10": null, "ma20": null}]}
+{
+  "ticker": "BERKSHIRE HATHAWAY INC CL A",
+  "series": [
+    {
+      "date": "2025-03-19",
+      "net": 3105970.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-25",
+      "net": -778340.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-26",
+      "net": 4739779.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-08",
+      "net": -3839313.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-18",
+      "net": 1586586.0,
+      "ma5": 962936.4,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

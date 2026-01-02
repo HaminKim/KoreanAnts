@@ -1,1 +1,19 @@
-{"meta": {"ticker": "CELSIUS HOLDINGS INC", "fileTicker": "CELSIUS HOLDINGS INC", "points": 2}, "series": [{"date": "2024-11-12", "net": -27.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-12-26", "net": -27.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "CELSIUS HOLDINGS INC",
+  "series": [
+    {
+      "date": "2024-11-12",
+      "net": -27.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-12-26",
+      "net": -27.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

@@ -1,1 +1,19 @@
-{"meta": {"ticker": "JANUS HENDERSON AAA CLO ETF", "fileTicker": "JANUS HENDERSON AAA CLO ETF", "points": 2}, "series": [{"date": "2024-10-21", "net": 7001678.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-31", "net": -4993611.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "JANUS HENDERSON AAA CLO ETF",
+  "series": [
+    {
+      "date": "2024-10-21",
+      "net": 7001678.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-31",
+      "net": -4993611.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

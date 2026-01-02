@@ -1,1 +1,26 @@
-{"meta": {"ticker": "TRADR 2X LONG APP DAILY ETF", "fileTicker": "TRADR 2X LONG APP DAILY ETF", "points": 3}, "series": [{"date": "2025-08-11", "net": -5027430.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-25", "net": -3009972.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-10-09", "net": -20660283.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "TRADR 2X LONG APP DAILY ETF",
+  "series": [
+    {
+      "date": "2025-08-11",
+      "net": -5027430.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-25",
+      "net": -3009972.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-10-09",
+      "net": -20660283.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

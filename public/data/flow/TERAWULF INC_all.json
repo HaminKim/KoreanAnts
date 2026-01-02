@@ -1,1 +1,26 @@
-{"meta": {"ticker": "TERAWULF INC", "fileTicker": "TERAWULF INC", "points": 3}, "series": [{"date": "2025-11-13", "net": 20239679.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-11-27", "net": -19965696.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-12-03", "net": 17705884.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "TERAWULF INC",
+  "series": [
+    {
+      "date": "2025-11-13",
+      "net": 20239679.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-11-27",
+      "net": -19965696.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-12-03",
+      "net": 17705884.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

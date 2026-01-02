@@ -1,1 +1,33 @@
-{"meta": {"ticker": "VANECK JP MORGAN EM LOCAL CURRENCY BOND ETF", "fileTicker": "VANECK JP MORGAN EM LOCAL CURRENCY BOND ETF", "points": 4}, "series": [{"date": "2025-01-15", "net": -13798006.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-01-16", "net": -13859811.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-06", "net": 9987831.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-20", "net": -10191965.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "VANECK JP MORGAN EM LOCAL CURRENCY BOND ETF",
+  "series": [
+    {
+      "date": "2025-01-15",
+      "net": -13798006.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-01-16",
+      "net": -13859811.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-06",
+      "net": 9987831.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-20",
+      "net": -10191965.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

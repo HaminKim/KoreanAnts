@@ -1,1 +1,40 @@
-{"meta": {"ticker": "ISHARES CHINA LARGE CAP ETF", "fileTicker": "ISHARES CHINA LARGE CAP ETF", "points": 5}, "series": [{"date": "2024-10-10", "net": 541435.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-03", "net": 12385040.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-04", "net": -10631971.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-03-07", "net": 7163625.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-04-04", "net": -7746988.0, "ma5": 342228.2, "ma10": null, "ma20": null}]}
+{
+  "ticker": "ISHARES CHINA LARGE CAP ETF",
+  "series": [
+    {
+      "date": "2024-10-10",
+      "net": 541435.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-03",
+      "net": 12385040.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-04",
+      "net": -10631971.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-03-07",
+      "net": 7163625.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-04-04",
+      "net": -7746988.0,
+      "ma5": 342228.2,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

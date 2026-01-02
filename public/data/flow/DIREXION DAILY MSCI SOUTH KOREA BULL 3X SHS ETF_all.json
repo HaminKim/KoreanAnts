@@ -1,1 +1,26 @@
-{"meta": {"ticker": "DIREXION DAILY MSCI SOUTH KOREA BULL 3X SHS ETF", "fileTicker": "DIREXION DAILY MSCI SOUTH KOREA BULL 3X SHS ETF", "points": 3}, "series": [{"date": "2024-12-05", "net": 17534331.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-12-06", "net": -676574.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2024-12-12", "net": 4229199.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "DIREXION DAILY MSCI SOUTH KOREA BULL 3X SHS ETF",
+  "series": [
+    {
+      "date": "2024-12-05",
+      "net": 17534331.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-12-06",
+      "net": -676574.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2024-12-12",
+      "net": 4229199.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

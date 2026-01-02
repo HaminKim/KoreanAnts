@@ -1,1 +1,26 @@
-{"meta": {"ticker": "UBER TECHNOLOGIES INC", "fileTicker": "UBER TECHNOLOGIES INC", "points": 3}, "series": [{"date": "2025-05-15", "net": 16092304.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-05-16", "net": 12701299.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-06-17", "net": -27474310.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "UBER TECHNOLOGIES INC",
+  "series": [
+    {
+      "date": "2025-05-15",
+      "net": 16092304.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-05-16",
+      "net": 12701299.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-06-17",
+      "net": -27474310.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

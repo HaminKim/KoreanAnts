@@ -1,1 +1,40 @@
-{"meta": {"ticker": "QUANTUMSCAPE CORP CL A EXOF 007727772 US4900732029", "fileTicker": "QUANTUMSCAPE CORP CL A EXOF 007727772 US4900732029", "points": 5}, "series": [{"date": "2024-10-28", "net": -339160.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-06-27", "net": -722794.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-06-30", "net": -688035.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-07-23", "net": -3878667.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-07-24", "net": -905325.0, "ma5": -1306796.2, "ma10": null, "ma20": null}]}
+{
+  "ticker": "QUANTUMSCAPE CORP CL A EXOF 007727772 US4900732029",
+  "series": [
+    {
+      "date": "2024-10-28",
+      "net": -339160.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-06-27",
+      "net": -722794.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-06-30",
+      "net": -688035.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-07-23",
+      "net": -3878667.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-07-24",
+      "net": -905325.0,
+      "ma5": -1306796.2,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

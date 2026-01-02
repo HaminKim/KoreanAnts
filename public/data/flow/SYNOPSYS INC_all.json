@@ -1,1 +1,61 @@
-{"meta": {"ticker": "SYNOPSYS INC", "fileTicker": "SYNOPSYS INC", "points": 8}, "series": [{"date": "2025-09-12", "net": 69049620.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-15", "net": 23569085.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-16", "net": 11243717.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-17", "net": 18770758.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-09-22", "net": -10415477.0, "ma5": 22443540.6, "ma10": null, "ma20": null}, {"date": "2025-09-24", "net": -3554670.0, "ma5": 7922682.6, "ma10": null, "ma20": null}, {"date": "2025-09-26", "net": 5693388.0, "ma5": 4347543.2, "ma10": null, "ma20": null}, {"date": "2025-12-12", "net": -6687416.0, "ma5": 761316.6, "ma10": null, "ma20": null}]}
+{
+  "ticker": "SYNOPSYS INC",
+  "series": [
+    {
+      "date": "2025-09-12",
+      "net": 69049620.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-15",
+      "net": 23569085.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-16",
+      "net": 11243717.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-17",
+      "net": 18770758.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-22",
+      "net": -10415477.0,
+      "ma5": 22443540.6,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-24",
+      "net": -3554670.0,
+      "ma5": 7922682.6,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-09-26",
+      "net": 5693388.0,
+      "ma5": 4347543.2,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-12-12",
+      "net": -6687416.0,
+      "ma5": 761316.6,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}

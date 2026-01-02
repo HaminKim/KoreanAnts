@@ -1,1 +1,33 @@
-{"meta": {"ticker": "LEVERAGE SHARES 2X LONG UNH DAILY ETF", "fileTicker": "LEVERAGE SHARES 2X LONG UNH DAILY ETF", "points": 4}, "series": [{"date": "2025-07-31", "net": 10103988.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-19", "net": 5000804.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-21", "net": 1784025.0, "ma5": null, "ma10": null, "ma20": null}, {"date": "2025-08-25", "net": 2866644.0, "ma5": null, "ma10": null, "ma20": null}]}
+{
+  "ticker": "LEVERAGE SHARES 2X LONG UNH DAILY ETF",
+  "series": [
+    {
+      "date": "2025-07-31",
+      "net": 10103988.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-19",
+      "net": 5000804.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-21",
+      "net": 1784025.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    },
+    {
+      "date": "2025-08-25",
+      "net": 2866644.0,
+      "ma5": NaN,
+      "ma10": NaN,
+      "ma20": NaN
+    }
+  ]
+}
