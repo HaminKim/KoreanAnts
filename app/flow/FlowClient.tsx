@@ -8,11 +8,14 @@ import {
   createChart,
   ColorType,
   CrosshairMode,
+  LineStyle,
   HistogramSeries,
   LineSeries,
   type IChartApi,
   type Time,
 } from 'lightweight-charts';
+
+import { getAntSignal, buildAntSummary, formatUSD_KR } from '../lib/antsFlow';
 
 type Side = 'netBuy' | 'netSell';
 
@@ -35,15 +38,6 @@ function formatDateDot(ymd: string) {
   return ymd.replaceAll('-', '.');
 }
 
-function formatMoneyCompact(v: number) {
-  const abs = Math.abs(v);
-  if (abs >= 1e12) return `${(v / 1e12).toFixed(2)}T`;
-  if (abs >= 1e9) return `${(v / 1e9).toFixed(2)}B`;
-  if (abs >= 1e6) return `${(v / 1e6).toFixed(2)}M`;
-  if (abs >= 1e3) return `${(v / 1e3).toFixed(2)}K`;
-  return v.toFixed(0);
-}
-
 /* ---------------- component ---------------- */
 
 export default function FlowClient() {
@@ -52,6 +46,9 @@ export default function FlowClient() {
   const ticker = params.get('ticker') ?? '';
   const fileTicker = params.get('fileTicker') ?? ticker;
   const side = (params.get('side') as Side) || 'netBuy';
+
+  // ✅ 메인에서 넘어온 거래일 선택값(days)
+  const days = Number(params.get('days') ?? '10') || 10;
 
   const themeColor = COLORS[side];
 
@@ -85,7 +82,6 @@ export default function FlowClient() {
         setLoading(true);
         setErr(null);
 
-        // ✅ 전체 기간 파일 사용 (파일명이 실제로 존재해야 함!)
         const res = await fetch(
           `/data/flow/${encodeURIComponent(fileTicker)}_all.json`,
           { cache: 'no-store' }
@@ -113,12 +109,21 @@ export default function FlowClient() {
 
   const last = rows.length ? rows[rows.length - 1] : null;
 
+  // ✅ 최근 n거래일 신호 & 문구
+  const signal = useMemo(() => {
+    return getAntSignal(rows, days, {
+      ratioThreshold: 0.7,
+      minAbsSumUSD: 1_000_000, // 필요하면 5_000_000으로 올려도 됨
+    });
+  }, [rows, days]);
+
+  const summaryText = useMemo(() => buildAntSummary(days, signal), [days, signal]);
+
   const histData = useMemo(
     () =>
       rows.map((r) => ({
         time: toBusinessDay(r.date),
         value: r.net,
-        // ✅ 0 기준 빨강/하늘색
         color: r.net >= 0 ? 'rgba(239,68,68,0.65)' : 'rgba(56,189,248,0.70)',
       })),
     [rows]
@@ -154,7 +159,12 @@ export default function FlowClient() {
     const host = hostRef.current;
     if (!host || chartRef.current) return;
 
+    const width = host.clientWidth || 800;
+    const height = host.clientHeight || 320;
+
     const chart = createChart(host, {
+      width,
+      height,
       layout: {
         background: { type: ColorType.Solid, color: 'transparent' },
         textColor: '#9CA3AF',
@@ -163,49 +173,79 @@ export default function FlowClient() {
         vertLines: { color: 'rgba(255,255,255,0.06)' },
         horzLines: { color: 'rgba(255,255,255,0.06)' },
       },
-      crosshair: { mode: CrosshairMode.Normal },
+      crosshair: {
+        mode: CrosshairMode.Normal,
+        vertLine: { color: 'rgba(255,255,255,0.20)', style: LineStyle.Solid, width: 1 },
+        horzLine: { color: 'rgba(255,255,255,0.20)', style: LineStyle.Solid, width: 1 },
+      },
       handleScroll: true,
       handleScale: true,
+
+      // ✅ 축 라벨(350M 같은거) 강제 포맷
+      localization: {
+        priceFormatter: (price: number) => formatUSD_KR(price),
+      },
     });
 
     chartRef.current = chart;
 
-    histRef.current = chart.addSeries(HistogramSeries, {
-      priceFormat: { type: 'volume' },
+    // ✅ Histogram (v4/v5 호환)
+    const seriesOptions = {
+      priceFormat: {
+        type: 'custom' as const,
+        minMove: 1,
+        formatter: (p: number) => formatUSD_KR(p),
+      },
       lastValueVisible: false,
       priceLineVisible: false,
-    });
+    };
 
-    ma5Ref.current = chart.addSeries(LineSeries, {
-      color: 'rgba(250,204,21,0.95)', // 노랑
+    const anyChart: any = chart;
+    if (typeof anyChart.addHistogramSeries === 'function') {
+      histRef.current = anyChart.addHistogramSeries(seriesOptions);
+    } else {
+      histRef.current = anyChart.addSeries(HistogramSeries as any, seriesOptions);
+    }
+
+    // MA 라인
+    ma5Ref.current = chart.addSeries(LineSeries as any, {
+      color: 'rgba(250,204,21,0.95)',
       lineWidth: 2,
       visible: showMA5,
       lastValueVisible: false,
       priceLineVisible: false,
     });
 
-    ma10Ref.current = chart.addSeries(LineSeries, {
-      color: 'rgba(167,139,250,0.95)', // 보라
+    ma10Ref.current = chart.addSeries(LineSeries as any, {
+      color: 'rgba(167,139,250,0.95)',
       lineWidth: 2,
       visible: showMA10,
       lastValueVisible: false,
       priceLineVisible: false,
     });
 
-    ma20Ref.current = chart.addSeries(LineSeries, {
-      color: 'rgba(74,222,128,0.95)', // 초록
+    ma20Ref.current = chart.addSeries(LineSeries as any, {
+      color: 'rgba(74,222,128,0.95)',
       lineWidth: 2,
       visible: showMA20,
       lastValueVisible: false,
       priceLineVisible: false,
     });
 
+    // 최초 데이터 주입
+    histRef.current?.setData(histData);
+    ma5Ref.current?.setData(ma5Data);
+    ma10Ref.current?.setData(ma10Data);
+    ma20Ref.current?.setData(ma20Data);
+    chart.timeScale().fitContent();
+
     const ro = new ResizeObserver(() => {
-      chart.applyOptions({
-        width: host.clientWidth,
-        height: host.clientHeight,
-      });
-      chart.timeScale().fitContent();
+      const w = host.clientWidth;
+      const h = host.clientHeight;
+      if (w > 0 && h > 0) {
+        chart.applyOptions({ width: w, height: h });
+        chart.timeScale().fitContent();
+      }
     });
     ro.observe(host);
 
@@ -218,6 +258,7 @@ export default function FlowClient() {
       ma10Ref.current = null;
       ma20Ref.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ---------- data update (NO destroy) ---------- */
@@ -259,16 +300,19 @@ export default function FlowClient() {
           <div className="text-sm text-gray-500">종목</div>
           <div className="text-xl font-semibold">{ticker}</div>
 
-          {rangeText && <div className="text-sm text-gray-500">기간: {rangeText}</div>}
-
-          {last && (
-            <div className="text-sm text-gray-300">
-              최신({formatDateDot(last.date)}):{' '}
-              <span className={last.net >= 0 ? 'text-red-400' : 'text-sky-400'}>
-                {formatMoneyCompact(last.net)}
-              </span>
+          {summaryText && (
+            <div
+              className="
+                mt-1 inline-flex items-center
+                rounded-md border border-amber-400/60 bg-amber-400/10
+                px-2.5 py-1
+                text-base font-semibold text-amber-400
+              "
+            >
+              {summaryText}
             </div>
           )}
+
         </div>
       </div>
 

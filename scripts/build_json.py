@@ -21,6 +21,9 @@ df[DATE] = pd.to_datetime(df[DATE])
 latest = df[DATE].max()
 latest_df = df[df[DATE] == latest]
 
+def num_or_none(x):
+    return None if pd.isna(x) else float(x)
+
 def write(p, o):
     p.write_text(json.dumps(o, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -69,15 +72,31 @@ for days in DAYS:
     })
 
 # FLOW JSON
+def num_or_none(x):
+    try:
+        if pd.isna(x):
+            return None
+        return float(x)
+    except:
+        return None
+
+
 for name, g in df.sort_values(DATE).groupby(NAME):
     series = []
     for _, r in g.iterrows():
         series.append({
             "date": r[DATE].strftime("%Y-%m-%d"),
-            "net": float(r[NET]),
-            "ma5": r.get(MA5),
-            "ma10": r.get(MA10),
-            "ma20": r.get(MA20),
+            "net": num_or_none(r[NET]),
+            "ma5": num_or_none(r.get(MA5)),
+            "ma10": num_or_none(r.get(MA10)),
+            "ma20": num_or_none(r.get(MA20)),
         })
+
     safe = name.replace("/", "_")
-    write(FLOW_DIR / f"{safe}_all.json", {"ticker": name, "series": series})
+    write(
+        FLOW_DIR / f"{safe}_all.json",
+        {
+            "ticker": name,
+            "series": series
+        }
+    )

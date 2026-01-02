@@ -1,10 +1,40 @@
 'use client';
-
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import Top10Grid from './components/Top10Grid';
 
+function formatUSD_KR(amount: number) {
+  if (amount == null || Number.isNaN(amount)) return '-';
+
+  const sign = amount < 0 ? '-' : '';
+  const abs = Math.abs(amount);
+
+  // 1만 달러 미만은 그냥 달러 표기
+  if (abs < 10_000) {
+    return `${sign}${Math.round(abs).toLocaleString('ko-KR')} 달러`;
+  }
+
+  // ✅ '만' 단위로 반올림 (10,000달러 단위)
+  const manTotal = Math.round(abs / 10_000); // ex) 56,280,000 -> 5,628(만)
+  const eok = Math.floor(manTotal / 10_000); // 1억 = 10,000만
+  const man = manTotal % 10_000;
+
+  if (eok > 0) {
+    // 1억 이상
+    if (man === 0) return `${sign}${eok}억 달러`;
+    return `${sign}${eok}억 ${man.toLocaleString('ko-KR')}만 달러`;
+  }
+
+  // 1억 미만
+  return `${sign}${manTotal.toLocaleString('ko-KR')}만 달러`;
+}
+
 function formatDate(date: Date) {
   return date.toISOString().slice(0, 10).replace(/-/g, '.');
+}
+
+function formatDotDate(dateStr: string) {
+  return dateStr.replaceAll('-', '.');
 }
 
 function getDateRange(days: number) {
@@ -24,6 +54,8 @@ type TopItem = {
 };
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [side, setSide] = useState<'netBuy' | 'netSell'>('netBuy');
   const [days, setDays] = useState(5);
 
@@ -33,11 +65,33 @@ export default function Home() {
   const [items, setItems] = useState<TopItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [range, setRange] = useState<{ start: string; end: string } | null>(null);
+
 
   // ✅ 원천이름 -> 표시이름 alias
   const [nameAlias, setNameAlias] = useState<Record<string, string>>({});
 
   const isBuy = side === 'netBuy';
+
+  useEffect(() => {
+    const spSide = searchParams.get('side');
+    const spDays = searchParams.get('days');
+    const spTop = searchParams.get('top');
+
+    if (spSide === 'netBuy' || spSide === 'netSell') setSide(spSide);
+    if (spDays && !Number.isNaN(Number(spDays))) setDays(Number(spDays));
+    if (spTop && ['10','20','30','40'].includes(spTop)) setTopN(Number(spTop) as 10|20|30|40);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set('side', side);
+    params.set('days', String(days));
+    params.set('top', String(topN));
+
+    router.replace(`/?${params.toString()}`, { scroll: false });
+  }, [side, days, topN, router]);
 
   // 1) name_alias.json 로드 (앱 시작 시 1회)
   useEffect(() => {
@@ -59,6 +113,7 @@ export default function Home() {
 
         const data = await res.json();
         setItems(data.items ?? []);
+        setRange(data.range ?? null);
       } catch (e: any) {
         setItems([]);
         setErr(e?.message ?? 'Unknown error');
@@ -134,7 +189,9 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="text-sm text-gray-500 mb-4">기간: {getDateRange(days)}</div>
+      <div className="text-sm text-gray-500 mb-4">
+        기간: {range ? `${formatDotDate(range.start)} ~ ${formatDotDate(range.end)}` : getDateRange(days)}          
+      </div>
 
       {/* ✅ TOP 개수 선택 */}
       <div className="flex gap-3 mb-6">
@@ -154,7 +211,7 @@ export default function Home() {
       {err && <div className="text-sm text-red-500 mb-4">에러: {err}</div>}
 
       {/* TOP Grid */}
-      <Top10Grid side={side} days={days} items={mappedItems} />
+      <Top10Grid side={side} days={days} topN={topN} items={visibleItems} />
     </>
   );
 }
