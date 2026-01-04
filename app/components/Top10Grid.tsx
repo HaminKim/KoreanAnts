@@ -5,8 +5,8 @@ import { COLORS } from '../constants/colors';
 
 type TopItem = {
   rank: number;
-  ticker: string;      // ✅ 화면 표시용 (한글 alias 가능)
-  fileTicker?: string; // ✅ 로고 파일 찾기용 (원래 rawName)
+  ticker: string;       
+  fileTicker?: string; 
   value?: number;
 };
 
@@ -18,47 +18,45 @@ type Props = {
 };
 
 function formatUSD_KR(amount?: number) {
-  if (amount == null || Number.isNaN(amount)) return '-';
+  if (amount == null || Number.isNaN(amount) || amount === 0) return '-';
 
   const sign = amount < 0 ? '-' : '';
-  let n = Math.round(Math.abs(amount)); // 달러 단위 정수
+  const abs = Math.abs(amount);
 
-  const eok = Math.floor(n / 100_000_000);
-  n %= 100_000_000;
+  if (abs < 10_000) return `${sign}${Math.round(abs).toLocaleString()}달러`;
 
-  const million = Math.floor(n / 1_000_000);
-  n %= 1_000_000;
+  const eokUnit = 100_000_000;
+  const manUnit = 10_000;
 
-  const man = Math.floor(n / 10_000);
-  n %= 10_000;
+  let eok = Math.floor(abs / eokUnit);
+  const remainder = abs % eokUnit;
+  let man = Math.round(remainder / manUnit);
 
-  const parts: string[] = [];
-  if (eok) parts.push(`${eok}억`);
-  if (million) parts.push(`${million}백만`);
-  if (man) parts.push(`${man}만`);
+  if (man === 10_000) { eok += 1; man = 0; }
 
-  if (parts.length === 0) return `${sign}${n.toLocaleString('ko-KR')}달러`;
-  return `${sign}${parts.join(' ')}달러`;
+  if (eok > 0) {
+    if (man === 0) return `${sign}${eok}억 달러`;
+    return `${sign}${eok}억 ${man.toLocaleString()}만 달러`;
+  }
+  return `${sign}${man.toLocaleString()}만 달러`;
 }
 
 export default function Top10Grid({ side, days, topN, items }: Props) {
   const isBuy = side === 'netBuy';
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-8">
       {items.map((item, i) => {
-        const displayName = item.ticker;                 // ✅ 화면 텍스트
-        const logoKey = (item.fileTicker ?? '').trim(); // ✅ 로고 파일명 키(rawName)
+        const displayName = item.ticker;
+        const logoKey = (item.fileTicker ?? '').trim();
 
         const qs = new URLSearchParams();
-        qs.set('ticker', displayName);        // 화면 표시용
-        qs.set('fileTicker', logoKey);        // 차트/로고 기준용
+        qs.set('ticker', displayName);
+        qs.set('fileTicker', logoKey);
         qs.set('side', side);
         qs.set('days', String(days));
         if (topN) qs.set('top', String(topN));
 
-        // ✅ 로고 URL: 반드시 encodeURIComponent
-        // ✅ 없으면 _us.png
         const logoSrc = logoKey
           ? `/logos/${encodeURIComponent(logoKey)}.png`
           : `/logos/_us.png`;
@@ -67,33 +65,28 @@ export default function Top10Grid({ side, days, topN, items }: Props) {
           <Link
             key={`${logoKey || displayName}-${i}`}
             href={`/flow?${qs.toString()}`}
-            className="text-center cursor-pointer"
+            className="text-center cursor-pointer group block"
           >
-            {/* 로고 + 랭킹 */}
-            <div className="relative w-20 h-20 mx-auto mb-2">
+            {/* 1. 로고 + 랭킹 */}
+            <div className="relative w-20 h-20 mx-auto mb-1.5"> 
               <div
                 className={`absolute inset-0 rounded-full border-2 transition ${
                   isBuy
-                    ? `${COLORS.netBuy.border} hover:${COLORS.netBuy.borderStrong}`
-                    : `${COLORS.netSell.border} hover:${COLORS.netSell.borderStrong}`
+                    ? `${COLORS.netBuy.border} group-hover:${COLORS.netBuy.borderStrong}`
+                    : `${COLORS.netSell.border} group-hover:${COLORS.netSell.borderStrong}`
                 }`}
               />
-
-              {/* ✅ 로고 이미지 */}
               <img
                 src={logoSrc}
                 alt={displayName}
                 className="absolute inset-[6px] w-[calc(100%-12px)] h-[calc(100%-12px)] rounded-full object-cover bg-white"
                 onError={(e) => {
                   const img = e.currentTarget;
-                  if (!img.src.endsWith('/logos/_us.png')) {
-                    img.src = '/logos/_us.png';
-                  }
+                  if (!img.src.endsWith('/logos/_us.png')) { img.src = '/logos/_us.png'; }
                 }}
               />
-
               <div
-                className={`absolute -top-2 -left-2 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white ${
+                className={`absolute -top-2 -left-2 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm ${
                   isBuy ? COLORS.netBuy.bg : COLORS.netSell.bg
                 }`}
               >
@@ -101,12 +94,24 @@ export default function Top10Grid({ side, days, topN, items }: Props) {
               </div>
             </div>
 
-            {/* 종목명 */}
-            <div className="text-sm font-medium">{displayName}</div>
+            {/* 🔥 [핵심 수정] 
+              이름과 돈을 감싸는 컨테이너에 높이(h-[72px])를 줍니다.
+              - 이름이 짧으면 돈이 위로 붙습니다.
+              - 이름이 길어도(3줄) 공간이 확보됩니다.
+              - 남는 공간은 돈 '밑'에 생깁니다.
+            */}
+            <div className="h-[72px] px-1 flex flex-col justify-start items-center">
+              
+              {/* 종목명: 높이 제한 해제 (auto) -> 내용만큼만 차지 */}
+              <span className="text-sm font-medium break-keep line-clamp-3 leading-tight tracking-tight">
+                 {displayName}
+              </span>
 
-            {/* 금액 */}
-            <div className="text-xs text-gray-500 mt-1">
-              {formatUSD_KR(item.value)}
+              {/* 금액: 종목명 바로 아래 붙음 (mt-0.5) */}
+              <span className="text-xs text-gray-500 font-mono mt-0.5">
+                {formatUSD_KR(item.value)}
+              </span>
+              
             </div>
           </Link>
         );

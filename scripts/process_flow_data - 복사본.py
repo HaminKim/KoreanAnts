@@ -8,7 +8,7 @@ from pandas.tseries.offsets import BusinessDay
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # =========================================================
-# ⚙️ 설정 (엑셀 컬럼명에 맞춰 수정됨)
+# ⚙️ 설정
 # =========================================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_DIR = os.path.join(BASE_DIR, '..', 'processed')
@@ -16,17 +16,9 @@ TARGET_CSV_FILE = 'all_data_clean.csv'
 OUTPUT_DIR = os.path.join(BASE_DIR, '..', 'public', 'data', 'flow')
 MAP_FILE = os.path.join(BASE_DIR, '..', 'public', 'data', 'ticker_map.json')
 
-# 🚨 CSV 파일 안의 이동평균선 컬럼명 매핑 (왼쪽: 엑셀 헤더, 오른쪽: 코드 내부용)
-# 엑셀 사진 보고 정확히 맞췄습니다.
-MA_MAP = {
-    'MA5': 'ma5',     
-    'MA10': 'ma10',   
-    'MA20': 'ma20'    
-}
-
 # 🚨 날짜 보정 (T+2)
 DATE_OFFSET = 2
-# 🚀 병렬 처리 개수
+# 🚀 병렬 처리 개수 (안전하게 4개)
 MAX_WORKERS = 4 
 # =========================================================
 
@@ -49,20 +41,19 @@ def calculate_reverse_signal(df):
     z_score = round((last_row['net_buy'] - last_row['mean_60']) / std, 2)
 
     price_trend = "FLAT"
-    # 주가 데이터가 있는 경우에만 추세 계산
-    if 'close' in df.columns:
-        last_price_row = df.iloc[-1]
-        if pd.notnull(last_price_row['close']) and last_price_row['close'] != 0:
-            ma20 = df['close'].rolling(window=20).mean().iloc[-1]
-            ma5 = df['close'].rolling(window=5).mean().iloc[-1]
-            
-            if pd.notnull(ma5) and pd.notnull(ma20):
-                if ma5 < ma20 * 0.98: price_trend = "DOWN"
-                elif ma5 > ma20 * 1.02: price_trend = "UP"
+    last_price_row = df.iloc[-1]
+    
+    if 'close' in df.columns and pd.notnull(last_price_row['close']) and last_price_row['close'] != 0:
+        ma20 = df['close'].rolling(window=20).mean().iloc[-1]
+        ma5 = df['close'].rolling(window=5).mean().iloc[-1]
+        
+        if pd.notnull(ma5) and pd.notnull(ma20):
+            if ma5 < ma20 * 0.98: price_trend = "DOWN"
+            elif ma5 > ma20 * 1.02: price_trend = "UP"
 
     signal = "NEUTRAL"
     if price_trend == "DOWN" and z_score > 1.5: signal = "FALLING_KNIFE" 
-    elif price_trend == "UP" and z_score > 2.0: signal = "FOMO"            
+    elif price_trend == "UP" and z_score > 2.0: signal = "FOMO"           
     elif price_trend == "DOWN" and z_score < -1.5: signal = "PANIC_SELL" 
 
     return signal, z_score
@@ -77,7 +68,7 @@ def process_single_stock(data_pack):
         
         if ticker_symbol:
             try:
-                # 1. 주가 데이터 가져오기
+                # 1. 주가 데이터 가져오기 (독립 객체 사용)
                 ticker_obj = yf.Ticker(ticker_symbol)
                 stock_data = ticker_obj.history(period="2y")
                 
@@ -88,34 +79,31 @@ def process_single_stock(data_pack):
                     
                     price_df = stock_data[['Date', 'Close']].rename(columns={'Date': 'date', 'Close': 'close'})
                     
-                    # 진짜 개장일(Market Days) 필터링
+                    # 🔥 [핵심 수정] 진짜 개장일(Market Days) 리스트 확보
+                    # 야후가 데이터를 준 날짜만 '진짜 거래일'로 인정합니다.
                     valid_market_days = set(price_df['date'])
 
-                    # 2. 데이터 병합 (Outer Join으로 한국/미국 날짜 모두 포함)
+                    # 2. 데이터 병합
                     final_df = pd.merge(df_flow, price_df, on='date', how='outer')
                     
-                    # 미국 휴장일(데이터 없는 날) 삭제
+                    # 🔥 [핵심 수정] 휴장일 강제 삭제 (Market Filter)
+                    # "야후에 날짜가 없으면 -> 그날은 크리스마스거나 휴일이다 -> 삭제"
                     final_df = final_df[final_df['date'].isin(valid_market_days)]
                     
-                    # 3. 데이터 정리 및 채우기 (Filling Logic)
+                    # 3. 데이터 정리
                     min_flow_date = df_flow['date'].min()
                     final_df = final_df[final_df['date'] >= min_flow_date].copy()
                     
                     final_df['name'] = final_df['name'].fillna(raw_name)
-                    final_df['net_buy'] = final_df['net_buy'].fillna(0) # 순매수는 없으면 0
+                    final_df['net_buy'] = final_df['net_buy'].fillna(0)
                     
-                    # 🔥 [핵심] MA(이동평균) 데이터 전날 값 유지 (Forward Fill)
-                    # 계산된 MA값은 추세이므로, 한국 휴장일에도 전날 추세가 유지된다고 가정
-                    for col in MA_MAP.values():
-                        if col in final_df.columns:
-                            final_df[col] = final_df[col].ffill()
-                            final_df[col] = final_df[col].fillna(0) # 앞부분 비었으면 0
-
-                    final_df['close'] = final_df['close'].ffill() # 주가도 ffill
+                    # 이제 ffill을 해도 안전합니다 (이미 휴일 행 자체가 삭제되었으므로)
+                    final_df['close'] = final_df['close'].ffill()
                     has_price = True
             except Exception:
                 pass
 
+        # 혹시 모를 잔여 데이터 처리
         if has_price:
             final_df = final_df.dropna(subset=['close'])
             final_df = final_df[final_df['close'] > 0]
@@ -140,7 +128,6 @@ def process_single_stock(data_pack):
             "data": []
         }
 
-        # JSON 데이터 생성
         for _, row in final_df.iterrows():
             item = {
                 "date": row['date'].strftime('%Y-%m-%d'),
@@ -148,13 +135,6 @@ def process_single_stock(data_pack):
             }
             if 'close' in row and row['close'] > 0:
                 item["price"] = round(row['close'], 2)
-            
-            # 🔥 [핵심] MA 데이터 JSON에 추가 (정수로 변환하여 용량 절약)
-            for ma_key in MA_MAP.values():
-                if ma_key in row and pd.notnull(row[ma_key]):
-                    # 엑셀에 소수점이 있어도 화면 표시용으론 정수가 깔끔하므로 int 처리
-                    item[ma_key] = int(row[ma_key])
-
             output_data['data'].append(item)
             
         return output_data
@@ -165,7 +145,7 @@ def process_single_stock(data_pack):
 
 def main():
     start_time = time.time()
-    print(f"🚀 데이터 처리 시작 (MA5, MA10, MA20 포함)...")
+    print(f"🚀 데이터 처리 시작 (휴장일 완벽 제거 모드)...")
 
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
@@ -182,14 +162,10 @@ def main():
         df_all = pd.read_csv(csv_path)
         df_all.columns = [c.strip() for c in df_all.columns]
         
-        # 기본 컬럼명 매핑
         rename_map = {'종목명': 'name', '날짜': 'date', '순매수': 'net_buy'}
-        
-        # 🔥 MA 컬럼 매핑 추가
-        rename_map.update(MA_MAP)
-        
         df_all.rename(columns=rename_map, inplace=True)
 
+        # 날짜 보정
         df_all['date'] = pd.to_datetime(df_all['date'])
         print(f"⚡ 날짜 보정: 결제일 기준 -{DATE_OFFSET} 영업일 적용 중...")
         df_all['date'] = df_all['date'] - BusinessDay(n=DATE_OFFSET)
@@ -228,6 +204,7 @@ def main():
         end_time = time.time()
         elapsed = end_time - start_time
         print(f"\n\n✅ 전체 완료! 소요 시간: {elapsed:.2f}초")
+        print("미국 휴장일(크리스마스 등) 데이터 완벽 삭제됨.")
 
     except Exception as e:
         print(f"\n❌ 치명적 오류 발생: {e}")
