@@ -1,12 +1,1 @@
-{
-  "ticker": "FISERV INC",
-  "series": [
-    {
-      "date": "2025-10-31",
-      "net": 21126209.0,
-      "ma5": null,
-      "ma10": null,
-      "ma20": null
-    }
-  ]
-}
+{"meta": {"name": "FISERV INC", "ticker": "FISV", "signal": "NEUTRAL", "zScore": NaN, "hasPrice": true, "lastUpdate": "2026-01-02"}, "data": [{"date": "2025-10-29", "netBuy": 21126209, "price": 70.6}, {"date": "2025-10-30", "netBuy": 0, "price": 65.19}, {"date": "2025-10-31", "netBuy": 0, "price": 66.69}, {"date": "2025-11-03", "netBuy": 0, "price": 65.14}, {"date": "2025-11-04", "netBuy": 0, "price": 64.45}, {"date": "2025-11-05", "netBuy": 0, "price": 64.0}, {"date": "2025-11-06", "netBuy": 0, "price": 61.63}, {"date": "2025-11-07", "netBuy": 0, "price": 63.7}, {"date": "2025-11-10", "netBuy": 0, "price": 63.8}, {"date": "2025-11-11", "netBuy": 0, "price": 64.26}, {"date": "2025-11-13", "netBuy": 0, "price": 64.53}, {"date": "2025-11-14", "netBuy": 0, "price": 63.42}, {"date": "2025-11-17", "netBuy": 0, "price": 62.7}, {"date": "2025-11-18", "netBuy": 0, "price": 61.34}, {"date": "2025-11-19", "netBuy": 0, "price": 61.17}, {"date": "2025-11-20", "netBuy": 0, "price": 59.77}, {"date": "2025-11-21", "netBuy": 0, "price": 60.84}, {"date": "2025-11-24", "netBuy": 0, "price": 60.67}, {"date": "2025-11-25", "netBuy": 0, "price": 60.76}, {"date": "2025-11-26", "netBuy": 0, "price": 60.8}, {"date": "2025-11-28", "netBuy": 0, "price": 61.47}, {"date": "2025-12-01", "netBuy": 0, "price": 62.69}, {"date": "2025-12-02", "netBuy": 0, "price": 63.24}, {"date": "2025-12-03", "netBuy": 0, "price": 66.95}, {"date": "2025-12-04", "netBuy": 0, "price": 66.06}, {"date": "2025-12-05", "netBuy": 0, "price": 66.28}, {"date": "2025-12-08", "netBuy": 0, "price": 65.73}, {"date": "2025-12-09", "netBuy": 0, "price": 66.21}, {"date": "2025-12-10", "netBuy": 0, "price": 66.57}, {"date": "2025-12-11", "netBuy": 0, "price": 68.16}, {"date": "2025-12-12", "netBuy": 0, "price": 68.75}, {"date": "2025-12-15", "netBuy": 0, "price": 68.97}, {"date": "2025-12-16", "netBuy": 0, "price": 67.7}, {"date": "2025-12-17", "netBuy": 0, "price": 68.33}, {"date": "2025-12-18", "netBuy": 0, "price": 68.0}, {"date": "2025-12-19", "netBuy": 0, "price": 67.94}, {"date": "2025-12-22", "netBuy": 0, "price": 68.62}, {"date": "2025-12-23", "netBuy": 0, "price": 67.72}, {"date": "2025-12-24", "netBuy": 0, "price": 67.95}, {"date": "2025-12-26", "netBuy": 0, "price": 67.5}, {"date": "2025-12-29", "netBuy": 0, "price": 67.28}, {"date": "2025-12-30", "netBuy": 0, "price": 67.54}, {"date": "2025-12-31", "netBuy": 0, "price": 67.17}, {"date": "2026-01-02", "netBuy": 0, "price": 65.59}]}

@@ -1,12 +1,1 @@
-{
-  "ticker": "COSTAR GROUP INC",
-  "series": [
-    {
-      "date": "2025-12-02",
-      "net": 17928265.0,
-      "ma5": null,
-      "ma10": null,
-      "ma20": null
-    }
-  ]
-}
+{"meta": {"name": "COSTAR GROUP INC", "ticker": "CSGP", "signal": "NEUTRAL", "zScore": NaN, "hasPrice": true, "lastUpdate": "2026-01-02"}, "data": [{"date": "2025-11-28", "netBuy": 17928265, "price": 68.8}, {"date": "2025-12-01", "netBuy": 0, "price": 68.02}, {"date": "2025-12-02", "netBuy": 0, "price": 68.2}, {"date": "2025-12-03", "netBuy": 0, "price": 69.02}, {"date": "2025-12-04", "netBuy": 0, "price": 68.19}, {"date": "2025-12-05", "netBuy": 0, "price": 68.01}, {"date": "2025-12-08", "netBuy": 0, "price": 66.33}, {"date": "2025-12-09", "netBuy": 0, "price": 67.93}, {"date": "2025-12-10", "netBuy": 0, "price": 67.87}, {"date": "2025-12-11", "netBuy": 0, "price": 67.47}, {"date": "2025-12-12", "netBuy": 0, "price": 68.23}, {"date": "2025-12-15", "netBuy": 0, "price": 63.75}, {"date": "2025-12-16", "netBuy": 0, "price": 63.62}, {"date": "2025-12-17", "netBuy": 0, "price": 64.83}, {"date": "2025-12-18", "netBuy": 0, "price": 64.88}, {"date": "2025-12-19", "netBuy": 0, "price": 65.23}, {"date": "2025-12-22", "netBuy": 0, "price": 66.6}, {"date": "2025-12-23", "netBuy": 0, "price": 66.64}, {"date": "2025-12-24", "netBuy": 0, "price": 66.89}, {"date": "2025-12-26", "netBuy": 0, "price": 67.01}, {"date": "2025-12-29", "netBuy": 0, "price": 67.6}, {"date": "2025-12-30", "netBuy": 0, "price": 67.86}, {"date": "2025-12-31", "netBuy": 0, "price": 67.24}, {"date": "2026-01-02", "netBuy": 0, "price": 65.69}]}

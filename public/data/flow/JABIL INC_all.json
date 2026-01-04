@@ -1,12 +1,1 @@
-{
-  "ticker": "JABIL INC",
-  "series": [
-    {
-      "date": "2025-12-18",
-      "net": 9079133.0,
-      "ma5": null,
-      "ma10": null,
-      "ma20": null
-    }
-  ]
-}
+{"meta": {"name": "JABIL INC", "ticker": "JBL", "signal": "NEUTRAL", "zScore": 0, "hasPrice": true, "lastUpdate": "2026-01-02"}, "data": [{"date": "2025-12-16", "netBuy": 9079133, "price": 212.56}, {"date": "2025-12-17", "netBuy": 0, "price": 216.3}, {"date": "2025-12-18", "netBuy": 0, "price": 217.04}, {"date": "2025-12-19", "netBuy": 0, "price": 226.62}, {"date": "2025-12-22", "netBuy": 0, "price": 229.78}, {"date": "2025-12-23", "netBuy": 0, "price": 235.07}, {"date": "2025-12-24", "netBuy": 0, "price": 234.49}, {"date": "2025-12-26", "netBuy": 0, "price": 236.11}, {"date": "2025-12-29", "netBuy": 0, "price": 234.97}, {"date": "2025-12-30", "netBuy": 0, "price": 231.57}, {"date": "2025-12-31", "netBuy": 0, "price": 228.02}, {"date": "2026-01-02", "netBuy": 0, "price": 240.39}]}

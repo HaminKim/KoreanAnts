@@ -1,5 +1,4 @@
 'use client';
-console.log('FlowChart mounted ✅');
 
 import { useEffect, useMemo, useRef } from 'react';
 import {

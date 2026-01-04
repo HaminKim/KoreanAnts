@@ -1,12 +1,1 @@
-{
-  "ticker": "JANONE INC CHAN 006757890 US03814F4037",
-  "series": [
-    {
-      "date": "2025-08-14",
-      "net": 13335762.0,
-      "ma5": null,
-      "ma10": null,
-      "ma20": null
-    }
-  ]
-}
+{"meta": {"name": "JANONE INC CHAN 006757890 US03814F4037", "ticker": "JAN", "signal": "NEUTRAL", "zScore": 0, "hasPrice": false, "lastUpdate": "2025-08-12"}, "data": [{"date": "2025-08-12", "netBuy": 13335762}]}

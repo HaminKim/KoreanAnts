@@ -1,12 +1,1 @@
-{
-  "ticker": "TIDAL TRUST II DEFIANCE DAILY TARGT 2X LNG NVO ETF SPLR 988046292 US88636J2463",
-  "series": [
-    {
-      "date": "2025-12-25",
-      "net": 2133533.0,
-      "ma5": null,
-      "ma10": null,
-      "ma20": null
-    }
-  ]
-}
+{"meta": {"name": "TIDAL TRUST II DEFIANCE DAILY TARGT 2X LNG NVO ETF SPLR 988046292 US88636J2463", "ticker": "NVOX", "signal": "NEUTRAL", "zScore": 0, "hasPrice": true, "lastUpdate": "2026-01-02"}, "data": [{"date": "2025-12-23", "netBuy": 2133533, "price": 22.6}, {"date": "2025-12-24", "netBuy": 0, "price": 23.34}, {"date": "2025-12-26", "netBuy": 0, "price": 23.23}, {"date": "2025-12-29", "netBuy": 0, "price": 22.37}, {"date": "2025-12-30", "netBuy": 0, "price": 22.12}, {"date": "2025-12-31", "netBuy": 0, "price": 21.89}, {"date": "2026-01-02", "netBuy": 0, "price": 23.11}]}

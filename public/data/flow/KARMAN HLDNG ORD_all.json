@@ -1,12 +1,1 @@
-{
-  "ticker": "KARMAN HLDNG ORD",
-  "series": [
-    {
-      "date": "2025-12-01",
-      "net": 7641941.0,
-      "ma5": null,
-      "ma10": null,
-      "ma20": null
-    }
-  ]
-}
+{"meta": {"name": "KARMAN HLDNG ORD", "ticker": "KAR", "signal": "NEUTRAL", "zScore": NaN, "hasPrice": true, "lastUpdate": "2026-01-02"}, "data": [{"date": "2025-11-28", "netBuy": 0, "price": 25.44}, {"date": "2025-12-01", "netBuy": 0, "price": 25.69}, {"date": "2025-12-02", "netBuy": 0, "price": 25.83}, {"date": "2025-12-03", "netBuy": 0, "price": 26.1}, {"date": "2025-12-04", "netBuy": 0, "price": 25.76}, {"date": "2025-12-05", "netBuy": 0, "price": 26.14}, {"date": "2025-12-08", "netBuy": 0, "price": 26.43}, {"date": "2025-12-09", "netBuy": 0, "price": 27.06}, {"date": "2025-12-10", "netBuy": 0, "price": 27.76}, {"date": "2025-12-11", "netBuy": 0, "price": 28.66}, {"date": "2025-12-12", "netBuy": 0, "price": 28.65}, {"date": "2025-12-15", "netBuy": 0, "price": 28.84}, {"date": "2025-12-16", "netBuy": 0, "price": 29.98}, {"date": "2025-12-17", "netBuy": 0, "price": 29.49}, {"date": "2025-12-18", "netBuy": 0, "price": 29.69}, {"date": "2025-12-19", "netBuy": 0, "price": 30.55}, {"date": "2025-12-22", "netBuy": 0, "price": 30.55}, {"date": "2025-12-23", "netBuy": 0, "price": 30.77}, {"date": "2025-12-24", "netBuy": 0, "price": 30.88}, {"date": "2025-12-26", "netBuy": 0, "price": 31.02}, {"date": "2025-12-29", "netBuy": 0, "price": 30.76}, {"date": "2025-12-30", "netBuy": 0, "price": 30.12}, {"date": "2025-12-31", "netBuy": 0, "price": 29.78}, {"date": "2026-01-02", "netBuy": 0, "price": 29.21}]}

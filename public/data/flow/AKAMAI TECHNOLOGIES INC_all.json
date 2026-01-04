@@ -1,12 +1,1 @@
-{
-  "ticker": "AKAMAI TECHNOLOGIES INC",
-  "series": [
-    {
-      "date": "2025-12-02",
-      "net": 38683891.0,
-      "ma5": null,
-      "ma10": null,
-      "ma20": null
-    }
-  ]
-}
+{"meta": {"name": "AKAMAI TECHNOLOGIES INC", "ticker": "AKAM", "signal": "NEUTRAL", "zScore": NaN, "hasPrice": true, "lastUpdate": "2026-01-02"}, "data": [{"date": "2025-11-28", "netBuy": 38683891, "price": 89.52}, {"date": "2025-12-01", "netBuy": 0, "price": 87.71}, {"date": "2025-12-02", "netBuy": 0, "price": 86.83}, {"date": "2025-12-03", "netBuy": 0, "price": 87.97}, {"date": "2025-12-04", "netBuy": 0, "price": 86.6}, {"date": "2025-12-05", "netBuy": 0, "price": 83.49}, {"date": "2025-12-08", "netBuy": 0, "price": 85.32}, {"date": "2025-12-09", "netBuy": 0, "price": 85.66}, {"date": "2025-12-10", "netBuy": 0, "price": 86.45}, {"date": "2025-12-11", "netBuy": 0, "price": 85.45}, {"date": "2025-12-12", "netBuy": 0, "price": 85.88}, {"date": "2025-12-15", "netBuy": 0, "price": 86.53}, {"date": "2025-12-16", "netBuy": 0, "price": 87.74}, {"date": "2025-12-17", "netBuy": 0, "price": 87.55}, {"date": "2025-12-18", "netBuy": 0, "price": 88.49}, {"date": "2025-12-19", "netBuy": 0, "price": 89.22}, {"date": "2025-12-22", "netBuy": 0, "price": 90.11}, {"date": "2025-12-23", "netBuy": 0, "price": 89.23}, {"date": "2025-12-24", "netBuy": 0, "price": 88.82}, {"date": "2025-12-26", "netBuy": 0, "price": 88.42}, {"date": "2025-12-29", "netBuy": 0, "price": 88.24}, {"date": "2025-12-30", "netBuy": 0, "price": 87.97}, {"date": "2025-12-31", "netBuy": 0, "price": 87.25}, {"date": "2026-01-02", "netBuy": 0, "price": 85.1}]}
