@@ -14,12 +14,12 @@ import {
 
 // ✅ 데이터 타입
 type FlowData = {
-  date: string;   
-  netBuy: number; 
-  price?: number; 
-  ma5?: number;   
-  ma10?: number;  
-  ma20?: number;  
+  date: string;
+  netBuy: number;
+  price?: number;
+  ma5?: number;
+  ma10?: number;
+  ma20?: number;
 };
 
 // YYYY-MM-DD → BusinessDay
@@ -29,49 +29,30 @@ function toBusinessDay(ymd: string): Time {
 }
 
 /**
- * 🛠️ [수정됨] 금액 포맷팅 함수 (한국식 억/만 단위)
- * 예: 121,831,235 -> "1억 2,183만 달러"
+ * 🛠️ [초슬림 포맷터] $1.2억 / $5000만
+ * 달러 기호($)를 맨 앞에 붙임
  */
-function formatUSD_KR(amount: number) {
+function formatUltraCompact(amount: number) {
   if (amount == null || Number.isNaN(amount)) return '-';
-
   const sign = amount < 0 ? '-' : '';
   const abs = Math.abs(amount);
 
-  // 1. 1만 달러 미만: 그냥 숫자 전체 표시 (예: 5,400달러)
-  if (abs < 10_000) {
-    return `${sign}${Math.round(abs).toLocaleString('ko-KR')}달러`;
+  // 1. 1억 이상 -> "$1.2억"
+  if (abs >= 100_000_000) {
+    return `${sign}$${(abs / 100_000_000).toFixed(1)}억`;
   }
 
-  // 2. 단위 계산 (억, 만)
-  const eokUnit = 100_000_000;
-  const manUnit = 10_000;
-
-  const eok = Math.floor(abs / eokUnit);          // 억 단위
-  const remainder = abs % eokUnit;                // 억을 뺀 나머지
-  const man = Math.round(remainder / manUnit);    // 나머지를 만 단위로 반올림
-
-  // (예외처리) 만약 반올림하다가 만 단위가 10,000이 되면 -> 1억을 올려줌
-  // 예: 1억 9999.9만 -> 2억 0만
-  if (man === 10_000) {
-    return `${sign}${eok + 1}억 달러`;
+  // 2. 1만 이상 -> "$5000만"
+  if (abs >= 10_000) {
+    return `${sign}$${Math.round(abs / 10_000)}만`;
   }
 
-  // 3. 억 단위가 있을 때 (예: 1억 이상)
-  if (eok > 0) {
-    if (man === 0) {
-      return `${sign}${eok}억 달러`; // 예: 1억 달러
-    }
-    // 예: 1억 2,183만 달러
-    return `${sign}${eok}억 ${man.toLocaleString('ko-KR')}만 달러`;
-  }
-
-  // 4. 억 단위가 없을 때 (예: 5,000만 달러)
-  return `${sign}${man.toLocaleString('ko-KR')}만 달러`;
+  // 3. 그 외 -> "$100"
+  return `${sign}$${Math.round(abs)}`;
 }
 
-// 주가 표기 (예: $150.23)
-function formatPriceUSD(price: number) {
+// 주가 표기 -> "$315.15"
+function formatPriceCompact(price: number) {
   return `$${price.toFixed(2)}`;
 }
 
@@ -86,10 +67,10 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
   const ma10Ref = useRef<any>(null);
   const ma20Ref = useRef<any>(null);
 
-  // MA 선 ON/OFF 상태 관리
-  const [showMa5, setShowMa5] = useState(true);
-  const [showMa10, setShowMa10] = useState(true);
-  const [showMa20, setShowMa20] = useState(true);
+  // ✅ [설정] MA 선 기본값: 꺼짐 (OFF) -> 사용자가 켤 수 있음
+  const [showMa5, setShowMa5] = useState(false);
+  const [showMa10, setShowMa10] = useState(false);
+  const [showMa20, setShowMa20] = useState(false);
 
   // 1. 데이터 가공
   const histData = useMemo(() => {
@@ -98,7 +79,8 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
       return {
         time: toBusinessDay(p.date),
         value: v,
-        color: v >= 0 ? 'rgba(239,68,68,0.65)' : 'rgba(56,189,248,0.70)',
+        // 투명도 조절: 주가 선과 겹쳐도 보이게
+        color: v >= 0 ? 'rgba(239, 68, 68, 0.55)' : 'rgba(59, 130, 246, 0.55)', 
       };
     });
   }, [data]);
@@ -132,11 +114,27 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
     const chart = createChart(el, {
       width,
       height,
-      layout: { background: { type: ColorType.Solid, color: 'transparent' }, textColor: '#9CA3AF' },
-      grid: { vertLines: { color: 'rgba(255,255,255,0.06)' }, horzLines: { color: 'rgba(255,255,255,0.06)' } },
-      leftPriceScale: { visible: true, borderColor: 'rgba(255,255,255,0.08)' },
-      rightPriceScale: { visible: true, borderColor: 'rgba(255,255,255,0.08)' },
-      timeScale: { borderColor: 'rgba(255,255,255,0.08)', rightOffset: 2 },
+      layout: { 
+        background: { type: ColorType.Solid, color: '#ffffff' }, 
+        textColor: '#9ca3af', 
+        fontSize: 11,
+      },
+      grid: { 
+        vertLines: { visible: false }, 
+        horzLines: { color: '#f3f4f6' } 
+      },
+      // 주가/수급 겹치기 (영역 공유)
+      rightPriceScale: { 
+        visible: true, 
+        borderColor: 'transparent', 
+        scaleMargins: { top: 0.1, bottom: 0.1 },
+      },
+      leftPriceScale: { 
+        visible: true, 
+        borderColor: 'transparent',
+        scaleMargins: { top: 0.1, bottom: 0.1 },
+      },
+      timeScale: { borderColor: '#f3f4f6', rightOffset: 2 },
       crosshair: { mode: CrosshairMode.Normal },
       handleScroll: true,
       handleScale: true,
@@ -145,34 +143,51 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
     chartRef.current = chart;
     const anyChart: any = chart;
 
+    // 🔥 0점 중앙 고정 로직
+    const symmetricScaleProvider = (original: any) => {
+      const res = original();
+      if (res !== null && res.priceRange !== null) {
+        const limit = Math.max(Math.abs(res.priceRange.minValue), Math.abs(res.priceRange.maxValue));
+        const buffer = (limit === 0 ? 1 : limit) * 1.1; 
+        return { priceRange: { minValue: -buffer, maxValue: buffer } };
+      }
+      return null;
+    };
+
     // A. 수급 막대 (왼쪽 축)
     const histOptions = {
       priceScaleId: 'left',
-      priceFormat: { type: 'custom', minMove: 1, formatter: formatUSD_KR },
-      lastValueVisible: false, priceLineVisible: false,
+      priceFormat: { type: 'custom', minMove: 1, formatter: formatUltraCompact }, // ✅ $1.2억 포맷
+      lastValueVisible: false, 
+      priceLineVisible: false, 
+      autoscaleInfoProvider: symmetricScaleProvider,
     };
     const histogram = anyChart.addHistogramSeries ? anyChart.addHistogramSeries(histOptions) : anyChart.addSeries(HistogramSeries, histOptions);
     histRef.current = histogram;
 
-    // B. MA 선들 (왼쪽 축)
+    // B. MA 선들 (사용자가 켤 수 있음)
     const createMaSeries = (color: string) => {
       const options = {
-        priceScaleId: 'left', color, lineWidth: 1,
+        priceScaleId: 'left',
+        color, lineWidth: 1,
         crosshairMarkerVisible: false, lastValueVisible: false, priceLineVisible: false,
-        priceFormat: { type: 'custom', formatter: formatUSD_KR },
+        priceFormat: { type: 'custom', formatter: formatUltraCompact },
+        lineStyle: LineStyle.Solid,
+        autoscaleInfoProvider: symmetricScaleProvider,
       };
       return anyChart.addLineSeries ? anyChart.addLineSeries(options) : anyChart.addSeries(LineSeries, options);
     };
 
-    ma5Ref.current = createMaSeries('#fb923c');  // 주황
-    ma10Ref.current = createMaSeries('#a78bfa'); // 보라
-    ma20Ref.current = createMaSeries('#38bdf8'); // 하늘
+    ma5Ref.current = createMaSeries('#fb923c');  
+    ma10Ref.current = createMaSeries('#a78bfa'); 
+    ma20Ref.current = createMaSeries('#38bdf8'); 
 
     // C. 주가 선 (오른쪽 축)
     const lineOptions = {
-      priceScaleId: 'right', color: '#4ade80', lineWidth: 2,
-      crosshairMarkerVisible: true, lastValueVisible: true, priceLineVisible: true,
-      priceFormat: { type: 'custom', formatter: formatPriceUSD },
+      priceScaleId: 'right', 
+      color: '#10b981', lineWidth: 2,
+      crosshairMarkerVisible: true, lastValueVisible: true, priceLineVisible: true, 
+      priceFormat: { type: 'custom', formatter: formatPriceCompact }, // ✅ $315.15 포맷
     };
     const lineSeries = anyChart.addLineSeries ? anyChart.addLineSeries(lineOptions) : anyChart.addSeries(LineSeries, lineOptions);
     lineRef.current = lineSeries;
@@ -184,12 +199,18 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
     ma20Ref.current.setData(ma20Data);
     lineSeries.setData(lineData);
     
-    chart.timeScale().fitContent();
+    // 줌 설정 (최근 50일)
+    const totalPoints = histData.length;
+    const visiblePoints = 50; 
+    if (totalPoints > visiblePoints) {
+      chart.timeScale().setVisibleLogicalRange({ from: totalPoints - visiblePoints, to: totalPoints + 2 });
+    } else {
+      chart.timeScale().fitContent();
+    }
 
     const ro = new ResizeObserver(() => {
       if (el.clientWidth > 0 && el.clientHeight > 0) {
         chart.applyOptions({ width: el.clientWidth, height: el.clientHeight });
-        chart.timeScale().fitContent();
       }
     });
     ro.observe(el);
@@ -201,7 +222,7 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
     };
   }, []); 
 
-  // 3. 데이터 업데이트
+  // 업데이트 Hooks
   useEffect(() => {
     if (!chartRef.current) return;
     if (histRef.current) histRef.current.setData(histData);
@@ -211,7 +232,7 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
     if (lineRef.current) lineRef.current.setData(lineData);
   }, [histData, lineData, ma5Data, ma10Data, ma20Data]);
 
-  // 4. Visibility 업데이트
+  // MA 버튼 누를 때마다 보였다 안 보였다 처리
   useEffect(() => {
     if (ma5Ref.current) ma5Ref.current.applyOptions({ visible: showMa5 });
     if (ma10Ref.current) ma10Ref.current.applyOptions({ visible: showMa10 });
@@ -219,44 +240,16 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
   }, [showMa5, showMa10, showMa20]);
 
   return (
-    <div className="w-full">
-      {/* 컨트롤 패널 */}
-      <div className="flex gap-2 mb-2 px-2 items-center">
-        <span className="text-xs font-bold text-gray-500 mr-1">이동평균(수급):</span>
-        <button
-          onClick={() => setShowMa5(!showMa5)}
-          className={`text-xs px-2 py-1 rounded border transition-colors ${
-            showMa5 
-              ? 'bg-orange-500/10 border-orange-500 text-orange-500 font-bold' 
-              : 'bg-gray-100 border-gray-200 text-gray-400 line-through'
-          }`}
-        >
-          MA5
-        </button>
-        <button
-          onClick={() => setShowMa10(!showMa10)}
-          className={`text-xs px-2 py-1 rounded border transition-colors ${
-            showMa10 
-              ? 'bg-violet-500/10 border-violet-500 text-violet-500 font-bold' 
-              : 'bg-gray-100 border-gray-200 text-gray-400 line-through'
-          }`}
-        >
-          MA10
-        </button>
-        <button
-          onClick={() => setShowMa20(!showMa20)}
-          className={`text-xs px-2 py-1 rounded border transition-colors ${
-            showMa20 
-              ? 'bg-sky-500/10 border-sky-500 text-sky-500 font-bold' 
-              : 'bg-gray-100 border-gray-200 text-gray-400 line-through'
-          }`}
-        >
-          MA20
-        </button>
+    <div className="w-full bg-white rounded-xl border border-gray-100 shadow-sm p-1">
+      {/* 컨트롤 패널: 버튼 클릭 시 색상 변경 (켜짐 표시) */}
+      <div className="flex justify-end gap-1 mb-1 px-1">
+        <button onClick={() => setShowMa5(!showMa5)} className={`text-[9px] px-1.5 py-0.5 rounded border ${showMa5 ? 'bg-orange-50 text-orange-600 border-orange-200' : 'bg-gray-50 text-gray-300 border-gray-100'}`}>MA5</button>
+        <button onClick={() => setShowMa10(!showMa10)} className={`text-[9px] px-1.5 py-0.5 rounded border ${showMa10 ? 'bg-violet-50 text-violet-600 border-violet-200' : 'bg-gray-50 text-gray-300 border-gray-100'}`}>MA10</button>
+        <button onClick={() => setShowMa20(!showMa20)} className={`text-[9px] px-1.5 py-0.5 rounded border ${showMa20 ? 'bg-sky-50 text-sky-600 border-sky-200' : 'bg-gray-50 text-gray-300 border-gray-100'}`}>MA20</button>
       </div>
 
       {/* 차트 영역 */}
-      <div ref={hostRef} className="w-full h-80" />
+      <div ref={hostRef} className="w-full h-[340px]" />
     </div>
   );
 }

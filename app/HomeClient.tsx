@@ -20,14 +20,15 @@ function getDateRange(days: number) {
 
 type TopItem = {
   rank: number;
-  ticker: string;        // 🔴 원래 데이터 이름 (rawName)
+  ticker: string;        
   value?: number;
 };
 
+// UIItem 타입을 TopItem과 동일하게 가져갑니다. (변형 X)
 type UIItem = {
   rank: number;
-  ticker: string;        // 화면에 보여줄 이름
-  fileTicker: string;    // 🔴 로고 파일명으로 쓸 값 (rawName 그대로)
+  ticker: string;        
+  fileTicker: string;    
   value?: number;
 };
 
@@ -44,8 +45,6 @@ export default function HomeClient() {
   const [err, setErr] = useState<string | null>(null);
   const [range, setRange] = useState<{ start: string; end: string } | null>(null);
 
-  const [nameAlias, setNameAlias] = useState<Record<string, string>>({});
-
   const isBuy = side === 'netBuy';
 
   // URL → state
@@ -59,7 +58,6 @@ export default function HomeClient() {
     if (spTop && ['10','20','30','40'].includes(spTop)) {
       setTopN(Number(spTop) as 10 | 20 | 30 | 40);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // state → URL
@@ -71,21 +69,13 @@ export default function HomeClient() {
     router.replace(`/?${params.toString()}`, { scroll: false });
   }, [side, days, topN, router]);
 
-  // 이름 alias (표시용)
-  useEffect(() => {
-    fetch('/data/name_alias.json', { cache: 'no-store' })
-      .then((res) => (res.ok ? res.json() : {}))
-      .then((data) => setNameAlias(data ?? {}))
-      .catch(() => setNameAlias({}));
-  }, []);
-
-  // TOP 데이터
+  // TOP 데이터 로드
   useEffect(() => {
     async function run() {
       try {
         setLoading(true);
         setErr(null);
-
+        // 캐시 끄기 (최신 데이터 보장)
         const res = await fetch(`/data/top10/${side}_${days}.json`, { cache: 'no-store' });
         if (!res.ok) throw new Error(`Failed to load: ${res.status}`);
 
@@ -105,25 +95,21 @@ export default function HomeClient() {
   const visibleItems = useMemo(() => items.slice(0, topN), [items, topN]);
 
   /**
-   * 🔥 핵심 로직
-   * - rawName = it.ticker
-   * - fileTicker = rawName 그대로
-   * - 로고 파일명 = rawName.png
+   * 🔥 핵심 수정: HomeClient는 데이터 가공을 하지 않습니다.
+   * 원본 데이터("NVIDIA CORP")를 그대로 Top10Grid에 넘겨줍니다.
+   * 그래야 Top10Grid가 ticker_map.json에서 "NVDA"를 찾을 수 있습니다.
    */
-const uiItems: UIItem[] = useMemo(() => {
-    return visibleItems.map((it, index) => { // 👈 index 추가 (0, 1, 2...)
-      const rawName = (it.ticker ?? '').trim();
-
-      return {
-        // 🔥 수정됨: 순매도(netSell)면 1, 2, 3등으로 강제 변환
-        rank: side === 'netSell' ? index + 1 : it.rank,
-        
-        ticker: nameAlias[rawName]?.trim() || rawName, 
-        fileTicker: rawName,
-        value: it.value,
-      };
-    });
-  }, [visibleItems, nameAlias, side]); // 👈 side 의존성 추가 필수!
+  const uiItems: UIItem[] = useMemo(() => {
+    return visibleItems.map((it, index) => { 
+      const rawName = (it.ticker ?? '').trim();
+      return {
+        rank: side === 'netSell' ? index + 1 : it.rank,
+        ticker: rawName,     // 화면 표시용 (일단 원본 넘김)
+        fileTicker: rawName, // 파일 찾기용 (일단 원본 넘김)
+        value: it.value,
+      };
+    });
+  }, [visibleItems, side]);
 
   return (
     <>
@@ -168,7 +154,7 @@ const uiItems: UIItem[] = useMemo(() => {
       </div>
 
       <div className="flex gap-3 mb-6">
-        {[10, 20, 30, 40].map((n) => (
+        {[10, 20, 30].map((n) => (
           <button
             key={n}
             onClick={() => setTopN(n as 10 | 20 | 30 | 40)}
@@ -182,7 +168,6 @@ const uiItems: UIItem[] = useMemo(() => {
       {loading && <div className="text-sm text-gray-500 mb-4">불러오는 중…</div>}
       {err && <div className="text-sm text-red-500 mb-4">에러: {err}</div>}
 
-      {/* 🔥 여기 중요 */}
       <Top10Grid side={side} days={days} topN={topN} items={uiItems} />
     </>
   );
