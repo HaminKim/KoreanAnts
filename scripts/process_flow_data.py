@@ -8,7 +8,7 @@ from pandas.tseries.offsets import BusinessDay
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # =========================================================
-# ⚙️ 설정 (엑셀 컬럼명에 맞춰 수정됨)
+# ⚙️ 설정
 # =========================================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_DIR = os.path.join(BASE_DIR, '..', 'processed')
@@ -16,17 +16,14 @@ TARGET_CSV_FILE = 'all_data_clean.csv'
 OUTPUT_DIR = os.path.join(BASE_DIR, '..', 'public', 'data', 'flow')
 MAP_FILE = os.path.join(BASE_DIR, '..', 'public', 'data', 'ticker_map.json')
 
-# 🚨 CSV 파일 안의 이동평균선 컬럼명 매핑 (왼쪽: 엑셀 헤더, 오른쪽: 코드 내부용)
-# 엑셀 사진 보고 정확히 맞췄습니다.
+# MA 컬럼 매핑
 MA_MAP = {
     'MA5': 'ma5',     
     'MA10': 'ma10',   
     'MA20': 'ma20'    
 }
 
-# 🚨 날짜 보정 (T+2)
 DATE_OFFSET = 2
-# 🚀 병렬 처리 개수
 MAX_WORKERS = 4 
 # =========================================================
 
@@ -49,7 +46,6 @@ def calculate_reverse_signal(df):
     z_score = round((last_row['net_buy'] - last_row['mean_60']) / std, 2)
 
     price_trend = "FLAT"
-    # 주가 데이터가 있는 경우에만 추세 계산
     if 'close' in df.columns:
         last_price_row = df.iloc[-1]
         if pd.notnull(last_price_row['close']) and last_price_row['close'] != 0:
@@ -77,7 +73,6 @@ def process_single_stock(data_pack):
         
         if ticker_symbol:
             try:
-                # 1. 주가 데이터 가져오기
                 ticker_obj = yf.Ticker(ticker_symbol)
                 stock_data = ticker_obj.history(period="2y")
                 
@@ -87,31 +82,22 @@ def process_single_stock(data_pack):
                         stock_data['Date'] = stock_data['Date'].dt.tz_localize(None)
                     
                     price_df = stock_data[['Date', 'Close']].rename(columns={'Date': 'date', 'Close': 'close'})
-                    
-                    # 진짜 개장일(Market Days) 필터링
                     valid_market_days = set(price_df['date'])
 
-                    # 2. 데이터 병합 (Outer Join으로 한국/미국 날짜 모두 포함)
                     final_df = pd.merge(df_flow, price_df, on='date', how='outer')
-                    
-                    # 미국 휴장일(데이터 없는 날) 삭제
                     final_df = final_df[final_df['date'].isin(valid_market_days)]
                     
-                    # 3. 데이터 정리 및 채우기 (Filling Logic)
                     min_flow_date = df_flow['date'].min()
                     final_df = final_df[final_df['date'] >= min_flow_date].copy()
                     
                     final_df['name'] = final_df['name'].fillna(raw_name)
-                    final_df['net_buy'] = final_df['net_buy'].fillna(0) # 순매수는 없으면 0
+                    final_df['net_buy'] = final_df['net_buy'].fillna(0)
                     
-                    # 🔥 [핵심] MA(이동평균) 데이터 전날 값 유지 (Forward Fill)
-                    # 계산된 MA값은 추세이므로, 한국 휴장일에도 전날 추세가 유지된다고 가정
                     for col in MA_MAP.values():
                         if col in final_df.columns:
-                            final_df[col] = final_df[col].ffill()
-                            final_df[col] = final_df[col].fillna(0) # 앞부분 비었으면 0
+                            final_df[col] = final_df[col].ffill().fillna(0)
 
-                    final_df['close'] = final_df['close'].ffill() # 주가도 ffill
+                    final_df['close'] = final_df['close'].ffill()
                     has_price = True
             except Exception:
                 pass
@@ -131,7 +117,7 @@ def process_single_stock(data_pack):
         output_data = {
             "meta": {
                 "name": raw_name,
-                "ticker": ticker_symbol,
+                "ticker": ticker_symbol, # ✅ 여기서 티커를 담아서 보냅니다
                 "signal": signal,
                 "zScore": z_score,
                 "hasPrice": has_price,
@@ -140,7 +126,6 @@ def process_single_stock(data_pack):
             "data": []
         }
 
-        # JSON 데이터 생성
         for _, row in final_df.iterrows():
             item = {
                 "date": row['date'].strftime('%Y-%m-%d'),
@@ -149,10 +134,8 @@ def process_single_stock(data_pack):
             if 'close' in row and row['close'] > 0:
                 item["price"] = round(row['close'], 2)
             
-            # 🔥 [핵심] MA 데이터 JSON에 추가 (정수로 변환하여 용량 절약)
             for ma_key in MA_MAP.values():
                 if ma_key in row and pd.notnull(row[ma_key]):
-                    # 엑셀에 소수점이 있어도 화면 표시용으론 정수가 깔끔하므로 int 처리
                     item[ma_key] = int(row[ma_key])
 
             output_data['data'].append(item)
@@ -179,15 +162,18 @@ def main():
         return
 
     try:
-        df_all = pd.read_csv(csv_path)
+        # 탭이나 콤마 구분자 자동 처리
+        try:
+            df_all = pd.read_csv(csv_path, sep='\t')
+            if len(df_all.columns) < 2:
+                 df_all = pd.read_csv(csv_path, sep=',')
+        except:
+             df_all = pd.read_csv(csv_path)
+
         df_all.columns = [c.strip() for c in df_all.columns]
         
-        # 기본 컬럼명 매핑
         rename_map = {'종목명': 'name', '날짜': 'date', '순매수': 'net_buy'}
-        
-        # 🔥 MA 컬럼 매핑 추가
         rename_map.update(MA_MAP)
-        
         df_all.rename(columns=rename_map, inplace=True)
 
         df_all['date'] = pd.to_datetime(df_all['date'])
@@ -213,14 +199,25 @@ def main():
                 try:
                     result = future.result()
                     if result:
-                        safe_filename = "".join([c if c.isalnum() or c in (' ', '.', '-', '_') else "_" for c in stock_name])
+                        # ✨ [수정된 핵심 부분]
+                        # 밖에서 정의된 ticker_symbol이 아니라, 
+                        # 방금 처리하고 돌아온 result 안의 meta 정보를 씁니다.
+                        res_ticker = result['meta']['ticker']
+                        res_name = result['meta']['name']
+                        
+                        # 티커가 있으면 티커를 파일명으로, 없으면 이름 사용
+                        file_id = res_ticker.strip().upper() if res_ticker else res_name
+                        
+                        # 특수문자 제거 후 파일명 생성 (META_all.json)
+                        safe_filename = "".join([c if c.isalnum() else "_" for c in file_id])
+                        
                         save_path = os.path.join(OUTPUT_DIR, f"{safe_filename}_all.json")
                         with open(save_path, 'w', encoding='utf-8') as f:
                             json.dump(result, f, ensure_ascii=False)
                             
-                    completed_count += 1
-                    if completed_count % 5 == 0:
-                        print(f"⚡ 진행률: {completed_count}/{total_groups} 완료", end="\r")
+                        completed_count += 1
+                        if completed_count % 5 == 0:
+                            print(f"⚡ 진행률: {completed_count}/{total_groups} 완료", end="\r")
                         
                 except Exception as exc:
                     print(f"\n❌ {stock_name} 처리 중 에러: {exc}")

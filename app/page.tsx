@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Suspense, useRef, useState, useEffect, useMemo } from 'react';
 import HomeClient from './HomeClient';
+import NomNomChart from './components/NomNomChart'; // ✨ 새로 추가된 컴포넌트
 
 // 🛠️ 타입 정의
 type HookItem = {
@@ -154,7 +155,7 @@ export default function Page() {
           </h1>
 
           <p className="text-gray-400 text-sm md:text-base font-medium mb-8">
-            공포 탐욕 지수 <span className={`font-bold text-lg ${heroContent.scoreColor}`}>{marketScore ?? '--'}</span>. {heroContent.desc}
+            개미 탐욕 지수 <span className={`font-bold text-lg ${heroContent.scoreColor}`}>{marketScore ?? '--'}</span>. {heroContent.desc}
           </p>
 
           <div className="relative max-w-md mx-auto h-4 bg-gray-800/50 rounded-full overflow-hidden mb-2 ring-1 ring-white/10">
@@ -176,7 +177,7 @@ export default function Page() {
         </div>
       </div>
 
-      {/* 3️⃣ [HOOK] 추천 카드 (✨ 로고 복구 & 안전장치 적용) */}
+      {/* 3️⃣ [HOOK] 추천 카드 */}
       <section className="max-w-5xl mx-auto px-4 mb-8">
         <div className="grid grid-cols-2 gap-3">
           
@@ -194,7 +195,6 @@ export default function Page() {
                     className="w-full h-full rounded-full object-cover"
                     onError={(e) => { 
                       const img = e.currentTarget;
-                      // 💡 1차 시도 실패 시 -> 원본 이름(fileTicker)으로 재시도 -> 실패 시 미국 국기
                       if (hookItems[0] && !img.src.includes(encodeURIComponent(hookItems[0].fileTicker))) {
                         img.src = `/logos/${encodeURIComponent(hookItems[0].fileTicker)}.png`;
                       } else {
@@ -239,7 +239,6 @@ export default function Page() {
                     className="w-full h-full rounded-full object-cover"
                     onError={(e) => { 
                       const img = e.currentTarget;
-                      // 💡 1차 시도 실패 시 -> 원본 이름(fileTicker)으로 재시도 -> 실패 시 미국 국기
                       if (hookItems[1] && !img.src.includes(encodeURIComponent(hookItems[1].fileTicker))) {
                         img.src = `/logos/${encodeURIComponent(hookItems[1].fileTicker)}.png`;
                       } else {
@@ -273,30 +272,13 @@ export default function Page() {
         </div>
       </section>
 
-      {/* 4️⃣ [KEYWORD] 테마 키워드 */}
-      <section className="max-w-5xl mx-auto px-4 mb-8">
-        <div className="flex items-center justify-between mb-2 px-1">
-          <h3 className="text-xs font-bold text-gray-400">🔥 개미들의 4가지 행동</h3>
-        </div>
-        <div className="grid grid-cols-4 gap-2">
-          <button className="bg-blue-50 border border-blue-200 rounded-lg py-2 flex flex-col items-center justify-center hover:bg-blue-100 transition-colors active:scale-95">
-            <span className="text-[11px] font-bold text-blue-700">💎 폭락줍줍</span>
-            <span className="text-[8px] text-gray-500 mt-0.5">주가📉 수급📈</span>
-          </button>
-          <button className="bg-red-50 border border-red-200 rounded-lg py-2 flex flex-col items-center justify-center hover:bg-red-100 transition-colors active:scale-95">
-            <span className="text-[11px] font-bold text-red-700">🔥 불타기</span>
-            <span className="text-[8px] text-gray-500 mt-0.5">주가📈 수급📈</span>
-          </button>
-          <button className="bg-green-50 border border-green-200 rounded-lg py-2 flex flex-col items-center justify-center hover:bg-green-100 transition-colors active:scale-95">
-            <span className="text-[11px] font-bold text-green-700">💰 익절</span>
-            <span className="text-[8px] text-gray-500 mt-0.5">주가📈 수급📉</span>
-          </button>
-          <button className="bg-gray-50 border border-gray-200 rounded-lg py-2 flex flex-col items-center justify-center hover:bg-gray-100 transition-colors active:scale-95">
-            <span className="text-[11px] font-bold text-gray-600">🏃 패닉셀</span>
-            <span className="text-[8px] text-gray-500 mt-0.5">주가📉 수급📉</span>
-          </button>
-        </div>
-      </section>
+      {/* ✨ 4️⃣ [놈놈놈] 차트 (기존 버튼 4개 삭제하고 교체) */}
+      <NomNomChart 
+        fire={{ ticker: 'TSLA', name: '테슬라' }}  // 💡 데이터 준비 전까지 임시 데이터 표시
+        top={{ ticker: 'NVDA', name: '엔비디아' }}
+        bottom={{ ticker: 'SOXL', name: 'SOXL' }}
+        knife={{ ticker: 'INTC', name: '인텔' }}
+      />
 
       {/* 5️⃣ [DATA] Top 10 리스트 */}
       <section ref={rankingRef} className="max-w-7xl mx-auto px-4 scroll-mt-20">

@@ -48,44 +48,43 @@ export default function FlowClient() {
       .catch(err => console.error("Alias Load Error:", err));
   }, []);
 
-/* ---------- 2. Data Load (수정됨) ---------- */
-  useEffect(() => {
-    if (!fileTicker) return;
+/* ---------- 2. Data Load (전면 수정) ---------- */
+useEffect(() => {
+  if (!ticker) return; // fileTicker 대신 ticker 사용
 
-    (async () => {
-      try {
-        setLoading(true);
-        setErr(null);
-        // 파일명 안전하게 변환
-        const safeName = fileTicker.replace(/[^a-zA-Z0-9 .-_]/g, "_");
-        
-        // 1. 일단 텍스트로 가져옵니다.
-        const res = await fetch(
-          `/data/flow/${encodeURIComponent(safeName)}_all.json`,
-          { cache: 'no-store' }
-        );
-        if (!res.ok) throw new Error(`데이터 없음 (${res.status})`);
-        
-        const text = await res.text();
+  (async () => {
+    try {
+      setLoading(true);
+      setErr(null);
 
-        // 🎯 [핵심 패치] JSON 표준에 없는 'NaN'이 있으면 'null'로 강제 치환
-        // 예: "zScore": NaN  ->  "zScore": null
-        const safeText = text.replace(/:\s*NaN/g, ': null'); 
+      // ✨ [핵심] 복잡한 safeName 변환 다 삭제! 
+      // 그냥 티커(META)만 믿고 간다. 파이썬도 이걸로 저장했으니까.
+      // 특수문자만 언더바로 바꾸는 최소한의 방어 로직만 유지
+      const safeTicker = ticker.toUpperCase().replace(/[^A-Z0-9]/g, "_");
+      
+      const res = await fetch(
+        `/data/flow/${safeTicker}_all.json`,
+        { cache: 'no-store' }
+      );
+      
+      if (!res.ok) throw new Error(`데이터 없음 (${res.status})`);
+      
+      const text = await res.text();
+      const safeText = text.replace(/:\s*NaN/g, ': null'); 
+      const json = JSON.parse(safeText);
+      
+      setRows(json.data ?? []);
+      setMeta(json.meta ?? null);
+    } catch (e: any) {
+      console.error(e);
+      setRows([]);
+      setErr(e?.message);
+    } finally {
+      setLoading(false);
+    }
+  })();
+}, [ticker]); // 의존성도 ticker로 변경
 
-        // 2. 그 다음 JSON으로 변환
-        const json = JSON.parse(safeText);
-        
-        setRows(json.data ?? []);
-        setMeta(json.meta ?? null);
-      } catch (e: any) {
-        console.error(e);
-        setRows([]);
-        setErr(e?.message);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [fileTicker]);
   /* ---------- 3. 주가 정보 추출 ---------- */
   const priceInfo = useMemo(() => {
     if (!rows || rows.length < 2) return null;
