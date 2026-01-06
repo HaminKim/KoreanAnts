@@ -18,7 +18,7 @@ export default function RootLayout({
               className="flex items-center gap-2 text-xl font-bold tracking-tight"
             >
               <span className="text-lg">🇰🇷</span>
-              <span>Korean Ants</span>
+              <span>www.reant.kr>ㅈ>ㅈㅈ>ㅈ
             </Link>
 
             {/* Navigation */}
