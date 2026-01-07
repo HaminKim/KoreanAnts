@@ -51,28 +51,39 @@ jobs:
         with:
           python-version: "3.11"
 
-      # 6. 라이브러리 설치 (yfinance 포함 필수!)
+      # 6. 라이브러리 설치 (pandas, yfinance 필수)
       - name: Install deps
         run: |
           pip install pandas yfinance
 
-      # 7. 주가 데이터 처리 & 흐름 분석 (요리 1단계)
-      - name: Process Flow Data
+      # ----------------------------------------------------------------
+      # 🍳 데이터 요리 시작 (순서 엄수!)
+      # ----------------------------------------------------------------
+
+      # 7-1. 기초 데이터 생성 (CSV -> JSON 변환 & 랭킹 산정)
+      - name: 1. Process Flow Data (Base)
         run: |
           python scripts/process_flow_data.py
 
-      # 8. 최종 JSON 빌드 (요리 2단계)
-      - name: Build JSON
+      # 7-2. 놈놈놈 분석 (기초 데이터를 바탕으로 대장주 선발) ✨ 추가됨!
+      - name: 2. Generate NomNom Analysis
+        run: |
+          python scripts/generate_nomnom.py
+
+      # 7-3. 검색용 인덱스/메타데이터 빌드 (마무리 정리)
+      - name: 3. Build Search Index
         run: |
           python scripts/build_json.py
 
-      # 9. [수정됨] 최종 결과물(JSON) 업로드 (순서: 커밋 -> 풀 -> 푸시)
+      # ----------------------------------------------------------------
+
+      # 8. 최종 결과물(JSON) 업로드 (순서: 커밋 -> 풀 -> 푸시)
       - name: Commit and push JSONs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # public/data 폴더의 모든 변경사항 담기
+          # public/data 폴더의 모든 변경사항 담기 (flow, top10, search 등)
           git add public/data/
 
           # 변경사항 없으면 종료
@@ -81,10 +92,10 @@ jobs:
             exit 0
           fi
 
-          # ⭐ 핵심 수정: 커밋을 먼저 해서 상태를 확정지음
-          git commit -m "chore(data): update daily JSON files"
+          # 커밋을 먼저 해서 상태를 확정지음
+          git commit -m "chore(data): update daily JSON files & NomNom analysis"
 
-          # 그 다음 서버 변경사항 당겨오기 (Rebase)
+          # 그 다음 서버 변경사항 당겨오기 (충돌 방지 Rebase)
           git pull --rebase
 
           # 최종 업로드

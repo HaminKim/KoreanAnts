@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+// ❌ import PremiumLock 삭제됨
+
 type StockData = {
   name: string;
   ticker: string;
@@ -15,8 +17,8 @@ type Props = {
   top?: StockData;
   bottom?: StockData;
   knife?: StockData;
-  isPremium?: boolean;
-  onOpenGuide?: () => void; // (혹시 나중에 쓸 수도 있으니 타입은 남겨둠)
+  // isPremium은 혹시 나중에 쓸 수 있으니 타입은 남겨두되, 안 써도 무방함
+  isPremium?: boolean; 
 };
 
 export default function NomNomChart({ fire, top, bottom, knife, isPremium = false }: Props) {
@@ -56,7 +58,7 @@ export default function NomNomChart({ fire, top, bottom, knife, isPremium = fals
       }
     }[type];
 
-    const isLocked = false; 
+    // ❌ isLocked 로직 삭제됨 (무조건 false)
 
     if (!data) {
       return (
@@ -74,11 +76,11 @@ export default function NomNomChart({ fire, top, bottom, knife, isPremium = fals
 
     return (
       <div className="relative w-full">
-         {isLocked && <PremiumLock />}
+         {/* ❌ {isLocked && <PremiumLock />} 삭제됨 */}
          
          <Link 
-            href={isLocked ? '#' : `/flow?ticker=${data.ticker}&fileTicker=${encodeURIComponent(linkTicker)}&side=netBuy&days=5`} 
-            className={`block w-full ${isLocked ? 'blur-sm pointer-events-none' : ''}`}
+            href={`/flow?ticker=${data.ticker}&fileTicker=${encodeURIComponent(linkTicker)}&side=netBuy&days=5`} 
+            className="block w-full"
          >
           <div className={`${cardBase} ${config.bg}`}>
             
@@ -135,7 +137,7 @@ export default function NomNomChart({ fire, top, bottom, knife, isPremium = fals
             </p>
         </div>
 
-        {/* ✨ 수정됨: 버튼 삭제하고 Live 뱃지만 남김 */}
+        {/* Live 뱃지만 유지 */}
         <div className="hidden md:flex items-center gap-1.5 bg-green-50 px-2 py-1 rounded-full border border-green-100">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
             <span className="text-[10px] font-bold text-green-700">Live</span>
