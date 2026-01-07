@@ -3,15 +3,24 @@
 import Link from 'next/link';
 import { Suspense, useRef, useState, useEffect, useMemo } from 'react';
 import HomeClient from './HomeClient';
-import NomNomChart from './components/NomNomChart'; // ✨ 새로 추가된 컴포넌트
+import NomNomChart from './components/NomNomChart';
+import Footer from './components/Footer';
 
 // 🛠️ 타입 정의
 type HookItem = {
-  ticker: string;     // 화면/로고용 (NVDA)
-  fileTicker: string; // 데이터/백업로고용 (NVIDIA CORP)
-  name: string;       // 한글 (엔비디아)
+  ticker: string;
+  fileTicker: string;
+  name: string;
   value: number;
   type: 'buy' | 'sell';
+};
+
+// 놈놈놈 데이터 타입
+type NomData = {
+  fire?: any;
+  top?: any;
+  bottom?: any;
+  knife?: any;
 };
 
 export default function Page() {
@@ -24,21 +33,30 @@ export default function Page() {
   const [marketScore, setMarketScore] = useState<number | null>(null);
   const [newsTicker, setNewsTicker] = useState<string[]>([]);
   const [hookItems, setHookItems] = useState<[HookItem | null, HookItem | null]>([null, null]);
+  
+  // 놈놈놈 데이터 상태
+  const [nomData, setNomData] = useState<NomData | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [buyRes, sellRes, tickerMapRes, nameMapRes] = await Promise.all([
+        const [buyRes, sellRes, tickerMapRes, nameMapRes, nomRes] = await Promise.all([
           fetch('/data/top10/netBuy_5.json', { cache: 'no-store' }),
           fetch('/data/top10/netSell_5.json', { cache: 'no-store' }),
           fetch('/data/ticker_map.json'),
-          fetch('/data/name_alias.json')
+          fetch('/data/name_alias.json'),
+          fetch('/data/flow/nom_nom_data.json', { cache: 'no-store' }).catch(() => null)
         ]);
 
         const buyJson = await buyRes.json();
         const sellJson = await sellRes.json();
         const tickerMap = await tickerMapRes.json();
         const nameMap = await nameMapRes.json();
+        
+        if (nomRes && nomRes.ok) {
+            const nomJson = await nomRes.json();
+            setNomData(nomJson);
+        }
 
         const normalizeKey = (k: string) => k.toUpperCase().trim();
         const normalizedTickerMap: Record<string, string> = {};
@@ -50,7 +68,6 @@ export default function Page() {
         const enrichItem = (item: any, type: 'buy' | 'sell'): HookItem => {
           const rawName = (item.ticker || '').trim();
           const lookupKey = normalizeKey(rawName);
-          
           const shortTicker = normalizedTickerMap[lookupKey] || rawName;
           const koreanName = normalizedNameMap[lookupKey] || shortTicker;
 
@@ -66,7 +83,6 @@ export default function Page() {
         const buyItemsRaw = (buyJson.items ?? []).slice(0, 20);
         const sellItemsRaw = (sellJson.items ?? []).slice(0, 20);
 
-        // 1. 공포/탐욕 지수
         const top10Buys = buyItemsRaw.slice(0, 10);
         const top10Sells = sellItemsRaw.slice(0, 10);
         const buyPower = top10Buys.reduce((acc: number, cur: any) => acc + (cur.value > 0 ? cur.value : 0), 0);
@@ -74,14 +90,12 @@ export default function Page() {
         const totalVolume = buyPower + sellPower;
         setMarketScore(totalVolume === 0 ? 50 : Math.round((buyPower / totalVolume) * 100));
 
-        // 2. Hook 카드 설정
         let leftCard: HookItem | null = null;
         let rightCard: HookItem | null = null;
         if (buyItemsRaw.length > 0) leftCard = enrichItem(buyItemsRaw[0], 'buy');
         if (sellItemsRaw.length > 0) rightCard = enrichItem(sellItemsRaw[0], 'sell');
         setHookItems([leftCard, rightCard]);
 
-        // 3. 뉴스 티커
         const newsList: string[] = [];
         if (leftCard) newsList.push(`👑 ${leftCard.name} 5일간 순매수 압도적 1위!`);
         if (rightCard) newsList.push(`📉 ${rightCard.name} 순매도 1위, 차익실현 물량 주의`);
@@ -137,7 +151,7 @@ export default function Page() {
   const needlePosition = `${Math.min(Math.max(marketScore ?? 50, 0), 100)}%`;
 
   return (
-    <main className="min-h-screen bg-white pb-24 relative"> 
+    <main className="min-h-screen bg-white pb-0 relative"> 
       
       {/* 1️⃣ [HERO] 시장 신호등 */}
       <section className="bg-slate-900 text-white pt-8 pb-16 px-4 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden mb-12">
@@ -272,13 +286,16 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ✨ 4️⃣ [놈놈놈] 차트 (기존 버튼 4개 삭제하고 교체) */}
-      <NomNomChart 
-        fire={{ ticker: 'TSLA', name: '테슬라' }}  // 💡 데이터 준비 전까지 임시 데이터 표시
-        top={{ ticker: 'NVDA', name: '엔비디아' }}
-        bottom={{ ticker: 'SOXL', name: 'SOXL' }}
-        knife={{ ticker: 'INTC', name: '인텔' }}
-      />
+      {/* 4️⃣ [놈놈놈] 차트 */}
+      <section className="max-w-5xl mx-auto px-4 mb-2">
+         {/* ✨ 깔끔하게 버튼 로직 삭제됨 */}
+         <NomNomChart 
+           fire={nomData?.fire} 
+           top={nomData?.top} 
+           bottom={nomData?.bottom} 
+           knife={nomData?.knife} 
+         />
+      </section>
 
       {/* 5️⃣ [DATA] Top 10 리스트 */}
       <section ref={rankingRef} className="max-w-7xl mx-auto px-4 scroll-mt-20">
@@ -291,7 +308,10 @@ export default function Page() {
         </Suspense>
       </section>
 
-      {/* ✨ [NEW] 하단 플로팅 버튼 */}
+      {/* 6️⃣ 푸터 */}
+      <Footer />
+
+      {/* 플로팅 버튼 */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
         <button 
           onClick={scrollToRanking}

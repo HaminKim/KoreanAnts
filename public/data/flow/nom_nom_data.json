@@ -1,32 +1,42 @@
 {
   "fire": {
-    "name": "MOMENTUS INC COM USD0.00001 CL A(POST REV SPLIT) SPLR 949708716 US60879E1010",
-    "ticker": "MNTS",
-    "close": 8.819999694824219,
-    "price_change": 0.7818181888240541,
-    "net_buy_sum": 0.0,
-    "ma5": 5.909999847412109,
-    "ma50": 13.289299936294556,
-    "disparity": 0.9258939707069864
+    "name": "T-REX 2X LONG BMNR DAILY TARGET ETF",
+    "ticker": "BMNU",
+    "file_ticker": "T-REX 2X LONG BMNR DAILY TARGET ETF",
+    "close": 6.93,
+    "price_change": 0.3999999999999999,
+    "net_buy_sum": -8364405,
+    "ma5": 340111,
+    "ma20": 4212074
   },
   "top": {
-    "name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-    "ticker": "SOXL",
-    "close": 49.220001220703125,
-    "price_change": 0.1232314368664116,
-    "net_buy_sum": 184688695.0,
-    "ma5": 45.19599990844726,
-    "ma50": 42.69939998626709,
-    "disparity": 1.1163909178633042
+    "name": "MICRON TECHNOLOGY INC",
+    "ticker": "MU",
+    "file_ticker": "MICRON TECHNOLOGY INC",
+    "close": 333.08,
+    "price_change": 0.13822916310699515,
+    "net_buy_sum": 81483587,
+    "ma5": 23545396,
+    "ma20": 8512116
+  },
+  "bottom": {
+    "name": "APPLOVIN CORP",
+    "ticker": "APP",
+    "file_ticker": "APPLOVIN CORP",
+    "close": 601.5,
+    "price_change": -0.13292297934295316,
+    "net_buy_sum": -10356080,
+    "ma5": -1234761,
+    "ma20": -2969971
   },
   "knife": {
-    "name": "IONQ INC",
-    "ticker": "IONQ",
-    "close": 48.709999084472656,
-    "price_change": 0.07646406816514158,
-    "net_buy_sum": 25065654.0,
-    "ma5": 46.18199996948242,
-    "ma50": 51.195599746704104,
-    "disparity": 0.9894875768301853
+    "name": "TESLA INC",
+    "ticker": "TSLA",
+    "file_ticker": "TESLA INC",
+    "close": 433.44,
+    "price_change": -0.04618973219197678,
+    "net_buy_sum": 149223074,
+    "ma5": 38334019,
+    "ma20": 1531939
   }
 }
