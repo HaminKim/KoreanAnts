@@ -14,7 +14,7 @@ export default function AnalysisPage() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (step === 'loading') {
-      interval = setInterval(() => {W
+      interval = setInterval(() => {
         const randomIdx = Math.floor(Math.random() * funnyPhrases.length);
         setLoadingText(funnyPhrases[randomIdx]);
       }, 700); // 0.7초마다 멘트 변경
