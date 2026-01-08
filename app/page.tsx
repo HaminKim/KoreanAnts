@@ -288,7 +288,6 @@ export default function Page() {
 
       {/* 4️⃣ [놈놈놈] 차트 */}
       <section className="max-w-5xl mx-auto px-4 mb-2">
-         {/* ✨ 깔끔하게 버튼 로직 삭제됨 */}
          <NomNomChart 
            fire={nomData?.fire} 
            top={nomData?.top} 
@@ -311,15 +310,31 @@ export default function Page() {
       {/* 6️⃣ 푸터 */}
       <Footer />
 
-      {/* 플로팅 버튼 */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-        <button 
-          onClick={scrollToRanking}
-          className="bg-gray-900/90 text-white backdrop-blur-md px-6 py-3 rounded-full shadow-2xl flex items-center gap-2 border border-white/10 active:scale-95 transition-transform"
-        >
-          <span className="text-sm font-bold">📊 랭킹 보러가기</span>
-          <svg className="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-        </button>
+      {/* ✨ [수정됨] 하단 플로팅 버튼 (쌍둥이 디자인) */}
+      <div className="fixed bottom-6 left-0 w-full px-4 z-50 pointer-events-none">
+        <div className="max-w-md mx-auto flex items-center justify-center gap-3">
+            
+            {/* 1. 랭킹 보러가기 (왼쪽, 검정색) */}
+            <button 
+                onClick={scrollToRanking}
+                className="pointer-events-auto bg-gray-900 text-white shadow-2xl pl-5 pr-6 py-3 rounded-full flex items-center gap-2 border border-white/10 active:scale-95 transition-transform h-14"
+            >
+                <span className="text-sm font-bold">📊 랭킹 보러가기</span>
+            </button>
+
+            {/* 2. 내 종목 분석 (오른쪽, 파란색) */}
+            <Link 
+                href="/analysis"
+                className="pointer-events-auto bg-blue-600 text-white shadow-2xl pl-4 pr-6 py-3 rounded-full flex items-center gap-2.5 border border-white/10 active:scale-95 transition-transform h-14"
+            >
+                <span className="text-xl">🔍</span>
+                <div className="flex flex-col items-start leading-none">
+                    <span className="text-[10px] text-blue-100 font-medium mb-0.5">티커로 검색하는</span>
+                    <span className="text-sm font-bold">내 종목 분석</span>
+                </div>
+            </Link>
+
+        </div>
       </div>
 
     </main>

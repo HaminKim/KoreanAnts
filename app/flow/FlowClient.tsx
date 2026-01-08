@@ -48,42 +48,39 @@ export default function FlowClient() {
       .catch(err => console.error("Alias Load Error:", err));
   }, []);
 
-/* ---------- 2. Data Load (전면 수정) ---------- */
-useEffect(() => {
-  if (!ticker) return; // fileTicker 대신 ticker 사용
+  /* ---------- 2. Data Load ---------- */
+  useEffect(() => {
+    if (!ticker) return; 
 
-  (async () => {
-    try {
-      setLoading(true);
-      setErr(null);
+    (async () => {
+      try {
+        setLoading(true);
+        setErr(null);
 
-      // ✨ [핵심] 복잡한 safeName 변환 다 삭제! 
-      // 그냥 티커(META)만 믿고 간다. 파이썬도 이걸로 저장했으니까.
-      // 특수문자만 언더바로 바꾸는 최소한의 방어 로직만 유지
-      const safeTicker = ticker.toUpperCase().replace(/[^A-Z0-9]/g, "_");
-      
-      const res = await fetch(
-        `/data/flow/${safeTicker}_all.json`,
-        { cache: 'no-store' }
-      );
-      
-      if (!res.ok) throw new Error(`데이터 없음 (${res.status})`);
-      
-      const text = await res.text();
-      const safeText = text.replace(/:\s*NaN/g, ': null'); 
-      const json = JSON.parse(safeText);
-      
-      setRows(json.data ?? []);
-      setMeta(json.meta ?? null);
-    } catch (e: any) {
-      console.error(e);
-      setRows([]);
-      setErr(e?.message);
-    } finally {
-      setLoading(false);
-    }
-  })();
-}, [ticker]); // 의존성도 ticker로 변경
+        const safeTicker = ticker.toUpperCase().replace(/[^A-Z0-9]/g, "_");
+        
+        const res = await fetch(
+          `/data/flow/${safeTicker}_all.json`,
+          { cache: 'no-store' }
+        );
+        
+        if (!res.ok) throw new Error(`데이터 없음 (${res.status})`);
+        
+        const text = await res.text();
+        const safeText = text.replace(/:\s*NaN/g, ': null'); 
+        const json = JSON.parse(safeText);
+        
+        setRows(json.data ?? []);
+        setMeta(json.meta ?? null);
+      } catch (e: any) {
+        console.error(e);
+        setRows([]);
+        setErr(e?.message);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [ticker]);
 
   /* ---------- 3. 주가 정보 추출 ---------- */
   const priceInfo = useMemo(() => {
@@ -130,12 +127,11 @@ useEffect(() => {
       priceReturn = (end - start) / start;
     }
 
+    const totalAbsSum = recentRows.reduce((acc, cur) => acc + Math.abs(cur.netBuy), 0);
     const sortedNetBuys = recentRows.map(r => r.netBuy).sort((a, b) => Math.abs(b) - Math.abs(a));
     const top3Sum = sortedNetBuys.slice(0, 3).reduce((acc, cur) => acc + Math.abs(cur), 0);
-    const totalAbsSum = recentRows.reduce((acc, cur) => acc + Math.abs(cur.netBuy), 0);
     const concentration = totalAbsSum === 0 ? 0 : top3Sum / totalAbsSum;
 
-    // Badge Logic (기존 유지)
     if (totalActiveDays < 5 && totalActiveDays > 0) {
       if (totalNet > 0) {
         style = "bg-purple-500/10 border-purple-500/20 text-purple-600";
@@ -217,15 +213,40 @@ useEffect(() => {
     </div>
   );
 
+  /* ---------- Share Logic ---------- */
+  const handleShare = async () => {
+    const url = window.location.href;
+    const shareData = {
+      title: `REANT - ${displayName} 수급 분석`,
+      text: `${displayName}의 수급 데이터가 심상치 않습니다! 확인해보세요.`,
+      url: url,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Share canceled');
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('링크가 복사되었습니다! 친구들에게 공유해보세요. 🔗');
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+    }
+  };
+
   /* ---------- Render ---------- */
   const displayName = aliasMap[fileTicker] || meta?.name || ticker;
 
   return (
     <div className="max-w-4xl mx-auto p-4 pb-20">
       
-      {/* 🟢 Header: 아주 심플하게 (로고 / 이름 / 가격) */}
+      {/* 🟢 Header */}
       <div className="mb-6 flex items-center gap-4">
-        {/* 1. 로고 */}
+        {/* ... (Header 내용 동일) ... */}
         <div className="relative w-14 h-14 rounded-full overflow-hidden border border-gray-100 bg-white shadow-sm shrink-0">
           <Image
             src={`/logos/${encodeURIComponent(fileTicker)}.png`}
@@ -237,7 +258,6 @@ useEffect(() => {
           />
         </div>
 
-        {/* 2. 이름 및 가격 정보 */}
         <div className="flex-1">
           <div className="flex items-baseline gap-2">
             <h1 className="text-xl font-bold text-gray-900 tracking-tight">
@@ -248,7 +268,6 @@ useEffect(() => {
             </span>
           </div>
 
-          {/* 가격 */}
           <div className="flex items-center gap-2 mt-0.5">
             {priceInfo ? (
               <>
@@ -266,17 +285,39 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* 🟢 배지 (분석 카드) */}
+      {/* 🟢 Badge */}
       {renderBadge()}
 
-      {/* 🟢 차트 영역 */}
-      <div className={`w-full rounded-xl border ${themeColor.border} bg-white p-2 shadow-sm mb-4`}>
+      {/* 🟢 Chart Area */}
+      <div className={`w-full rounded-xl border ${themeColor.border} bg-white p-2 shadow-sm mb-4 relative`}> {/* ✨ relative 유지 */}
         {loading && <div className="h-80 flex items-center justify-center text-gray-400 text-sm">데이터 로딩 중...</div>}
         {err && <div className="h-80 flex items-center justify-center text-red-400 text-sm">{err}</div>}
 
         {!loading && !err && rows.length > 0 && (
           <>
+            {/* ✨ NEW: 차트 공유하기 버튼 (우측 상단) */}
+            <div className="absolute top-3 right-5 z-20">
+                <button 
+                  onClick={handleShare}
+                  // 👇 여기서 [색상]을 고르세요! (원하는 옵션 줄만 남기고 나머진 지우거나 주석 처리)
+                  
+                  // [옵션 1] 가장 추천: 연한 회색 (부드럽고 자연스러움)
+                  //className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-black px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
+
+                  // [옵션 2] 깔끔형: 흰색 + 테두리 (애플 감성)
+                   className="flex items-center gap-1 bg-white hover:bg-gray-50 border border-gray-500 shadow-sm text-gray-800 hover:text-black px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
+
+                  // [옵션 3] 파랑형: 연한 파란색 (순매수 테마랑 맞춤)
+                  // className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
+                >
+                    <span className="text-sm">🔗</span>
+                    <span className="text-[11px] font-bold">분석 차트 링크로 공유하기</span>
+                </button>
+            </div>
+
             <FlowChart data={rows} />
+            
+            {/* 범례 */}
             <div className="flex justify-end gap-3 mt-2 px-2 pb-1 text-[10px] text-gray-400 font-medium">
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-red-400 rounded-full opacity-60"></div>
@@ -291,13 +332,12 @@ useEffect(() => {
         )}
       </div>
 
-      {/* 🟢 Footer: 모든 부가 정보는 여기로 이동 */}
+      {/* 🟢 Footer */}
       <div className="mt-8 border-t border-gray-100 pt-4 text-center">
         <div className="text-xs font-bold text-gray-400 mb-2">
           주가 및 수급 데이터 기반 분석
         </div>
         
-        {/* 날짜 정보들 (여기로 다 모음) */}
         <div className="text-[10px] text-gray-300 flex flex-col gap-1">
           <span>* 주가 기준: 1일 전 종가 (Market Closed)</span>
           {meta?.lastUpdate && (

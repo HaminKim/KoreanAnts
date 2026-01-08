@@ -1,8 +1,8 @@
-name: Daily sync all_data_clean.csv
+name: Daily Sync & Analysis (KST)
 
 on:
   schedule:
-    - cron: "0 16 * * *"   # 매일 KST 01:00 (UTC 16:00)
+    - cron: "0 16 * * *"    # 매일 KST 01:00 (UTC 16:00)
   workflow_dispatch: {}
 
 permissions:
@@ -11,6 +11,11 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    
+    # ✨ [핵심] 서버 시간을 한국 시간(KST)으로 고정합니다.
+    # 그래야 history_20260109.json 파일명이 한국 날짜로 생성됩니다.
+    env:
+      TZ: 'Asia/Seoul'
 
     steps:
       # 1. 내 저장소 체크아웃
@@ -51,51 +56,50 @@ jobs:
         with:
           python-version: "3.11"
 
-      # 6. 라이브러리 설치 (pandas, yfinance 필수)
+      # 6. 라이브러리 설치
       - name: Install deps
         run: |
           pip install pandas yfinance
 
       # ----------------------------------------------------------------
-      # 🍳 데이터 요리 시작 (순서 엄수!)
+      # 🍳 데이터 요리 시작
       # ----------------------------------------------------------------
 
-      # 7-1. 기초 데이터 생성 (CSV -> JSON 변환 & 랭킹 산정)
+      # 7-1. 기초 데이터 생성
       - name: 1. Process Flow Data (Base)
-        run: |
-          python scripts/process_flow_data.py
+        run: python scripts/process_flow_data.py
 
-      # 7-2. 놈놈놈 분석 (기초 데이터를 바탕으로 대장주 선발) ✨ 추가됨!
-      - name: 2. Generate NomNom Analysis
-        run: |
-          python scripts/generate_nomnom.py
+      # 7-2. 놈놈놈 분석 & 타임머신 기록 저장 🕰️
+      # (아까 수정한 코드가 여기서 history_202XXXXX.json을 생성합니다)
+      - name: 2. Generate NomNom & History
+        run: python scripts/generate_nomnom.py
 
-      # 7-3. 검색용 인덱스/메타데이터 빌드 (마무리 정리)
+      # 7-3. 검색 인덱스 빌드
       - name: 3. Build Search Index
-        run: |
-          python scripts/build_json.py
+        run: python scripts/build_json.py
 
       # ----------------------------------------------------------------
 
-      # 8. 최종 결과물(JSON) 업로드 (순서: 커밋 -> 풀 -> 푸시)
+      # 8. 최종 결과물(JSON) 업로드
       - name: Commit and push JSONs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # public/data 폴더의 모든 변경사항 담기 (flow, top10, search 등)
+          # ✨ public/data 폴더 전체를 add 합니다.
+          # 이제 history 폴더에 생긴 새 파일도 자동으로 포함됩니다.
           git add public/data/
 
-          # 변경사항 없으면 종료
+          # 변경사항 확인
           if git diff --cached --quiet; then
             echo "No changes in JSONs"
             exit 0
           fi
 
-          # 커밋을 먼저 해서 상태를 확정지음
-          git commit -m "chore(data): update daily JSON files & NomNom analysis"
+          # 커밋
+          git commit -m "chore(data): update daily JSONs & History record"
 
-          # 그 다음 서버 변경사항 당겨오기 (충돌 방지 Rebase)
+          # CSV 커밋(4번 스텝)과 충돌나지 않게 당겨오기
           git pull --rebase
 
           # 최종 업로드

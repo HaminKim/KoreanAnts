@@ -241,8 +241,12 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
 
   return (
     <div className="w-full bg-white rounded-xl border border-gray-100 shadow-sm p-1">
-      {/* 컨트롤 패널: 버튼 클릭 시 색상 변경 (켜짐 표시) */}
-      <div className="flex justify-end gap-1 mb-1 px-1">
+      {/* ✅ [수정됨] 컨트롤 패널 정렬 변경
+        기존: justify-end (오른쪽 정렬)
+        변경: justify-start (왼쪽 정렬)
+        -> 이제 오른쪽 공간은 부모 컴포넌트(FlowClient)의 '공유 버튼'이 차지합니다!
+      */}
+      <div className="flex justify-start gap-1 mb-1 px-1">
         <button onClick={() => setShowMa5(!showMa5)} className={`text-[9px] px-1.5 py-0.5 rounded border ${showMa5 ? 'bg-orange-50 text-orange-600 border-orange-200' : 'bg-gray-50 text-gray-300 border-gray-100'}`}>MA5</button>
         <button onClick={() => setShowMa10(!showMa10)} className={`text-[9px] px-1.5 py-0.5 rounded border ${showMa10 ? 'bg-violet-50 text-violet-600 border-violet-200' : 'bg-gray-50 text-gray-300 border-gray-100'}`}>MA10</button>
         <button onClick={() => setShowMa20(!showMa20)} className={`text-[9px] px-1.5 py-0.5 rounded border ${showMa20 ? 'bg-sky-50 text-sky-600 border-sky-200' : 'bg-gray-50 text-gray-300 border-gray-100'}`}>MA20</button>
