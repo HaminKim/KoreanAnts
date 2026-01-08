@@ -1,42 +1,42 @@
 {
   "fire": {
-    "name": "DXN MU BUL2X ETF",
-    "ticker": "MUU",
-    "file_ticker": "DXN MU BUL2X ETF",
-    "close": 142.39,
-    "price_change": 0.41344054000397057,
-    "net_buy_sum": -10809308,
-    "ma5": 0,
-    "ma20": 0
+    "name": "DEFIANCE DAILY TARGET 2X LONG IREN ETF",
+    "ticker": "IRE",
+    "file_ticker": "DEFIANCE DAILY TARGET 2X LONG IREN ETF",
+    "close": 8.35,
+    "price_change": 0.11930294906166215,
+    "net_buy_sum": -10370405,
+    "ma5": -1835063,
+    "ma20": 3092849
   },
   "top": {
-    "name": "MICRON TECHNOLOGY INC",
-    "ticker": "MU",
-    "file_ticker": "MICRON TECHNOLOGY INC",
-    "close": 342.7,
-    "price_change": 0.20072877614659598,
-    "net_buy_sum": 111071714,
-    "ma5": 31700711,
-    "ma20": 12132704
+    "name": "PALANTIR TECHNOLOGIES INC CL A",
+    "ticker": "PLTR",
+    "file_ticker": "PALANTIR TECHNOLOGIES INC CL A",
+    "close": 178.15,
+    "price_change": 0.061301084236864,
+    "net_buy_sum": 97000411,
+    "ma5": 22697125,
+    "ma20": -3486408
   },
   "bottom": {
-    "name": "APPLOVIN CORP",
-    "ticker": "APP",
-    "file_ticker": "APPLOVIN CORP",
-    "close": 628.17,
-    "price_change": -0.06774806328099506,
-    "net_buy_sum": -37749512,
-    "ma5": -8988619,
-    "ma20": -4031125
+    "name": "T-REX 2X LONG BMNR DAILY TARGET ETF",
+    "ticker": "BMNU",
+    "file_ticker": "T-REX 2X LONG BMNR DAILY TARGET ETF",
+    "close": 5.51,
+    "price_change": -0.09819967266775785,
+    "net_buy_sum": -11073250,
+    "ma5": 340111,
+    "ma20": 4212074
   },
   "knife": {
-    "name": "TESLA INC",
-    "ticker": "TSLA",
-    "file_ticker": "TESLA INC",
-    "close": 436.11,
-    "price_change": -0.030263274926621037,
-    "net_buy_sum": 195230273,
-    "ma5": 57899345,
-    "ma20": 5327620
+    "name": "DIREXION SEMICONDUCTOR BEAR 3X ETF",
+    "ticker": "SOXS",
+    "file_ticker": "DIREXION SEMICONDUCTOR BEAR 3X ETF",
+    "close": 2.63,
+    "price_change": -0.043636363636363674,
+    "net_buy_sum": 62303988,
+    "ma5": 11810944,
+    "ma20": 1762702
   }
 }
