@@ -1,42 +1,38 @@
 {
   "fire": {
-    "name": "DEFIANCE DAILY TARGET 2X LONG RKLB ETF",
-    "ticker": "RKLX",
-    "file_ticker": "DEFIANCE DAILY TARGET 2X LONG RKLB ETF",
-    "close": 55.16,
-    "price_change": 0.17611940298507459,
-    "net_buy_sum": -8468085,
-    "ma5": -4503308,
-    "ma20": 0
+    "name": "PROSHARES ULTRA SILVER ETF",
+    "name_kr": "",
+    "ticker": "AGQ",
+    "file_ticker": "PROSHARES ULTRA SILVER ETF",
+    "close": 181.92,
+    "price_change": 0.11854402361042796,
+    "net_buy_sum": -6397536,
+    "buy_score": 2,
+    "sell_score": 4,
+    "comment": "개미 털고 세력 떡상 중 🚀"
   },
   "top": {
     "name": "PALANTIR TECHNOLOGIES INC CL A",
+    "name_kr": "팔란티어 테크놀로지스",
     "ticker": "PLTR",
     "file_ticker": "PALANTIR TECHNOLOGIES INC CL A",
     "close": 176.86,
     "price_change": 0.053616108661980216,
     "net_buy_sum": 97000411,
-    "ma5": 22697125,
-    "ma20": -3486408
-  },
-  "bottom": {
-    "name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-    "ticker": "LITE",
-    "file_ticker": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-    "close": 348.26,
-    "price_change": -0.09802905907642906,
-    "net_buy_sum": -17106839,
-    "ma5": -11733383,
-    "ma20": 0
+    "buy_score": 4,
+    "sell_score": 2,
+    "comment": "고점 판독기 삐빅... 조심해 ⚠️"
   },
   "knife": {
     "name": "DIREXION SEMICONDUCTOR BEAR 3X ETF",
+    "name_kr": "",
     "ticker": "SOXS",
     "file_ticker": "DIREXION SEMICONDUCTOR BEAR 3X ETF",
     "close": 2.57,
     "price_change": -0.06545454545454552,
     "net_buy_sum": 62303988,
-    "ma5": 11810944,
-    "ma20": 1762702
+    "buy_score": 4,
+    "sell_score": 2,
+    "comment": "물타기하다 익사한다... 도망쳐! 🩸"
   }
 }
