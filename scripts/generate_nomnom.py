@@ -17,7 +17,7 @@ NAME_ALIAS_FILE = os.path.join(DATA_DIR, 'name_alias.json')
 
 TARGET_RANKS = ['netBuy_5.json', 'netBuy_10.json', 'netSell_5.json', 'netSell_10.json']
 
-# ✨ 최소 며칠 이상이어야 인정해줄지 설정 (여기서 조절하세요!)
+# ✨ 최소 며칠 이상이어야 인정해줄지 설정
 MIN_SCORE_CUTLINE = 4 
 
 # -----------------------------------------------------------
@@ -55,6 +55,9 @@ def analyze_stock(file_path, file_ticker_name, alias_map):
     current_price = last.get('price', 0)
     prev_price = prev_5.get('price', 0)
     
+    # ✨ [핵심 수정 1] 데이터의 실제 날짜 가져오기
+    last_date = last.get('date', '') 
+    
     if current_price == 0 or prev_price == 0: return None
 
     price_change_pct = (current_price - prev_price) / prev_price
@@ -78,8 +81,9 @@ def analyze_stock(file_path, file_ticker_name, alias_map):
         "close": current_price,
         "price_change": price_change_pct,
         "net_buy_sum": net_buy_sum,
-        "buy_score": buy_days_count,   
-        "sell_score": sell_days_count 
+        "buy_score": buy_days_count,    
+        "sell_score": sell_days_count,
+        "last_date": last_date  # ✨ 날짜 반환 추가
     }
 
 # -----------------------------------------------------------
@@ -95,7 +99,7 @@ def get_comment(type_key):
     return comments.get(type_key, "")
 
 # -----------------------------------------------------------
-# 5. 메인 실행 (과락 제도 포함)
+# 5. 메인 실행
 # -----------------------------------------------------------
 def main():
     print(f"🚀 놈놈놈 분석 V5 시작 (최소 {MIN_SCORE_CUTLINE}일 이상만 합격)...")
@@ -111,7 +115,7 @@ def main():
         path = os.path.join(TOP10_DIR, rank_file)
         rank_data = load_json(path)
         if rank_data and 'items' in rank_data:
-            for item in rank_data['items'][:40]: # 후보군 더 늘림 (40개)
+            for item in rank_data['items'][:40]: 
                 raw_name = item.get('ticker') or item.get('name')
                 if not raw_name: continue
                 
@@ -140,41 +144,32 @@ def main():
         elif pct < -0.05 and net < 0: pools['bottom'].append(stock)
         elif pct < -0.03 and net > 0: pools['knife'].append(stock)
 
-    # ✨ [핵심] 대장 선발 + 과락 체크 함수
     def pick_qualified_best(category_pool, score_key, sort_key_func):
         if not category_pool: return None
-        
-        # 1. 점수 높은 순 정렬
         sorted_pool = sorted(category_pool, key=sort_key_func, reverse=True)
         best_pick = sorted_pool[0]
-
-        # 2. 과락 체크 (최소 점수 미만이면 탈락!)
-        #    루멘텀(sell_score=2)은 여기서 걸러짐 (2 < 4) -> 탈락
+        
         if best_pick[score_key] < MIN_SCORE_CUTLINE:
-            print(f"⚠️ 1등이 과락됨 ({best_pick['ticker']}, 점수: {best_pick[score_key]}) -> 패스")
+            # print(f"⚠️ 1등 과락 ({best_pick['ticker']}) -> 패스")
             return None
-            
         return best_pick
 
-    # Fire: 매도 점수 체크 (sell_score)
+    # 카테고리별 선발
     pick = pick_qualified_best(pools['fire'], 'sell_score', lambda x: (x['sell_score'], x['price_change']))
     if pick:
         pick['comment'] = get_comment('fire')
         final_result['fire'] = pick
 
-    # Top: 매수 점수 체크 (buy_score)
     pick = pick_qualified_best(pools['top'], 'buy_score', lambda x: (x['buy_score'], x['net_buy_sum']))
     if pick:
         pick['comment'] = get_comment('top')
         final_result['top'] = pick
 
-    # Bottom: 매도 점수 체크 (sell_score)
     pick = pick_qualified_best(pools['bottom'], 'sell_score', lambda x: (x['sell_score'], -x['net_buy_sum']))
     if pick:
         pick['comment'] = get_comment('bottom')
         final_result['bottom'] = pick
 
-    # Knife: 매수 점수 체크 (buy_score)
     pick = pick_qualified_best(pools['knife'], 'buy_score', lambda x: (x['buy_score'], x['net_buy_sum']))
     if pick:
         pick['comment'] = get_comment('knife')
@@ -182,15 +177,35 @@ def main():
 
     # 저장
     if not os.path.exists(FLOW_DIR): os.makedirs(FLOW_DIR)
+    
+    # nom_nom_data.json 저장 (이건 UI 표시용이라 덮어쓰기)
     with open(os.path.join(FLOW_DIR, 'nom_nom_data.json'), 'w', encoding='utf-8') as f:
         json.dump(final_result, f, ensure_ascii=False, indent=2)
     
+    # ✨ [핵심 수정 2] 히스토리 파일명 결정 (데이터 기준)
     if not os.path.exists(HISTORY_DIR): os.makedirs(HISTORY_DIR)
-    today_str = datetime.datetime.now().strftime("%Y%m%d")
-    with open(os.path.join(HISTORY_DIR, f"history_{today_str}.json"), 'w', encoding='utf-8') as f:
+    
+    # 기본값은 오늘 날짜지만...
+    file_date_str = datetime.datetime.now().strftime("%Y%m%d")
+    
+    # 결과가 하나라도 있으면, 그 종목의 데이터 날짜를 씁니다.
+    # (예: 미국장 금요일 데이터면 20240109가 나옴)
+    found_date = None
+    for key in ['fire', 'top', 'bottom', 'knife']:
+        if key in final_result and 'last_date' in final_result[key]:
+            found_date = final_result[key]['last_date'] # YYYY-MM-DD
+            break
+            
+    if found_date:
+        file_date_str = found_date.replace('-', '') # YYYYMMDD 변환
+        print(f"📅 데이터 기준 날짜 감지: {file_date_str} (미국 현지 시간)")
+    else:
+        print(f"📅 데이터 날짜 감지 실패, 시스템 시간 사용: {file_date_str}")
+
+    with open(os.path.join(HISTORY_DIR, f"history_{file_date_str}.json"), 'w', encoding='utf-8') as f:
         json.dump(final_result, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ V5 완료! 2~3일짜리 뜨내기는 걸러내고 진짜 꾸준한 놈만 남김.")
+    print(f"✅ V5 완료! 저장된 파일명: history_{file_date_str}.json")
 
 if __name__ == "__main__":
     main()
