@@ -2,7 +2,8 @@ import './globals.css';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/react';
-import ShareButton from './components/ShareButton'; // 👈 1. 공유 버튼 불러오기
+import Script from 'next/script'; // ✨ 구글 애즈용 스크립트 도구 추가
+import ShareButton from './components/ShareButton';
 
 // ✨ 메타데이터 설정 (카톡 공유 미리보기 & SEO)
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     siteName: 'REANT',
     images: [
       {
-        url: '/og-image.png', // public 폴더에 이 이름으로 이미지를 넣으세요!
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'REANT Preview',
@@ -71,7 +72,7 @@ export default function RootLayout({
                 About
               </Link>
 
-              {/* ✨ 여기에 Share 추가! */}
+              {/* Share Button */}
               <span className="text-gray-300">|</span>
               <ShareButton />
               
@@ -79,11 +80,26 @@ export default function RootLayout({
           </header>
 
           {/* Page Content */}
-          <main className="px-6 py-6 pb-24"> {/* 하단 버튼 공간 확보를 위해 pb-24 추가 */}
+          <main className="px-6 py-6 pb-24">
             {children}
           </main>
         
         </div>
+
+        {/* ✨ 구글 애즈 태그 (Google Ads) */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17856168628"
+        />
+        <Script id="google-ads-tag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'AW-17856168628');
+          `}
+        </Script>
 
         {/* ✨ Vercel Analytics (방문자 수 체크) */}
         <Analytics />
