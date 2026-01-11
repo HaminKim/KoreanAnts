@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { funnyPhrases } from '../data/funny_loading';
@@ -23,7 +23,8 @@ type AnalysisResult = {
   comment: string;
 };
 
-export default function AnalysisPage() {
+// ✨ [핵심] Vercel 배포 에러 방지를 위해 로직 부분을 별도 컴포넌트로 분리
+function AnalysisContent() {
   const router = useRouter();
   const searchParams = useSearchParams(); 
   
@@ -381,11 +382,9 @@ export default function AnalysisPage() {
                                style={{
                                    left: `${resultData.score}%`,
                                    transform: 'translateX(-50%)',
-                                   // 테두리에만 살짝 그림자를 주어 입체감을 더합니다.
                                    boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
                                }}
                            >
-                               {/* 내부의 회색 장식용 div는 삭제되었습니다. */}
                            </div>
                        </div>
                        
@@ -444,5 +443,18 @@ export default function AnalysisPage() {
 
       </div>
     </main>
+  );
+}
+
+// ✨ [핵심] Vercel 배포 에러 방지용 Suspense Wrapper
+export default function AnalysisPage() {
+  return (
+    <Suspense fallback={
+       <div className="min-h-screen bg-white flex items-center justify-center">
+         <div className="w-10 h-10 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+       </div>
+    }>
+      <AnalysisContent />
+    </Suspense>
   );
 }
