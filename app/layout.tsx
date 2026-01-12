@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/react';
 import Script from 'next/script';
 import ShareButton from './components/ShareButton';
-import AuthButton from './components/AuthButton'; // ✨ 1. 로그인 버튼 가져오기
+import AuthButton from './components/AuthButton';
 
 // 메타데이터 설정
 export const metadata: Metadata = {
@@ -51,8 +51,7 @@ export default function RootLayout({
               href="/"
               className="flex items-center gap-2 text-xl font-bold tracking-tight"
             >
-              <span className="text-lg">🇰🇷</span>
-              <span>www.reant.kr</span>
+              <span>REANT</span>
             </Link>
 
             {/* Navigation */}
@@ -66,18 +65,12 @@ export default function RootLayout({
               
               <span className="text-gray-300">|</span>
               
-              <Link
-                href="#"
-                className="hover:text-black transition"
-              >
-                About
-              </Link>
+              {/* About 삭제됨 */}
 
-              <span className="text-gray-300">|</span>
               <ShareButton />
               
-              {/* ✨ 2. 여기에 로그인 버튼 배치! */}
               <span className="text-gray-300">|</span>
+              
               <AuthButton />
               
             </nav>
