@@ -12,9 +12,9 @@ export const metadata: Metadata = {
   description: '개미들의 반란, 리앤트(ReAnt). 리버스 개미 전략, AI 주식 분석, 공포/탐욕 지수, 미국 주식 투자 정보를 제공합니다.',
   keywords: ['리앤트', 'ReAnt', '리버스개미', '주식분석', '미국주식', 'AI투자', '투자심리', '공포탐욕지수'],
   
-  // 👇 구글 소유권 인증 번호 (사장님이 확인하신 코드)
+  // 👇 구글에서 방금 복사하신 '진짜 열쇠'로 교체했습니다!
   verification: {
-    google: 'google44390d384245cc5a', 
+    google: 'YxyiRFV2A7ub4mFChMZaJRr06Ybrs-TJJezPOjRtufY', 
   },
 
   openGraph: {
