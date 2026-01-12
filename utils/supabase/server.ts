@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
+// ✨ 여기에 'async'가 꼭 있어야 합니다.
 export async function createClient() {
   const cookieStore = await cookies()
 
@@ -16,7 +17,7 @@ export async function createClient() {
           try {
             cookieStore.set({ name, value, ...options })
           } catch (error) {
-            // Next.js 서버 컴포넌트에서는 쿠키 설정이 무시될 수 있음 (정상)
+            // Server Component에서는 쿠키 설정 무시 (정상)
           }
         },
         remove(name: string, options: CookieOptions) {
