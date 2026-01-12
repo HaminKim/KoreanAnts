@@ -6,13 +6,20 @@ import Script from 'next/script';
 import ShareButton from './components/ShareButton';
 import AuthButton from './components/AuthButton';
 
-// 메타데이터 설정
+// 🚀 [SEO & Google 인증] 검색 엔진 최적화 설정
 export const metadata: Metadata = {
-  title: 'REANT - 리버스 개미',
-  description: '공포에 사고 탐욕에 파는, 스마트한 개미들을 위한 미국 주식 데이터 분석',
+  title: '리앤트(REANT) | 주식 투자 심리 분석 & AI 리포트',
+  description: '개미들의 반란, 리앤트(ReAnt). 리버스 개미 전략, AI 주식 분석, 공포/탐욕 지수, 미국 주식 투자 정보를 제공합니다.',
+  keywords: ['리앤트', 'ReAnt', '리버스개미', '주식분석', '미국주식', 'AI투자', '투자심리', '공포탐욕지수'],
+  
+  // 👇 구글 소유권 인증 번호 (사장님이 확인하신 코드)
+  verification: {
+    google: 'google44390d384245cc5a', 
+  },
+
   openGraph: {
-    title: 'REANT - 리버스 개미',
-    description: '지금 개미들은 뭘 사고 있을까? 수급 데이터로 보는 진짜 주식 흐름.',
+    title: '리앤트(REANT) - 개미와 반대로 투자하라',
+    description: '오늘 개미들은 뭘 샀을까? AI가 분석해주는 역발상 투자 전략.',
     url: 'https://www.reant.kr',
     siteName: 'REANT',
     images: [
@@ -28,7 +35,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'REANT - 리버스 개미',
+    title: '리앤트(REANT) - 리버스 개미',
     description: '스마트한 개미들을 위한 데이터 분석',
     images: ['/og-image.png'],
   },
@@ -65,8 +72,6 @@ export default function RootLayout({
               
               <span className="text-gray-300">|</span>
               
-              {/* About 삭제됨 */}
-
               <ShareButton />
               
               <span className="text-gray-300">|</span>
