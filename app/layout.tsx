@@ -2,10 +2,11 @@ import './globals.css';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/react';
-import Script from 'next/script'; // ✨ 구글 애즈용 스크립트 도구 추가
+import Script from 'next/script';
 import ShareButton from './components/ShareButton';
+import AuthButton from './components/AuthButton'; // ✨ 1. 로그인 버튼 가져오기
 
-// ✨ 메타데이터 설정 (카톡 공유 미리보기 & SEO)
+// 메타데이터 설정
 export const metadata: Metadata = {
   title: 'REANT - 리버스 개미',
   description: '공포에 사고 탐욕에 파는, 스마트한 개미들을 위한 미국 주식 데이터 분석',
@@ -72,9 +73,12 @@ export default function RootLayout({
                 About
               </Link>
 
-              {/* Share Button */}
               <span className="text-gray-300">|</span>
               <ShareButton />
+              
+              {/* ✨ 2. 여기에 로그인 버튼 배치! */}
+              <span className="text-gray-300">|</span>
+              <AuthButton />
               
             </nav>
           </header>
@@ -86,7 +90,7 @@ export default function RootLayout({
         
         </div>
 
-        {/* ✨ 구글 애즈 태그 (Google Ads) */}
+        {/* 구글 애즈 태그 (Google Ads) */}
         <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=AW-17856168628"
@@ -101,7 +105,7 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* ✨ Vercel Analytics (방문자 수 체크) */}
+        {/* Vercel Analytics (방문자 수 체크) */}
         <Analytics />
       </body>
     </html>
