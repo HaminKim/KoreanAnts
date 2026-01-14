@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
-// 👇 [중요] Supabase 클라이언트 가져오기 (AuthButton과 동일한 방식)
 import { createClient } from '@/utils/supabase/client';
 
 // ----------------------------------------------------------------------
@@ -31,7 +30,7 @@ export default function HomeClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  // 👇 Supabase 클라이언트 생성
+  // Supabase 클라이언트
   const supabase = createClient();
 
   // ----------------------------------------------------------------------
@@ -44,35 +43,25 @@ export default function HomeClient() {
   const [items, setItems] = useState<RankItem[]>([]);
   const [loading, setLoading] = useState(false);
   
-  // 🔒 로그인 상태 (초기값 false)
+  // 로그인 상태
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // 💰 (미래 대비) 유저 등급 상태 ('user', 'premium', 'admin' 등)
+  // (미래 대비) 유저 권한: 'user' | 'premium' | 'admin'
   const [userRole, setUserRole] = useState<string | null>(null);
 
   const isBuy = side === 'netBuy';
 
   // ----------------------------------------------------------------------
-  // ✨ [핵심] 로그인 상태 실시간 감지 & DB 권한 확인
+  // 2. 로그인 체크 (Supabase)
   // ----------------------------------------------------------------------
   useEffect(() => {
     const checkUser = async () => {
-      // 1. 현재 세션 가져오기
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session?.user) {
         setIsLoggedIn(true);
-
-        // 🚀 [미래 대비] 나중에 결제 기능을 붙일 때 이 부분을 활성화하면 됩니다!
-        // 지금은 로그인만 하면 다 보여주니까 주석 처리하거나 role 확인만 해둡니다.
-        /*
-        const { data: userData } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-        
-        setUserRole(userData?.role || 'user');
-        */
+        // 나중에 결제 기능 붙일 때 여기서 DB 조회해서 role 확인하면 됨
+        // const { data } = await supabase.from('users').select('role').eq('id', session.user.id).single();
+        // setUserRole(data?.role);
       } else {
         setIsLoggedIn(false);
         setUserRole(null);
@@ -81,7 +70,6 @@ export default function HomeClient() {
 
     checkUser();
 
-    // 2. 로그인/로그아웃 이벤트 리스너 (AuthButton 눌렀을 때 즉시 반응)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session);
     });
@@ -89,9 +77,11 @@ export default function HomeClient() {
     return () => subscription.unsubscribe();
   }, [supabase]);
 
+  // 권한 체크: 지금은 로그인만 하면 통과 (나중에 && userRole === 'premium' 추가 가능)
+  const hasAccess = isLoggedIn; 
 
   // ----------------------------------------------------------------------
-  // 2. URL <-> State 동기화
+  // 3. URL <-> State 동기화
   // ----------------------------------------------------------------------
   useEffect(() => {
     const spSide = searchParams.get('side');
@@ -115,7 +105,7 @@ export default function HomeClient() {
   }, [side, days, topN, router]);
 
   // ----------------------------------------------------------------------
-  // 3. 데이터 로드 및 매핑
+  // 4. 데이터 로드 및 매핑
   // ----------------------------------------------------------------------
   useEffect(() => {
     async function fetchData() {
@@ -170,24 +160,19 @@ export default function HomeClient() {
 
   const visibleItems = useMemo(() => items.slice(0, topN), [items, topN]);
 
-  // ✨ [2단계 준비] 권한 체크 로직
-  // 지금은: 로그인만 하면 통과 (isLoggedIn)
-  // 나중엔: isLoggedIn && userRole === 'premium' 으로 바꾸면 끝!
-  const hasAccess = isLoggedIn; 
-
   // ----------------------------------------------------------------------
-  // 4. 렌더링
+  // 5. 렌더링
   // ----------------------------------------------------------------------
   return (
     <>
-      {/* 헤더 라인 */}
+      {/* 1️⃣ 헤더 라인 */}
       <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 mb-6 mt-2">
           <h2 className="text-2xl font-bold flex items-center gap-2 text-gray-900 leading-none">
             📊 실시간 수급 랭킹
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse mb-4"></span>
           </h2>
           
-          {/* TOP 버튼 그룹 */}
+          {/* TOP 버튼 */}
           <div className="flex bg-gray-100 p-1 rounded-lg">
             {[10, 20, 30].map((n) => (
                 <button
@@ -205,7 +190,7 @@ export default function HomeClient() {
           </div>
       </div>
 
-      {/* 필터 라인 */}
+      {/* 2️⃣ 필터 라인 */}
       <div className="flex flex-wrap items-center gap-4 mb-8">
         <div className="flex bg-gray-100 p-1 rounded-lg">
             <button
@@ -239,6 +224,7 @@ export default function HomeClient() {
         </div>
       </div>
 
+      {/* 로딩 표시 */}
       {loading && (
           <div className="py-20 text-center text-gray-400 flex flex-col items-center gap-2">
               <div className="w-8 h-8 border-4 border-gray-200 border-t-gray-400 rounded-full animate-spin"></div>
@@ -246,13 +232,13 @@ export default function HomeClient() {
           </div>
       )}
 
+      {/* 3️⃣ 랭킹 그리드 (반응형 비율 조정 완료) */}
       {!loading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-12">
             {visibleItems.map((item, index) => {
                 const rank = index + 1;
                 
-                // 🔒 자물쇠 로직 (1, 2, 3위 && 권한 없음)
-                // hasAccess 변수 하나만 바꾸면 나중에 유료화 전환 가능!
+                // 🔒 자물쇠: 1~3위 (index 0,1,2) 이고 권한 없을 때
                 const isLocked = !hasAccess && index < 3;
 
                 return (
@@ -260,12 +246,13 @@ export default function HomeClient() {
                         
                         {/* 카드 본문 (잠금 시 블러) */}
                         <div className={`
-                            flex items-center gap-4 p-4 rounded-2xl border transition-all bg-white
+                            flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl border transition-all bg-white
                             ${isLocked ? 'blur-md opacity-60 pointer-events-none select-none grayscale' : 'hover:shadow-lg hover:-translate-y-1'}
                             ${isBuy ? 'hover:border-red-100 border-gray-100' : 'hover:border-blue-100 border-gray-100'}
                         `}>
+                            {/* ✨ 순위 (모바일에서 작게, PC에서 크게) / 색상은 5위까지 */}
                             <div className={`
-                                w-8 h-8 flex items-center justify-center rounded-lg font-black text-lg shadow-sm shrink-0
+                                w-6 h-6 md:w-8 md:h-8 flex items-center justify-center rounded-lg font-black text-sm md:text-lg shadow-sm shrink-0
                                 ${rank <= 5 
                                     ? (isBuy ? 'bg-red-500 text-white' : 'bg-blue-500 text-white') 
                                     : 'bg-gray-100 text-gray-500'}
@@ -273,7 +260,8 @@ export default function HomeClient() {
                                 {rank}
                             </div>
 
-                            <div className="w-12 h-12 rounded-full bg-white border border-gray-100 p-0.5 shrink-0 overflow-hidden">
+                            {/* ✨ 로고 (모바일에서 작게, PC에서 크게) */}
+                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-gray-100 p-0.5 shrink-0 overflow-hidden">
                                 <img 
                                     src={`/logos/${encodeURIComponent(item.fileTicker)}.png`} 
                                     alt={item.name}
@@ -289,11 +277,12 @@ export default function HomeClient() {
                                 />
                             </div>
 
+                            {/* 정보 (글자 크기 및 간격 조정) */}
                             <div className="min-w-0 flex-1">
-                                <h3 className="font-bold text-gray-900 truncate text-sm md:text-base">
+                                <h3 className="font-bold text-gray-900 truncate text-sm md:text-base leading-tight">
                                     {item.name}
                                 </h3>
-                                <div className="flex items-center gap-2 text-xs">
+                                <div className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs mt-0.5">
                                     <span className="text-gray-400 font-mono">{item.ticker}</span>
                                     <span className={`font-bold ${isBuy ? 'text-red-500' : 'text-blue-500'}`}>
                                         {formatMoney(item.value)}
@@ -302,12 +291,12 @@ export default function HomeClient() {
                             </div>
                         </div>
 
-                        {/* 🔒 자물쇠 오버레이 (클릭 시 카카오 로그인 실행) */}
+                        {/* 🔒 자물쇠 오버레이 (버튼 크기 반응형) */}
                         {isLocked && (
                             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/10 rounded-2xl backdrop-blur-[1px]">
                                 <button 
                                      onClick={() => {
-                                        // 🟡 카카오 로그인 트리거 (AuthButton과 동일한 로직)
+                                        // 카카오 로그인 트리거
                                         supabase.auth.signInWithOAuth({
                                             provider: 'kakao',
                                             options: {
@@ -316,10 +305,10 @@ export default function HomeClient() {
                                             },
                                         });
                                      }} 
-                                     className="bg-white shadow-xl px-4 py-2.5 rounded-full flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform border border-gray-100"
+                                     className="bg-white shadow-xl px-3 py-2 md:px-4 md:py-2.5 rounded-full flex items-center gap-1.5 md:gap-2 cursor-pointer hover:scale-105 transition-transform border border-gray-100"
                                 >
-                                    <span className="text-lg">🔒</span>
-                                    <span className="text-sm font-bold text-gray-800">
+                                    <span className="text-base md:text-lg">🔒</span>
+                                    <span className="text-xs md:text-sm font-bold text-gray-800">
                                         로그인하고 {rank}위 보기
                                     </span>
                                 </button>
