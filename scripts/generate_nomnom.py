@@ -17,8 +17,18 @@ NAME_ALIAS_FILE = os.path.join(DATA_DIR, 'name_alias.json')
 
 TARGET_RANKS = ['netBuy_5.json', 'netBuy_10.json', 'netSell_5.json', 'netSell_10.json']
 
-# ✨ 최소 며칠 이상이어야 인정해줄지 설정
-MIN_SCORE_CUTLINE = 4 
+# ✨ [수정] 최소 점수 완화 (4일 -> 3일)
+MIN_SCORE_CUTLINE = 4
+
+# 🚫 ETF 및 파생상품 필터링 키워드
+BLACKLIST_KEYWORDS = [
+    "ETF", "ETN", "FUND", "TRUST", "LP",          
+    "2X", "3X", "-1X", "-2X", "-3X", "1.5X",      
+    "BULL", "BEAR", "ULTRA", "SHORT", "LONG",     
+    "SHARES", "VANGUARD", "ISHARES", "DIREXION",  
+    "PROSHARES", "INVESCO", "SPDR", "SWAP", "VIX", 
+    "HOLDINGS", "GROUP", "PARTNERS"               
+]
 
 # -----------------------------------------------------------
 # 2. 유틸리티 함수
@@ -38,6 +48,14 @@ def find_stock_file(name_or_ticker):
     if os.path.exists(path): return path
     return None
 
+def is_etf_keyword(name):
+    if not name: return False
+    upper_name = name.upper()
+    for keyword in BLACKLIST_KEYWORDS:
+        if keyword in upper_name:
+            return True
+    return False
+
 # -----------------------------------------------------------
 # 3. 분석 로직
 # -----------------------------------------------------------
@@ -48,6 +66,11 @@ def analyze_stock(file_path, file_ticker_name, alias_map):
     daily = data['data']
     meta = data.get('meta', {})
     ticker = meta.get('ticker', '')
+    stock_name = meta.get('name', '') 
+
+    # ETF 필터링
+    if is_etf_keyword(stock_name):
+        return None
 
     last = daily[-1]
     prev_5 = daily[-5]
@@ -55,7 +78,6 @@ def analyze_stock(file_path, file_ticker_name, alias_map):
     current_price = last.get('price', 0)
     prev_price = prev_5.get('price', 0)
     
-    # ✨ [핵심 수정 1] 데이터의 실제 날짜 가져오기
     last_date = last.get('date', '') 
     
     if current_price == 0 or prev_price == 0: return None
@@ -64,17 +86,16 @@ def analyze_stock(file_path, file_ticker_name, alias_map):
     recent_5_days = daily[-5:]
     net_buy_sum = sum(d.get('netBuy', 0) for d in recent_5_days)
 
-    # 10일치 빈도 계산
     check_days = 10
     recent_days = daily[-check_days:] if len(daily) >= check_days else daily
     
     buy_days_count = sum(1 for d in recent_days if d.get('netBuy', 0) > 0)
     sell_days_count = sum(1 for d in recent_days if d.get('netBuy', 0) < 0)
 
-    korean_name = alias_map.get(ticker.upper()) or alias_map.get(meta.get('name', '').upper()) or ""
+    korean_name = alias_map.get(ticker.upper()) or alias_map.get(stock_name.upper()) or ""
 
     return {
-        "name": meta.get('name', ''),
+        "name": stock_name,
         "name_kr": korean_name,
         "ticker": ticker,
         "file_ticker": file_ticker_name, 
@@ -83,7 +104,7 @@ def analyze_stock(file_path, file_ticker_name, alias_map):
         "net_buy_sum": net_buy_sum,
         "buy_score": buy_days_count,    
         "sell_score": sell_days_count,
-        "last_date": last_date  # ✨ 날짜 반환 추가
+        "last_date": last_date 
     }
 
 # -----------------------------------------------------------
@@ -102,7 +123,7 @@ def get_comment(type_key):
 # 5. 메인 실행
 # -----------------------------------------------------------
 def main():
-    print(f"🚀 놈놈놈 분석 V5 시작 (최소 {MIN_SCORE_CUTLINE}일 이상만 합격)...")
+    print(f"🚀 놈놈놈 V7 (기준 완화: {MIN_SCORE_CUTLINE}일) 시작...")
     
     ticker_map = load_json(MAP_FILE) or {}
     normalized_ticker_map = {k.upper().strip(): v for k, v in ticker_map.items()}
@@ -135,13 +156,18 @@ def main():
     final_result = {}
     pools = {"fire": [], "top": [], "bottom": [], "knife": []}
 
+    # ✨ [수정] 등락폭 기준 완화 (더 많은 종목 포착)
     for stock in analyzed_pool:
         pct = stock['price_change']
         net = stock['net_buy_sum']
         
-        if pct > 0.03 and net < 0: pools['fire'].append(stock)
-        elif pct > 0.05 and net > 0: pools['top'].append(stock)
-        elif pct < -0.05 and net < 0: pools['bottom'].append(stock)
+        # Fire: 3% -> 4%
+        if pct > 0.04 and net < 0: pools['fire'].append(stock)
+        # Top: 5% -> 4%
+        elif pct > 0.04 and net > 0: pools['top'].append(stock)
+        # Bottom: -5% -> -2.5%
+        elif pct < -0.025 and net < 0: pools['bottom'].append(stock)
+        # Knife: -3% -> -2%
         elif pct < -0.03 and net > 0: pools['knife'].append(stock)
 
     def pick_qualified_best(category_pool, score_key, sort_key_func):
@@ -150,11 +176,10 @@ def main():
         best_pick = sorted_pool[0]
         
         if best_pick[score_key] < MIN_SCORE_CUTLINE:
-            # print(f"⚠️ 1등 과락 ({best_pick['ticker']}) -> 패스")
+            # print(f"⚠️ 과락: {best_pick['ticker']} (점수: {best_pick[score_key]})")
             return None
         return best_pick
 
-    # 카테고리별 선발
     pick = pick_qualified_best(pools['fire'], 'sell_score', lambda x: (x['sell_score'], x['price_change']))
     if pick:
         pick['comment'] = get_comment('fire')
@@ -175,37 +200,28 @@ def main():
         pick['comment'] = get_comment('knife')
         final_result['knife'] = pick
 
-    # 저장
     if not os.path.exists(FLOW_DIR): os.makedirs(FLOW_DIR)
     
-    # nom_nom_data.json 저장 (이건 UI 표시용이라 덮어쓰기)
     with open(os.path.join(FLOW_DIR, 'nom_nom_data.json'), 'w', encoding='utf-8') as f:
         json.dump(final_result, f, ensure_ascii=False, indent=2)
     
-    # ✨ [핵심 수정 2] 히스토리 파일명 결정 (데이터 기준)
+    # 히스토리 저장
     if not os.path.exists(HISTORY_DIR): os.makedirs(HISTORY_DIR)
     
-    # 기본값은 오늘 날짜지만...
     file_date_str = datetime.datetime.now().strftime("%Y%m%d")
-    
-    # 결과가 하나라도 있으면, 그 종목의 데이터 날짜를 씁니다.
-    # (예: 미국장 금요일 데이터면 20240109가 나옴)
     found_date = None
     for key in ['fire', 'top', 'bottom', 'knife']:
         if key in final_result and 'last_date' in final_result[key]:
-            found_date = final_result[key]['last_date'] # YYYY-MM-DD
+            found_date = final_result[key]['last_date'] 
             break
             
     if found_date:
-        file_date_str = found_date.replace('-', '') # YYYYMMDD 변환
-        print(f"📅 데이터 기준 날짜 감지: {file_date_str} (미국 현지 시간)")
-    else:
-        print(f"📅 데이터 날짜 감지 실패, 시스템 시간 사용: {file_date_str}")
+        file_date_str = found_date.replace('-', '')
 
     with open(os.path.join(HISTORY_DIR, f"history_{file_date_str}.json"), 'w', encoding='utf-8') as f:
         json.dump(final_result, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ V5 완료! 저장된 파일명: history_{file_date_str}.json")
+    print(f"✅ V7 완료! (기준 완화 적용됨) 저장: history_{file_date_str}.json")
 
 if __name__ == "__main__":
     main()

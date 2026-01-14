@@ -12,7 +12,14 @@ export const metadata: Metadata = {
   description: '개미들의 반란, 리앤트(ReAnt). 리버스 개미 전략, AI 주식 분석, 공포/탐욕 지수, 미국 주식 투자 정보를 제공합니다.',
   keywords: ['리앤트', 'ReAnt', '리버스개미', '주식분석', '미국주식', 'AI투자', '투자심리', '공포탐욕지수'],
   
-  // 👇 구글에서 방금 복사하신 '진짜 열쇠'로 교체했습니다!
+  // 👇 [추가됨] 구글 검색 결과 및 탭에 뜰 아이콘(로고) 설정
+  icons: {
+    icon: '/icon.png',      // app 폴더 혹은 public 폴더에 있는 icon.png
+    shortcut: '/icon.png',
+    apple: '/icon.png',     // 아이폰 홈 화면 추가 시 뜰 아이콘
+  },
+
+  // 구글 소유권 인증 번호
   verification: {
     google: 'YxyiRFV2A7ub4mFChMZaJRr06Ybrs-TJJezPOjRtufY', 
   },

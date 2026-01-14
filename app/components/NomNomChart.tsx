@@ -239,18 +239,38 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
     const displayName = cardData.name_kr && cardData.name_kr.trim() !== "" ? cardData.name_kr : cardData.name;
     const displayComment = cardData.comment || "AI 분석 중...";
 
+    // 🌟 로고 로직: 1순위(KEYNAME) -> 2순위(Ticker) -> 3순위(국기)
+    const primarySrc = `/logos/${encodeURIComponent(cardData.name)}.png`;
+    const secondarySrc = `/logos/${encodeURIComponent(cardData.ticker)}.png`;
+
     return (
       <div className="relative w-full">
          <Link href={`/flow?ticker=${cardData.ticker}&fileTicker=${encodeURIComponent(linkTicker)}&side=netBuy&days=5`} className="block w-full">
           <div className={`${cardBase} ${config.bg}`}>
             <div className="flex items-center gap-3 overflow-hidden flex-1">
                <div className="w-12 h-12 flex-shrink-0 rounded-full bg-white border border-gray-100 p-0.5 shadow-sm group-hover:scale-105 transition-transform">
-                  <img src={`/logos/${encodeURIComponent(linkTicker)}.png`} alt={cardData.name} className="w-full h-full object-cover rounded-full" onError={(e) => { e.currentTarget.src = '/logos/_us.png'; }} />
+                  <img 
+                    src={primarySrc} 
+                    alt={cardData.name} 
+                    className="w-full h-full object-cover rounded-full" 
+                    onError={(e) => { 
+                        const target = e.currentTarget;
+                        // 현재 KEYNAME(1순위)으로 시도했다가 에러난 경우 -> Ticker(2순위)로 교체
+                        // (이미지 주소에 ticker가 포함되어 있지 않고, 아직 국기가 아니라면 시도)
+                        if (!target.src.includes(encodeURIComponent(cardData.ticker)) && !target.src.includes('_us.png')) {
+                            target.src = secondarySrc;
+                        } 
+                        // Ticker로도 안 되면 -> 국기(3순위)
+                        else {
+                            target.src = '/logos/_us.png';
+                        }
+                    }} 
+                  />
                </div>
                <div className="flex flex-col min-w-0 pr-2">
                   <div className="flex items-center gap-1.5 mb-0.5">
-                     <span className="text-[10px] font-bold text-gray-500 bg-white border border-gray-200 px-1.5 rounded font-mono">{cardData.ticker}</span>
-                     <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-gray-100/50 ${config.text} bg-white/80`}>{config.badge}</span>
+                      <span className="text-[10px] font-bold text-gray-500 bg-white border border-gray-200 px-1.5 rounded font-mono">{cardData.ticker}</span>
+                      <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-gray-100/50 ${config.text} bg-white/80`}>{config.badge}</span>
                   </div>
                   
                   <h3 className="text-sm font-bold text-gray-900 truncate">
