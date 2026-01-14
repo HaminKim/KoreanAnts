@@ -5,6 +5,7 @@ import { Suspense, useRef, useState, useEffect, useMemo } from 'react';
 import HomeClient from './HomeClient';
 import NomNomChart from './components/NomNomChart';
 import Footer from './components/Footer';
+import IntroModal from './components/IntroModal'; 
 
 // 🛠️ 타입 정의
 type HookItem = {
@@ -34,7 +35,6 @@ export default function Page() {
   const [newsTicker, setNewsTicker] = useState<string[]>([]);
   const [hookItems, setHookItems] = useState<[HookItem | null, HookItem | null]>([null, null]);
   
-  // 놈놈놈 데이터 상태
   const [nomData, setNomData] = useState<NomData | null>(null);
 
   useEffect(() => {
@@ -153,6 +153,9 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-white pb-0 relative"> 
       
+      {/* ✨ [Intro] 인트로 모달 */}
+      <IntroModal />
+
       {/* 1️⃣ [HERO] 시장 신호등 */}
       <section className="bg-slate-900 text-white pt-8 pb-16 px-4 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden mb-12">
         <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600 rounded-full mix-blend-overlay filter blur-[100px] opacity-20 animate-pulse"></div>
@@ -204,13 +207,13 @@ export default function Page() {
               <div className="bg-white rounded-xl p-4 shadow-lg border-t-4 border-blue-500 hover:-translate-y-1 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
                 <div className="absolute top-3 right-3 w-12 h-12 rounded-full border border-gray-100 bg-white p-0.5 shadow-sm group-hover:scale-110 transition">
                   <img 
-                    src={`/logos/${encodeURIComponent(hookItems[0].ticker)}.png`} 
+                    src={`/logos/${encodeURIComponent(hookItems[0].name)}.png`} 
                     alt={hookItems[0].name}
                     className="w-full h-full rounded-full object-cover"
                     onError={(e) => { 
                       const img = e.currentTarget;
-                      if (hookItems[0] && !img.src.includes(encodeURIComponent(hookItems[0].fileTicker))) {
-                        img.src = `/logos/${encodeURIComponent(hookItems[0].fileTicker)}.png`;
+                      if (hookItems[0] && !img.src.includes(encodeURIComponent(hookItems[0].ticker))) {
+                        img.src = `/logos/${encodeURIComponent(hookItems[0].ticker)}.png`;
                       } else {
                         img.src = '/logos/_us.png';
                       }
@@ -248,13 +251,13 @@ export default function Page() {
               <div className="bg-white rounded-xl p-4 shadow-lg border-t-4 border-red-500 hover:-translate-y-1 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
                 <div className="absolute top-3 right-3 w-12 h-12 rounded-full border border-gray-100 bg-white p-0.5 shadow-sm group-hover:scale-110 transition">
                   <img 
-                    src={`/logos/${encodeURIComponent(hookItems[1].ticker)}.png`} 
+                    src={`/logos/${encodeURIComponent(hookItems[1].name)}.png`} 
                     alt={hookItems[1].name}
                     className="w-full h-full rounded-full object-cover"
                     onError={(e) => { 
                       const img = e.currentTarget;
-                      if (hookItems[1] && !img.src.includes(encodeURIComponent(hookItems[1].fileTicker))) {
-                        img.src = `/logos/${encodeURIComponent(hookItems[1].fileTicker)}.png`;
+                      if (hookItems[1] && !img.src.includes(encodeURIComponent(hookItems[1].ticker))) {
+                        img.src = `/logos/${encodeURIComponent(hookItems[1].ticker)}.png`;
                       } else {
                         img.src = '/logos/_us.png';
                       }
@@ -296,12 +299,8 @@ export default function Page() {
          />
       </section>
 
-      {/* 5️⃣ [DATA] Top 10 리스트 */}
+      {/* 5️⃣ [DATA] Top 10 리스트 (타이틀 제거됨) */}
       <section ref={rankingRef} className="max-w-7xl mx-auto px-4 scroll-mt-20">
-        <div className="flex items-center gap-2 mb-4">
-          <h2 className="text-lg font-bold text-gray-900">📊 실시간 수급 랭킹</h2>
-          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-        </div>
         <Suspense fallback={<div className="text-center py-20 text-gray-400">데이터를 불러오는 중입니다...</div>}>
           <HomeClient />
         </Suspense>
@@ -310,19 +309,15 @@ export default function Page() {
       {/* 6️⃣ 푸터 */}
       <Footer />
 
-      {/* ✨ [수정됨] 하단 플로팅 버튼 (쌍둥이 디자인) */}
+      {/* ✨ 하단 플로팅 버튼 */}
       <div className="fixed bottom-6 left-0 w-full px-4 z-50 pointer-events-none">
         <div className="max-w-md mx-auto flex items-center justify-center gap-3">
-            
-            {/* 1. 랭킹 보러가기 (왼쪽, 검정색) */}
             <button 
                 onClick={scrollToRanking}
                 className="pointer-events-auto bg-gray-900 text-white shadow-2xl pl-5 pr-6 py-3 rounded-full flex items-center gap-2 border border-white/10 active:scale-95 transition-transform h-14"
             >
                 <span className="text-sm font-bold">📊 랭킹 보러가기</span>
             </button>
-
-            {/* 2. 내 종목 분석 (오른쪽, 파란색) */}
             <Link 
                 href="/analysis"
                 className="pointer-events-auto bg-blue-600 text-white shadow-2xl pl-4 pr-6 py-3 rounded-full flex items-center gap-2.5 border border-white/10 active:scale-95 transition-transform h-14"
@@ -333,7 +328,6 @@ export default function Page() {
                     <span className="text-sm font-bold">내 종목 분석</span>
                 </div>
             </Link>
-
         </div>
       </div>
 
