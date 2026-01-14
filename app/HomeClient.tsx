@@ -29,8 +29,6 @@ type RankItem = {
 export default function HomeClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
-  // Supabase 클라이언트
   const supabase = createClient();
 
   // ----------------------------------------------------------------------
@@ -43,41 +41,31 @@ export default function HomeClient() {
   const [items, setItems] = useState<RankItem[]>([]);
   const [loading, setLoading] = useState(false);
   
-  // 로그인 상태
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // (미래 대비) 유저 권한: 'user' | 'premium' | 'admin'
   const [userRole, setUserRole] = useState<string | null>(null);
 
   const isBuy = side === 'netBuy';
 
   // ----------------------------------------------------------------------
-  // 2. 로그인 체크 (Supabase)
+  // 2. 로그인 체크
   // ----------------------------------------------------------------------
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
       if (session?.user) {
         setIsLoggedIn(true);
-        // 나중에 결제 기능 붙일 때 여기서 DB 조회해서 role 확인하면 됨
-        // const { data } = await supabase.from('users').select('role').eq('id', session.user.id).single();
-        // setUserRole(data?.role);
       } else {
         setIsLoggedIn(false);
         setUserRole(null);
       }
     };
-
     checkUser();
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session);
     });
-
     return () => subscription.unsubscribe();
   }, [supabase]);
 
-  // 권한 체크: 지금은 로그인만 하면 통과 (나중에 && userRole === 'premium' 추가 가능)
   const hasAccess = isLoggedIn; 
 
   // ----------------------------------------------------------------------
@@ -90,7 +78,6 @@ export default function HomeClient() {
 
     if (spSide === 'netBuy' || spSide === 'netSell') setSide(spSide);
     if (spDays && !Number.isNaN(Number(spDays))) setDays(Number(spDays));
-    
     if (spTop && ['10','20','30'].includes(spTop)) {
       setTopN(Number(spTop) as 10 | 20 | 30);
     }
@@ -105,7 +92,7 @@ export default function HomeClient() {
   }, [side, days, topN, router]);
 
   // ----------------------------------------------------------------------
-  // 4. 데이터 로드 및 매핑
+  // 4. 데이터 로드
   // ----------------------------------------------------------------------
   useEffect(() => {
     async function fetchData() {
@@ -145,9 +132,7 @@ export default function HomeClient() {
                 value: it.value
             };
         });
-
         setItems(processedItems);
-
       } catch (e) {
         console.error(e);
         setItems([]);
@@ -191,7 +176,7 @@ export default function HomeClient() {
       </div>
 
       {/* 2️⃣ 필터 라인 */}
-      <div className="flex flex-wrap items-center gap-4 mb-8">
+      <div className="flex flex-wrap items-center gap-4 mb-4">
         <div className="flex bg-gray-100 p-1 rounded-lg">
             <button
                 onClick={() => setSide('netBuy')}
@@ -226,104 +211,109 @@ export default function HomeClient() {
 
       {/* 로딩 표시 */}
       {loading && (
-          <div className="py-20 text-center text-gray-400 flex flex-col items-center gap-2">
+          <div className="h-[400px] flex flex-col items-center justify-center gap-2 text-gray-400">
               <div className="w-8 h-8 border-4 border-gray-200 border-t-gray-400 rounded-full animate-spin"></div>
               <span>데이터 분석 중...</span>
           </div>
       )}
 
-      {/* 3️⃣ 랭킹 그리드 (반응형 비율 조정 완료) */}
+      {/* 3️⃣ 랭킹 리스트 (내부 스크롤 박스 적용) */}
       {!loading && (
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-12">
-            {visibleItems.map((item, index) => {
-                const rank = index + 1;
-                
-                // 🔒 자물쇠: 1~3위 (index 0,1,2) 이고 권한 없을 때
-                const isLocked = !hasAccess && index < 3;
+        // ✨ [핵심] 스크롤 박스 컨테이너
+        // h-[600px]: 높이 고정 (화면이 길어지지 않음)
+        // overflow-y-auto: 내용이 넘치면 이 박스 안에서만 스크롤됨
+        <div className="h-[600px] overflow-y-auto pr-1 pb-10 scrollbar-hide md:scrollbar-default border-t border-gray-100 pt-4">
+            
+            {/* ✨ grid-cols-1: 모바일에서 1줄 복귀 */}
+            {/* ✨ gap-2: 모바일에서 간격을 좁게 (8px) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
+                {visibleItems.map((item, index) => {
+                    const rank = index + 1;
+                    const isLocked = !hasAccess && index < 3;
 
-                return (
-                    <div key={item.fileTicker + index} className="relative group">
-                        
-                        {/* 카드 본문 (잠금 시 블러) */}
-                        <div className={`
-                            flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl border transition-all bg-white
-                            ${isLocked ? 'blur-md opacity-60 pointer-events-none select-none grayscale' : 'hover:shadow-lg hover:-translate-y-1'}
-                            ${isBuy ? 'hover:border-red-100 border-gray-100' : 'hover:border-blue-100 border-gray-100'}
-                        `}>
-                            {/* ✨ 순위 (모바일에서 작게, PC에서 크게) / 색상은 5위까지 */}
+                    return (
+                        <div key={item.fileTicker + index} className="relative group">
+                            
+                            {/* 카드 본문 */}
                             <div className={`
-                                w-6 h-6 md:w-8 md:h-8 flex items-center justify-center rounded-lg font-black text-sm md:text-lg shadow-sm shrink-0
-                                ${rank <= 5 
-                                    ? (isBuy ? 'bg-red-500 text-white' : 'bg-blue-500 text-white') 
-                                    : 'bg-gray-100 text-gray-500'}
+                                flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl border transition-all bg-white
+                                ${isLocked ? 'blur-md opacity-60 pointer-events-none select-none grayscale' : 'hover:shadow-lg hover:-translate-y-1'}
+                                ${isBuy ? 'hover:border-red-100 border-gray-100' : 'hover:border-blue-100 border-gray-100'}
                             `}>
-                                {rank}
-                            </div>
+                                {/* 순위 (5위까지 색상) */}
+                                <div className={`
+                                    w-8 h-8 flex items-center justify-center rounded-lg font-black text-sm md:text-lg shadow-sm shrink-0
+                                    ${rank <= 5 
+                                        ? (isBuy ? 'bg-red-500 text-white' : 'bg-blue-500 text-white') 
+                                        : 'bg-gray-100 text-gray-500'}
+                                `}>
+                                    {rank}
+                                </div>
 
-                            {/* ✨ 로고 (모바일에서 작게, PC에서 크게) */}
-                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-gray-100 p-0.5 shrink-0 overflow-hidden">
-                                <img 
-                                    src={`/logos/${encodeURIComponent(item.fileTicker)}.png`} 
-                                    alt={item.name}
-                                    className="w-full h-full object-cover rounded-full"
-                                    onError={(e) => {
-                                        const target = e.currentTarget;
-                                        if (!target.src.includes(encodeURIComponent(item.ticker)) && !target.src.includes('_us.png')) {
-                                            target.src = `/logos/${encodeURIComponent(item.ticker)}.png`;
-                                        } else {
-                                            target.src = '/logos/_us.png';
-                                        }
-                                    }}
-                                />
-                            </div>
+                                {/* 로고 */}
+                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-gray-100 p-0.5 shrink-0 overflow-hidden">
+                                    <img 
+                                        src={`/logos/${encodeURIComponent(item.fileTicker)}.png`} 
+                                        alt={item.name}
+                                        className="w-full h-full object-cover rounded-full"
+                                        onError={(e) => {
+                                            const target = e.currentTarget;
+                                            if (!target.src.includes(encodeURIComponent(item.ticker)) && !target.src.includes('_us.png')) {
+                                                target.src = `/logos/${encodeURIComponent(item.ticker)}.png`;
+                                            } else {
+                                                target.src = '/logos/_us.png';
+                                            }
+                                        }}
+                                    />
+                                </div>
 
-                            {/* 정보 (글자 크기 및 간격 조정) */}
-                            <div className="min-w-0 flex-1">
-                                <h3 className="font-bold text-gray-900 truncate text-sm md:text-base leading-tight">
-                                    {item.name}
-                                </h3>
-                                <div className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs mt-0.5">
-                                    <span className="text-gray-400 font-mono">{item.ticker}</span>
-                                    <span className={`font-bold ${isBuy ? 'text-red-500' : 'text-blue-500'}`}>
-                                        {formatMoney(item.value)}
-                                    </span>
+                                {/* 정보 */}
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="font-bold text-gray-900 truncate text-sm md:text-base leading-tight">
+                                        {item.name}
+                                    </h3>
+                                    <div className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs mt-0.5">
+                                        <span className="text-gray-400 font-mono">{item.ticker}</span>
+                                        <span className={`font-bold ${isBuy ? 'text-red-500' : 'text-blue-500'}`}>
+                                            {formatMoney(item.value)}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
+
+                            {/* 자물쇠 오버레이 */}
+                            {isLocked && (
+                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/10 rounded-2xl backdrop-blur-[1px]">
+                                    <button 
+                                        onClick={() => {
+                                            supabase.auth.signInWithOAuth({
+                                                provider: 'kakao',
+                                                options: {
+                                                    redirectTo: `${location.origin}/auth/callback`,
+                                                    queryParams: { scope: 'profile_nickname,profile_image' },
+                                                },
+                                            });
+                                        }} 
+                                        className="bg-white shadow-xl px-3 py-2 md:px-4 md:py-2.5 rounded-full flex items-center gap-1.5 md:gap-2 cursor-pointer hover:scale-105 transition-transform border border-gray-100"
+                                    >
+                                        <span className="text-base md:text-lg">🔒</span>
+                                        <span className="text-xs md:text-sm font-bold text-gray-800">
+                                            로그인하고 {rank}위 보기
+                                        </span>
+                                    </button>
+                                </div>
+                            )}
+
+                            {!isLocked && (
+                                <Link 
+                                    href={`/flow?ticker=${item.ticker}&fileTicker=${encodeURIComponent(item.fileTicker)}&side=${side}&days=${days}`}
+                                    className="absolute inset-0 z-0"
+                                />
+                            )}
                         </div>
-
-                        {/* 🔒 자물쇠 오버레이 (버튼 크기 반응형) */}
-                        {isLocked && (
-                            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/10 rounded-2xl backdrop-blur-[1px]">
-                                <button 
-                                     onClick={() => {
-                                        // 카카오 로그인 트리거
-                                        supabase.auth.signInWithOAuth({
-                                            provider: 'kakao',
-                                            options: {
-                                                redirectTo: `${location.origin}/auth/callback`,
-                                                queryParams: { scope: 'profile_nickname,profile_image' },
-                                            },
-                                        });
-                                     }} 
-                                     className="bg-white shadow-xl px-3 py-2 md:px-4 md:py-2.5 rounded-full flex items-center gap-1.5 md:gap-2 cursor-pointer hover:scale-105 transition-transform border border-gray-100"
-                                >
-                                    <span className="text-base md:text-lg">🔒</span>
-                                    <span className="text-xs md:text-sm font-bold text-gray-800">
-                                        로그인하고 {rank}위 보기
-                                    </span>
-                                </button>
-                            </div>
-                        )}
-
-                        {!isLocked && (
-                            <Link 
-                                href={`/flow?ticker=${item.ticker}&fileTicker=${encodeURIComponent(item.fileTicker)}&side=${side}&days=${days}`}
-                                className="absolute inset-0 z-0"
-                            />
-                        )}
-                    </div>
-                );
-            })}
+                    );
+                })}
+            </div>
         </div>
       )}
     </>
