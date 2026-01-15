@@ -1,0 +1,52 @@
+{
+  "date": "2026-01-15",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
+  "items": [
+    {
+      "rank": 1,
+      "ticker": "SOXL",
+      "name": "SOXL",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -1090014473.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "LLY",
+      "name": "LLY",
+      "raw_name": "ELI LILLY & CO",
+      "value": -75130171.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "TQQQ",
+      "name": "TQQQ",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -52483083.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "APP",
+      "name": "APP",
+      "raw_name": "APPLOVIN CORP",
+      "value": -46320108.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "META",
+      "name": "META",
+      "raw_name": "META PLATFORMS INC CL A",
+      "value": -28441508.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
+    }
+  ]
+}
