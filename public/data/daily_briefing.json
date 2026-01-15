@@ -1,52 +1,52 @@
 {
-  "date": "2026-01-15",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-01-16",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "SOXL",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -1090014473.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 263056854.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "LLY",
-      "name": "LLY",
-      "raw_name": "ELI LILLY & CO",
-      "value": -75130171.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "TSLA",
+      "name": "TSLA",
+      "raw_name": "TESLA INC",
+      "value": 110216368.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
-      "name": "TQQQ",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -52483083.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "ticker": "NVDA",
+      "name": "NVDA",
+      "raw_name": "NVIDIA CORP",
+      "value": 68487653.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "APP",
-      "name": "APP",
-      "raw_name": "APPLOVIN CORP",
-      "value": -46320108.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "VOO",
+      "name": "VOO",
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 62952767.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "META",
-      "name": "META",
-      "raw_name": "META PLATFORMS INC CL A",
-      "value": -28441508.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "SGOV",
+      "name": "SGOV",
+      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
+      "value": 43374460.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
