@@ -2,6 +2,11 @@
   "date": "2026-01-17",
   "day_of_week": "Saturday",
   "theme_code": "THEME_WEEKEND_TOTAL",
+  "meta_info": {
+    "period_days": 20,
+    "total_count": 5,
+    "source_desc": "최근 20일간 데이터"
+  },
   "items": [
     {
       "rank": 1,
