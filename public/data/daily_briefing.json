@@ -1,28 +1,28 @@
 {
-  "date": "2026-01-18",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-01-19",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
-      "name": "TSLA",
-      "raw_name": "TESLA INC",
-      "value": 597019058.0,
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 333812591.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
-      "name": "GOOGL",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 578569170.0,
+      "ticker": "TSLA",
+      "name": "TSLA",
+      "raw_name": "TESLA INC",
+      "value": 86910270.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
@@ -31,25 +31,25 @@
       "ticker": "VOO",
       "name": "VOO",
       "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 318256862.0,
+      "value": 66658257.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "SGOV",
-      "name": "SGOV",
-      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 269370236.0,
+      "ticker": "GOOG",
+      "name": "GOOG",
+      "raw_name": "ALPHABET INC CL C CHAN 39527405649 US38259P7069",
+      "value": 50615440.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "TSLL",
-      "name": "TSLL",
-      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": 238439285.0,
+      "ticker": "SLV",
+      "name": "SLV",
+      "raw_name": "ISHARES SILVER TRUST ETF",
+      "value": 45833901.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
