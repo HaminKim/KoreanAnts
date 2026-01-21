@@ -3,8 +3,8 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import FlowChart from '../components/FlowChart'; // ✅ 요청하신 상대 경로
-import { COLORS } from '../constants/colors';    // ✅ 요청하신 상대 경로
+import FlowChart from '../components/FlowChart';
+import { COLORS } from '../constants/colors';
 
 /* ---------- Type Definitions ---------- */
 type MetaData = {
@@ -29,7 +29,7 @@ export default function FlowClient() {
   const ticker = params.get('ticker') ?? '';
   const fileTicker = params.get('fileTicker') ?? ticker;
   const days = Number(params.get('days') ?? '60'); 
-  
+   
   const side = 'netBuy'; 
   const themeColor = COLORS[side];
 
@@ -38,14 +38,21 @@ export default function FlowClient() {
   const [meta, setMeta] = useState<MetaData | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  
+  // ✨ 족보 2개 다 불러옴
   const [aliasMap, setAliasMap] = useState<Record<string, string>>({});
+  const [tickerMap, setTickerMap] = useState<Record<string, string>>({});
 
-  /* ---------- 1. Alias Load ---------- */
+  /* ---------- 1. Alias & Ticker Map Load ---------- */
   useEffect(() => {
-    fetch('/data/name_alias.json')
-      .then(res => res.json())
-      .then(data => setAliasMap(data))
-      .catch(err => console.error("Alias Load Error:", err));
+    // Promise.all로 둘 다 불러오기
+    Promise.all([
+        fetch('/data/name_alias.json').then(res => res.json()),
+        fetch('/data/ticker_map.json').then(res => res.json())
+    ]).then(([nameData, tickerData]) => {
+        setAliasMap(nameData);
+        setTickerMap(tickerData);
+    }).catch(err => console.error("Map Load Error:", err));
   }, []);
 
   /* ---------- 2. Data Load ---------- */
@@ -57,6 +64,7 @@ export default function FlowClient() {
         setLoading(true);
         setErr(null);
 
+        // 티커 정제 (특수문자 제거)
         const safeTicker = ticker.toUpperCase().replace(/[^A-Z0-9]/g, "_");
         
         const res = await fetch(
@@ -238,22 +246,40 @@ export default function FlowClient() {
     }
   };
 
-  /* ---------- Render ---------- */
-  const displayName = aliasMap[fileTicker] || meta?.name || ticker;
+  /* ---------- Render Logic (DisplayName) ---------- */
+  // ✨ 이름 찾기 로직 강화: 정규화(대문자+trim) 후 검색
+  const normalize = (s: string) => s?.toUpperCase().trim() || '';
+  const key = normalize(fileTicker);
+  const tickerKey = normalize(ticker);
+
+  const displayName = 
+      aliasMap[key] ||           // 1순위: fileTicker(KEYNAME)으로 찾은 한글 이름
+      aliasMap[tickerKey] ||     // 2순위: ticker로 찾은 한글 이름
+      meta?.name ||              // 3순위: 데이터 파일 내 이름
+      ticker;                    // 4순위: 그냥 티커
 
   return (
     <div className="max-w-4xl mx-auto p-4 pb-20">
       
       {/* 🟢 Header */}
       <div className="mb-6 flex items-center gap-4">
-        {/* ... (Header 내용 동일) ... */}
         <div className="relative w-14 h-14 rounded-full overflow-hidden border border-gray-100 bg-white shadow-sm shrink-0">
+          {/* ✨ 로고 이미지 (안전장치 2중 적용) */}
           <Image
             src={`/logos/${encodeURIComponent(fileTicker)}.png`}
             alt={ticker}
             fill
             className="object-contain p-2"
-            onError={(e) => { e.currentTarget.src = '/logos/_us.png'; }}
+            onError={(e) => {
+                const target = e.currentTarget;
+                // 1. fileTicker(긴이름) 실패 시 -> ticker(짧은이름) 시도
+                if (!target.src.includes(encodeURIComponent(ticker))) {
+                    target.src = `/logos/${encodeURIComponent(ticker)}.png`;
+                } else {
+                    // 2. ticker도 실패 시 -> 미국 국기
+                    target.src = '/logos/_us.png';
+                }
+            }}
             unoptimized
           />
         </div>
@@ -264,7 +290,7 @@ export default function FlowClient() {
               {displayName}
             </h1>
             <span className="text-sm text-gray-400 font-medium">
-              {meta?.ticker}
+              {meta?.ticker || ticker}
             </span>
           </div>
 
@@ -289,26 +315,17 @@ export default function FlowClient() {
       {renderBadge()}
 
       {/* 🟢 Chart Area */}
-      <div className={`w-full rounded-xl border ${themeColor.border} bg-white p-2 shadow-sm mb-4 relative`}> {/* ✨ relative 유지 */}
+      <div className={`w-full rounded-xl border ${themeColor.border} bg-white p-2 shadow-sm mb-4 relative`}> 
         {loading && <div className="h-80 flex items-center justify-center text-gray-400 text-sm">데이터 로딩 중...</div>}
         {err && <div className="h-80 flex items-center justify-center text-red-400 text-sm">{err}</div>}
 
         {!loading && !err && rows.length > 0 && (
           <>
-            {/* ✨ NEW: 차트 공유하기 버튼 (우측 상단) */}
+            {/* ✨ 차트 공유하기 버튼 */}
             <div className="absolute top-3 right-5 z-20">
                 <button 
                   onClick={handleShare}
-                  // 👇 여기서 [색상]을 고르세요! (원하는 옵션 줄만 남기고 나머진 지우거나 주석 처리)
-                  
-                  // [옵션 1] 가장 추천: 연한 회색 (부드럽고 자연스러움)
-                  //className="flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-black px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
-
-                  // [옵션 2] 깔끔형: 흰색 + 테두리 (애플 감성)
-                   className="flex items-center gap-1 bg-white hover:bg-gray-50 border border-gray-500 shadow-sm text-gray-800 hover:text-black px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
-
-                  // [옵션 3] 파랑형: 연한 파란색 (순매수 테마랑 맞춤)
-                  // className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
+                  className="flex items-center gap-1 bg-white hover:bg-gray-50 border border-gray-500 shadow-sm text-gray-800 hover:text-black px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
                 >
                     <span className="text-sm">🔗</span>
                     <span className="text-[11px] font-bold">분석 차트 링크로 공유하기</span>
