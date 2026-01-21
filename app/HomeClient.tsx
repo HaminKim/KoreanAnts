@@ -5,6 +5,9 @@ import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 
+// 💰 사장님 구글 설문지 주소 (여기에 꼭 넣어주세요!)
+const GOOGLE_FORM_URL = "https://forms.gle/QjVKqFMDA4ULyYuK6"; 
+
 // ----------------------------------------------------------------------
 // 🛠️ 유틸리티 함수
 // ----------------------------------------------------------------------
@@ -20,9 +23,9 @@ function formatMoney(val: number) {
 // ----------------------------------------------------------------------
 type RankItem = {
   rank: number;
-  ticker: string;      
-  name: string;        
-  fileTicker: string;  
+  ticker: string;       
+  name: string;         
+  fileTicker: string;   
   value: number;
 };
 
@@ -41,35 +44,82 @@ export default function HomeClient() {
   const [items, setItems] = useState<RankItem[]>([]);
   const [loading, setLoading] = useState(false);
   
+  // ✨ 로그인 & 구독 상태
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const [isSubscribed, setIsSubscribed] = useState(false); 
 
   const isBuy = side === 'netBuy';
 
   // ----------------------------------------------------------------------
-  // 2. 로그인 체크
+  // 2. 로그인 & 구독 체크 (핵심)
   // ----------------------------------------------------------------------
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      
       if (session?.user) {
         setIsLoggedIn(true);
+
+        // 💰 구독자 테이블 확인
+        const { data: subData } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .eq('status', 'active')
+          .gt('end_date', new Date().toISOString())
+          .single();
+
+        setIsSubscribed(!!subData);
       } else {
         setIsLoggedIn(false);
-        setUserRole(null);
+        setIsSubscribed(false);
       }
     };
+
     checkUser();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(!!session);
+       if (session) {
+           setIsLoggedIn(true);
+       } else {
+           setIsLoggedIn(false);
+           setIsSubscribed(false);
+       }
     });
     return () => subscription.unsubscribe();
   }, [supabase]);
 
-  const hasAccess = isLoggedIn; 
+  // ----------------------------------------------------------------------
+  // 3. 잠금 해제 액션 핸들러 (랭크별 분기 처리)
+  // ----------------------------------------------------------------------
+  const handleLockAction = (rank: number) => {
+    // 1. 비로그인 상태면 -> 카카오 로그인
+    if (!isLoggedIn) {
+        supabase.auth.signInWithOAuth({
+            provider: 'kakao',
+            options: {
+                redirectTo: `${location.origin}/auth/callback`,
+                queryParams: { scope: 'profile_nickname,profile_image' },
+            },
+        });
+        return;
+    }
+
+    // 2. 로그인 했지만 구독 안 한 상태에서 1~2위 클릭 시 -> 결제 유도
+    if (rank <= 2 && !isSubscribed) {
+        const confirmPay = confirm(
+            "👑 1~2위는 프리미엄 전용입니다.\n\n" +
+            "월 29,900원에 실시간 수급 데이터를 무제한으로 보시겠습니까?\n" +
+            "(확인을 누르면 입금 신청 폼으로 이동합니다)"
+        );
+        if (confirmPay) {
+            window.open(GOOGLE_FORM_URL, '_blank');
+        }
+    }
+  };
 
   // ----------------------------------------------------------------------
-  // 3. URL <-> State 동기화
+  // 4. URL <-> State 동기화
   // ----------------------------------------------------------------------
   useEffect(() => {
     const spSide = searchParams.get('side');
@@ -78,9 +128,7 @@ export default function HomeClient() {
 
     if (spSide === 'netBuy' || spSide === 'netSell') setSide(spSide);
     if (spDays && !Number.isNaN(Number(spDays))) setDays(Number(spDays));
-    if (spTop && ['10','20','30'].includes(spTop)) {
-      setTopN(Number(spTop) as 10 | 20 | 30);
-    }
+    if (spTop && ['10','20','30'].includes(spTop)) setTopN(Number(spTop) as 10 | 20 | 30);
   }, []);
 
   useEffect(() => {
@@ -92,7 +140,7 @@ export default function HomeClient() {
   }, [side, days, topN, router]);
 
   // ----------------------------------------------------------------------
-  // 4. 데이터 로드
+  // 5. 데이터 로드
   // ----------------------------------------------------------------------
   useEffect(() => {
     async function fetchData() {
@@ -104,12 +152,8 @@ export default function HomeClient() {
             fetch('/data/name_alias.json')
         ]);
 
-        if (!rankRes.ok) throw new Error("Rank data fetch failed");
-
-        const rankJson = await rankRes.json();
         const tickerMap = await tickerRes.json();
         const nameMap = await nameRes.json();
-
         const normalize = (s: string) => s.toUpperCase().trim();
         const normTickerMap: Record<string, string> = {};
         const normNameMap: Record<string, string> = {};
@@ -117,22 +161,25 @@ export default function HomeClient() {
         Object.entries(tickerMap).forEach(([k, v]) => normTickerMap[normalize(k)] = String(v));
         Object.entries(nameMap).forEach(([k, v]) => normNameMap[normalize(k)] = String(v));
 
-        const rawItems = rankJson.items ?? [];
-        const processedItems = rawItems.map((it: any, index: number) => {
-            const rawName = (it.ticker || '').trim();
-            const key = normalize(rawName);
-            const shortTicker = normTickerMap[key] || rawName;
-            const koreanName = normNameMap[key] || shortTicker;
+        if (rankRes.ok) {
+            const rankJson = await rankRes.json();
+            const rawItems = rankJson.items ?? [];
+            const processedItems = rawItems.map((it: any, index: number) => {
+                const rawName = (it.ticker || '').trim();
+                const key = normalize(rawName);
+                const shortTicker = normTickerMap[key] || rawName;
+                const koreanName = normNameMap[key] || shortTicker;
 
-            return {
-                rank: side === 'netSell' ? index + 1 : it.rank,
-                ticker: shortTicker,
-                name: koreanName,
-                fileTicker: rawName,
-                value: it.value
-            };
-        });
-        setItems(processedItems);
+                return {
+                    rank: side === 'netSell' ? index + 1 : it.rank,
+                    ticker: shortTicker,
+                    name: koreanName,
+                    fileTicker: rawName,
+                    value: it.value
+                };
+            });
+            setItems(processedItems);
+        }
       } catch (e) {
         console.error(e);
         setItems([]);
@@ -146,7 +193,7 @@ export default function HomeClient() {
   const visibleItems = useMemo(() => items.slice(0, topN), [items, topN]);
 
   // ----------------------------------------------------------------------
-  // 5. 렌더링
+  // 6. 렌더링
   // ----------------------------------------------------------------------
   return (
     <>
@@ -157,7 +204,6 @@ export default function HomeClient() {
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse mb-4"></span>
           </h2>
           
-          {/* TOP 버튼 */}
           <div className="flex bg-gray-100 p-1 rounded-lg">
             {[10, 20, 30].map((n) => (
                 <button
@@ -209,7 +255,6 @@ export default function HomeClient() {
         </div>
       </div>
 
-      {/* 로딩 표시 */}
       {loading && (
           <div className="h-[400px] flex flex-col items-center justify-center gap-2 text-gray-400">
               <div className="w-8 h-8 border-4 border-gray-200 border-t-gray-400 rounded-full animate-spin"></div>
@@ -217,30 +262,38 @@ export default function HomeClient() {
           </div>
       )}
 
-      {/* 3️⃣ 랭킹 리스트 (내부 스크롤 박스 적용) */}
+      {/* 3️⃣ 랭킹 리스트 */}
       {!loading && (
-        // ✨ [핵심] 스크롤 박스 컨테이너
-        // h-[600px]: 높이 고정 (화면이 길어지지 않음)
-        // overflow-y-auto: 내용이 넘치면 이 박스 안에서만 스크롤됨
         <div className="h-[600px] overflow-y-auto pr-1 pb-10 scrollbar-hide md:scrollbar-default border-t border-gray-100 pt-4">
-            
-            {/* ✨ grid-cols-1: 모바일에서 1줄 복귀 */}
-            {/* ✨ gap-2: 모바일에서 간격을 좁게 (8px) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
                 {visibleItems.map((item, index) => {
                     const rank = index + 1;
-                    const isLocked = !hasAccess && index < 3;
+                    
+                    // ✨ [핵심] 계단식 잠금 로직
+                    const isPremiumLock = rank <= 2 && !isSubscribed;
+                    const isLoginLock = (rank === 3 || rank === 4) && !isLoggedIn;
+                    const isLocked = isPremiumLock || isLoginLock;
+
+                    // 잠금 멘트 설정
+                    let lockTitle = "";
+                    let lockBtnText = "";
+                    
+                    if (isPremiumLock) {
+                        lockTitle = "👑 Premium Only";
+                        lockBtnText = isLoggedIn ? "구독하고 잠금해제" : "로그인하고 1~2위 보기";
+                    } else if (isLoginLock) {
+                        lockTitle = "🔒 Member Only";
+                        lockBtnText = "로그인하고 무료 보기";
+                    }
 
                     return (
                         <div key={item.fileTicker + index} className="relative group">
                             
-                            {/* 카드 본문 */}
                             <div className={`
                                 flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl border transition-all bg-white
-                                ${isLocked ? 'blur-md opacity-60 pointer-events-none select-none grayscale' : 'hover:shadow-lg hover:-translate-y-1'}
+                                ${isLocked ? 'blur-md opacity-60 pointer-events-none select-none grayscale' : 'hover:shadow-lg hover:-translate-y-1 cursor-pointer'}
                                 ${isBuy ? 'hover:border-red-100 border-gray-100' : 'hover:border-blue-100 border-gray-100'}
                             `}>
-                                {/* 순위 (5위까지 색상) */}
                                 <div className={`
                                     w-8 h-8 flex items-center justify-center rounded-lg font-black text-sm md:text-lg shadow-sm shrink-0
                                     ${rank <= 5 
@@ -250,7 +303,6 @@ export default function HomeClient() {
                                     {rank}
                                 </div>
 
-                                {/* 로고 */}
                                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-gray-100 p-0.5 shrink-0 overflow-hidden">
                                     <img 
                                         src={`/logos/${encodeURIComponent(item.fileTicker)}.png`} 
@@ -267,7 +319,6 @@ export default function HomeClient() {
                                     />
                                 </div>
 
-                                {/* 정보 */}
                                 <div className="min-w-0 flex-1">
                                     <h3 className="font-bold text-gray-900 truncate text-sm md:text-base leading-tight">
                                         {item.name}
@@ -281,29 +332,23 @@ export default function HomeClient() {
                                 </div>
                             </div>
 
-                            {/* 자물쇠 오버레이 */}
+                            {/* 🔒 잠금 화면 오버레이 */}
                             {isLocked && (
                                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/10 rounded-2xl backdrop-blur-[1px]">
                                     <button 
-                                        onClick={() => {
-                                            supabase.auth.signInWithOAuth({
-                                                provider: 'kakao',
-                                                options: {
-                                                    redirectTo: `${location.origin}/auth/callback`,
-                                                    queryParams: { scope: 'profile_nickname,profile_image' },
-                                                },
-                                            });
-                                        }} 
-                                        className="bg-white shadow-xl px-3 py-2 md:px-4 md:py-2.5 rounded-full flex items-center gap-1.5 md:gap-2 cursor-pointer hover:scale-105 transition-transform border border-gray-100"
+                                        onClick={() => handleLockAction(rank)} 
+                                        className="bg-gray-900 shadow-xl px-4 py-2.5 rounded-full flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform border border-gray-700 group-hover:animate-pulse"
                                     >
-                                        <span className="text-base md:text-lg">🔒</span>
-                                        <span className="text-xs md:text-sm font-bold text-gray-800">
-                                            로그인하고 {rank}위 보기
-                                        </span>
+                                        <span className="text-lg">{isPremiumLock ? '👑' : '🔒'}</span>
+                                        <div className="flex flex-col items-start leading-none">
+                                            <span className="text-[10px] text-gray-300 font-medium mb-0.5">{lockTitle}</span>
+                                            <span className="text-sm font-bold text-white">{lockBtnText}</span>
+                                        </div>
                                     </button>
                                 </div>
                             )}
 
+                            {/* 링크 (잠금 아닐 때만 작동) */}
                             {!isLocked && (
                                 <Link 
                                     href={`/flow?ticker=${item.ticker}&fileTicker=${encodeURIComponent(item.fileTicker)}&side=${side}&days=${days}`}
