@@ -9,9 +9,9 @@ import IntroModal from './components/IntroModal';
 
 // 🛠️ 타입 정의
 type HookItem = {
-  ticker: string;
-  fileTicker: string;
-  name: string;
+  ticker: string;     // 예: TSLA
+  fileTicker: string; // 예: TESLA INC (로고 파일명 찾는 용도)
+  name: string;       // 예: 테슬라 (화면 표시 용도)
   value: number;
   type: 'buy' | 'sell';
 };
@@ -66,15 +66,18 @@ export default function Page() {
         Object.entries(nameMap).forEach(([k, v]) => normalizedNameMap[normalizeKey(k)] = String(v));
 
         const enrichItem = (item: any, type: 'buy' | 'sell'): HookItem => {
+          // 1. 원본 키네임 가져오기 (예: TESLA INC)
           const rawName = (item.ticker || '').trim();
           const lookupKey = normalizeKey(rawName);
-          const shortTicker = normalizedTickerMap[lookupKey] || rawName;
-          const koreanName = normalizedNameMap[lookupKey] || shortTicker;
+
+          // 2. 족보에서 찾기
+          const shortTicker = normalizedTickerMap[lookupKey] || rawName; // TSLA
+          const koreanName = normalizedNameMap[lookupKey] || shortTicker; // 테슬라
 
           return {
-            ticker: shortTicker,
-            fileTicker: rawName,
-            name: koreanName,
+            ticker: shortTicker, // 화면에 작게 보여줄 티커
+            fileTicker: rawName, // ✨ 로고 찾을 때 쓸 원본 키네임 (중요!)
+            name: koreanName,    // 화면에 크게 보여줄 한글 이름
             value: item.value,
             type
           };
@@ -201,20 +204,23 @@ export default function Page() {
           {/* [Left] 줍줍 1위 */}
           {hookItems[0] ? (
             <Link 
-              href={`/flow?ticker=${hookItems[0].ticker}&fileTicker=${hookItems[0].fileTicker}&side=netBuy&days=5`} 
+              href={`/flow?ticker=${hookItems[0].ticker}&fileTicker=${encodeURIComponent(hookItems[0].fileTicker)}&side=netBuy&days=5`} 
               className="group h-full"
             >
               <div className="bg-white rounded-xl p-4 shadow-lg border-t-4 border-blue-500 hover:-translate-y-1 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
                 <div className="absolute top-3 right-3 w-12 h-12 rounded-full border border-gray-100 bg-white p-0.5 shadow-sm group-hover:scale-110 transition">
+                  {/* ✨ 수정됨: name 대신 fileTicker 사용 */}
                   <img 
-                    src={`/logos/${encodeURIComponent(hookItems[0].name)}.png`} 
+                    src={`/logos/${encodeURIComponent(hookItems[0].fileTicker)}.png`} 
                     alt={hookItems[0].name}
                     className="w-full h-full rounded-full object-cover"
                     onError={(e) => { 
                       const img = e.currentTarget;
+                      // 1차 시도 실패 시 티커로 재시도
                       if (hookItems[0] && !img.src.includes(encodeURIComponent(hookItems[0].ticker))) {
                         img.src = `/logos/${encodeURIComponent(hookItems[0].ticker)}.png`;
                       } else {
+                        // 티커도 실패하면 미국 국기
                         img.src = '/logos/_us.png';
                       }
                     }}
@@ -245,13 +251,14 @@ export default function Page() {
           {/* [Right] 매도 1위 */}
           {hookItems[1] ? (
             <Link 
-              href={`/flow?ticker=${hookItems[1].ticker}&fileTicker=${hookItems[1].fileTicker}&side=netSell&days=5`} 
+              href={`/flow?ticker=${hookItems[1].ticker}&fileTicker=${encodeURIComponent(hookItems[1].fileTicker)}&side=netSell&days=5`} 
               className="group h-full"
             >
               <div className="bg-white rounded-xl p-4 shadow-lg border-t-4 border-red-500 hover:-translate-y-1 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
                 <div className="absolute top-3 right-3 w-12 h-12 rounded-full border border-gray-100 bg-white p-0.5 shadow-sm group-hover:scale-110 transition">
+                  {/* ✨ 수정됨: name 대신 fileTicker 사용 */}
                   <img 
-                    src={`/logos/${encodeURIComponent(hookItems[1].name)}.png`} 
+                    src={`/logos/${encodeURIComponent(hookItems[1].fileTicker)}.png`} 
                     alt={hookItems[1].name}
                     className="w-full h-full rounded-full object-cover"
                     onError={(e) => { 
