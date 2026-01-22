@@ -1,57 +1,57 @@
 {
-  "date": "2026-01-22",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-01-23",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "SOXL",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -661939633.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 244858747.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TQQQ",
-      "name": "TQQQ",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -62909537.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "SNDK",
+      "name": "SNDK",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": 86769337.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "META",
-      "name": "META",
-      "raw_name": "META PLATFORMS INC CL A",
-      "value": -37415233.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "ticker": "MU",
+      "name": "MU",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 77054201.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "LITE",
-      "name": "LITE",
-      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": -34593143.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "TQQQ",
+      "name": "TQQQ",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 72885745.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "IRE",
-      "name": "IRE",
-      "raw_name": "DEFIANCE DAILY TARGET 2X LONG IREN ETF",
-      "value": -28331109.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "VOO",
+      "name": "VOO",
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 64402772.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
