@@ -5,8 +5,8 @@ import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 
-// 💰 사장님 구글 설문지 주소 (여기에 꼭 넣어주세요!)
-const GOOGLE_FORM_URL = "https://forms.gle/QjVKqFMDA4ULyYuK6"; 
+// 💰 사장님 구글 설문지 주소
+const GOOGLE_FORM_URL = "https://forms.gle/여기에_설문지_주소_넣기"; 
 
 // ----------------------------------------------------------------------
 // 🛠️ 유틸리티 함수
@@ -51,7 +51,7 @@ export default function HomeClient() {
   const isBuy = side === 'netBuy';
 
   // ----------------------------------------------------------------------
-  // 2. 로그인 & 구독 체크 (핵심)
+  // 2. 로그인 & 구독 체크
   // ----------------------------------------------------------------------
   useEffect(() => {
     const checkUser = async () => {
@@ -60,7 +60,6 @@ export default function HomeClient() {
       if (session?.user) {
         setIsLoggedIn(true);
 
-        // 💰 구독자 테이블 확인
         const { data: subData } = await supabase
           .from('subscriptions')
           .select('*')
@@ -90,10 +89,10 @@ export default function HomeClient() {
   }, [supabase]);
 
   // ----------------------------------------------------------------------
-  // 3. 잠금 해제 액션 핸들러 (랭크별 분기 처리)
+  // 3. 잠금 해제 액션 핸들러 (전략 수정됨)
   // ----------------------------------------------------------------------
   const handleLockAction = (rank: number) => {
-    // 1. 비로그인 상태면 -> 카카오 로그인
+    // 1. 비로그인 상태면 -> 무조건 카카오 로그인 유도
     if (!isLoggedIn) {
         supabase.auth.signInWithOAuth({
             provider: 'kakao',
@@ -105,15 +104,11 @@ export default function HomeClient() {
         return;
     }
 
-    // 2. 로그인 했지만 구독 안 한 상태에서 1~2위 클릭 시 -> 결제 유도
-    if (rank <= 2 && !isSubscribed) {
-        const confirmPay = confirm(
-            "👑 1~2위는 프리미엄 전용입니다.\n\n" +
-            "월 29,900원에 실시간 수급 데이터를 무제한으로 보시겠습니까?\n" +
-            "(확인을 누르면 입금 신청 폼으로 이동합니다)"
-        );
-        if (confirmPay) {
-            window.open(GOOGLE_FORM_URL, '_blank');
+    // 2. 5일 데이터가 '아닐 때'만 유료 결제 체크
+    if (days !== 5) {
+        // 로그인 했는데 1~2위(프리미엄) 클릭 & 미구독 -> 결제 안내
+        if (rank <= 2 && !isSubscribed) {
+            router.push('/premium'); 
         }
     }
   };
@@ -269,20 +264,40 @@ export default function HomeClient() {
                 {visibleItems.map((item, index) => {
                     const rank = index + 1;
                     
-                    // ✨ [핵심] 계단식 잠금 로직
-                    const isPremiumLock = rank <= 2 && !isSubscribed;
-                    const isLoginLock = (rank === 3 || rank === 4) && !isLoggedIn;
+                    // ✨ [핵심] 사장님의 "5일 미끼" 작전 적용
+                    const isFiveDays = days === 5;
+                    
+                    let isPremiumLock = false;
+                    let isLoginLock = false;
+
+                    if (isFiveDays) {
+                        // 5일일 때: 1~4위는 '로그인'만 하면 보임 (구독 X)
+                        if (rank <= 4 && !isLoggedIn) {
+                             isLoginLock = true;
+                        }
+                    } else {
+                        // 다른 날짜: 1~2위(유료), 3~4위(로그인)
+                        if (rank <= 2 && !isSubscribed) {
+                            isPremiumLock = true;
+                        } else if ((rank === 3 || rank === 4) && !isLoggedIn) {
+                            isLoginLock = true;
+                        }
+                    }
+
                     const isLocked = isPremiumLock || isLoginLock;
 
-                    // 잠금 멘트 설정
+                    // 잠금 멘트 및 아이콘 설정
                     let lockTitle = "";
                     let lockBtnText = "";
+                    let lockIcon = "🔒";
                     
                     if (isPremiumLock) {
                         lockTitle = "👑 Premium Only";
-                        lockBtnText = isLoggedIn ? "구독하고 잠금해제" : "로그인하고 1~2위 보기";
+                        lockIcon = "👑";
+                        lockBtnText = isLoggedIn ? "구독하고 잠금해제" : " 구독하고 잠금해제";
                     } else if (isLoginLock) {
                         lockTitle = "🔒 Member Only";
+                        lockIcon = "🔒";
                         lockBtnText = "로그인하고 무료 보기";
                     }
 
@@ -339,7 +354,7 @@ export default function HomeClient() {
                                         onClick={() => handleLockAction(rank)} 
                                         className="bg-gray-900 shadow-xl px-4 py-2.5 rounded-full flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform border border-gray-700 group-hover:animate-pulse"
                                     >
-                                        <span className="text-lg">{isPremiumLock ? '👑' : '🔒'}</span>
+                                        <span className="text-lg">{lockIcon}</span>
                                         <div className="flex flex-col items-start leading-none">
                                             <span className="text-[10px] text-gray-300 font-medium mb-0.5">{lockTitle}</span>
                                             <span className="text-sm font-bold text-white">{lockBtnText}</span>
