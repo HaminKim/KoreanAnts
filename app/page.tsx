@@ -66,18 +66,15 @@ export default function Page() {
         Object.entries(nameMap).forEach(([k, v]) => normalizedNameMap[normalizeKey(k)] = String(v));
 
         const enrichItem = (item: any, type: 'buy' | 'sell'): HookItem => {
-          // 1. 원본 키네임 가져오기 (예: TESLA INC)
           const rawName = (item.ticker || '').trim();
           const lookupKey = normalizeKey(rawName);
-
-          // 2. 족보에서 찾기
-          const shortTicker = normalizedTickerMap[lookupKey] || rawName; // TSLA
-          const koreanName = normalizedNameMap[lookupKey] || shortTicker; // 테슬라
+          const shortTicker = normalizedTickerMap[lookupKey] || rawName; 
+          const koreanName = normalizedNameMap[lookupKey] || shortTicker; 
 
           return {
-            ticker: shortTicker, // 화면에 작게 보여줄 티커
-            fileTicker: rawName, // ✨ 로고 찾을 때 쓸 원본 키네임 (중요!)
-            name: koreanName,    // 화면에 크게 보여줄 한글 이름
+            ticker: shortTicker,
+            fileTicker: rawName,
+            name: koreanName,
             value: item.value,
             type
           };
@@ -124,6 +121,7 @@ export default function Page() {
 
   const heroContent = useMemo(() => {
     const score = marketScore ?? 50;
+    // ... 기존 히어로 로직 유지 ...
     if (score <= 20) return {
         badge: "🥶 EXTREME FEAR", badgeColor: "text-indigo-200 bg-indigo-900/50 border-indigo-500/50", dotColor: "bg-indigo-400",
         title: <>시장은 지금 <br className="md:hidden" />😱 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300">절망</span>에 빠져있습니다.</>,
@@ -197,100 +195,120 @@ export default function Page() {
         </div>
       </div>
 
-      {/* 3️⃣ [HOOK] 추천 카드 */}
+{/* 3️⃣ [HOOK] 추천 카드 - ✨ 1줄 설명 & 깔끔한 정리 */}
       <section className="max-w-5xl mx-auto px-4 mb-8">
         <div className="grid grid-cols-2 gap-3">
           
-          {/* [Left] 줍줍 1위 */}
+          {/* [Left] 줍줍 1위 (빨강 계열) */}
           {hookItems[0] ? (
             <Link 
               href={`/flow?ticker=${hookItems[0].ticker}&fileTicker=${encodeURIComponent(hookItems[0].fileTicker)}&side=netBuy&days=5`} 
               className="group h-full"
             >
-              <div className="bg-white rounded-xl p-4 shadow-lg border-t-4 border-blue-500 hover:-translate-y-1 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute top-3 right-3 w-12 h-12 rounded-full border border-gray-100 bg-white p-0.5 shadow-sm group-hover:scale-110 transition">
-                  {/* ✨ 수정됨: name 대신 fileTicker 사용 */}
-                  <img 
-                    src={`/logos/${encodeURIComponent(hookItems[0].fileTicker)}.png`} 
-                    alt={hookItems[0].name}
-                    className="w-full h-full rounded-full object-cover"
-                    onError={(e) => { 
-                      const img = e.currentTarget;
-                      // 1차 시도 실패 시 티커로 재시도
-                      if (hookItems[0] && !img.src.includes(encodeURIComponent(hookItems[0].ticker))) {
-                        img.src = `/logos/${encodeURIComponent(hookItems[0].ticker)}.png`;
-                      } else {
-                        // 티커도 실패하면 미국 국기
-                        img.src = '/logos/_us.png';
-                      }
-                    }}
-                  />
-                </div>
+              <div className="bg-gradient-to-br from-red-50/25 to-white rounded-2xl p-4 border border-red-100 hover:border-red-200 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
                 
-                <div>
-                  <span className="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-1 rounded-full">💎 순매수 1위</span>
-                  <div className="mt-3 mb-1 pr-12">
-                    <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition break-keep">
-                      {hookItems[0].name}
-                    </h3>
-                    <span className="text-xs text-gray-400 font-mono">{hookItems[0].ticker}</span>
+                {/* 상단 뱃지와 아이콘 */}
+                <div className="flex justify-between items-start mb-3">
+                  <span className="bg-red-100 text-red-600 text-xs font-bold px-3 py-1.5 rounded-full tracking-tight">
+                    순매수 1위
+                  </span>
+                  <div className="w-11 h-11  rounded-full border border-red-100 bg-white p-0.5 group-hover:scale-105 transition-transform">
+                    <img 
+                      src={`/logos/${encodeURIComponent(hookItems[0].fileTicker)}.png`} 
+                      alt={hookItems[0].name}
+                      className="w-full h-full rounded-full object-cover"
+                      onError={(e) => { 
+                        const img = e.currentTarget;
+                        if (hookItems[0] && !img.src.includes(encodeURIComponent(hookItems[0].ticker))) {
+                          img.src = `/logos/${encodeURIComponent(hookItems[0].ticker)}.png`;
+                        } else {
+                          img.src = '/logos/_us.png';
+                        }
+                      }}
+                    />
                   </div>
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-dashed border-gray-100">
-                  <p className="text-xs text-gray-500 leading-tight">
-                    개미들이 가장 많이 <br/><span className="text-blue-600 font-bold">쓸어 담은 종목</span>
+                {/* [Left] 줍줍 1위 (좌측 카드) */}
+                <div className="pr-2">
+                  {/* ✨ 수정됨: 기준 20글자 */}
+                  <h3 className={`font-bold text-gray-900 mb-0.5 break-keep ${
+                      hookItems[0].name.length > 20 ? 'text-sm leading-tight' : 'text-lg leading-tight'
+                  }`}>
+                    {hookItems[0].name}
+                  </h3>
+                  <span className="text-[13px] text-gray-400 font-medium font-mono">
+                    {hookItems[0].ticker}
+                  </span>
+                </div>
+
+                {/* ✨ 하단 설명 - 1줄로 수정 */}
+                <div className="mt-3 pt-3 border-t border-red-100/50">
+                  <p className="text-xs text-gray-600 font-medium leading-tight">
+                    개미들이 <span className="text-red-600 font-bold">쓸어 담은 종목</span>
                   </p>
                 </div>
+
               </div>
             </Link>
           ) : (
-            <div className="bg-gray-100 rounded-xl h-32 animate-pulse"></div>
+            <div className="bg-gray-50 rounded-2xl h-36 animate-pulse border border-gray-100"></div>
           )}
 
-          {/* [Right] 매도 1위 */}
+          {/* [Right] 매도 1위 (파랑 계열) */}
           {hookItems[1] ? (
             <Link 
               href={`/flow?ticker=${hookItems[1].ticker}&fileTicker=${encodeURIComponent(hookItems[1].fileTicker)}&side=netSell&days=5`} 
               className="group h-full"
             >
-              <div className="bg-white rounded-xl p-4 shadow-lg border-t-4 border-red-500 hover:-translate-y-1 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute top-3 right-3 w-12 h-12 rounded-full border border-gray-100 bg-white p-0.5 shadow-sm group-hover:scale-110 transition">
-                  {/* ✨ 수정됨: name 대신 fileTicker 사용 */}
-                  <img 
-                    src={`/logos/${encodeURIComponent(hookItems[1].fileTicker)}.png`} 
-                    alt={hookItems[1].name}
-                    className="w-full h-full rounded-full object-cover"
-                    onError={(e) => { 
-                      const img = e.currentTarget;
-                      if (hookItems[1] && !img.src.includes(encodeURIComponent(hookItems[1].ticker))) {
-                        img.src = `/logos/${encodeURIComponent(hookItems[1].ticker)}.png`;
-                      } else {
-                        img.src = '/logos/_us.png';
-                      }
-                    }}
-                  />
-                </div>
+              <div className="bg-gradient-to-br from-blue-50/25 to-white rounded-2xl p-4 border border-blue-100 hover:border-blue-200 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
                 
-                <div>
-                  <span className="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-1 rounded-full">🚧 순매도 1위</span>
-                  <div className="mt-3 mb-1 pr-12">
-                    <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-red-600 transition break-keep">
-                      {hookItems[1].name}
-                    </h3>
-                    <span className="text-xs text-gray-400 font-mono">{hookItems[1].ticker}</span>
+                {/* 상단 뱃지와 아이콘 */}
+                <div className="flex justify-between items-start mb-3">
+                  <span className="bg-blue-100 text-blue-600 text-xs font-bold px-3 py-1.5 rounded-full tracking-tight">
+                    순매도 1위
+                  </span>
+                  <div className="w-11 h-11 rounded-full border border-blue-100 bg-white p-0.5 group-hover:scale-105 transition-transform">
+                    <img 
+                      src={`/logos/${encodeURIComponent(hookItems[1].fileTicker)}.png`} 
+                      alt={hookItems[1].name}
+                      className="w-full h-full rounded-full object-cover"
+                      onError={(e) => { 
+                        const img = e.currentTarget;
+                        if (hookItems[1] && !img.src.includes(encodeURIComponent(hookItems[1].ticker))) {
+                          img.src = `/logos/${encodeURIComponent(hookItems[1].ticker)}.png`;
+                        } else {
+                          img.src = '/logos/_us.png';
+                        }
+                      }}
+                    />
                   </div>
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-dashed border-gray-100">
-                  <p className="text-xs text-gray-500 leading-tight">
-                    개미들이 가장 많이 <br/><span className="text-red-500 font-bold">던지고 떠난 종목</span>
+                {/* [Right] 매도 1위 (우측 카드) */}
+                <div className="pr-2">
+                  {/* ✨ 수정됨: 기준 20글자 */}
+                  <h3 className={`font-bold text-gray-900 mb-0.5 break-keep ${
+                      hookItems[1].name.length > 20 ? 'text-sm leading-tight' : 'text-lg leading-tight'
+                  }`}>
+                    {hookItems[1].name}
+                  </h3>
+                  <span className="text-[13px] text-gray-400 font-medium font-mono">
+                    {hookItems[1].ticker}
+                  </span>
+                </div>
+
+                {/* ✨ 하단 설명 - 1줄로 수정 */}
+                <div className="mt-3 pt-3 border-t border-blue-100/50">
+                  <p className="text-xs text-gray-600 font-medium leading-tight">
+                    개미들이 <span className="text-blue-500 font-bold">던지고 떠난 종목</span>
                   </p>
                 </div>
+
               </div>
             </Link>
           ) : (
-             <div className="bg-gray-100 rounded-xl h-32 animate-pulse"></div>
+            <div className="bg-gray-50 rounded-2xl h-36 animate-pulse border border-gray-100"></div>
           )}
 
         </div>
