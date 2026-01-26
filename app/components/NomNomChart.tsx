@@ -115,7 +115,7 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
   const nextSlide = () => setSlideIndex((prev) => Math.min(prev + 1, 3));
   const prevSlide = () => setSlideIndex((prev) => Math.max(prev - 1, 0));
 
-  // ✨ [버그 수정] PC화면(md 이상) 되면 슬라이드 초기화
+  // PC화면(md 이상) 되면 슬라이드 초기화
   useEffect(() => {
     const handleResize = () => {
         if (window.innerWidth >= 768) { 
@@ -220,19 +220,18 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
                             />
                         </div>
                         <div className="flex flex-col min-w-0">
-                            <h3 className="text-lg font-bold text-gray-900 truncate leading-tight group-hover:text-blue-600 transition-colors">{displayName}</h3>
+                            <h3 className="text-sm font-bold text-gray-900 truncate leading-tight group-hover:text-blue-600 transition-colors">{displayName}</h3>
                             <span className="text-[10px] font-bold text-gray-400 font-mono">{cardData.ticker}</span>
                         </div>
                     </div>
 
                     {/* 오른쪽: 등락률 & 가격 */}
                     <div className="text-right pl-2">
-                        {/* ✨ [수정] 등락률은 text-base로 적당하게 (너무 크지 않게) */}
+                        {/* 등락률: text-base (적당히) */}
                         <div className={`text-base font-extrabold ${Number(pct) > 0 ? 'text-red-500' : 'text-blue-500'}`}>
                             {Number(pct) > 0 ? '+' : ''}{pct}%
                         </div>
-                        
-                        {/* ✨ [수정] 가격은 text-xs로 키움 (기존 10px -> 12px) */}
+                        {/* 가격: text-xs (기존보다 키움) */}
                         {cardData.close && (
                             <div className="text-xs text-gray-500 font-medium mt-0.5">
                                 ${cardData.close.toFixed(2)}
@@ -263,10 +262,10 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
       const t = themes[type];
 
       return (
-        <div className={`w-full flex-shrink-0 md:w-auto snap-center bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col h-full overflow-hidden hover:border-gray-200 transition-colors`}>
+        <div className={`w-full flex-shrink-0 md:w-auto snap-center bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col h-full overflow-hidden hover:border-gray-200 transition-colors`}>
             
-            {/* Header Block */}
-            <div className={`px-4 py-3 ${t.bg} border-b ${t.border} flex items-center gap-2`}>
+            {/* Header Block: padding 줄여서 공간 확보 (px-4 -> px-3) */}
+            <div className={`px-3 py-3 ${t.bg} border-b ${t.border} flex items-center gap-2`}>
                 <span className={`text-base font-black tracking-tight ${t.title}`}>{title}</span>
                 <span className="text-[10px] text-gray-400 opacity-50">|</span>
                 <span className={`text-xs font-bold opacity-90 ${t.desc}`}>{desc}</span>
@@ -281,8 +280,9 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
   };
 
   return (
-    <section className="max-w-5xl mx-auto px-4 mb-12">
-      <div className="mb-4 flex items-end justify-between">
+    // ✨ [핵심 수정] 모바일 여백 px-2로 축소 (와이드 효과) / PC는 px-4 유지
+    <section className="max-w-5xl mx-auto px-0.8 md:px-4 mb-12">
+      <div className="mb-4 flex items-end justify-between px-1.5 md:px-0">
         <div>
             <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">🤔 매수/매도가 고민될 때... 💭</h2>
             <p className="text-sm text-gray-500 mt-1">최근 <span className="font-bold text-gray-800">5일간</span> 주가 패턴을 AI로 분석합니다.</p>
@@ -298,7 +298,7 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
       {/* 모바일: 슬라이드 / 데스크탑: 2x2 그리드 */}
       <div className="relative overflow-hidden md:overflow-visible">
           
-          {/* 모바일 전용 버튼 (반투명, mt-4.5) */}
+          {/* 모바일 전용 버튼 */}
           {slideIndex > 0 && (
             <button 
                 onClick={prevSlide} 
@@ -317,7 +317,7 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
             </button>
           )}
 
-          {/* 트랙 - PC일 땐 transform-none으로 슬라이드 효과 무시 */}
+          {/* 트랙 */}
           <div 
             className="flex transition-transform duration-300 ease-out md:grid md:grid-cols-2 md:gap-6 md:transform-none"
             style={{ transform: `translateX(-${slideIndex * 100}%)` }} 
