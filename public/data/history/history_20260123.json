@@ -1,54 +1,114 @@
 {
-  "fire": {
-    "name": "ADVANCED MICRO DEVICES INC",
-    "name_kr": "AMD",
-    "ticker": "AMD",
-    "file_ticker": "ADVANCED MICRO DEVICES INC",
-    "close": 259.68,
-    "price_change": 0.12013113056981406,
-    "net_buy_sum": -18286154,
-    "buy_score": 1,
-    "sell_score": 6,
-    "last_date": "2026-01-23",
-    "comment": "개미 털고 세력 떡상 중 🚀"
-  },
-  "top": {
-    "name": "SNDSK CRP ORD WI",
-    "name_kr": "샌디스크",
-    "ticker": "SNDK",
-    "file_ticker": "SNDSK CRP ORD WI",
-    "close": 473.83,
-    "price_change": 0.14556839611237363,
-    "net_buy_sum": 44360940,
-    "buy_score": 6,
-    "sell_score": 1,
-    "last_date": "2026-01-23",
-    "comment": "고점 판독기 삐빅... 조심해 ⚠️"
-  },
-  "bottom": {
-    "name": "BLOOM ENERGY CORP CL A",
-    "name_kr": "블룸 에너지",
-    "ticker": "BE",
-    "file_ticker": "BLOOM ENERGY CORP CL A",
-    "close": 144.89,
-    "price_change": -0.030836120401337885,
-    "net_buy_sum": -24198098,
-    "buy_score": 0,
-    "sell_score": 6,
-    "last_date": "2026-01-23",
-    "comment": "공포에 줍줍할 기회인가 💎"
-  },
-  "knife": {
-    "name": "IONQ INC",
-    "name_kr": "아이온큐",
-    "ticker": "IONQ",
-    "file_ticker": "IONQ INC",
-    "close": 47.25,
-    "price_change": -0.06988188976377947,
-    "net_buy_sum": 22875003,
-    "buy_score": 4,
-    "sell_score": 3,
-    "last_date": "2026-01-23",
-    "comment": "물타기하다 익사한다... 도망쳐! 🩸"
-  }
+  "fire": [
+    {
+      "name": "ADVANCED MICRO DEVICES INC",
+      "name_kr": "AMD",
+      "ticker": "AMD",
+      "file_ticker": "ADVANCED MICRO DEVICES INC",
+      "close": 259.68,
+      "price_change": 0.12013113056981406,
+      "net_buy_sum": -18286154,
+      "buy_score": 1,
+      "sell_score": 6,
+      "last_date": "2026-01-23",
+      "comment": "개미 털고 세력 떡상 중 🚀"
+    },
+    {
+      "name": "META PLATFORMS INC CL A",
+      "name_kr": "메타",
+      "ticker": "META",
+      "file_ticker": "META PLATFORMS INC CL A",
+      "close": 658.76,
+      "price_change": 0.06208786779524384,
+      "net_buy_sum": -7069917,
+      "buy_score": 0,
+      "sell_score": 6,
+      "last_date": "2026-01-23",
+      "comment": "개미 털고 세력 떡상 중 🚀"
+    }
+  ],
+  "top": [
+    {
+      "name": "SNDSK CRP ORD WI",
+      "name_kr": "샌디스크",
+      "ticker": "SNDK",
+      "file_ticker": "SNDSK CRP ORD WI",
+      "close": 473.83,
+      "price_change": 0.14556839611237363,
+      "net_buy_sum": 44360940,
+      "buy_score": 6,
+      "sell_score": 1,
+      "last_date": "2026-01-23",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    },
+    {
+      "name": "MICRON TECHNOLOGY INC",
+      "name_kr": "마이크론 테크놀로지",
+      "ticker": "MU",
+      "file_ticker": "MICRON TECHNOLOGY INC",
+      "close": 399.65,
+      "price_change": 0.10172294968986899,
+      "net_buy_sum": 113969796,
+      "buy_score": 5,
+      "sell_score": 2,
+      "last_date": "2026-01-23",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    }
+  ],
+  "bottom": [
+    {
+      "name": "BLOOM ENERGY CORP CL A",
+      "name_kr": "블룸 에너지",
+      "ticker": "BE",
+      "file_ticker": "BLOOM ENERGY CORP CL A",
+      "close": 144.89,
+      "price_change": -0.030836120401337885,
+      "net_buy_sum": -24198098,
+      "buy_score": 0,
+      "sell_score": 6,
+      "last_date": "2026-01-23",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    },
+    {
+      "name": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "name_kr": "브로드컴",
+      "ticker": "AVGO",
+      "file_ticker": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "close": 320.05,
+      "price_change": -0.09001734383440894,
+      "net_buy_sum": -507465,
+      "buy_score": 3,
+      "sell_score": 4,
+      "last_date": "2026-01-23",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    }
+  ],
+  "knife": [
+    {
+      "name": "IONQ INC",
+      "name_kr": "아이온큐",
+      "ticker": "IONQ",
+      "file_ticker": "IONQ INC",
+      "close": 47.25,
+      "price_change": -0.06988188976377947,
+      "net_buy_sum": 22875003,
+      "buy_score": 4,
+      "sell_score": 3,
+      "last_date": "2026-01-23",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    },
+    {
+      "name": "ALTC ACQUISITION CORP",
+      "name_kr": "오클로",
+      "ticker": "OKLO",
+      "file_ticker": "ALTC ACQUISITION CORP",
+      "close": 87.63,
+      "price_change": -0.07709320695102694,
+      "net_buy_sum": 11521037,
+      "buy_score": 4,
+      "sell_score": 1,
+      "last_date": "2026-01-23",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    }
+  ]
 }

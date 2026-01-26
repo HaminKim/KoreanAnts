@@ -17,17 +17,17 @@ NAME_ALIAS_FILE = os.path.join(DATA_DIR, 'name_alias.json')
 
 TARGET_RANKS = ['netBuy_5.json', 'netBuy_10.json', 'netSell_5.json', 'netSell_10.json']
 
-# ✨ [수정] 최소 점수 완화 (4일 -> 3일)
-MIN_SCORE_CUTLINE = 4
+# ✨ 최소 점수 (3일)
+MIN_SCORE_CUTLINE = 3
 
 # 🚫 ETF 및 파생상품 필터링 키워드
 BLACKLIST_KEYWORDS = [
-    "ETF", "ETN", "FUND", "TRUST", "LP",          
-    "2X", "3X", "-1X", "-2X", "-3X", "1.5X",      
-    "BULL", "BEAR", "ULTRA", "SHORT", "LONG",     
-    "SHARES", "VANGUARD", "ISHARES", "DIREXION",  
+    "ETF", "ETN", "FUND", "TRUST", "LP",           
+    "2X", "3X", "-1X", "-2X", "-3X", "1.5X",       
+    "BULL", "BEAR", "ULTRA", "SHORT", "LONG",      
+    "SHARES", "VANGUARD", "ISHARES", "DIREXION",   
     "PROSHARES", "INVESCO", "SPDR", "SWAP", "VIX", 
-    "HOLDINGS", "GROUP", "PARTNERS"               
+    "HOLDINGS", "GROUP", "PARTNERS"                
 ]
 
 # -----------------------------------------------------------
@@ -102,7 +102,7 @@ def analyze_stock(file_path, file_ticker_name, alias_map):
         "close": current_price,
         "price_change": price_change_pct,
         "net_buy_sum": net_buy_sum,
-        "buy_score": buy_days_count,    
+        "buy_score": buy_days_count,     
         "sell_score": sell_days_count,
         "last_date": last_date 
     }
@@ -123,7 +123,7 @@ def get_comment(type_key):
 # 5. 메인 실행
 # -----------------------------------------------------------
 def main():
-    print(f"🚀 놈놈놈 V7 (기준 완화: {MIN_SCORE_CUTLINE}일) 시작...")
+    print(f"🚀 놈놈놈 V8 (Top 2 모드) 시작...")
     
     ticker_map = load_json(MAP_FILE) or {}
     normalized_ticker_map = {k.upper().strip(): v for k, v in ticker_map.items()}
@@ -156,50 +156,55 @@ def main():
     final_result = {}
     pools = {"fire": [], "top": [], "bottom": [], "knife": []}
 
-    # ✨ [수정] 등락폭 기준 완화 (더 많은 종목 포착)
     for stock in analyzed_pool:
         pct = stock['price_change']
         net = stock['net_buy_sum']
         
-        # Fire: 3% -> 4%
         if pct > 0.04 and net < 0: pools['fire'].append(stock)
-        # Top: 5% -> 4%
         elif pct > 0.04 and net > 0: pools['top'].append(stock)
-        # Bottom: -5% -> -2.5%
         elif pct < -0.025 and net < 0: pools['bottom'].append(stock)
-        # Knife: -3% -> -2%
         elif pct < -0.03 and net > 0: pools['knife'].append(stock)
 
-    def pick_qualified_best(category_pool, score_key, sort_key_func):
-        if not category_pool: return None
+    # ✨ [핵심] 상위 N개(2개) 선정 함수로 변경
+    def pick_qualified_top_n(category_pool, score_key, sort_key_func, n=2):
+        if not category_pool: return []
+        # 정렬
         sorted_pool = sorted(category_pool, key=sort_key_func, reverse=True)
-        best_pick = sorted_pool[0]
         
-        if best_pick[score_key] < MIN_SCORE_CUTLINE:
-            # print(f"⚠️ 과락: {best_pick['ticker']} (점수: {best_pick[score_key]})")
-            return None
-        return best_pick
+        candidates = []
+        for item in sorted_pool:
+            # 점수 커트라인 체크
+            if item[score_key] >= MIN_SCORE_CUTLINE:
+                candidates.append(item)
+                if len(candidates) == n: break # 2개 채우면 중단
+        
+        return candidates
 
-    pick = pick_qualified_best(pools['fire'], 'sell_score', lambda x: (x['sell_score'], x['price_change']))
-    if pick:
-        pick['comment'] = get_comment('fire')
-        final_result['fire'] = pick
+    # 1. Fire (세력 떡상) - 2개 뽑기
+    picks = pick_qualified_top_n(pools['fire'], 'sell_score', lambda x: (x['sell_score'], x['price_change']))
+    if picks:
+        for p in picks: p['comment'] = get_comment('fire')
+        final_result['fire'] = picks # 리스트 저장
 
-    pick = pick_qualified_best(pools['top'], 'buy_score', lambda x: (x['buy_score'], x['net_buy_sum']))
-    if pick:
-        pick['comment'] = get_comment('top')
-        final_result['top'] = pick
+    # 2. Top (고점 판독) - 2개 뽑기
+    picks = pick_qualified_top_n(pools['top'], 'buy_score', lambda x: (x['buy_score'], x['net_buy_sum']))
+    if picks:
+        for p in picks: p['comment'] = get_comment('top')
+        final_result['top'] = picks
 
-    pick = pick_qualified_best(pools['bottom'], 'sell_score', lambda x: (x['sell_score'], -x['net_buy_sum']))
-    if pick:
-        pick['comment'] = get_comment('bottom')
-        final_result['bottom'] = pick
+    # 3. Bottom (공포 줍줍) - 2개 뽑기
+    picks = pick_qualified_top_n(pools['bottom'], 'sell_score', lambda x: (x['sell_score'], -x['net_buy_sum']))
+    if picks:
+        for p in picks: p['comment'] = get_comment('bottom')
+        final_result['bottom'] = picks
 
-    pick = pick_qualified_best(pools['knife'], 'buy_score', lambda x: (x['buy_score'], x['net_buy_sum']))
-    if pick:
-        pick['comment'] = get_comment('knife')
-        final_result['knife'] = pick
+    # 4. Knife (칼날) - 2개 뽑기
+    picks = pick_qualified_top_n(pools['knife'], 'buy_score', lambda x: (x['buy_score'], x['net_buy_sum']))
+    if picks:
+        for p in picks: p['comment'] = get_comment('knife')
+        final_result['knife'] = picks
 
+    # 저장 로직
     if not os.path.exists(FLOW_DIR): os.makedirs(FLOW_DIR)
     
     with open(os.path.join(FLOW_DIR, 'nom_nom_data.json'), 'w', encoding='utf-8') as f:
@@ -210,9 +215,11 @@ def main():
     
     file_date_str = datetime.datetime.now().strftime("%Y%m%d")
     found_date = None
+    
+    # 리스트 안의 첫 번째 아이템에서 날짜 추출
     for key in ['fire', 'top', 'bottom', 'knife']:
-        if key in final_result and 'last_date' in final_result[key]:
-            found_date = final_result[key]['last_date'] 
+        if key in final_result and len(final_result[key]) > 0:
+            found_date = final_result[key][0].get('last_date') 
             break
             
     if found_date:
@@ -221,7 +228,7 @@ def main():
     with open(os.path.join(HISTORY_DIR, f"history_{file_date_str}.json"), 'w', encoding='utf-8') as f:
         json.dump(final_result, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ V7 완료! (기준 완화 적용됨) 저장: history_{file_date_str}.json")
+    print(f"✅ V8 (Top 2) 완료! 저장: history_{file_date_str}.json")
 
 if __name__ == "__main__":
     main()
