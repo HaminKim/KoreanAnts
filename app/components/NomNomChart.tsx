@@ -112,15 +112,29 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
   // 모바일 슬라이드용 인덱스
   const [slideIndex, setSlideIndex] = useState(0);
 
+  // 스와이프를 위한 터치 상태값
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
   const nextSlide = () => setSlideIndex((prev) => Math.min(prev + 1, 3));
   const prevSlide = () => setSlideIndex((prev) => Math.max(prev - 1, 0));
+
+  // 터치 이벤트 핸들러 (스와이프)
+  const handleTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
+  const handleTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+  const handleTouchEnd = () => {
+      if (!touchStart || !touchEnd) return;
+      const distance = touchStart - touchEnd;
+      if (distance > 50) nextSlide();
+      else if (distance < -50) prevSlide();
+      setTouchStart(0);
+      setTouchEnd(0);
+  };
 
   // PC화면(md 이상) 되면 슬라이드 초기화
   useEffect(() => {
     const handleResize = () => {
-        if (window.innerWidth >= 768) { 
-            setSlideIndex(0);
-        }
+        if (window.innerWidth >= 768) setSlideIndex(0);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -168,7 +182,6 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
 
   // ✨ 개별 카드 렌더링
   const renderCards = (dataList: StockData[], type: 'fire'|'top'|'bottom'|'knife') => {
-    
     if (isLoading) {
         return (
             <>
@@ -205,8 +218,6 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
           <div key={`${cardData.ticker}-${idx}`}>
              <Link href={`/flow?ticker=${cardData.ticker}&fileTicker=${encodeURIComponent(linkTicker)}&side=netBuy&days=5`} className="block group">
                 <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                    
-                    {/* 왼쪽: 순위 + 로고 + 이름 */}
                     <div className="flex items-center gap-2 overflow-hidden flex-1">
                         <RankBadge />
                         <div className="w-9 h-9 flex-shrink-0 rounded-full bg-white border border-gray-100 p-0.5 shadow-sm group-hover:scale-105 transition-transform">
@@ -224,27 +235,15 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
                             <span className="text-[10px] font-bold text-gray-400 font-mono">{cardData.ticker}</span>
                         </div>
                     </div>
-
-                    {/* 오른쪽: 등락률 & 가격 */}
                     <div className="text-right pl-2">
-                        {/* 등락률: text-base (적당히) */}
                         <div className={`text-base font-extrabold ${Number(pct) > 0 ? 'text-red-500' : 'text-blue-500'}`}>
                             {Number(pct) > 0 ? '+' : ''}{pct}%
                         </div>
-                        {/* 가격: text-xs (기존보다 키움) */}
-                        {cardData.close && (
-                            <div className="text-xs text-gray-500 font-medium mt-0.5">
-                                ${cardData.close.toFixed(2)}
-                            </div>
-                        )}
+                        {cardData.close && <div className="text-xs text-gray-500 font-medium mt-0.5">${cardData.close.toFixed(2)}</div>}
                     </div>
                 </div>
             </Link>
-            
-            {/* 1위와 2위 사이 구분선 */}
-            {idx < dataList.length - 1 && (
-                <div className="h-px bg-gray-50 mx-3"></div>
-            )}
+            {idx < dataList.length - 1 && <div className="h-px bg-gray-50 mx-3"></div>}
           </div>
         );
     });
@@ -253,25 +252,22 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
   // ✨ 테마 그룹 (1줄 슬림 헤더)
   const renderThemeGroup = (title: string, desc: string, dataList: StockData[], type: 'fire'|'top'|'bottom'|'knife') => {
       const themes = {
-        fire: { bg: "bg-red-50/80", border: "border-red-100", title: "text-red-700", desc: "text-red-500" },
-        top: { bg: "bg-orange-50/80", border: "border-orange-100", title: "text-orange-700", desc: "text-orange-500" },
-        bottom: { bg: "bg-blue-50/80", border: "border-blue-100", title: "text-blue-700", desc: "text-blue-500" },
-        knife: { bg: "bg-gray-100/80", border: "border-gray-200", title: "text-gray-700", desc: "text-gray-500" }
+        fire: { bg: "bg-red-50/80", border: "border-red-100", title: "text-red-600", desc: "text-red-500" },
+        top: { bg: "bg-orange-50/80", border: "border-orange-100", title: "text-orange-600", desc: "text-orange-500" },
+        bottom: { bg: "bg-blue-50/80", border: "border-blue-100", title: "text-blue-600", desc: "text-blue-500" },
+        knife: { bg: "bg-gray-100/80", border: "border-gray-200", title: "text-gray-600", desc: "text-gray-500" }
       };
-      
       const t = themes[type];
 
       return (
         <div className={`w-full flex-shrink-0 md:w-auto snap-center bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col h-full overflow-hidden hover:border-gray-200 transition-colors`}>
-            
-            {/* Header Block: padding 줄여서 공간 확보 (px-4 -> px-3) */}
+            {/* ✨ 헤더: 사장님이 넣은 이모지({title}) 그대로 출력! */}
             <div className={`px-3 py-3 ${t.bg} border-b ${t.border} flex items-center gap-2`}>
                 <span className={`text-base font-black tracking-tight ${t.title}`}>{title}</span>
                 <span className="text-[10px] text-gray-400 opacity-50">|</span>
                 <span className={`text-xs font-bold opacity-90 ${t.desc}`}>{desc}</span>
             </div>
-
-            {/* Body List */}
+            {/* 본문 */}
             <div className="p-2 flex flex-col gap-1 flex-1 bg-white min-h-[140px]">
                 {renderCards(dataList, type)}
             </div>
@@ -279,14 +275,47 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
       );
   };
 
+  // ✨ 탭 데이터 (이름만 깔끔하게 + 테마 색상 지정)
+  const tabs = [
+      { label: "주가 상승", idx: 0, activeClass: "text-red-600 border-red-600" },
+      { label: "고점 경보", idx: 1, activeClass: "text-orange-600 border-orange-600" },
+      { label: "공포 줍줍", idx: 2, activeClass: "text-blue-600 border-blue-600" },
+      { label: "칼날 주의", idx: 3, activeClass: "text-gray-600 border-gray-600" },
+  ];
+
   return (
-    // ✨ [핵심 수정] 모바일 여백 px-2로 축소 (와이드 효과) / PC는 px-4 유지
-    <section className="max-w-5xl mx-auto px-0.8 md:px-4 mb-12">
-      <div className="mb-4 flex items-end justify-between px-1.5 md:px-0">
+    <section className="max-w-5xl mx-auto px-2 md:px-4 mb-12">
+      <div className="mb-1 flex flex-col md:flex-row md:items-end justify-between px-1 md:px-0">
         <div>
             <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">🤔 매수/매도가 고민될 때... 💭</h2>
-            <p className="text-sm text-gray-500 mt-1">최근 <span className="font-bold text-gray-800">5일간</span> 주가 패턴을 AI로 분석합니다.</p>
+            <p className="text-sm text-gray-500 mt-1 md:mb-0">최근 <span className="font-bold text-gray-800">5일간</span> 주가 패턴을 AI로 분석합니다.</p>
         </div>
+
+        {/* ✨ 탭 메뉴: 선택된 탭에 색상(activeClass) 적용 */}
+        <div className="flex md:hidden items-center justify-between pt-4 pb-0 w-full select-none">
+            {tabs.map((tab, i) => {
+                const isActive = slideIndex === tab.idx;
+                return (
+                    <div key={tab.idx} className="flex items-center flex-1 justify-center">
+                        <button
+                            onClick={() => setSlideIndex(tab.idx)}
+                            className={`text-[12px] pb-2 transition-all w-full text-center tracking-tight border-b-2 ${
+                                isActive 
+                                ? `font-black ${tab.activeClass}` // ✨ 선택됨: 각 테마 색상 + 밑줄
+                                : "font-medium text-gray-400 border-transparent hover:text-gray-600" // 선택안됨: 회색
+                            }`}
+                        >
+                            {tab.label}
+                        </button>
+                        {/* 구분선 */}
+                        {i < tabs.length - 1 && (
+                            <span className="text-gray-200 text-[10px] mb-2 font-light px-0.5">|</span>
+                        )}
+                    </div>
+                );
+            })}
+        </div>
+
         <div className={`hidden md:flex items-center gap-1.5 px-2 py-1 rounded-full border ${currentDate.toDateString() === new Date().toDateString() ? 'bg-green-50 border-green-100' : 'bg-gray-100 border-gray-200'}`}>
             <span className={`w-1.5 h-1.5 rounded-full ${currentDate.toDateString() === new Date().toDateString() ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></span>
             <span className={`text-[10px] font-bold ${currentDate.toDateString() === new Date().toDateString() ? 'text-green-700' : 'text-gray-500'}`}>
@@ -296,8 +325,12 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
       </div>
 
       {/* 모바일: 슬라이드 / 데스크탑: 2x2 그리드 */}
-      <div className="relative overflow-hidden md:overflow-visible">
-          
+      <div 
+        className="relative overflow-hidden md:overflow-visible mt-2 md:mt-0"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
           {/* 모바일 전용 버튼 */}
           {slideIndex > 0 && (
             <button 
@@ -322,15 +355,16 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
             className="flex transition-transform duration-300 ease-out md:grid md:grid-cols-2 md:gap-6 md:transform-none"
             style={{ transform: `translateX(-${slideIndex * 100}%)` }} 
           >
+            {/* ✨ 사장님이 지정한 이모지 & 멘트 그대로 사용! */}
             {renderThemeGroup("🚀 주가 상승", "개미 털고 떡상 중", data.fire, 'fire')}
-            {renderThemeGroup("🚨 고점 경보", "개미 몰림 구간 · 고점 판독기 삐빅", data.top, 'top')}
+            {renderThemeGroup("🚨 고점 경보", "고점 판독기 삐빅", data.top, 'top')}
             {renderThemeGroup("💰 공포 줍줍", "공포에 주워, 환희에 팔자!", data.bottom, 'bottom')}
-            {renderThemeGroup("⛔ 칼날 주의", "개미가 다 받아낸 자리 · 추가 하락 가능성", data.knife, 'knife')}
+            {renderThemeGroup("⛔ 칼날 주의", "물타기 금지! 도망쳐", data.knife, 'knife')}
           </div>
 
       </div>
 
-      {/* 모바일 인디케이터 */}
+      {/* 모바일 인디케이터 (점) */}
       <div className="flex md:hidden justify-center gap-1.5 mt-4">
         {[0, 1, 2, 3].map((idx) => (
             <div key={idx} className={`w-1.5 h-1.5 rounded-full transition-colors ${idx === slideIndex ? 'bg-gray-800' : 'bg-gray-300'}`}></div>
