@@ -59,7 +59,7 @@ export default function RootLayout({
         <div className="max-w-5xl mx-auto">
           
           {/* Header */}
-          <header className="flex items-center justify-between px-6 py-4 border-b">
+          <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b">
             {/* Brand */}
             <Link
               href="/"
@@ -69,19 +69,27 @@ export default function RootLayout({
             </Link>
 
             {/* Navigation */}
-            <nav className="flex gap-4 text-sm text-gray-600 items-center">
+            <nav className="flex items-center gap-3 sm:gap-4 text-sm text-gray-600">
+              {/* Home (모바일에서는 공간 부족하면 숨기거나 아이콘으로 대체 가능하지만 일단 유지) */}
               <Link
                 href="/"
-                className="hover:text-black transition"
+                className="hidden sm:block hover:text-black transition"
               >
                 Home
               </Link>
               
-              <span className="text-gray-300">|</span>
+              <span className="hidden sm:block text-gray-300">|</span>
               
               <ShareButton />
-              
-              <span className="text-gray-300">|</span>
+
+              {/* ✨ [NEW] 구독하기 버튼 (세련된 골드 그라데이션 적용) */}
+              <Link 
+                href="/pricing"
+                className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold shadow-sm hover:shadow-md hover:from-amber-600 hover:to-orange-700 transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm flex items-center gap-1"
+              >
+                <span>구독하기</span>
+                <span className="hidden sm:inline">👑</span>
+              </Link>
               
               <AuthButton />
               
@@ -89,7 +97,7 @@ export default function RootLayout({
           </header>
 
           {/* Page Content */}
-          <main className="px-6 py-6 pb-24">
+          <main className="px-4 sm:px-6 py-6 pb-24">
             {children}
           </main>
         

@@ -5,9 +5,6 @@ import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 
-// 💰 사장님 구글 설문지 주소
-const GOOGLE_FORM_URL = "https://forms.gle/여기에_설문지_주소_넣기"; 
-
 // ----------------------------------------------------------------------
 // 🛠️ 유틸리티 함수
 // ----------------------------------------------------------------------
@@ -89,10 +86,10 @@ export default function HomeClient() {
   }, [supabase]);
 
   // ----------------------------------------------------------------------
-  // 3. 잠금 해제 액션 핸들러 (전략 수정됨)
+  // 3. 잠금 해제 액션 핸들러 (사장님 요청: 원래 로직 순서 준수)
   // ----------------------------------------------------------------------
   const handleLockAction = (rank: number) => {
-    // 1. 비로그인 상태면 -> 무조건 카카오 로그인 유도
+    // [1단계] 비로그인 상태면 -> 무조건 카카오 로그인부터 시킴
     if (!isLoggedIn) {
         supabase.auth.signInWithOAuth({
             provider: 'kakao',
@@ -104,11 +101,12 @@ export default function HomeClient() {
         return;
     }
 
-    // 2. 5일 데이터가 '아닐 때'만 유료 결제 체크
+    // [2단계] 로그인은 했는데 잠긴 걸 눌렀을 때
+    // 5일 데이터가 아닐 때 (즉, 유료 구간일 때)
     if (days !== 5) {
-        // 로그인 했는데 1~2위(프리미엄) 클릭 & 미구독 -> 결제 안내
+        // 1~2위(프리미엄) 클릭 & 아직 구독 안 함 -> 상품 페이지(/pricing)로 이동
         if (rank <= 2 && !isSubscribed) {
-            router.push('/premium'); 
+            router.push('/pricing'); 
         }
     }
   };
@@ -273,7 +271,7 @@ export default function HomeClient() {
                     if (isFiveDays) {
                         // 5일일 때: 1~4위는 '로그인'만 하면 보임 (구독 X)
                         if (rank <= 4 && !isLoggedIn) {
-                             isLoginLock = true;
+                            isLoginLock = true;
                         }
                     } else {
                         // 다른 날짜: 1~2위(유료), 3~4위(로그인)
@@ -294,7 +292,8 @@ export default function HomeClient() {
                     if (isPremiumLock) {
                         lockTitle = "👑 Premium Only";
                         lockIcon = "👑";
-                        lockBtnText = isLoggedIn ? "구독하고 잠금해제" : " 구독하고 잠금해제";
+                        // 구독 안 했으면 무조건 소개 페이지로 유도
+                        lockBtnText = isLoggedIn ? "구독하고 잠금해제" : "구독하고 잠금해제";
                     } else if (isLoginLock) {
                         lockTitle = "🔒 Member Only";
                         lockIcon = "🔒";
