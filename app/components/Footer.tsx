@@ -49,7 +49,7 @@ export default function Footer() {
                     <span className="font-semibold text-gray-500">배송/제공 기간 :</span> 결제 즉시 서비스 이용 권한이 부여되며, 별도의 실물 배송은 없습니다.
                 </li>
                 <li>
-                    <span className="font-semibold text-gray-500">취소/해지 규정 :</span> 마이페이지 &gt; 구독 관리에서 언제든지 해지 예약이 가능하며, 다음 결제일부터 청구되지 않습니다.
+                    <span className="font-semibold text-gray-500">취소/해지 규정 :</span> 언제든지 해지 예약이 가능하며, 다음 결제일부터 청구되지 않습니다.
                 </li>
                 <li>
                     <span className="font-semibold text-gray-500">교환/환불 정책 :</span> 결제일로부터 7일 이내 서비스 이용 이력이 없는 경우 전액 환불 가능합니다. (상세 내용은 약관 참조)

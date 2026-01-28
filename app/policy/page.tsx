@@ -7,7 +7,7 @@ export default function PolicyPage() {
       <section className="mb-12">
         <h2 className="text-xl font-bold mb-4 border-b pb-2">제1조 (이용약관의 준칙)</h2>
         <p className="text-sm leading-relaxed">
-          본 서비스(리앤트웍스)는 공정거래위원회가 고시한 <strong>&lt;전자상거래 표준약관&gt;</strong>을 준수합니다.
+          본 서비스(리앤트)는 공정거래위원회가 고시한 <strong>&lt;전자상거래 표준약관&gt;</strong>을 준수합니다.
           <br />
           자세한 서비스 이용에 관한 조항은 대한민국 관련 법령 및 상관례에 따릅니다.
         </p>

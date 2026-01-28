@@ -235,11 +235,16 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
                             <span className="text-[10px] font-bold text-gray-400 font-mono">{cardData.ticker}</span>
                         </div>
                     </div>
-                    <div className="text-right pl-2">
-                        <div className={`text-base font-extrabold ${Number(pct) > 0 ? 'text-red-500' : 'text-blue-500'}`}>
+                    
+                    {/* 오른쪽: 등락률 & 가격 */}
+                    <div className="flex flex-col items-end justify-center pl-2">
+                        {/* ✨ [New] '5일 기준' 멘트 추가 */}
+                        <span className="text-[9px] text-gray-400 mb-0.5">5일 기준</span>
+                        
+                        <div className={`text-base font-extrabold leading-none ${Number(pct) > 0 ? 'text-red-500' : 'text-blue-500'}`}>
                             {Number(pct) > 0 ? '+' : ''}{pct}%
                         </div>
-                        {cardData.close && <div className="text-xs text-gray-500 font-medium mt-0.5">${cardData.close.toFixed(2)}</div>}
+                        {cardData.close && <div className="text-xs text-gray-500 font-medium mt-1">${cardData.close.toFixed(2)}</div>}
                     </div>
                 </div>
             </Link>
@@ -252,18 +257,18 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
   // ✨ 테마 그룹 (1줄 슬림 헤더)
   const renderThemeGroup = (title: string, desc: string, dataList: StockData[], type: 'fire'|'top'|'bottom'|'knife') => {
       const themes = {
-        fire: { bg: "bg-red-50/80", border: "border-red-100", title: "text-red-600", desc: "text-red-500" },
-        top: { bg: "bg-orange-50/80", border: "border-orange-100", title: "text-orange-600", desc: "text-orange-500" },
-        bottom: { bg: "bg-blue-50/80", border: "border-blue-100", title: "text-blue-600", desc: "text-blue-500" },
-        knife: { bg: "bg-gray-100/80", border: "border-gray-200", title: "text-gray-600", desc: "text-gray-500" }
+        fire: { bg: "bg-red-50/80", border: "border-red-100", title: "text-red-600", desc: "text-red-500", icon: "🚀" },
+        top: { bg: "bg-orange-50/80", border: "border-orange-100", title: "text-orange-600", desc: "text-orange-500", icon: "🔥" },
+        bottom: { bg: "bg-blue-50/80", border: "border-blue-100", title: "text-blue-600", desc: "text-blue-500", icon: "💰" },
+        knife: { bg: "bg-gray-100/80", border: "border-gray-200", title: "text-gray-600", desc: "text-gray-500", icon: "📉" }
       };
       const t = themes[type];
 
       return (
         <div className={`w-full flex-shrink-0 md:w-auto snap-center bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col h-full overflow-hidden hover:border-gray-200 transition-colors`}>
-            {/* ✨ 헤더: 사장님이 넣은 이모지({title}) 그대로 출력! */}
+            {/* ✨ 헤더: 제목 + 구분선 + 설명 */}
             <div className={`px-3 py-3 ${t.bg} border-b ${t.border} flex items-center gap-2`}>
-                <span className={`text-base font-black tracking-tight ${t.title}`}>{title}</span>
+                <span className={`text-base font-black tracking-tight ${t.title}`}>{t.icon} {title}</span>
                 <span className="text-[10px] text-gray-400 opacity-50">|</span>
                 <span className={`text-xs font-bold opacity-90 ${t.desc}`}>{desc}</span>
             </div>
@@ -275,12 +280,12 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
       );
   };
 
-  // ✨ 탭 데이터 (이름만 깔끔하게 + 테마 색상 지정)
+  // ✨ 탭 데이터 (수정된 네이밍 반영)
   const tabs = [
-      { label: "주가 상승", idx: 0, activeClass: "text-red-600 border-red-600" },
-      { label: "고점 경보", idx: 1, activeClass: "text-orange-600 border-orange-600" },
-      { label: "공포 줍줍", idx: 2, activeClass: "text-blue-600 border-blue-600" },
-      { label: "칼날 주의", idx: 3, activeClass: "text-gray-600 border-gray-600" },
+      { label: "나홀로 상승", idx: 0, activeClass: "text-red-600 border-red-600" },
+      { label: "과열 주의보", idx: 1, activeClass: "text-orange-600 border-orange-600" },
+      { label: "공포의 투매", idx: 2, activeClass: "text-blue-600 border-blue-600" },
+      { label: "뚝배기 주의", idx: 3, activeClass: "text-gray-600 border-gray-600" },
   ];
 
   return (
@@ -291,7 +296,7 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
             <p className="text-sm text-gray-500 mt-1 md:mb-0">최근 <span className="font-bold text-gray-800">5일간</span> 주가 패턴을 AI로 분석합니다.</p>
         </div>
 
-        {/* ✨ 탭 메뉴: 선택된 탭에 색상(activeClass) 적용 */}
+        {/* 탭 메뉴 */}
         <div className="flex md:hidden items-center justify-between pt-4 pb-0 w-full select-none">
             {tabs.map((tab, i) => {
                 const isActive = slideIndex === tab.idx;
@@ -301,13 +306,12 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
                             onClick={() => setSlideIndex(tab.idx)}
                             className={`text-[12px] pb-2 transition-all w-full text-center tracking-tight border-b-2 ${
                                 isActive 
-                                ? `font-black ${tab.activeClass}` // ✨ 선택됨: 각 테마 색상 + 밑줄
-                                : "font-medium text-gray-400 border-transparent hover:text-gray-600" // 선택안됨: 회색
+                                ? `font-black ${tab.activeClass}` 
+                                : "font-medium text-gray-400 border-transparent hover:text-gray-600" 
                             }`}
                         >
                             {tab.label}
                         </button>
-                        {/* 구분선 */}
                         {i < tabs.length - 1 && (
                             <span className="text-gray-200 text-[10px] mb-2 font-light px-0.5">|</span>
                         )}
@@ -324,7 +328,6 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
         </div>
       </div>
 
-      {/* 모바일: 슬라이드 / 데스크탑: 2x2 그리드 */}
       <div 
         className="relative overflow-hidden md:overflow-visible mt-2 md:mt-0"
         onTouchStart={handleTouchStart}
@@ -355,16 +358,15 @@ export default function NomNomChart({ fire: initialFire, top: initialTop, bottom
             className="flex transition-transform duration-300 ease-out md:grid md:grid-cols-2 md:gap-6 md:transform-none"
             style={{ transform: `translateX(-${slideIndex * 100}%)` }} 
           >
-            {/* ✨ 사장님이 지정한 이모지 & 멘트 그대로 사용! */}
-            {renderThemeGroup("🚀 주가 상승", "개미 털고 떡상 중", data.fire, 'fire')}
-            {renderThemeGroup("🚨 고점 경보", "고점 판독기 삐빅", data.top, 'top')}
-            {renderThemeGroup("💰 공포 줍줍", "공포에 주워, 환희에 팔자!", data.bottom, 'bottom')}
-            {renderThemeGroup("⛔ 칼날 주의", "물타기 금지! 도망쳐", data.knife, 'knife')}
+            {/* ✨ 수정된 멘트 반영 */}
+            {renderThemeGroup("나홀로 상승", "개미 털고 상승 중", data.fire, 'fire')}
+            {renderThemeGroup("과열 일까?", "개인투자자 서학개미 대거유입!", data.top, 'top')}
+            {renderThemeGroup("공포의 투매", "서학개미 줄지어 이탈 중...😱", data.bottom, 'bottom')}
+            {renderThemeGroup("하락 중", "떨어지는 주가, 개미들이 받아먹네?", data.knife, 'knife')}
           </div>
 
       </div>
 
-      {/* 모바일 인디케이터 (점) */}
       <div className="flex md:hidden justify-center gap-1.5 mt-4">
         {[0, 1, 2, 3].map((idx) => (
             <div key={idx} className={`w-1.5 h-1.5 rounded-full transition-colors ${idx === slideIndex ? 'bg-gray-800' : 'bg-gray-300'}`}></div>

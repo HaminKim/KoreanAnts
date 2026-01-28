@@ -17,8 +17,9 @@ NAME_ALIAS_FILE = os.path.join(DATA_DIR, 'name_alias.json')
 
 TARGET_RANKS = ['netBuy_5.json', 'netBuy_10.json', 'netSell_5.json', 'netSell_10.json']
 
-# ✨ 최소 점수 (3일)
-MIN_SCORE_CUTLINE = 3
+# ✨ [수정] 최소 점수 완화 (3점 -> 2점)
+# 10일 중 2번만 확실한 시그널이 있어도 후보로 쳐줍니다.
+MIN_SCORE_CUTLINE = 2
 
 # 🚫 ETF 및 파생상품 필터링 키워드
 BLACKLIST_KEYWORDS = [
@@ -111,6 +112,7 @@ def analyze_stock(file_path, file_ticker_name, alias_map):
 # 4. 멘트 생성기
 # -----------------------------------------------------------
 def get_comment(type_key):
+    # ✨ 멘트는 프론트엔드에서 고정으로 보여주므로 여기는 ID 역할만 확실히 하면 됩니다.
     comments = {
         "fire": "개미 털고 세력 떡상 중 🚀",
         "top": "고점 판독기 삐빅... 조심해 ⚠️",
@@ -123,7 +125,7 @@ def get_comment(type_key):
 # 5. 메인 실행
 # -----------------------------------------------------------
 def main():
-    print(f"🚀 놈놈놈 V8 (Top 2 모드) 시작...")
+    print(f"🚀 놈놈놈 V8 (기준 완화 모드) 시작...")
     
     ticker_map = load_json(MAP_FILE) or {}
     normalized_ticker_map = {k.upper().strip(): v for k, v in ticker_map.items()}
@@ -160,45 +162,54 @@ def main():
         pct = stock['price_change']
         net = stock['net_buy_sum']
         
-        if pct > 0.04 and net < 0: pools['fire'].append(stock)
-        elif pct > 0.04 and net > 0: pools['top'].append(stock)
-        elif pct < -0.025 and net < 0: pools['bottom'].append(stock)
-        elif pct < -0.03 and net > 0: pools['knife'].append(stock)
+        # ✨ [수정] 등락률 기준 완화 (조금 더 관대하게)
+        # 1. Fire (나홀로 상승): 4% -> 3% 이상 상승 + 개미 매도
+        if pct > 0.03 and net < 0: pools['fire'].append(stock)
+        
+        # 2. Top (과열 주의보): 4% -> 3% 이상 상승 + 개미 매수
+        elif pct > 0.03 and net > 0: pools['top'].append(stock)
+        
+        # 3. Bottom (공포 투매): -2.5% -> -2.0% 이하 하락 + 개미 매도
+        elif pct < -0.02 and net < 0: pools['bottom'].append(stock)
+        
+        # 4. Knife (뚝배기 주의): -3.0% -> -2.5% 이하 하락 + 개미 매수
+        elif pct < -0.025 and net > 0: pools['knife'].append(stock)
 
-    # ✨ [핵심] 상위 N개(2개) 선정 함수로 변경
+    # ✨ 상위 2개 선정 (로직은 유지 -> 점수 높은 순 정렬)
     def pick_qualified_top_n(category_pool, score_key, sort_key_func, n=2):
         if not category_pool: return []
-        # 정렬
+        # 정렬: 점수가 높고, 변화폭이 큰 순서 (reverse=True)
+        # 기준을 낮췄어도 정렬 때문에 "가장 적합한" 녀석이 1등이 됩니다.
         sorted_pool = sorted(category_pool, key=sort_key_func, reverse=True)
         
         candidates = []
         for item in sorted_pool:
-            # 점수 커트라인 체크
+            # 점수 커트라인 (2점)
             if item[score_key] >= MIN_SCORE_CUTLINE:
                 candidates.append(item)
-                if len(candidates) == n: break # 2개 채우면 중단
+                if len(candidates) == n: break 
         
         return candidates
 
-    # 1. Fire (세력 떡상) - 2개 뽑기
+    # 1. Fire
     picks = pick_qualified_top_n(pools['fire'], 'sell_score', lambda x: (x['sell_score'], x['price_change']))
     if picks:
         for p in picks: p['comment'] = get_comment('fire')
-        final_result['fire'] = picks # 리스트 저장
+        final_result['fire'] = picks 
 
-    # 2. Top (고점 판독) - 2개 뽑기
+    # 2. Top
     picks = pick_qualified_top_n(pools['top'], 'buy_score', lambda x: (x['buy_score'], x['net_buy_sum']))
     if picks:
         for p in picks: p['comment'] = get_comment('top')
         final_result['top'] = picks
 
-    # 3. Bottom (공포 줍줍) - 2개 뽑기
+    # 3. Bottom (개미가 많이 던진 순서)
     picks = pick_qualified_top_n(pools['bottom'], 'sell_score', lambda x: (x['sell_score'], -x['net_buy_sum']))
     if picks:
         for p in picks: p['comment'] = get_comment('bottom')
         final_result['bottom'] = picks
 
-    # 4. Knife (칼날) - 2개 뽑기
+    # 4. Knife (개미가 많이 산 순서)
     picks = pick_qualified_top_n(pools['knife'], 'buy_score', lambda x: (x['buy_score'], x['net_buy_sum']))
     if picks:
         for p in picks: p['comment'] = get_comment('knife')
@@ -216,7 +227,6 @@ def main():
     file_date_str = datetime.datetime.now().strftime("%Y%m%d")
     found_date = None
     
-    # 리스트 안의 첫 번째 아이템에서 날짜 추출
     for key in ['fire', 'top', 'bottom', 'knife']:
         if key in final_result and len(final_result[key]) > 0:
             found_date = final_result[key][0].get('last_date') 
@@ -228,7 +238,7 @@ def main():
     with open(os.path.join(HISTORY_DIR, f"history_{file_date_str}.json"), 'w', encoding='utf-8') as f:
         json.dump(final_result, f, ensure_ascii=False, indent=2)
 
-    print(f"✅ V8 (Top 2) 완료! 저장: history_{file_date_str}.json")
+    print(f"✅ V8 (기준 완화 완료!) 저장: history_{file_date_str}.json")
 
 if __name__ == "__main__":
     main()
