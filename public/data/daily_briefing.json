@@ -1,57 +1,57 @@
 {
-  "date": "2026-01-29",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-01-30",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "NVDA",
-      "name": "NVDA",
-      "raw_name": "NVIDIA CORP",
-      "value": -177157892.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "ticker": "IONQ",
+      "name": "IONQ",
+      "raw_name": "IONQ INC",
+      "value": 162420329.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "AMD",
-      "name": "AMD",
-      "raw_name": "ADVANCED MICRO DEVICES INC",
-      "value": -53146943.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "SLV",
+      "name": "SLV",
+      "raw_name": "ISHARES SILVER TRUST ETF",
+      "value": 137770735.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "APP",
-      "name": "APP",
-      "raw_name": "APPLOVIN CORP",
-      "value": -49863157.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 125943661.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "NVDL",
-      "name": "NVDL",
-      "raw_name": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
-      "value": -43149457.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "UNH",
+      "name": "UNH",
+      "raw_name": "UNITEDHEALTH GROUP INC",
+      "value": 62871610.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "BE",
-      "name": "BE",
-      "raw_name": "BLOOM ENERGY CORP CL A",
-      "value": -34667787.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "VOO",
+      "name": "VOO",
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 54281095.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
