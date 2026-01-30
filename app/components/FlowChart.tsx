@@ -8,8 +8,9 @@ import {
   LineStyle,
   type IChartApi,
   type Time,
-  HistogramSeries,
-  LineSeries,
+  HistogramSeries, // ✨ 필수 import
+  LineSeries,      // ✨ 필수 import
+  AreaSeries,      // ✨ 필수 import
 } from 'lightweight-charts';
 
 // ✅ 데이터 타입
@@ -28,30 +29,18 @@ function toBusinessDay(ymd: string): Time {
   return { year: y, month: m, day: d } as any;
 }
 
-/**
- * 🛠️ [초슬림 포맷터] $1.2억 / $5000만
- * 달러 기호($)를 맨 앞에 붙임
- */
+// 💰 초슬림 포맷터
 function formatUltraCompact(amount: number) {
   if (amount == null || Number.isNaN(amount)) return '-';
   const sign = amount < 0 ? '-' : '';
   const abs = Math.abs(amount);
 
-  // 1. 1억 이상 -> "$1.2억"
-  if (abs >= 100_000_000) {
-    return `${sign}$${(abs / 100_000_000).toFixed(1)}억`;
-  }
-
-  // 2. 1만 이상 -> "$5000만"
-  if (abs >= 10_000) {
-    return `${sign}$${Math.round(abs / 10_000)}만`;
-  }
-
-  // 3. 그 외 -> "$100"
+  if (abs >= 100_000_000) return `${sign}$${(abs / 100_000_000).toFixed(1)}억`;
+  if (abs >= 10_000) return `${sign}$${Math.round(abs / 10_000)}만`;
   return `${sign}$${Math.round(abs)}`;
 }
 
-// 주가 표기 -> "$315.15"
+// 💵 주가 포맷터
 function formatPriceCompact(price: number) {
   return `$${price.toFixed(2)}`;
 }
@@ -61,13 +50,12 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
   const chartRef = useRef<IChartApi | null>(null);
   
   const histRef = useRef<any>(null);      
-  const lineRef = useRef<any>(null);      
+  const areaRef = useRef<any>(null); 
   
   const ma5Ref = useRef<any>(null);
   const ma10Ref = useRef<any>(null);
   const ma20Ref = useRef<any>(null);
 
-  // ✅ [설정] MA 선 기본값: 꺼짐 (OFF) -> 사용자가 켤 수 있음
   const [showMa5, setShowMa5] = useState(false);
   const [showMa10, setShowMa10] = useState(false);
   const [showMa20, setShowMa20] = useState(false);
@@ -79,8 +67,7 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
       return {
         time: toBusinessDay(p.date),
         value: v,
-        // 투명도 조절: 주가 선과 겹쳐도 보이게
-        color: v >= 0 ? 'rgba(239, 68, 68, 0.55)' : 'rgba(59, 130, 246, 0.55)', 
+        color: v >= 0 ? 'rgba(248, 113, 113, 0.6)' : 'rgba(96, 165, 250, 0.6)', 
       };
     });
   }, [data]);
@@ -91,17 +78,9 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
       .map((p) => ({ time: toBusinessDay(p.date), value: p.price! }));
   }, [data]);
 
-  const ma5Data = useMemo(() => {
-    return (data ?? []).filter(p => p.ma5).map(p => ({ time: toBusinessDay(p.date), value: p.ma5! }));
-  }, [data]);
-
-  const ma10Data = useMemo(() => {
-    return (data ?? []).filter(p => p.ma10).map(p => ({ time: toBusinessDay(p.date), value: p.ma10! }));
-  }, [data]);
-
-  const ma20Data = useMemo(() => {
-    return (data ?? []).filter(p => p.ma20).map(p => ({ time: toBusinessDay(p.date), value: p.ma20! }));
-  }, [data]);
+  const ma5Data = useMemo(() => (data ?? []).filter(p => p.ma5).map(p => ({ time: toBusinessDay(p.date), value: p.ma5! })), [data]);
+  const ma10Data = useMemo(() => (data ?? []).filter(p => p.ma10).map(p => ({ time: toBusinessDay(p.date), value: p.ma10! })), [data]);
+  const ma20Data = useMemo(() => (data ?? []).filter(p => p.ma20).map(p => ({ time: toBusinessDay(p.date), value: p.ma20! })), [data]);
 
   // 2. 차트 생성
   useEffect(() => {
@@ -118,32 +97,31 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
         background: { type: ColorType.Solid, color: '#ffffff' }, 
         textColor: '#9ca3af', 
         fontSize: 11,
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       },
       grid: { 
         vertLines: { visible: false }, 
         horzLines: { color: '#f3f4f6' } 
       },
-      // 주가/수급 겹치기 (영역 공유)
       rightPriceScale: { 
         visible: true, 
         borderColor: 'transparent', 
-        scaleMargins: { top: 0.1, bottom: 0.1 },
+        scaleMargins: { top: 0.1, bottom: 0.1 }, 
       },
       leftPriceScale: { 
         visible: true, 
         borderColor: 'transparent',
-        scaleMargins: { top: 0.1, bottom: 0.1 },
+        scaleMargins: { top: 0.2, bottom: 0.2 }, 
       },
-      timeScale: { borderColor: '#f3f4f6', rightOffset: 2 },
+      timeScale: { borderColor: '#f3f4f6', rightOffset: 5 },
       crosshair: { mode: CrosshairMode.Normal },
       handleScroll: true,
       handleScale: true,
     });
 
     chartRef.current = chart;
-    const anyChart: any = chart;
 
-    // 🔥 0점 중앙 고정 로직
+    // 0점 대칭 스케일
     const symmetricScaleProvider = (original: any) => {
       const res = original();
       if (res !== null && res.priceRange !== null) {
@@ -154,52 +132,58 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
       return null;
     };
 
-    // A. 수급 막대 (왼쪽 축)
+    // ✨ [수정 핵심] addHistogramSeries 대신 addSeries(HistogramSeries, ...) 사용
     const histOptions = {
       priceScaleId: 'left',
-      priceFormat: { type: 'custom', minMove: 1, formatter: formatUltraCompact }, // ✅ $1.2억 포맷
+      priceFormat: { type: 'custom', minMove: 1, formatter: formatUltraCompact },
       lastValueVisible: false, 
       priceLineVisible: false, 
       autoscaleInfoProvider: symmetricScaleProvider,
     };
-    const histogram = anyChart.addHistogramSeries ? anyChart.addHistogramSeries(histOptions) : anyChart.addSeries(HistogramSeries, histOptions);
+    const histogram = chart.addSeries(HistogramSeries, histOptions);
     histRef.current = histogram;
 
-    // B. MA 선들 (사용자가 켤 수 있음)
+    // B. MA 선들
     const createMaSeries = (color: string) => {
       const options = {
-        priceScaleId: 'left',
+        priceScaleId: 'right',
         color, lineWidth: 1,
         crosshairMarkerVisible: false, lastValueVisible: false, priceLineVisible: false,
-        priceFormat: { type: 'custom', formatter: formatUltraCompact },
+        priceFormat: { type: 'custom', formatter: formatPriceCompact },
         lineStyle: LineStyle.Solid,
-        autoscaleInfoProvider: symmetricScaleProvider,
       };
-      return anyChart.addLineSeries ? anyChart.addLineSeries(options) : anyChart.addSeries(LineSeries, options);
+      // ✨ [수정 핵심] addSeries(LineSeries, ...) 사용
+      return chart.addSeries(LineSeries, options);
     };
 
     ma5Ref.current = createMaSeries('#fb923c');  
     ma10Ref.current = createMaSeries('#a78bfa'); 
     ma20Ref.current = createMaSeries('#38bdf8'); 
 
-    // C. 주가 선 (오른쪽 축)
-    const lineOptions = {
+    // C. 주가 영역형 차트 (AreaSeries)
+    const areaOptions = {
       priceScaleId: 'right', 
-      color: '#10b981', lineWidth: 2,
-      crosshairMarkerVisible: true, lastValueVisible: true, priceLineVisible: true, 
-      priceFormat: { type: 'custom', formatter: formatPriceCompact }, // ✅ $315.15 포맷
+      lineColor: '#059669',     // 진한 에메랄드
+      topColor: 'rgba(16, 185, 129, 0.4)', 
+      bottomColor: 'rgba(255, 255, 255, 0)', 
+      lineWidth: 3,             // 굵게!
+      crosshairMarkerVisible: true, 
+      lastValueVisible: true, 
+      priceLineVisible: true, 
+      priceFormat: { type: 'custom', formatter: formatPriceCompact },
     };
-    const lineSeries = anyChart.addLineSeries ? anyChart.addLineSeries(lineOptions) : anyChart.addSeries(LineSeries, lineOptions);
-    lineRef.current = lineSeries;
+    // ✨ [수정 핵심] addSeries(AreaSeries, ...) 사용
+    const areaSeries = chart.addSeries(AreaSeries, areaOptions);
+    areaRef.current = areaSeries;
 
-    // 초기 데이터 주입
+    // 데이터 주입
     histogram.setData(histData);
     ma5Ref.current.setData(ma5Data);
     ma10Ref.current.setData(ma10Data);
     ma20Ref.current.setData(ma20Data);
-    lineSeries.setData(lineData);
+    areaSeries.setData(lineData);
     
-    // 줌 설정 (최근 50일)
+    // 줌 설정
     const totalPoints = histData.length;
     const visiblePoints = 50; 
     if (totalPoints > visiblePoints) {
@@ -229,10 +213,10 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
     if (ma5Ref.current) ma5Ref.current.setData(ma5Data);
     if (ma10Ref.current) ma10Ref.current.setData(ma10Data);
     if (ma20Ref.current) ma20Ref.current.setData(ma20Data);
-    if (lineRef.current) lineRef.current.setData(lineData);
+    if (areaRef.current) areaRef.current.setData(lineData);
   }, [histData, lineData, ma5Data, ma10Data, ma20Data]);
 
-  // MA 버튼 누를 때마다 보였다 안 보였다 처리
+  // MA 토글
   useEffect(() => {
     if (ma5Ref.current) ma5Ref.current.applyOptions({ visible: showMa5 });
     if (ma10Ref.current) ma10Ref.current.applyOptions({ visible: showMa10 });
@@ -240,19 +224,13 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
   }, [showMa5, showMa10, showMa20]);
 
   return (
-    <div className="w-full bg-white rounded-xl border border-gray-100 shadow-sm p-1">
-      {/* ✅ [수정됨] 컨트롤 패널 정렬 변경
-        기존: justify-end (오른쪽 정렬)
-        변경: justify-start (왼쪽 정렬)
-        -> 이제 오른쪽 공간은 부모 컴포넌트(FlowClient)의 '공유 버튼'이 차지합니다!
-      */}
+    <div className="w-full bg-white rounded-xl shadow-sm p-1">
       <div className="flex justify-start gap-1 mb-1 px-1">
         <button onClick={() => setShowMa5(!showMa5)} className={`text-[9px] px-1.5 py-0.5 rounded border ${showMa5 ? 'bg-orange-50 text-orange-600 border-orange-200' : 'bg-gray-50 text-gray-300 border-gray-100'}`}>MA5</button>
         <button onClick={() => setShowMa10(!showMa10)} className={`text-[9px] px-1.5 py-0.5 rounded border ${showMa10 ? 'bg-violet-50 text-violet-600 border-violet-200' : 'bg-gray-50 text-gray-300 border-gray-100'}`}>MA10</button>
         <button onClick={() => setShowMa20(!showMa20)} className={`text-[9px] px-1.5 py-0.5 rounded border ${showMa20 ? 'bg-sky-50 text-sky-600 border-sky-200' : 'bg-gray-50 text-gray-300 border-gray-100'}`}>MA20</button>
       </div>
 
-      {/* 차트 영역 */}
       <div ref={hostRef} className="w-full h-[340px]" />
     </div>
   );
