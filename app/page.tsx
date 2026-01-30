@@ -6,12 +6,14 @@ import HomeClient from './HomeClient';
 import NomNomChart from './components/NomNomChart';
 import Footer from './components/Footer';
 import IntroModal from './components/IntroModal'; 
+// ✨ [추가] 섹터 그리드 컴포넌트 불러오기
+import SectorGrid from './components/SectorGrid';
 
 // 🛠️ 타입 정의
 type HookItem = {
-  ticker: string;     // 예: TSLA
-  fileTicker: string; // 예: TESLA INC (로고 파일명 찾는 용도)
-  name: string;       // 예: 테슬라 (화면 표시 용도)
+  ticker: string;     
+  fileTicker: string; 
+  name: string;       
   value: number;
   type: 'buy' | 'sell';
 };
@@ -121,7 +123,6 @@ export default function Page() {
 
   const heroContent = useMemo(() => {
     const score = marketScore ?? 50;
-    // ... 기존 히어로 로직 유지 ...
     if (score <= 20) return {
         badge: "🥶 EXTREME FEAR", badgeColor: "text-indigo-200 bg-indigo-900/50 border-indigo-500/50", dotColor: "bg-indigo-400",
         title: <>시장은 지금 <br className="md:hidden" />😱 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300">절망</span>에 빠져있습니다.</>,
@@ -177,8 +178,8 @@ export default function Page() {
           </p>
 
           <div className="relative max-w-md mx-auto h-4 bg-gray-800/50 rounded-full overflow-hidden mb-2 ring-1 ring-white/10">
-             <div className={`absolute inset-0 bg-gradient-to-r ${heroContent.gradient} opacity-70`}></div>
-             <div className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_10px_white] transition-all duration-1000 ease-out" style={{ left: needlePosition }}></div>
+              <div className={`absolute inset-0 bg-gradient-to-r ${heroContent.gradient} opacity-70`}></div>
+              <div className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_10px_white] transition-all duration-1000 ease-out" style={{ left: needlePosition }}></div>
           </div>
         </div>
       </section>
@@ -195,7 +196,12 @@ export default function Page() {
         </div>
       </div>
 
-{/* 3️⃣ [HOOK] 추천 카드 - ✨ 1줄 설명 & 깔끔한 정리 */}
+      {/* ✨ [SECTOR] 섹터 그리드 (여기에 추가됨!) */}
+      <section className="max-w-5xl mx-auto px-4 mb-8">
+         <SectorGrid />
+      </section>
+
+      {/* 3️⃣ [HOOK] 추천 카드 */}
       <section className="max-w-5xl mx-auto px-4 mb-8">
         <div className="grid grid-cols-2 gap-3">
           
@@ -231,7 +237,6 @@ export default function Page() {
 
                 {/* [Left] 줍줍 1위 (좌측 카드) */}
                 <div className="pr-2">
-                  {/* ✨ 수정됨: 기준 20글자 */}
                   <h3 className={`font-bold text-gray-900 mb-0.5 break-keep ${
                       hookItems[0].name.length > 20 ? 'text-sm leading-tight' : 'text-lg leading-tight'
                   }`}>
@@ -287,7 +292,6 @@ export default function Page() {
 
                 {/* [Right] 매도 1위 (우측 카드) */}
                 <div className="pr-2">
-                  {/* ✨ 수정됨: 기준 20글자 */}
                   <h3 className={`font-bold text-gray-900 mb-0.5 break-keep ${
                       hookItems[1].name.length > 20 ? 'text-sm leading-tight' : 'text-lg leading-tight'
                   }`}>
