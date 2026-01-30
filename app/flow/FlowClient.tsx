@@ -38,7 +38,6 @@ export default function FlowClient() {
   const [err, setErr] = useState<string | null>(null);
   
   const [aliasMap, setAliasMap] = useState<Record<string, string>>({});
-  const [tickerMap, setTickerMap] = useState<Record<string, string>>({});
 
   /* ---------- 1. Map Load ---------- */
   useEffect(() => {
@@ -47,7 +46,6 @@ export default function FlowClient() {
         fetch('/data/ticker_map.json').then(res => res.json())
     ]).then(([nameData, tickerData]) => {
         setAliasMap(nameData);
-        setTickerMap(tickerData);
     }).catch(err => console.error("Map Load Error:", err));
   }, []);
 
@@ -107,7 +105,7 @@ export default function FlowClient() {
     const isLongTermDominant = Math.abs(change20d) > Math.abs(change5d);
     
     return {
-        periodText: isLongTermDominant ? "지난 한 달(20일)" : "최근 일주일",
+        periodText: isLongTermDominant ? "지난 한 달 동안" : "최근 일주일 동안",
         targetChange: isLongTermDominant ? change20d : change5d,
         netSum5d: rows.slice(-5).reduce((acc, cur) => acc + cur.netBuy, 0),
         isNetBuy: rows.slice(-5).reduce((acc, cur) => acc + cur.netBuy, 0) > 0
@@ -151,11 +149,12 @@ export default function FlowClient() {
           <div className="flex items-center gap-2 mt-1">
             {priceInfo ? (
               <>
-                {/* ✨ Color Fix: text-red-500 / text-blue-500 (차트 톤에 맞춤) */}
-                <span className={`text-2xl font-bold leading-none ${priceInfo.isUp ? 'text-red-500' : 'text-blue-500'}`}>
+                {/* ✨ Color Fix: 500(진한색) -> 400(차트색) */}
+                <span className={`text-2xl font-bold leading-none ${priceInfo.isUp ? 'text-red-400' : 'text-blue-400'}`}>
                     ${priceInfo.price.toLocaleString()}
                 </span>
-                <span className={`text-xs font-bold px-1.5 py-0.5 rounded-md ${priceInfo.isUp ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'}`}>
+                {/* ✨ Color Fix: 배경은 연하게, 글자는 차트색(400)으로 */}
+                <span className={`text-xs font-bold px-1.5 py-0.5 rounded-md ${priceInfo.isUp ? 'bg-red-50 text-red-400' : 'bg-blue-50 text-blue-400'}`}>
                   {priceInfo.isUp ? '▲' : '▼'} {Math.abs(priceInfo.changePercent).toFixed(2)}%
                 </span>
               </>
@@ -165,28 +164,20 @@ export default function FlowClient() {
       </div>
 
       {/* 🟢 2. Unified Content */}
-      <div className="w-full mt-2 md:bg-white md:border md:border-gray-200 md:rounded-2xl md:shadow-sm overflow-hidden">
+      <div className="w-full mt-2">
         
-        {/* 구분선 */}
-        <div className="w-full h-px bg-gray-100 border-b border-gray-50"></div>
-
         {/* A. Insight Section */}
         {insightMessage && (
-            <div className="px-2 pt-5 pb-2">
-                <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">🧐</span>
-                    <span className="text- font-bold text-gray-500">
-                        {displayName}는 지금?
-                    </span>
-                </div>
-                <div className="text-[17px] text-gray-900 leading-relaxed break-keep font-medium">
-                    {/* ✨ Color Fix: border-red-200 / text-red-500 (부드러운 강조) */}
-                    {insightMessage.periodText} <span className={`font-bold ${insightMessage.targetChange > 0 ? 'text-red-500' : 'text-blue-500'}`}>
-                        {Math.abs(insightMessage.targetChange).toFixed(1)}% {insightMessage.targetChange > 0 ? '상승' : '하락'}
-                    </span>했어요.<br/>
-                    최근 개인들은 <span className={`font-bold border-b-2 ${insightMessage.isNetBuy ? 'border-red-200 text-red-500' : 'border-blue-200 text-blue-500'}`}>
-                        {formatMoneyKR(insightMessage.netSum5d)} {insightMessage.isNetBuy ? '순매수' : '순매도'}
-                    </span> 중이네요.
+            <div className="px-2 pt-2 pb-4">
+                <div className="bg-gray-50/50 rounded-2xl p-5 border border-gray-100 text-center">
+                    <p className="text-lg text-gray-700 font-medium leading-relaxed break-keep">
+                        {insightMessage.periodText} <span className={`font-bold ${insightMessage.targetChange > 0 ? 'text-red-400' : 'text-blue-400'}`}>
+                            {Math.abs(insightMessage.targetChange).toFixed(1)}% {insightMessage.targetChange > 0 ? '상승' : '하락'}
+                        </span>했고,<br />
+                        {' '}서학개미들은 <span className={`font-bold ${insightMessage.isNetBuy ? 'text-red-400' : 'text-blue-400'}`}>
+                            {formatMoneyKR(insightMessage.netSum5d)} {insightMessage.isNetBuy ? '순매수' : '순매도'}
+                        </span>했어요.
+                    </p>
                 </div>
             </div>
         )}
@@ -205,24 +196,21 @@ export default function FlowClient() {
                     </button>
                 </div>
 
-                {/* 차트 본체 */}
+                {/* 차트 */}
                 <div>
                     <FlowChart data={rows} />
                 </div>
                 
-                {/* ✨ Color Fix: 범례 색상 완벽 동기화 */}
+                {/* 범례 - 여기도 차트와 똑같은 400번 사용 */}
                 <div className="flex justify-center gap-4 mt-1 pb-1">
-                    {/* 서학개미 매수 (Red-400) */}
                     <div className="flex items-center gap-1.5">
                         <div className="w-2.5 h-2.5 bg-red-400 rounded-sm opacity-80"></div>
                         <span className="text-xs text-gray-500 font-medium">서학개미 순매수</span>
                     </div>
-                    {/* 서학개미 매도 (Blue-400) */}
                     <div className="flex items-center gap-1.5">
                         <div className="w-2.5 h-2.5 bg-blue-400 rounded-sm opacity-80"></div>
                         <span className="text-xs text-gray-500 font-medium">서학개미 순매도</span>
                     </div>
-                    {/* 주가 (Deep Emerald #059669) - 차트 선과 동일! */}
                     <div className="flex items-center gap-1.5">
                         <div className="w-8 h-0.5 bg-[#059669] rounded-full"></div>
                         <span className="text-xs text-gray-500 font-medium">주가</span>
