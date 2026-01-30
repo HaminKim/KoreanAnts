@@ -8,9 +8,13 @@ import {
   LineStyle,
   type IChartApi,
   type Time,
-  HistogramSeries, // ✨ 필수 import
-  LineSeries,      // ✨ 필수 import
-  AreaSeries,      // ✨ 필수 import
+  HistogramSeries,
+  LineSeries,
+  AreaSeries,
+  // ✨ [추가] 타입 명찰들 import
+  type HistogramSeriesPartialOptions,
+  type LineSeriesPartialOptions,
+  type AreaSeriesPartialOptions,
 } from 'lightweight-charts';
 
 // ✅ 데이터 타입
@@ -132,7 +136,7 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
       return null;
     };
 
-    // ✨ [수정 핵심] addHistogramSeries 대신 addSeries(HistogramSeries, ...) 사용
+    // A. 수급 막대 (왼쪽 축)
     const histOptions = {
       priceScaleId: 'left',
       priceFormat: { type: 'custom', minMove: 1, formatter: formatUltraCompact },
@@ -140,7 +144,8 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
       priceLineVisible: false, 
       autoscaleInfoProvider: symmetricScaleProvider,
     };
-    const histogram = chart.addSeries(HistogramSeries, histOptions);
+    // ✨ [수정] as HistogramSeriesPartialOptions 추가 (에러 해결 핵심!)
+    const histogram = chart.addSeries(HistogramSeries, histOptions as HistogramSeriesPartialOptions);
     histRef.current = histogram;
 
     // B. MA 선들
@@ -152,8 +157,8 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
         priceFormat: { type: 'custom', formatter: formatPriceCompact },
         lineStyle: LineStyle.Solid,
       };
-      // ✨ [수정 핵심] addSeries(LineSeries, ...) 사용
-      return chart.addSeries(LineSeries, options);
+      // ✨ [수정] as LineSeriesPartialOptions 추가
+      return chart.addSeries(LineSeries, options as LineSeriesPartialOptions);
     };
 
     ma5Ref.current = createMaSeries('#fb923c');  
@@ -163,17 +168,17 @@ export default function FlowChart({ data }: { data: FlowData[] }) {
     // C. 주가 영역형 차트 (AreaSeries)
     const areaOptions = {
       priceScaleId: 'right', 
-      lineColor: '#059669',     // 진한 에메랄드
+      lineColor: '#059669',     
       topColor: 'rgba(16, 185, 129, 0.4)', 
       bottomColor: 'rgba(255, 255, 255, 0)', 
-      lineWidth: 3,             // 굵게!
+      lineWidth: 3,             
       crosshairMarkerVisible: true, 
       lastValueVisible: true, 
       priceLineVisible: true, 
       priceFormat: { type: 'custom', formatter: formatPriceCompact },
     };
-    // ✨ [수정 핵심] addSeries(AreaSeries, ...) 사용
-    const areaSeries = chart.addSeries(AreaSeries, areaOptions);
+    // ✨ [수정] as AreaSeriesPartialOptions 추가
+    const areaSeries = chart.addSeries(AreaSeries, areaOptions as AreaSeriesPartialOptions);
     areaRef.current = areaSeries;
 
     // 데이터 주입
