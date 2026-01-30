@@ -256,7 +256,7 @@ export default function PricingPage() {
                 <li className="flex items-center gap-1.5"><CheckIcon /> 내 종목 분석</li>
                 <li className="flex items-start gap-1.5 opacity-60">
                     <span className="text-amber-500 shrink-0 mt-0.5 text-[10px]">🔒</span> 
-                    <span>Top 30 잠금</span>
+                    <span>일일 조회 한도 </span>
                 </li>
               </ul>
               
@@ -277,7 +277,7 @@ export default function PricingPage() {
                 <li className="flex items-center gap-1.5"><CheckIcon color="text-blue-500" /> 무료 기능 포함</li>
                 <li className="flex items-start gap-1.5 bg-blue-50 p-1.5 rounded-md -mx-1.5">
                     <span className="text-blue-500 shrink-0 text-[10px] mt-0.5">🔓</span> 
-                    <b>랭킹 전체 해제</b>
+                    <b>무제한 조회</b>
                 </li>
               </ul>
               
@@ -304,7 +304,7 @@ export default function PricingPage() {
                 <li className="flex items-center gap-1.5"><CheckIcon color="text-green-500" /> 무료 기능 포함</li>
                 <li className="flex items-start gap-1.5 bg-green-50 p-1.5 rounded-md -mx-1.5">
                     <span className="text-green-600 shrink-0 text-[10px] mt-0.5">🔓</span> 
-                    <b>랭킹 전체 해제</b>
+                    <b>무제한 조회</b>
                 </li>
               </ul>
               
@@ -331,7 +331,7 @@ export default function PricingPage() {
                 <li className="flex items-center gap-1.5"><CheckIcon color="text-amber-500" /> 무료 기능 포함</li>
                 <li className="flex items-start gap-1.5 bg-amber-50 p-1.5 rounded-md -mx-1.5">
                     <span className="text-amber-500 shrink-0 text-[10px] mt-0.5">🔓</span> 
-                    <b>랭킹 전체 해제</b>
+                    <b>무제한 조회</b>
                 </li>
                 <li className="flex items-center gap-1.5"><CheckIcon color="text-amber-500" /> 가장 저렴한 요금</li>
               </ul>
