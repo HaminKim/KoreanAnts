@@ -5,11 +5,13 @@ on:
     # -----------------------------------------------------------
     # GitHub Actions는 UTC 기준입니다. (KST - 9시간)
     # -----------------------------------------------------------
+    # [NEW] 0. 00:20 KST (UTC 15:20) -> 장 초반 (Early Trading)
+    - cron: "20 15 * * *"
+    
     # 1. 01:00 KST (UTC 16:00) -> 장 중 (Intraday)
     # 2. 06:00 KST (UTC 21:00) -> 정규장 마감 (Market Close)
     # 3. 07:00 KST (UTC 22:00) -> 애프터장 변동 체크
     # 4. 10:00 KST (UTC 01:00) -> 애프터장 최종 마감 (Day End)
-    # -----------------------------------------------------------
     - cron: "0 16,21,22,1 * * *"
   workflow_dispatch: {}
 
@@ -21,7 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     
     # ✨ [핵심] 서버 시간을 한국 시간(KST)으로 고정
-    # (주의: 로그 찍히는 시간만 바뀝니다. 실제 데이터 날짜는 파이썬 스크립트에서 미국 시간으로 맞춰주세요!)
     env:
       TZ: 'Asia/Seoul'
 
@@ -55,6 +56,8 @@ jobs:
             echo "No changes in CSV"
           else
             git commit -m "chore(data): sync all_data_clean.csv"
+            # CSV 쪽도 혹시 몰라 충돌 방지 추가
+            git pull --rebase -Xtheirs origin main
             git push
           fi
 
@@ -73,7 +76,7 @@ jobs:
       # 🍳 데이터 요리 시작
       # ----------------------------------------------------------------
 
-      # 7-1. 기초 데이터 생성 (여기서 netBuy_5.json 같은게 만들어짐)
+      # 7-1. 기초 데이터 생성
       - name: 1. Process Flow Data (Base)
         run: python scripts/process_flow_data.py
 
@@ -85,8 +88,7 @@ jobs:
       - name: 3. Build Search Index
         run: python scripts/build_json.py
 
-      # ✨✨ [NEW] 7-4. 매일 브리핑 데이터 생성 (N8N 자동화용) ✨✨
-      # 앞단계에서 만든 최신 데이터를 재료로 씁니다.
+      # 7-4. 매일 브리핑 데이터 생성 (N8N 자동화용)
       - name: 4. Generate Daily Briefing for N8N
         run: python scripts/generate-daily.py
 
@@ -98,8 +100,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # ✨ public/data 폴더 전체를 add 하므로
-          # 방금 만든 daily_briefing.json도 자동으로 포함됩니다!
+          # ✨ public/data 폴더 전체를 add
           git add public/data/
 
           # 변경사항 확인
@@ -111,8 +112,8 @@ jobs:
           # 커밋
           git commit -m "chore(data): update daily JSONs & History & Briefing"
 
-          # CSV 커밋(4번 스텝)과 충돌나지 않게 당겨오기
-          git pull --rebase
+          # ✨ [필수] 충돌 나면 '로봇 데이터'를 우선시함!
+          git pull --rebase -Xtheirs origin main
 
           # 최종 업로드
           git push
