@@ -6,7 +6,6 @@ import HomeClient from './HomeClient';
 import NomNomChart from './components/NomNomChart';
 import Footer from './components/Footer';
 import IntroModal from './components/IntroModal'; 
-// ✨ [추가] 섹터 그리드 컴포넌트 불러오기
 import SectorGrid from './components/SectorGrid';
 
 // 🛠️ 타입 정의
@@ -18,13 +17,26 @@ type HookItem = {
   type: 'buy' | 'sell';
 };
 
-// 놈놈놈 데이터 타입
 type NomData = {
   fire?: any;
   top?: any;
   bottom?: any;
   knife?: any;
 };
+
+// ✨ [NEW] 기간별 가중치 (과거일수록 낮게)
+const WEIGHTS = {
+    5: 0.35,  // 35% (최근 1주일이 깡패)
+    10: 0.25, // 25%
+    20: 0.20, // 20%
+    40: 0.10, // 10%
+    60: 0.10  // 10%
+};
+
+// ✨ [NEW] 증폭 계수 (Amplifier)
+// 1.0이면 정직하게 반영, 2.0이면 2배 과장되게 반영
+// 2.2 정도로 설정하면 수급이 72%만 쏠려도 점수는 98~99점이 됨 (다이나믹함)
+const AMPLIFIER = 2.2; 
 
 export default function Page() {
   const rankingRef = useRef<HTMLDivElement>(null);
@@ -36,30 +48,80 @@ export default function Page() {
   const [marketScore, setMarketScore] = useState<number | null>(null);
   const [newsTicker, setNewsTicker] = useState<string[]>([]);
   const [hookItems, setHookItems] = useState<[HookItem | null, HookItem | null]>([null, null]);
-  
   const [nomData, setNomData] = useState<NomData | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [buyRes, sellRes, tickerMapRes, nameMapRes, nomRes] = await Promise.all([
-          fetch('/data/top10/netBuy_5.json', { cache: 'no-store' }),
-          fetch('/data/top10/netSell_5.json', { cache: 'no-store' }),
-          fetch('/data/ticker_map.json'),
-          fetch('/data/name_alias.json'),
-          fetch('/data/flow/nom_nom_data.json', { cache: 'no-store' }).catch(() => null)
-        ]);
+        const days = [5, 10, 20, 40, 60];
+        const promises = [
+            ...days.map(d => fetch(`/data/top10/netBuy_${d}.json`, { cache: 'no-store' }).then(r => r.json())),
+            ...days.map(d => fetch(`/data/top10/netSell_${d}.json`, { cache: 'no-store' }).then(r => r.json())),
+            fetch('/data/ticker_map.json').then(r => r.json()),
+            fetch('/data/name_alias.json').then(r => r.json()),
+            fetch('/data/flow/nom_nom_data.json', { cache: 'no-store' }).then(r => r.json()).catch(() => null)
+        ];
 
-        const buyJson = await buyRes.json();
-        const sellJson = await sellRes.json();
-        const tickerMap = await tickerMapRes.json();
-        const nameMap = await nameMapRes.json();
+        const results = await Promise.all(promises);
         
-        if (nomRes && nomRes.ok) {
-            const nomJson = await nomRes.json();
-            setNomData(nomJson);
-        }
+        const buyDataMap: Record<number, any> = {};
+        const sellDataMap: Record<number, any> = {};
+        
+        days.forEach((d, i) => {
+            buyDataMap[d] = results[i];
+            sellDataMap[d] = results[i + 5];
+        });
 
+        const tickerMap = results[10];
+        const nameMap = results[11];
+        const nomJson = results[12];
+
+        if (nomJson) setNomData(nomJson);
+
+        // -------------------------------------------------------------
+        // 🧠 [핵심 알고리즘] 가중 평균 + 증폭(Amplification)
+        // -------------------------------------------------------------
+        let totalWeightedRatio = 0;
+        let totalWeight = 0;
+
+        days.forEach(d => {
+            // Top 30 기준 수급 총량 계산
+            const buyItems = (buyDataMap[d]?.items ?? []).slice(0, 30);
+            const sellItems = (sellDataMap[d]?.items ?? []).slice(0, 30);
+
+            const buyVol = buyItems.reduce((acc: number, cur: any) => acc + (cur.value > 0 ? cur.value : 0), 0);
+            const sellVol = sellItems.reduce((acc: number, cur: any) => acc + Math.abs(cur.value < 0 ? cur.value : 0), 0);
+            const totalVol = buyVol + sellVol;
+
+            // 순수 매수 비율 (0.0 ~ 1.0)
+            const rawRatio = totalVol === 0 ? 0.5 : (buyVol / totalVol);
+            
+            // @ts-ignore
+            const weight = WEIGHTS[d];
+            totalWeightedRatio += rawRatio * weight;
+            totalWeight += weight;
+        });
+
+        // 1. 가중 평균 비율 (예: 0.7)
+        const avgRatio = totalWeightedRatio; 
+
+        // 2. 중심(0.5) 기준으로 편차 구하기 (예: +0.2)
+        const deviation = avgRatio - 0.5;
+
+        // 3. 편차 증폭 (예: +0.2 * 2.2 = +0.44)
+        const amplifiedDeviation = deviation * AMPLIFIER;
+
+        // 4. 점수 환산 (0.5 + 0.44 = 0.94 -> 94점)
+        let finalScoreRaw = (0.5 + amplifiedDeviation) * 100;
+
+        // 5. 0~100 클램핑 (혹시 100 넘거나 0 밑으로 가면 잘라냄)
+        // 너무 극단적이면 재미없으니까 2~98 사이로 살짝 여유 둠
+        const finalScore = Math.max(2, Math.min(98, Math.round(finalScoreRaw)));
+
+        setMarketScore(finalScore);
+
+
+        // ... (아래는 기존 훅 아이템 로직 동일)
         const normalizeKey = (k: string) => k.toUpperCase().trim();
         const normalizedTickerMap: Record<string, string> = {};
         const normalizedNameMap: Record<string, string> = {};
@@ -82,15 +144,8 @@ export default function Page() {
           };
         };
 
-        const buyItemsRaw = (buyJson.items ?? []).slice(0, 20);
-        const sellItemsRaw = (sellJson.items ?? []).slice(0, 20);
-
-        const top10Buys = buyItemsRaw.slice(0, 10);
-        const top10Sells = sellItemsRaw.slice(0, 10);
-        const buyPower = top10Buys.reduce((acc: number, cur: any) => acc + (cur.value > 0 ? cur.value : 0), 0);
-        const sellPower = top10Sells.reduce((acc: number, cur: any) => acc + Math.abs(cur.value < 0 ? cur.value : 0), 0);
-        const totalVolume = buyPower + sellPower;
-        setMarketScore(totalVolume === 0 ? 50 : Math.round((buyPower / totalVolume) * 100));
+        const buyItemsRaw = (buyDataMap[5]?.items ?? []).slice(0, 20);
+        const sellItemsRaw = (sellDataMap[5]?.items ?? []).slice(0, 20);
 
         let leftCard: HookItem | null = null;
         let rightCard: HookItem | null = null;
@@ -141,7 +196,7 @@ export default function Page() {
     else if (score <= 80) return {
         badge: "🤔 GREED", badgeColor: "text-orange-200 bg-orange-900/50 border-orange-500/50", dotColor: "bg-orange-400",
         title: <>시장에 <br className="md:hidden" />🔥 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-amber-300">매수세</span>가 몰립니다.</>,
-        desc: "주가가 오르고 있습니다. 하지만 추격 매수는 신중해야 합니다.", gradient: "from-blue-500 via-orange-400 to-red-600", scoreColor: "text-orange-300"
+        desc: "개미들이 몰리고 있습니다. 하지만 추격 매수는 신중해야 합니다.", gradient: "from-blue-500 via-orange-400 to-red-600", scoreColor: "text-orange-300"
     };
     else return {
         badge: "🚨 EXTREME GREED", badgeColor: "text-red-200 bg-red-900/50 border-red-500/50", dotColor: "bg-red-500",
@@ -154,10 +209,8 @@ export default function Page() {
 
   return (
     <main className="min-h-screen bg-white pb-0 relative"> 
-      
-      {/* ✨ [Intro] 인트로 모달 */}
       <IntroModal />
-
+      
       {/* 1️⃣ [HERO] 시장 신호등 */}
       <section className="bg-slate-900 text-white pt-8 pb-16 px-4 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden mb-12">
         <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600 rounded-full mix-blend-overlay filter blur-[100px] opacity-20 animate-pulse"></div>
@@ -184,7 +237,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* 2️⃣ [TICKER] 속보 띠 */}
+      {/* 2️⃣ [TICKER] */}
       <div className="max-w-4xl mx-auto px-4 -mt-20 relative z-30 mb-8">
         <div className="bg-yellow-400 text-black text-xs font-bold py-3 px-4 rounded-lg shadow-lg flex items-center gap-3 overflow-hidden whitespace-nowrap border-b-4 border-yellow-600">
           <span className="bg-black text-yellow-400 px-1.5 py-0.5 rounded text-[10px] animate-pulse">LIVE</span>
@@ -196,161 +249,72 @@ export default function Page() {
         </div>
       </div>
 
-      {/* ✨ [SECTOR] 섹터 그리드 (여기에 추가됨!) */}
-      <section className="max-w-5xl mx-auto px-4 mb-8">
-         <SectorGrid />
-      </section>
+      <section className="max-w-5xl mx-auto px-4 mb-8"><SectorGrid /></section>
 
-      {/* 3️⃣ [HOOK] 추천 카드 */}
       <section className="max-w-5xl mx-auto px-4 mb-8">
         <div className="grid grid-cols-2 gap-3">
-          
-          {/* [Left] 줍줍 1위 (빨강 계열) */}
+          {/* Left Card */}
           {hookItems[0] ? (
-            <Link 
-              href={`/flow?ticker=${hookItems[0].ticker}&fileTicker=${encodeURIComponent(hookItems[0].fileTicker)}&side=netBuy&days=5`} 
-              className="group h-full"
-            >
+            <Link href={`/flow?ticker=${hookItems[0].ticker}&fileTicker=${encodeURIComponent(hookItems[0].fileTicker)}&side=netBuy&days=5`} className="group h-full">
               <div className="bg-gradient-to-br from-red-50/25 to-white rounded-2xl p-4 border border-red-100 hover:border-red-200 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
-                
-                {/* 상단 뱃지와 아이콘 */}
                 <div className="flex justify-between items-start mb-3">
-                  <span className="bg-red-100 text-red-600 text-xs font-bold px-3 py-1.5 rounded-full tracking-tight">
-                    순매수 1위
-                  </span>
-                  <div className="w-11 h-11  rounded-full border border-red-100 bg-white p-0.5 group-hover:scale-105 transition-transform">
-                    <img 
-                      src={`/logos/${encodeURIComponent(hookItems[0].fileTicker)}.png`} 
-                      alt={hookItems[0].name}
-                      className="w-full h-full rounded-full object-cover"
-                      onError={(e) => { 
-                        const img = e.currentTarget;
-                        if (hookItems[0] && !img.src.includes(encodeURIComponent(hookItems[0].ticker))) {
-                          img.src = `/logos/${encodeURIComponent(hookItems[0].ticker)}.png`;
-                        } else {
-                          img.src = '/logos/_us.png';
-                        }
-                      }}
-                    />
+                  <span className="bg-red-100 text-red-600 text-xs font-bold px-3 py-1.5 rounded-full tracking-tight">순매수 1위</span>
+                  <div className="w-11 h-11 rounded-full border border-red-100 bg-white p-0.5 group-hover:scale-105 transition-transform">
+                    <img src={`/logos/${encodeURIComponent(hookItems[0].fileTicker)}.png`} alt={hookItems[0].name} className="w-full h-full rounded-full object-cover" onError={(e) => { const img = e.currentTarget; if (!img.src.includes(encodeURIComponent(hookItems[0]!.ticker))) img.src = `/logos/${encodeURIComponent(hookItems[0]!.ticker)}.png`; else img.src = '/logos/_us.png'; }} />
                   </div>
                 </div>
-
-                {/* [Left] 줍줍 1위 (좌측 카드) */}
                 <div className="pr-2">
-                  <h3 className={`font-bold text-gray-900 mb-0.5 break-keep ${
-                      hookItems[0].name.length > 20 ? 'text-sm leading-tight' : 'text-lg leading-tight'
-                  }`}>
-                    {hookItems[0].name}
-                  </h3>
-                  <span className="text-[13px] text-gray-400 font-medium font-mono">
-                    {hookItems[0].ticker}
-                  </span>
+                  <h3 className={`font-bold text-gray-900 mb-0.5 break-keep ${hookItems[0].name.length > 20 ? 'text-sm leading-tight' : 'text-lg leading-tight'}`}>{hookItems[0].name}</h3>
+                  <span className="text-[13px] text-gray-400 font-medium font-mono">{hookItems[0].ticker}</span>
                 </div>
-
-                {/* ✨ 하단 설명 - 1줄로 수정 */}
                 <div className="mt-3 pt-3 border-t border-red-100/50">
-                  <p className="text-xs text-gray-600 font-medium leading-tight">
-                    개미들이 <span className="text-red-600 font-bold">쓸어 담은 종목</span>
-                  </p>
+                  <p className="text-xs text-gray-600 font-medium leading-tight">개미들이 <span className="text-red-600 font-bold">쓸어 담은 종목</span></p>
                 </div>
-
               </div>
             </Link>
-          ) : (
-            <div className="bg-gray-50 rounded-2xl h-36 animate-pulse border border-gray-100"></div>
-          )}
+          ) : <div className="bg-gray-50 rounded-2xl h-36 animate-pulse border border-gray-100"></div>}
 
-          {/* [Right] 매도 1위 (파랑 계열) */}
+          {/* Right Card */}
           {hookItems[1] ? (
-            <Link 
-              href={`/flow?ticker=${hookItems[1].ticker}&fileTicker=${encodeURIComponent(hookItems[1].fileTicker)}&side=netSell&days=5`} 
-              className="group h-full"
-            >
+            <Link href={`/flow?ticker=${hookItems[1].ticker}&fileTicker=${encodeURIComponent(hookItems[1].fileTicker)}&side=netSell&days=5`} className="group h-full">
               <div className="bg-gradient-to-br from-blue-50/25 to-white rounded-2xl p-4 border border-blue-100 hover:border-blue-200 transition duration-300 h-full flex flex-col justify-between relative overflow-hidden">
-                
-                {/* 상단 뱃지와 아이콘 */}
                 <div className="flex justify-between items-start mb-3">
-                  <span className="bg-blue-100 text-blue-600 text-xs font-bold px-3 py-1.5 rounded-full tracking-tight">
-                    순매도 1위
-                  </span>
+                  <span className="bg-blue-100 text-blue-600 text-xs font-bold px-3 py-1.5 rounded-full tracking-tight">순매도 1위</span>
                   <div className="w-11 h-11 rounded-full border border-blue-100 bg-white p-0.5 group-hover:scale-105 transition-transform">
-                    <img 
-                      src={`/logos/${encodeURIComponent(hookItems[1].fileTicker)}.png`} 
-                      alt={hookItems[1].name}
-                      className="w-full h-full rounded-full object-cover"
-                      onError={(e) => { 
-                        const img = e.currentTarget;
-                        if (hookItems[1] && !img.src.includes(encodeURIComponent(hookItems[1].ticker))) {
-                          img.src = `/logos/${encodeURIComponent(hookItems[1].ticker)}.png`;
-                        } else {
-                          img.src = '/logos/_us.png';
-                        }
-                      }}
-                    />
+                    <img src={`/logos/${encodeURIComponent(hookItems[1].fileTicker)}.png`} alt={hookItems[1].name} className="w-full h-full rounded-full object-cover" onError={(e) => { const img = e.currentTarget; if (!img.src.includes(encodeURIComponent(hookItems[1]!.ticker))) img.src = `/logos/${encodeURIComponent(hookItems[1]!.ticker)}.png`; else img.src = '/logos/_us.png'; }} />
                   </div>
                 </div>
-
-                {/* [Right] 매도 1위 (우측 카드) */}
                 <div className="pr-2">
-                  <h3 className={`font-bold text-gray-900 mb-0.5 break-keep ${
-                      hookItems[1].name.length > 20 ? 'text-sm leading-tight' : 'text-lg leading-tight'
-                  }`}>
-                    {hookItems[1].name}
-                  </h3>
-                  <span className="text-[13px] text-gray-400 font-medium font-mono">
-                    {hookItems[1].ticker}
-                  </span>
+                  <h3 className={`font-bold text-gray-900 mb-0.5 break-keep ${hookItems[1].name.length > 20 ? 'text-sm leading-tight' : 'text-lg leading-tight'}`}>{hookItems[1].name}</h3>
+                  <span className="text-[13px] text-gray-400 font-medium font-mono">{hookItems[1].ticker}</span>
                 </div>
-
-                {/* ✨ 하단 설명 - 1줄로 수정 */}
                 <div className="mt-3 pt-3 border-t border-blue-100/50">
-                  <p className="text-xs text-gray-600 font-medium leading-tight">
-                    개미들이 <span className="text-blue-500 font-bold">던지고 떠난 종목</span>
-                  </p>
+                  <p className="text-xs text-gray-600 font-medium leading-tight">개미들이 <span className="text-blue-500 font-bold">던지고 떠난 종목</span></p>
                 </div>
-
               </div>
             </Link>
-          ) : (
-            <div className="bg-gray-50 rounded-2xl h-36 animate-pulse border border-gray-100"></div>
-          )}
-
+          ) : <div className="bg-gray-50 rounded-2xl h-36 animate-pulse border border-gray-100"></div>}
         </div>
       </section>
 
-      {/* 4️⃣ [놈놈놈] 차트 */}
       <section className="max-w-5xl mx-auto px-4 mb-2">
-         <NomNomChart 
-           fire={nomData?.fire} 
-           top={nomData?.top} 
-           bottom={nomData?.bottom} 
-           knife={nomData?.knife} 
-         />
+         <NomNomChart fire={nomData?.fire} top={nomData?.top} bottom={nomData?.bottom} knife={nomData?.knife} />
       </section>
 
-      {/* 5️⃣ [DATA] Top 10 리스트 (타이틀 제거됨) */}
       <section ref={rankingRef} className="max-w-7xl mx-auto px-4 scroll-mt-20">
         <Suspense fallback={<div className="text-center py-20 text-gray-400">데이터를 불러오는 중입니다...</div>}>
           <HomeClient />
         </Suspense>
       </section>
 
-      {/* 6️⃣ 푸터 */}
       <Footer />
 
-      {/* ✨ 하단 플로팅 버튼 */}
       <div className="fixed bottom-6 left-0 w-full px-4 z-50 pointer-events-none">
         <div className="max-w-md mx-auto flex items-center justify-center gap-3">
-            <button 
-                onClick={scrollToRanking}
-                className="pointer-events-auto bg-gray-900 text-white shadow-2xl pl-5 pr-6 py-3 rounded-full flex items-center gap-2 border border-white/10 active:scale-95 transition-transform h-14"
-            >
+            <button onClick={scrollToRanking} className="pointer-events-auto bg-gray-900 text-white shadow-2xl pl-5 pr-6 py-3 rounded-full flex items-center gap-2 border border-white/10 active:scale-95 transition-transform h-14">
                 <span className="text-sm font-bold">📊 랭킹 보러가기</span>
             </button>
-            <Link 
-                href="/analysis"
-                className="pointer-events-auto bg-blue-600 text-white shadow-2xl pl-4 pr-6 py-3 rounded-full flex items-center gap-2.5 border border-white/10 active:scale-95 transition-transform h-14"
-            >
+            <Link href="/analysis" className="pointer-events-auto bg-blue-600 text-white shadow-2xl pl-4 pr-6 py-3 rounded-full flex items-center gap-2.5 border border-white/10 active:scale-95 transition-transform h-14">
                 <span className="text-xl">🔍</span>
                 <div className="flex flex-col items-start leading-none">
                     <span className="text-[10px] text-blue-100 font-medium mb-0.5">티커로 검색하는</span>

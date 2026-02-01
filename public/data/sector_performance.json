@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "반도체",
+    "ticker": "SOXX",
+    "emoji": "💾",
+    "change1d": -4.11,
+    "change1w": 0.46,
+    "change1m": 13.57
+  },
+  {
+    "id": 2,
+    "name": "빅테크",
+    "ticker": "XLK",
+    "emoji": "📱",
+    "change1d": -2.04,
+    "change1w": -0.83,
+    "change1m": -1.05
+  },
+  {
+    "id": 3,
+    "name": "나스닥",
+    "ticker": "QQQ",
+    "emoji": "🗽",
+    "change1d": -1.2,
+    "change1w": -0.14,
+    "change1m": 0.39
+  },
+  {
+    "id": 4,
+    "name": "2차전지",
+    "ticker": "LIT",
+    "emoji": "🔋",
+    "change1d": -4.99,
+    "change1w": -6.42,
+    "change1m": 6.76
+  },
+  {
+    "id": 5,
+    "name": "바이오",
+    "ticker": "XLV",
+    "emoji": "🧬",
+    "change1d": 0.6,
+    "change1w": -1.74,
+    "change1m": -0.6
+  },
+  {
+    "id": 6,
+    "name": "금융주",
+    "ticker": "XLF",
+    "emoji": "🏦",
+    "change1d": -0.21,
+    "change1w": 0.7,
+    "change1m": -3.15
+  },
+  {
+    "id": 7,
+    "name": "에너지",
+    "ticker": "XLE",
+    "emoji": "🛢️",
+    "change1d": 1.07,
+    "change1w": 3.78,
+    "change1m": 13.55
+  },
+  {
+    "id": 8,
+    "name": "방산",
+    "ticker": "ITA",
+    "emoji": "🚀",
+    "change1d": -0.17,
+    "change1w": -1.14,
+    "change1m": 7.41
+  }
+]

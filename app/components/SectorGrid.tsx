@@ -1,30 +1,26 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SectorChart from './SectorChart';
-import Portal from './Portal'; // ✨ [추가] 차원 이동 장치
+import Portal from './Portal'; 
 
-// ✅ 데이터 (사장님 UI 그대로 유지)
-const RAW_SECTORS = [
-  { id: 1, name: '반도체', ticker: 'SOXX', emoji: '💾', change1d: 3.45, change1w: 5.20, change1m: 12.4 },
-  { id: 2, name: '빅테크', ticker: 'XLK', emoji: '📱', change1d: 1.12, change1w: -0.50, change1m: 3.20 },
-  { id: 3, name: '나스닥', ticker: 'QQQ', emoji: '🗽', change1d: -0.45, change1w: 1.20, change1m: 4.50 },
-  { id: 4, name: '2차전지', ticker: 'LIT', emoji: '🔋', change1d: 0.05, change1w: -2.10, change1m: -8.50 },
-  { id: 5, name: '바이오', ticker: 'XLV', emoji: '🧬', change1d: -1.50, change1w: 3.40, change1m: 5.10 },
-  { id: 6, name: '금융주', ticker: 'XLF', emoji: '🏦', change1d: -2.80, change1w: -1.20, change1m: 2.30 },
-  { id: 7, name: '에너지', ticker: 'XLE', emoji: '🛢️', change1d: 4.10, change1w: 6.50, change1m: -1.20 },
-  { id: 8, name: '방산', ticker: 'ITA', emoji: '🚀', change1d: 0.80, change1w: 2.10, change1m: 8.90 },
-];
+// ✨ [수정] 타입 정의 (서버에서 오는 데이터 형태)
+type SectorItem = {
+  id: number;
+  name: string;
+  ticker: string;
+  emoji: string;
+  change1d: number;
+  change1w: number;
+  change1m: number;
+};
 
 const MAX_THRESHOLD = 4.0; 
 
 // ✨ [Card Component] (UI 건드리지 않음)
-const SectorCard = ({ sector, index, period, onClick }: { sector: any, index: number, period: string, onClick: () => void }) => {
-  
-  const change = period === '1D' ? sector.change1d 
-               : period === '1W' ? sector.change1w 
-               : sector.change1m;
+const SectorCard = ({ sector, index, period, onClick }: { sector: SectorItem, index: number, period: string, onClick: () => void }) => {
+  const change = period === '1D' ? sector.change1d : period === '1W' ? sector.change1w : sector.change1m;
 
   const getGradientStyle = (val: number) => {
     const threshold = period === '1M' ? 10.0 : MAX_THRESHOLD;
@@ -95,14 +91,37 @@ const SectorCard = ({ sector, index, period, onClick }: { sector: any, index: nu
 export default function SectorGrid() {
   const [period, setPeriod] = useState<'1D' | '1W' | '1M'>('1D');
   const [selectedSector, setSelectedSector] = useState<any>(null);
+  
+  // ✨ [수정] 실제 데이터를 담을 상태 (초기값 빈 배열)
+  const [sectors, setSectors] = useState<SectorItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  // ✨ [수정] 컴포넌트 마운트 시 데이터 패치
+  useEffect(() => {
+    fetch('/data/sector_performance.json')
+        .then(res => res.json())
+        .then(data => {
+            setSectors(data);
+            setLoading(false);
+        })
+        .catch(err => {
+            console.error("섹터 데이터 로드 실패:", err);
+            // 실패 시 빈 배열 유지하거나 에러 처리
+            setLoading(false);
+        });
+  }, []);
+
+  // ✨ [수정] RAW_SECTORS 대신 state인 sectors 사용
   const sortedSectors = useMemo(() => {
-    return [...RAW_SECTORS].sort((a, b) => {
+    return [...sectors].sort((a, b) => {
       const valA = period === '1D' ? a.change1d : period === '1W' ? a.change1w : a.change1m;
       const valB = period === '1D' ? b.change1d : period === '1W' ? b.change1w : b.change1m;
       return valB - valA; 
     });
-  }, [period]);
+  }, [period, sectors]);
+
+  // 로딩 중일 때 (선택사항 - 안 넣어도 됨)
+  if (loading && sectors.length === 0) return null; // 깜빡임 방지용
 
   return (
     <div className="w-full mt-4 mb-4 relative z-0"> 
@@ -150,7 +169,7 @@ export default function SectorGrid() {
         </AnimatePresence>
       </motion.div>
 
-      {/* ✨ [수술 부위] 여기만 Portal로 감쌌습니다. 나머지는 그대로입니다. */}
+      {/* ✨ [수술 부위] 사장님 원본 코드 그대로 복구 + 데이터 연결 */}
       <Portal>
         <AnimatePresence>
             {selectedSector && (
@@ -159,7 +178,6 @@ export default function SectorGrid() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSelectedSector(null)}
-                // z-index 99999 + Portal 조합 = 무적
                 className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-4"
             >
                 <motion.div
@@ -202,7 +220,6 @@ export default function SectorGrid() {
                 </div>
 
                 <div className="h-[250px] w-full mt-2 mb-6 relative px-2">
-                    {/* ✨ [수정] 진짜 차트가 나오려면 ticker가 꼭 필요해서 이것만 넣었습니다! */}
                     <SectorChart 
                         ticker={selectedSector.ticker}
                         change={period === '1D' ? selectedSector.change1d : period === '1W' ? selectedSector.change1w : selectedSector.change1m} 

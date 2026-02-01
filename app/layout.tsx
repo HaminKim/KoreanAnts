@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/react';
 import Script from 'next/script';
 import ShareButton from './components/ShareButton';
 import AuthButton from './components/AuthButton';
+// GlobalSearch import 삭제함
 
 // 🚀 [SEO & Google 인증] 검색 엔진 최적화 설정
 export const metadata: Metadata = {
@@ -12,14 +13,12 @@ export const metadata: Metadata = {
   description: '개미들의 반란, 리앤트(ReAnt). 리버스 개미 전략, AI 주식 분석, 공포/탐욕 지수, 미국 주식 투자 정보를 제공합니다.',
   keywords: ['리앤트', 'ReAnt', '리버스개미', '주식분석', '미국주식', 'AI투자', '투자심리', '공포탐욕지수'],
   
-  // 👇 [추가됨] 구글 검색 결과 및 탭에 뜰 아이콘(로고) 설정
   icons: {
-    icon: '/icon.png',      // app 폴더 혹은 public 폴더에 있는 icon.png
+    icon: '/icon.png',
     shortcut: '/icon.png',
-    apple: '/icon.png',     // 아이폰 홈 화면 추가 시 뜰 아이콘
+    apple: '/icon.png',
   },
 
-  // 구글 소유권 인증 번호
   verification: {
     google: 'YxyiRFV2A7ub4mFChMZaJRr06Ybrs-TJJezPOjRtufY', 
   },
@@ -70,7 +69,6 @@ export default function RootLayout({
 
             {/* Navigation */}
             <nav className="flex items-center gap-3 sm:gap-4 text-sm text-gray-600">
-              {/* Home (모바일에서는 공간 부족하면 숨기거나 아이콘으로 대체 가능하지만 일단 유지) */}
               <Link
                 href="/"
                 className="hidden sm:block hover:text-black transition"
@@ -80,9 +78,11 @@ export default function RootLayout({
               
               <span className="hidden sm:block text-gray-300">|</span>
               
+              {/* 검색창 삭제됨 */}
+              
               <ShareButton />
 
-              {/* ✨ [NEW] 구독하기 버튼 (세련된 골드 그라데이션 적용) */}
+              {/* 구독하기 버튼 (원래대로 유지) */}
               <Link 
                 href="/pricing"
                 className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold shadow-sm hover:shadow-md hover:from-amber-600 hover:to-orange-700 transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm flex items-center gap-1"
@@ -103,7 +103,7 @@ export default function RootLayout({
         
         </div>
 
-        {/* 구글 애즈 태그 (Google Ads) */}
+        {/* 구글 애즈 태그 */}
         <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=AW-17856168628"
@@ -118,7 +118,6 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Vercel Analytics (방문자 수 체크) */}
         <Analytics />
       </body>
     </html>
