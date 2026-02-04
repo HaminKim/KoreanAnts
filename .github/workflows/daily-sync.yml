@@ -92,6 +92,11 @@ jobs:
       - name: 4. Generate Daily Briefing for N8N
         run: python scripts/generate-daily.py
 
+      # ✨ [NEW] 7-5. 섹터 그리드(트리맵) 데이터 생성
+      # 사장님이 말씀하신 파일명(generate_sector.py)을 실행합니다!
+      - name: 5. Generate Sector Data
+        run: python scripts/generate_sector.py
+
       # ----------------------------------------------------------------
 
       # 8. 최종 결과물(JSON) 업로드
@@ -100,7 +105,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # ✨ public/data 폴더 전체를 add
+          # ✨ public/data 폴더 전체를 add (섹터 데이터도 포함됨)
           git add public/data/
 
           # 변경사항 확인
@@ -110,7 +115,7 @@ jobs:
           fi
 
           # 커밋
-          git commit -m "chore(data): update daily JSONs & History & Briefing"
+          git commit -m "chore(data): update daily JSONs & Sector & Briefing"
 
           # ✨ [필수] 충돌 나면 '로봇 데이터'를 우선시함!
           git pull --rebase -Xtheirs origin main
