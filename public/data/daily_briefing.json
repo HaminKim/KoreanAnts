@@ -1,57 +1,57 @@
 {
-  "date": "2026-02-05",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-02-06",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "NVDA",
-      "name": "NVDA",
-      "raw_name": "NVIDIA CORP",
-      "value": -432459408.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "ticker": "MSFT",
+      "name": "MSFT",
+      "raw_name": "MICROSOFT CORP",
+      "value": 340047734.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "SOXL",
-      "name": "SOXL",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -203023970.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "SNDK",
+      "name": "SNDK",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": 293264864.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "META",
-      "name": "META",
-      "raw_name": "META PLATFORMS INC CL A",
-      "value": -192759430.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "ticker": "SOXL",
+      "name": "SOXL",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 257668515.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "NVDL",
-      "name": "NVDL",
-      "raw_name": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
-      "value": -101133076.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "MU",
+      "name": "MU",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 246437003.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "TQQQ",
-      "name": "TQQQ",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -88315158.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "TSLA",
+      "name": "TSLA",
+      "raw_name": "TESLA INC",
+      "value": 234337045.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
