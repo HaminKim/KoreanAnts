@@ -17,9 +17,9 @@ function formatMoneyKR(val: number) {
     return `${val.toLocaleString()}$`;
 }
 
-// ✨ [설정] 기본 5회 + 보너스 5회 = 10회
-const FREE_LIMIT = 5;
-const BONUS_ADD = 5;
+// ✨ [설정] 기본 3회 + 보너스 2회 = 5회
+const FREE_LIMIT = 3;
+const BONUS_ADD = 2;
 
 export default function FlowClient() {
   const params = useSearchParams();

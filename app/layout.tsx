@@ -1,28 +1,22 @@
 import './globals.css';
-import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/react';
 import Script from 'next/script';
-import ShareButton from './components/ShareButton';
-import AuthButton from './components/AuthButton';
-// GlobalSearch import 삭제함
+import HeaderWithModal from './components/HeaderWithModal'; // ✨ 이것만 있으면 됩니다!
 
-// 🚀 [SEO & Google 인증] 검색 엔진 최적화 설정
+// 🚀 [SEO & Google 인증]
 export const metadata: Metadata = {
   title: '리앤트(REANT) | 주식 투자 심리 분석 & AI 리포트',
   description: '개미들의 반란, 리앤트(ReAnt). 리버스 개미 전략, AI 주식 분석, 공포/탐욕 지수, 미국 주식 투자 정보를 제공합니다.',
   keywords: ['리앤트', 'ReAnt', '리버스개미', '주식분석', '미국주식', 'AI투자', '투자심리', '공포탐욕지수'],
-  
   icons: {
     icon: '/icon.png',
     shortcut: '/icon.png',
     apple: '/icon.png',
   },
-
   verification: {
     google: 'YxyiRFV2A7ub4mFChMZaJRr06Ybrs-TJJezPOjRtufY', 
   },
-
   openGraph: {
     title: '리앤트(REANT) - 개미와 반대로 투자하라',
     description: '오늘 개미들은 뭘 샀을까? AI가 분석해주는 역발상 투자 전략.',
@@ -57,44 +51,8 @@ export default function RootLayout({
       <body className="bg-white text-black">
         <div className="max-w-5xl mx-auto">
           
-          {/* Header */}
-          <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b">
-            {/* Brand */}
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-xl font-bold tracking-tight"
-            >
-              <span>REANT</span>
-            </Link>
-
-            {/* Navigation */}
-            <nav className="flex items-center gap-3 sm:gap-4 text-sm text-gray-600">
-              <Link
-                href="/"
-                className="hidden sm:block hover:text-black transition"
-              >
-                Home
-              </Link>
-              
-              <span className="hidden sm:block text-gray-300">|</span>
-              
-              {/* 검색창 삭제됨 */}
-              
-              <ShareButton />
-
-              {/* 구독하기 버튼 (원래대로 유지) */}
-              <Link 
-                href="/pricing"
-                className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold shadow-sm hover:shadow-md hover:from-amber-600 hover:to-orange-700 transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm flex items-center gap-1"
-              >
-                <span>구독하기</span>
-                <span className="hidden sm:inline">👑</span>
-              </Link>
-              
-              <AuthButton />
-              
-            </nav>
-          </header>
+          {/* ✨ 기존의 복잡한 <header>를 제거하고 이거 한 줄로 끝! */}
+          <HeaderWithModal />
 
           {/* Page Content */}
           <main className="px-4 sm:px-6 py-6 pb-24">

@@ -35,12 +35,12 @@ export default function HomeClient() {
   const [items, setItems] = useState<RankItem[]>([]);
   const [loading, setLoading] = useState(false);
   
-  // ✨ 로그인 여부만 체크 (홈 화면에서는 구독 여부는 중요치 않음)
+  // ✨ 로그인 여부 체크
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const isBuy = side === 'netBuy';
 
-  // 2. 로그인 체크 (기존 방식 유지)
+  // 2. 로그인 체크
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -59,9 +59,8 @@ export default function HomeClient() {
     return () => subscription.unsubscribe();
   }, [supabase]);
 
-  // 3. 잠금 해제 액션 (기존 함수 복구)
+  // 3. 잠금 해제 액션
   const handleLockAction = (rank: number) => {
-    // 비로그인 상태면 -> 무조건 카카오 로그인
     if (!isLoggedIn) {
         supabase.auth.signInWithOAuth({
             provider: 'kakao',
@@ -72,7 +71,6 @@ export default function HomeClient() {
         });
         return;
     }
-    // (로그인 된 상태라면 잠금 자체가 안 걸리므로 여기 올 일 없음)
   };
 
   // 4. URL 동기화
@@ -187,15 +185,14 @@ export default function HomeClient() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
                 {visibleItems.map((item, index) => {
                     const rank = index + 1;
-                    
-                    // ✨ [핵심 수정] 1~3위 & 비로그인 -> 잠금
                     const isLocked = (rank <= 3) && !isLoggedIn;
 
                     return (
                         <div key={item.fileTicker + index} className="relative group">
+                            {/* ✨ [수정 1] 내용물: 흐림 효과 제거 (덮개가 흐리게 할 것임) */}
                             <div className={`
                                 flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl border transition-all bg-white
-                                ${isLocked ? 'blur-sm opacity-70 pointer-events-none select-none grayscale' : 'hover:shadow-lg hover:-translate-y-1 cursor-pointer'}
+                                ${isLocked ? 'pointer-events-none select-none' : 'hover:shadow-lg hover:-translate-y-1 cursor-pointer'}
                                 ${isBuy ? 'hover:border-red-100 border-gray-100' : 'hover:border-blue-100 border-gray-100'}
                             `}>
                                 <div className={`w-8 h-8 flex items-center justify-center rounded-lg font-black text-sm md:text-lg shadow-sm shrink-0 ${rank <= 5 ? (isBuy ? 'bg-red-500 text-white' : 'bg-blue-500 text-white') : 'bg-gray-100 text-gray-500'}`}>{rank}</div>
@@ -211,9 +208,9 @@ export default function HomeClient() {
                                 </div>
                             </div>
 
-                            {/* 🔒 잠금 화면 */}
+                            {/* 🔒 잠금 화면: ✨ [수정 2] 유리창 효과 (backdrop-blur-sm) 적용 */}
                             {isLocked && (
-                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/20 rounded-2xl">
+                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/20 backdrop-blur-sm rounded-2xl">
                                     <button 
                                         onClick={() => handleLockAction(rank)} 
                                         className="bg-gray-900 shadow-xl px-4 py-2.5 rounded-full flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform border border-gray-700 pointer-events-auto"
