@@ -1,46 +1,46 @@
 {
-  "date": "2026-02-08",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-02-09",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "GOOGL",
-      "name": "GOOGL",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 893261819.0,
+      "ticker": "SOXL",
+      "name": "SOXL",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 872221061.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "SNDK",
-      "name": "SNDK",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 406422181.0,
+      "ticker": "MSFT",
+      "name": "MSFT",
+      "raw_name": "MICROSOFT CORP",
+      "value": 325045913.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 390899212.0,
+      "ticker": "SNDK",
+      "name": "SNDK",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": 322400030.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "SLV",
-      "name": "SLV",
-      "raw_name": "ISHARES SILVER TRUST ETF",
-      "value": 388855089.0,
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 234069451.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
@@ -49,7 +49,7 @@
       "ticker": "MU",
       "name": "MU",
       "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 342622987.0,
+      "value": 196064570.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
