@@ -1,7 +1,7 @@
 {
-  "date": "2026-02-09",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-02-10",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "SOXL",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 872221061.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "ticker": "META",
+      "name": "META",
+      "raw_name": "META PLATFORMS INC CL A",
+      "value": -111962295.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 325045913.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "ticker": "NVDA",
+      "name": "NVDA",
+      "raw_name": "NVIDIA CORP",
+      "value": -111789276.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "SNDK",
-      "name": "SNDK",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 322400030.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "AAPL",
+      "name": "AAPL",
+      "raw_name": "APPLE INC",
+      "value": -91796302.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "GOOGL",
-      "name": "GOOGL",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 234069451.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "AVGO",
+      "name": "AVGO",
+      "raw_name": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "value": -60022960.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "MU",
-      "name": "MU",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 196064570.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "RKLB",
+      "name": "RKLB",
+      "raw_name": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
+      "value": -51914222.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
