@@ -1,66 +1,57 @@
 {
-  "date": "2026-02-11",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-02-12",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 379726529.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "SNDK",
-      "name": "SNDK",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 372689967.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "GOOGL",
-      "name": "GOOGL",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 325054969.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
-      "ticker": "NVDA",
-      "name": "NVDA",
-      "raw_name": "NVIDIA CORP",
-      "value": -424932384.0,
+      "ticker": "SOXL",
+      "name": "SOXL",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -546524391.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "META",
-      "name": "META",
-      "raw_name": "META PLATFORMS INC CL A",
-      "value": -241259588.0,
+      "ticker": "NVDA",
+      "name": "NVDA",
+      "raw_name": "NVIDIA CORP",
+      "value": -467670723.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
+      "ticker": "META",
+      "name": "META",
+      "raw_name": "META PLATFORMS INC CL A",
+      "value": -239489092.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
       "ticker": "AAPL",
       "name": "AAPL",
       "raw_name": "APPLE INC",
-      "value": -97098448.0,
+      "value": -107304209.0,
       "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "NVDL",
+      "name": "NVDL",
+      "raw_name": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
+      "value": -104928207.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
