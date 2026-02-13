@@ -1,19 +1,19 @@
 {
-  "date": "2026-02-13",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-02-14",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TQQQ",
-      "name": "TQQQ",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 151643691.0,
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 624320861.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -22,34 +22,34 @@
       "ticker": "SNDK",
       "name": "SNDK",
       "raw_name": "SNDSK CRP ORD WI",
-      "value": 140859173.0,
+      "value": 492633625.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "PLTR",
-      "name": "PLTR",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": 130697925.0,
+      "ticker": "MSFT",
+      "name": "MSFT",
+      "raw_name": "MICROSOFT CORP",
+      "value": 459984406.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "GOOGL",
-      "name": "GOOGL",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 103299515.0,
+      "ticker": "SLV",
+      "name": "SLV",
+      "raw_name": "ISHARES SILVER TRUST ETF",
+      "value": 332527225.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "AMZN",
-      "name": "AMZN",
-      "raw_name": "AMAZON.COM INC",
-      "value": 97136992.0,
+      "ticker": "IONQ",
+      "name": "IONQ",
+      "raw_name": "IONQ INC",
+      "value": 328975561.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
