@@ -1,7 +1,7 @@
 {
-  "date": "2026-02-16",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-02-17",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SNDK",
-      "name": "SNDK",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 123312979.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "ticker": "SOXL",
+      "name": "SOXL",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -759060291.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "AMZN",
-      "name": "AMZN",
-      "raw_name": "AMAZON.COM INC",
-      "value": 110320353.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "ticker": "NVDA",
+      "name": "NVDA",
+      "raw_name": "NVIDIA CORP",
+      "value": -185881478.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
-      "name": "TQQQ",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 83797558.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "MU",
+      "name": "MU",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -63264291.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 78176178.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "NVDL",
+      "name": "NVDL",
+      "raw_name": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
+      "value": -54323847.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "PLTR",
-      "name": "PLTR",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": 77236371.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "APP",
+      "name": "APP",
+      "raw_name": "APPLOVIN CORP",
+      "value": -44099845.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
