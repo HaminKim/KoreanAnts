@@ -5,8 +5,8 @@
       "name_kr": "블룸 에너지",
       "ticker": "BE",
       "file_ticker": "BLOOM ENERGY CORP CL A",
-      "close": 155.24,
-      "price_change": 0.11659354096238228,
+      "close": 156.69,
+      "price_change": 0.12702294468819678,
       "net_buy_sum": -1050903,
       "buy_score": 2,
       "sell_score": 4,
@@ -18,8 +18,8 @@
       "name_kr": "팔란티어 테크놀로지스",
       "ticker": "PLTR",
       "file_ticker": "PALANTIR TECHNOLOGIES INC CL A",
-      "close": 134.25,
-      "price_change": 0.039649965151397855,
+      "close": 134.57,
+      "price_change": 0.042128087973360165,
       "net_buy_sum": -18167320,
       "buy_score": 3,
       "sell_score": 4,
@@ -33,8 +33,8 @@
       "name_kr": "아이온큐",
       "ticker": "IONQ",
       "file_ticker": "IONQ INC",
-      "close": 32.58,
-      "price_change": 0.04089456869009577,
+      "close": 32.57,
+      "price_change": 0.04057507987220446,
       "net_buy_sum": 15427877,
       "buy_score": 7,
       "sell_score": 0,
@@ -46,13 +46,28 @@
       "name_kr": "아이렌",
       "ticker": "IREN",
       "file_ticker": "IRIS ENERGY LTD",
-      "close": 41.38,
-      "price_change": 0.03372470647014742,
+      "close": 41.53,
+      "price_change": 0.03747189607794154,
       "net_buy_sum": 3525696,
       "buy_score": 5,
       "sell_score": 2,
       "last_date": "2026-02-19",
       "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    }
+  ],
+  "knife": [
+    {
+      "name": "SNDSK CRP ORD WI",
+      "name_kr": "샌디스크",
+      "ticker": "SNDK",
+      "file_ticker": "SNDSK CRP ORD WI",
+      "close": 614.0,
+      "price_change": -0.025845245839216813,
+      "net_buy_sum": 18362008,
+      "buy_score": 5,
+      "sell_score": 2,
+      "last_date": "2026-02-19",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     }
   ]
 }
