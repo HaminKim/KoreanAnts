@@ -1,57 +1,57 @@
 {
-  "date": "2026-02-19",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-02-20",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "SOXL",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -400235059.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "ticker": "TQQQ",
+      "name": "TQQQ",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 91021730.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "NVDA",
-      "name": "NVDA",
-      "raw_name": "NVIDIA CORP",
-      "value": -228901540.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "MSFT",
+      "name": "MSFT",
+      "raw_name": "MICROSOFT CORP",
+      "value": 58053203.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "AAPL",
-      "name": "AAPL",
-      "raw_name": "APPLE INC",
-      "value": -115351513.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "ticker": "AMZN",
+      "name": "AMZN",
+      "raw_name": "AMAZON.COM INC",
+      "value": 55567024.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "META",
-      "name": "META",
-      "raw_name": "META PLATFORMS INC CL A",
-      "value": -88471261.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 51716101.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "AVGO",
-      "name": "AVGO",
-      "raw_name": "BROADCOM INC EXOF 005644980 SG9999014823",
-      "value": -76495984.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "TSM",
+      "name": "TSM",
+      "raw_name": "TAIWAN SEMICONDUCTOR MANUFACTURING CO LTD ADR",
+      "value": 49584652.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
