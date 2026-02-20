@@ -1,55 +1,55 @@
 {
-  "date": "2026-02-20",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-02-21",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TQQQ",
-      "name": "TQQQ",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 91021730.0,
+      "ticker": "MSFT",
+      "name": "MSFT",
+      "raw_name": "MICROSOFT CORP",
+      "value": 492242325.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 58053203.0,
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 467462081.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "AMZN",
-      "name": "AMZN",
-      "raw_name": "AMAZON.COM INC",
-      "value": 55567024.0,
+      "ticker": "SNDK",
+      "name": "SNDK",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": 429327346.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "GOOGL",
-      "name": "GOOGL",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 51716101.0,
+      "ticker": "IONQ",
+      "name": "IONQ",
+      "raw_name": "IONQ INC",
+      "value": 382574068.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "TSM",
-      "name": "TSM",
-      "raw_name": "TAIWAN SEMICONDUCTOR MANUFACTURING CO LTD ADR",
-      "value": 49584652.0,
+      "ticker": "SLV",
+      "name": "SLV",
+      "raw_name": "ISHARES SILVER TRUST ETF",
+      "value": 294594331.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
