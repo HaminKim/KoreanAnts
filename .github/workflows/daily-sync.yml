@@ -70,7 +70,7 @@ jobs:
       # 6. 라이브러리 설치
       - name: Install deps
         run: |
-          pip install pandas yfinance
+          pip install pandas numpy yfinance
 
       # ----------------------------------------------------------------
       # 🍳 데이터 요리 시작
@@ -96,6 +96,10 @@ jobs:
       # 사장님이 말씀하신 파일명(generate_sector.py)을 실행합니다!
       - name: 5. Generate Sector Data
         run: python scripts/generate_sector.py
+
+      # 7-6. 워치리스트 히트맵 데이터 생성 (스탠 와인스타인 스테이지 분석)
+      - name: 6. Generate Watchlist
+        run: python scripts/generate_watchlist.py
 
       # ----------------------------------------------------------------
 

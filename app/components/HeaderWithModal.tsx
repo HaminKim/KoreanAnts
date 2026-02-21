@@ -61,7 +61,14 @@ export default function HeaderWithModal() {
             <span>🔥필독🔥</span>
           </button>
           <span className="hidden sm:block text-gray-300">|</span>
-          <Link 
+          <Link
+            href="/watchlist"
+            className="hidden sm:flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800 transition-colors px-2 py-1.5 rounded-lg hover:bg-gray-50"
+          >
+            📊 히트맵
+          </Link>
+          <span className="hidden sm:block text-gray-300">|</span>
+          <Link
             href="/pricing"
             className="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold shadow-sm hover:shadow-md hover:from-amber-600 hover:to-orange-700 transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm flex items-center gap-1 shrink-0"
           >
