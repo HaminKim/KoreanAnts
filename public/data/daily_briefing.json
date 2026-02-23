@@ -1,7 +1,7 @@
 {
-  "date": "2026-02-23",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-02-24",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "TQQQ",
-      "name": "TQQQ",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 83870919.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "ticker": "NVDA",
+      "name": "NVDA",
+      "raw_name": "NVIDIA CORP",
+      "value": -50816450.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "MU",
-      "name": "MU",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 69378659.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "ticker": "APP",
+      "name": "APP",
+      "raw_name": "APPLOVIN CORP",
+      "value": -50172366.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "AMZN",
-      "name": "AMZN",
-      "raw_name": "AMAZON.COM INC",
-      "value": 55211819.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "CLOUDFLARE INC",
+      "name": "CLOUDFLARE INC",
+      "raw_name": "CLOUDFLARE INC",
+      "value": -24826062.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 47555133.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "AVGO",
+      "name": "AVGO",
+      "raw_name": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "value": -24295344.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "VOO",
-      "name": "VOO",
-      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 44965058.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "CH ROBINSON WORLDWIDE INC",
+      "name": "CH ROBINSON WORLDWIDE INC",
+      "raw_name": "CH ROBINSON WORLDWIDE INC",
+      "value": -19086323.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
