@@ -1,46 +1,19 @@
 {
-  "date": "2026-02-25",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-02-26",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "AMZN",
-      "name": "AMZN",
-      "raw_name": "AMAZON.COM INC",
-      "value": 151879879.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 145657489.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "GOOGL",
-      "name": "GOOGL",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 125929398.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "SOXL",
       "name": "SOXL",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -1095839312.0,
+      "value": -349459536.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -49,18 +22,36 @@
       "ticker": "NVDA",
       "name": "NVDA",
       "raw_name": "NVIDIA CORP",
-      "value": -246430893.0,
+      "value": -232532747.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
+      "ticker": "MU",
+      "name": "MU",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -76246592.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
       "ticker": "NVDL",
       "name": "NVDL",
       "raw_name": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
-      "value": -65472336.0,
+      "value": -51770098.0,
       "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "APP",
+      "name": "APP",
+      "raw_name": "APPLOVIN CORP",
+      "value": -50172366.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
