@@ -1,57 +1,57 @@
 {
-  "date": "2026-02-26",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-02-27",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "SOXL",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -349459536.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "ticker": "MSFT",
+      "name": "MSFT",
+      "raw_name": "MICROSOFT CORP",
+      "value": 72537392.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "NVDA",
-      "name": "NVDA",
-      "raw_name": "NVIDIA CORP",
-      "value": -232532747.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "GOOGL",
+      "name": "GOOGL",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 62011336.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
-      "name": "MU",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -76246592.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "ticker": "KORU",
+      "name": "KORU",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 51329419.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "NVDL",
-      "name": "NVDL",
-      "raw_name": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
-      "value": -51770098.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "TERADYNE INC",
+      "name": "TERADYNE INC",
+      "raw_name": "TERADYNE INC",
+      "value": 31507959.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "APP",
-      "name": "APP",
-      "raw_name": "APPLOVIN CORP",
-      "value": -50172366.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "ISHARES MSCI SOUTH KOREA ETF",
+      "name": "ISHARES MSCI SOUTH KOREA ETF",
+      "raw_name": "ISHARES MSCI SOUTH KOREA ETF",
+      "value": 24465286.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
