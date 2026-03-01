@@ -1,28 +1,28 @@
 {
-  "date": "2026-03-01",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-03-02",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 532489430.0,
+      "ticker": "KORU",
+      "name": "KORU",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 83923599.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "SNDK",
-      "name": "SNDK",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 484127422.0,
+      "ticker": "MSFT",
+      "name": "MSFT",
+      "raw_name": "MICROSOFT CORP",
+      "value": 78376767.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
@@ -31,25 +31,25 @@
       "ticker": "GOOGL",
       "name": "GOOGL",
       "raw_name": "ALPHABET INC CL A",
-      "value": 402565184.0,
+      "value": 61046764.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "IONQ",
-      "name": "IONQ",
-      "raw_name": "IONQ INC",
-      "value": 233028048.0,
+      "ticker": "VIAVI SOLUTIONS INC CHAN 39521202055 US46612J5074",
+      "name": "VIAVI SOLUTIONS INC CHAN 39521202055 US46612J5074",
+      "raw_name": "VIAVI SOLUTIONS INC CHAN 39521202055 US46612J5074",
+      "value": 35715160.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "AMZN",
-      "name": "AMZN",
-      "raw_name": "AMAZON.COM INC",
-      "value": 194169854.0,
+      "ticker": "ISHARES MSCI SOUTH KOREA ETF",
+      "name": "ISHARES MSCI SOUTH KOREA ETF",
+      "raw_name": "ISHARES MSCI SOUTH KOREA ETF",
+      "value": 33606178.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
