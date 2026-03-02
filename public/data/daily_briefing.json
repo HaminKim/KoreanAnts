@@ -1,7 +1,7 @@
 {
-  "date": "2026-03-02",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-03-03",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "KORU",
-      "name": "KORU",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 83923599.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "ticker": "SOXL",
+      "name": "SOXL",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -366852224.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 78376767.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "ticker": "TSLA",
+      "name": "TSLA",
+      "raw_name": "TESLA INC",
+      "value": -79999805.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "GOOGL",
-      "name": "GOOGL",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 61046764.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "TQQQ",
+      "name": "TQQQ",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -59796532.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "VIAVI SOLUTIONS INC CHAN 39521202055 US46612J5074",
-      "name": "VIAVI SOLUTIONS INC CHAN 39521202055 US46612J5074",
-      "raw_name": "VIAVI SOLUTIONS INC CHAN 39521202055 US46612J5074",
-      "value": 35715160.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "PLTR",
+      "name": "PLTR",
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -51558463.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "ISHARES MSCI SOUTH KOREA ETF",
-      "name": "ISHARES MSCI SOUTH KOREA ETF",
-      "raw_name": "ISHARES MSCI SOUTH KOREA ETF",
-      "value": 33606178.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "MU",
+      "name": "MU",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -44896545.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
