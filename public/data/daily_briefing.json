@@ -1,11 +1,11 @@
 {
-  "date": "2026-03-05",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-03-06",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,45 +13,45 @@
       "ticker": "SOXL",
       "name": "SOXL",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -191106411.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "value": 1158086701.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLA",
-      "name": "TSLA",
-      "raw_name": "TESLA INC",
-      "value": -90749422.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "KORU",
+      "name": "KORU",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 81735546.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "PLTR",
-      "name": "PLTR",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -58980519.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "ticker": "NVDA",
+      "name": "NVDA",
+      "raw_name": "NVIDIA CORP",
+      "value": 53327009.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "SLV",
-      "name": "SLV",
-      "raw_name": "ISHARES SILVER TRUST ETF",
-      "value": -52890119.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "XOM",
+      "name": "XOM",
+      "raw_name": "EXXON MOBIL CORP",
+      "value": 50069144.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "APP",
-      "name": "APP",
-      "raw_name": "APPLOVIN CORP",
-      "value": -50172366.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "NVDL",
+      "name": "NVDL",
+      "raw_name": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
+      "value": 42764039.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
