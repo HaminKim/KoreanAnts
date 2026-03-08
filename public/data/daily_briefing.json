@@ -1,55 +1,55 @@
 {
-  "date": "2026-03-08",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-03-09",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "KORU",
-      "name": "KORU",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 262376055.0,
+      "ticker": "SOXL",
+      "name": "SOXL",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 1022353912.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "MSFT",
-      "name": "MSFT",
-      "raw_name": "MICROSOFT CORP",
-      "value": 180454664.0,
+      "ticker": "KORU",
+      "name": "KORU",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 134215474.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
-      "name": "TQQQ",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 162670423.0,
+      "ticker": "CRCL",
+      "name": "CRCL",
+      "raw_name": "Circle Internet",
+      "value": 51145771.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "SOXL",
-      "name": "SOXL",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 152693640.0,
+      "ticker": "XOM",
+      "name": "XOM",
+      "raw_name": "EXXON MOBIL CORP",
+      "value": 50069144.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "AMZN",
-      "name": "AMZN",
-      "raw_name": "AMAZON.COM INC",
-      "value": 130108811.0,
+      "ticker": "NVDA",
+      "name": "NVDA",
+      "raw_name": "NVIDIA CORP",
+      "value": 46279064.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
