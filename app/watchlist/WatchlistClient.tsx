@@ -14,6 +14,10 @@ const TradingViewChart = dynamic(
 
 type Signal  = 'long' | 'long_watch' | 'short' | 'short_watch' | 'neutral'
 type RSPoint = { d: string; v: number }
+interface HighLow  { w52: number|null; w26: number|null; w13: number|null }
+interface NearHigh { w52: number|null; w26: number|null; w13: number|null }
+interface EpsQuarter { d: string; actual: number|null; estimate: number|null; surp: number|null }
+interface EpsData    { history: EpsQuarter[]; trend: string|null }
 
 interface StockBreakdown {
   bull_strength: number
@@ -41,13 +45,18 @@ interface StockData {
 }
 
 interface StockItem {
-  ticker:     string
-  score:      number
-  signal:     Signal
-  stage:      string
-  rs_history: RSPoint[]
-  breakdown:  StockBreakdown
-  data:       StockData
+  ticker:          string
+  score:           number
+  signal:          Signal
+  stage:           string
+  rs_spy_line:     RSPoint[]
+  rs_sector_line:  RSPoint[]
+  highs:           HighLow
+  lows:            HighLow
+  near_highs:      NearHigh
+  eps:             EpsData | null
+  breakdown:       StockBreakdown
+  data:            StockData
 }
 
 interface SectorItem {
@@ -206,6 +215,240 @@ function RSSparkline({
 }
 
 // ─────────────────────────────────────────
+// RSLineChart — RS LINE (정규화, 1년=100) + 20일 EMA
+//
+// Y축 기준선 = 100 (1년 전)
+// 100위: 초록 채움 / 100아래: 빨강 채움
+// 점선 오버레이: 20일 EMA (회색)
+// ─────────────────────────────────────────
+
+function calcEMA(data: RSPoint[], period: number): RSPoint[] {
+  const k = 2 / (period + 1)
+  let ema = data[0]?.v ?? 100
+  return data.map((p, i) => {
+    if (i === 0) return { d: p.d, v: ema }
+    ema = p.v * k + ema * (1 - k)
+    return { d: p.d, v: ema }
+  })
+}
+
+function RSLineChart({
+  data, label, uid,
+}: {
+  data:  RSPoint[]
+  label: string
+  uid:   string
+}) {
+  if (!data || data.length < 3) return null
+
+  const W = 400, H = 90
+  const PAD = { l: 38, r: 8, t: 6, b: 18 }
+  const innerW = W - PAD.l - PAD.r
+  const innerH = H - PAD.t - PAD.b
+
+  const values = data.map(d => d.v)
+  const minV   = Math.min(...values, 100)
+  const maxV   = Math.max(...values, 100)
+  const range  = Math.max(maxV - minV, 5)
+  const yPad   = range * 0.1
+  const yMin   = minV - yPad
+  const yMax   = maxV + yPad
+
+  const xS = (i: number) => PAD.l + (i / (data.length - 1)) * innerW
+  const yS = (v: number) => PAD.t + innerH * (1 - (v - yMin) / (yMax - yMin))
+
+  const y100 = yS(100)
+  const ema20 = calcEMA(data, 20)
+
+  const linePath = data
+    .map((d, i) => `${i === 0 ? 'M' : 'L'}${xS(i).toFixed(1)},${yS(d.v).toFixed(1)}`)
+    .join(' ')
+
+  const emaPath = ema20
+    .map((d, i) => `${i === 0 ? 'M' : 'L'}${xS(i).toFixed(1)},${yS(d.v).toFixed(1)}`)
+    .join(' ')
+
+  const areaPath =
+    `M${xS(0).toFixed(1)},${y100.toFixed(1)} ` +
+    data.map((d, i) => `L${xS(i).toFixed(1)},${yS(d.v).toFixed(1)}`).join(' ') +
+    ` L${xS(data.length - 1).toFixed(1)},${y100.toFixed(1)} Z`
+
+  const lastVal  = data[data.length - 1].v
+  const lineColor = lastVal >= 100 ? '#16a34a' : '#dc2626'
+  const aboveH   = Math.max(0, y100 - PAD.t)
+  const belowH   = Math.max(0, H - PAD.b - y100)
+
+  return (
+    <div className="mb-3">
+      <div className="flex items-center justify-between mb-0.5">
+        <span className="text-[10px] font-semibold text-gray-500">{label}</span>
+        <div className="flex items-center gap-3 text-[9px]">
+          <span className="font-mono font-bold" style={{ color: lineColor }}>
+            현재 {lastVal.toFixed(1)} ({lastVal >= 100 ? '+' : ''}{(lastVal - 100).toFixed(1)}%)
+          </span>
+          <span className="text-gray-400">— EMA20</span>
+        </div>
+      </div>
+
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ height: '80px', display: 'block' }}>
+        <defs>
+          <clipPath id={`above-${uid}`}>
+            <rect x={PAD.l} y={PAD.t} width={innerW} height={aboveH} />
+          </clipPath>
+          <clipPath id={`below-${uid}`}>
+            <rect x={PAD.l} y={y100} width={innerW} height={belowH} />
+          </clipPath>
+        </defs>
+
+        {/* 면적 채우기 */}
+        <path d={areaPath} fill="rgba(34,197,94,0.18)"  clipPath={`url(#above-${uid})`} />
+        <path d={areaPath} fill="rgba(239,68,68,0.18)"  clipPath={`url(#below-${uid})`} />
+
+        {/* 100 기준선 */}
+        <line
+          x1={PAD.l} y1={y100} x2={W - PAD.r} y2={y100}
+          stroke="#9ca3af" strokeWidth={0.6} strokeDasharray="3,2"
+        />
+
+        {/* 20일 EMA (점선, 회색) */}
+        <path d={emaPath} fill="none" stroke="#9ca3af" strokeWidth={1} strokeDasharray="3,2" strokeLinejoin="round" />
+
+        {/* RS LINE */}
+        <path d={linePath} fill="none" stroke={lineColor} strokeWidth={1.4} strokeLinejoin="round" />
+
+        {/* 현재값 점 */}
+        <circle cx={xS(data.length - 1)} cy={yS(lastVal)} r={2.5} fill={lineColor} />
+
+        {/* Y축 레이블 */}
+        <text x={PAD.l - 2} y={PAD.t + 4}    fontSize={7} textAnchor="end" fill="#9ca3af">{yMax.toFixed(0)}</text>
+        <text x={PAD.l - 2} y={y100}           fontSize={7} textAnchor="end" fill="#9ca3af" dominantBaseline="middle">100</text>
+        <text x={PAD.l - 2} y={H - PAD.b - 2}  fontSize={7} textAnchor="end" fill="#9ca3af">{yMin.toFixed(0)}</text>
+
+        {/* X축 첫/끝 날짜 */}
+        <text x={PAD.l}      y={H - 3} fontSize={7} fill="#d1d5db">{data[0].d.slice(5)}</text>
+        <text x={W - PAD.r}  y={H - 3} fontSize={7} fill="#d1d5db" textAnchor="end">{data[data.length - 1].d.slice(5)}</text>
+      </svg>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────
+// EPSChart — 분기별 실제 EPS 바 차트
+//
+// 막대 = actual EPS ($), 회색 점선 = estimate
+// 초록 = beat (actual >= estimate) / 빨강 = miss / 파랑 = estimate 없음
+// 우상단 트렌드 뱃지: ↗ 개선 / ↘ 악화 / → 보합
+// ─────────────────────────────────────────
+
+function EPSChart({ eps }: { eps: EpsData }) {
+  const history = eps.history.filter(q => q.actual !== null) as (EpsQuarter & { actual: number })[]
+  if (history.length < 2) return null
+
+  const W = 400, H = 90
+  const PAD = { l: 36, r: 8, t: 14, b: 22 }
+  const innerW = W - PAD.l - PAD.r
+  const innerH = H - PAD.t - PAD.b
+
+  // y축 범위: actual + estimate 전부 포함
+  const allVals = [
+    ...history.map(q => q.actual),
+    ...history.filter(q => q.estimate !== null).map(q => q.estimate as number),
+    0,
+  ]
+  const rawMax = Math.max(...allVals)
+  const rawMin = Math.min(...allVals)
+  const pad    = Math.max((rawMax - rawMin) * 0.15, 0.05)
+  const yMax   = rawMax + pad
+  const yMin   = rawMin - pad
+  const toY    = (v: number) => PAD.t + innerH * (1 - (v - yMin) / (yMax - yMin))
+  const zeroY  = toY(0)
+
+  const gap  = innerW / history.length
+  const barW = Math.max(6, gap * 0.55)
+
+  const trend      = eps.trend
+  const trendIcon  = trend === 'improving' ? '↗' : trend === 'declining' ? '↘' : '→'
+  const trendColor = trend === 'improving' ? '#15803d' : trend === 'declining' ? '#b91c1c' : '#6b7280'
+  const trendLabel = trend === 'improving' ? '개선' : trend === 'declining' ? '악화' : '보합'
+
+  return (
+    <div className="mb-3">
+      <div className="flex items-center justify-between mb-0.5">
+        <span className="text-[10px] font-semibold text-gray-500">EPS 실적 (분기 / $) ─ 점선=예상치</span>
+        {trend && (
+          <span className="text-[9px] font-bold" style={{ color: trendColor }}>
+            {trendIcon} {trendLabel}
+          </span>
+        )}
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ height: '80px', display: 'block' }}>
+        {/* 0 기준선 (0이 범위 안에 있을 때만) */}
+        {zeroY >= PAD.t && zeroY <= H - PAD.b && (
+          <line x1={PAD.l} y1={zeroY} x2={W - PAD.r} y2={zeroY}
+            stroke="#9ca3af" strokeWidth={0.6} strokeDasharray="3,2" />
+        )}
+
+        {history.map((q, i) => {
+          const cx      = PAD.l + gap * i + gap / 2
+          const actualY = toY(q.actual)
+          const isPos   = q.actual >= 0
+          const barTop  = isPos ? actualY : zeroY
+          const barBot  = isPos ? zeroY   : actualY
+          const barH    = Math.max(2, barBot - barTop)
+
+          // 색상: beat=초록, miss=빨강, estimate없음=파랑
+          let fill: string
+          if (q.estimate === null) {
+            fill = isPos ? 'rgba(59,130,246,0.6)' : 'rgba(239,68,68,0.6)'
+          } else {
+            fill = q.actual >= q.estimate ? 'rgba(34,197,94,0.75)' : 'rgba(239,68,68,0.75)'
+          }
+
+          const labelAbove = isPos
+          const labelY     = labelAbove ? barTop - 2 : barBot + 8
+
+          return (
+            <g key={q.d}>
+              {/* 실적 바 */}
+              <rect x={cx - barW / 2} y={barTop} width={barW} height={barH} fill={fill} rx={1} />
+
+              {/* 예상치 점선 */}
+              {q.estimate !== null && (
+                <line
+                  x1={cx - barW / 2 - 1} y1={toY(q.estimate)}
+                  x2={cx + barW / 2 + 1} y2={toY(q.estimate)}
+                  stroke="#6b7280" strokeWidth={1.2} strokeDasharray="2,1"
+                />
+              )}
+
+              {/* 실제 EPS 수치 */}
+              {barH > 5 && (
+                <text x={cx} y={labelY} fontSize={6} textAnchor="middle"
+                  fill={isPos ? '#15803d' : '#b91c1c'}>
+                  {q.actual > 0 ? '+' : ''}{q.actual.toFixed(2)}
+                </text>
+              )}
+
+              {/* 날짜 레이블 */}
+              <text x={cx} y={H - 2} fontSize={6} textAnchor="middle" fill="#9ca3af">
+                {q.d.slice(2, 7)}
+              </text>
+            </g>
+          )
+        })}
+
+        {/* Y축 레이블 */}
+        <text x={PAD.l - 2} y={PAD.t + 3}    fontSize={6} textAnchor="end" fill="#9ca3af">${yMax.toFixed(2)}</text>
+        {zeroY >= PAD.t && zeroY <= H - PAD.b && (
+          <text x={PAD.l - 2} y={zeroY} fontSize={6} textAnchor="end" fill="#9ca3af" dominantBaseline="middle">0</text>
+        )}
+        <text x={PAD.l - 2} y={H - PAD.b + 2} fontSize={6} textAnchor="end" fill="#9ca3af">${yMin.toFixed(2)}</text>
+      </svg>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────
 // StockCell
 // ─────────────────────────────────────────
 
@@ -213,15 +456,23 @@ function StockCell({ stock, onClick }: { stock: StockItem; onClick: () => void }
   const isTransition =
     stock.stage === 'stage2_early' || stock.stage === 'stage1_late' ||
     stock.stage === 'stage3_late'  || stock.stage === 'stage4_early'
-  const maColor = stock.data.ma_distance_pct >= 0 ? '#166534' : '#991b1b'
+  const maColor    = stock.data.ma_distance_pct >= 0 ? '#166534' : '#991b1b'
+  const show52High = stock.highs?.w52 != null && stock.highs.w52 <= 10
+  const show52Low  = stock.lows?.w52  != null && stock.lows.w52  <= 10
 
   return (
     <button
       onClick={onClick}
       title={`${stock.ticker} | MA100 대비 ${stock.data.ma_distance_pct >= 0 ? '+' : ''}${stock.data.ma_distance_pct.toFixed(1)}% | ${SIGNAL_KO[stock.signal]}`}
-      className="flex flex-col items-center justify-center w-full transition-opacity hover:opacity-75 active:opacity-50 cursor-pointer select-none"
+      className="relative flex flex-col items-center justify-center w-full transition-opacity hover:opacity-75 active:opacity-50 cursor-pointer select-none"
       style={{ background: getCellBg(stock.signal, stock.stage, stock.score), height: '54px', gap: '1px' }}
     >
+      {show52High && (
+        <span className="absolute top-0.5 right-0.5 text-[8px] leading-none">⭐</span>
+      )}
+      {!show52High && show52Low && (
+        <span className="absolute top-0.5 right-0.5 text-[8px] leading-none">📉</span>
+      )}
       <span className="text-[10px] font-bold leading-none" style={{ color: isTransition ? '#1c1917' : '#111827' }}>
         {stock.ticker}
       </span>
@@ -244,7 +495,7 @@ function SectorBlock({
   sector, onSelectStock, onSelectSector,
 }: {
   sector:         SectorItem
-  onSelectStock:  (stock: StockItem) => void
+  onSelectStock:  (stock: StockItem, sectorEtf: string) => void
   onSelectSector: (sector: SectorItem) => void
 }) {
   const rs = sector.sector_rs_excess
@@ -292,7 +543,7 @@ function SectorBlock({
       {/* 종목 그리드 — gap이 회색 격자선 */}
       <div className="grid grid-cols-5 bg-gray-200" style={{ gap: '2px', padding: '2px' }}>
         {sector.stocks.map(stock => (
-          <StockCell key={stock.ticker} stock={stock} onClick={() => onSelectStock(stock)} />
+          <StockCell key={stock.ticker} stock={stock} onClick={() => onSelectStock(stock, sector.etf)} />
         ))}
         {Array.from({ length: Math.max(0, 10 - sector.stocks.length) }).map((_, i) => (
           <div key={i} className="bg-gray-50" style={{ height: '54px' }} />
@@ -306,7 +557,7 @@ function SectorBlock({
 // StockDetailModal
 // ─────────────────────────────────────────
 
-function StockDetailModal({ stock, onClose }: { stock: StockItem; onClose: () => void }) {
+function StockDetailModal({ stock, sectorEtf, onClose }: { stock: StockItem; sectorEtf: string; onClose: () => void }) {
   const { breakdown: b, data: d } = stock
   const net        = b.net_direction
   const netPct     = Math.min(100, Math.abs(net))
@@ -342,6 +593,43 @@ function StockDetailModal({ stock, onClose }: { stock: StockItem; onClose: () =>
           </div>
         </div>
 
+        {/* 신고가/신저가 뱃지 행 */}
+        {(stock.highs?.w52 != null || stock.highs?.w26 != null || stock.highs?.w13 != null ||
+          stock.lows?.w52  != null || stock.lows?.w26  != null || stock.lows?.w13  != null) && (
+          <div className="flex flex-wrap gap-1.5 px-4 py-2 border-b border-gray-100 bg-gray-50">
+            {stock.highs?.w52 != null && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-semibold">
+                ⭐ 52주 신고가 {stock.highs.w52}일 전
+              </span>
+            )}
+            {stock.highs?.w26 != null && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-semibold">
+                ✨ 26주 신고가 {stock.highs.w26}일 전
+              </span>
+            )}
+            {stock.highs?.w13 != null && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-semibold">
+                🔔 13주 신고가 {stock.highs.w13}일 전
+              </span>
+            )}
+            {stock.lows?.w52 != null && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-semibold">
+                📉 52주 신저가 {stock.lows.w52}일 전
+              </span>
+            )}
+            {stock.lows?.w26 != null && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-semibold">
+                📉 26주 신저가 {stock.lows.w26}일 전
+              </span>
+            )}
+            {stock.lows?.w13 != null && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-semibold">
+                📉 13주 신저가 {stock.lows.w13}일 전
+              </span>
+            )}
+          </div>
+        )}
+
         {/* TradingView 가격 차트 */}
         <div style={{ height: '300px' }}>
           <TradingViewChart symbol={stock.ticker} height={300} />
@@ -350,14 +638,26 @@ function StockDetailModal({ stock, onClose }: { stock: StockItem; onClose: () =>
         {/* 스크롤 영역 */}
         <div className="overflow-y-auto p-4" style={{ maxHeight: '360px' }}>
 
-          {/* RS 추이 그래프 (52주 기준) */}
-          {stock.rs_history && stock.rs_history.length >= 3 && (
-            <RSSparkline
-              data={stock.rs_history}
-              label={`RS vs SPY  (52주 초과수익률 추이,  최근 ${stock.rs_history.length}거래일)`}
-              uid={`stk-${stock.ticker}`}
+          {/* RS LINE 차트: vs SPY */}
+          {stock.rs_spy_line && stock.rs_spy_line.length >= 3 && (
+            <RSLineChart
+              data={stock.rs_spy_line}
+              label="vs SPY (1년)"
+              uid={`spy-${stock.ticker}`}
             />
           )}
+
+          {/* RS LINE 차트: vs 섹터 ETF */}
+          {stock.rs_sector_line && stock.rs_sector_line.length >= 3 && (
+            <RSLineChart
+              data={stock.rs_sector_line}
+              label={`vs ${sectorEtf} (1년)`}
+              uid={`etf-${stock.ticker}`}
+            />
+          )}
+
+          {/* EPS 서프라이즈 차트 */}
+          {stock.eps && <EPSChart eps={stock.eps} />}
 
           {/* bull / bear 강도 바 */}
           <div className="space-y-2 mb-4">
@@ -570,30 +870,121 @@ const HELP_SCORES = [
 ]
 
 // ─────────────────────────────────────────
+// BottomUp — 신고가/신저가 필터 뷰
+// ─────────────────────────────────────────
+
+type HLFilter =
+  | 'high52' | 'high26' | 'high13'   // 신고가 달성 (10일 이내)
+  | 'near52' | 'near26'               // 신고가 후보 (3% 이내)
+  | 'low52'  | 'low26'  | 'low13'    // 신저가 달성 (10일 이내)
+
+type HLResult = { value: number; isNear: boolean }
+
+const HL_DEFS: { key: HLFilter; label: string; isHigh: boolean; isNear?: boolean }[] = [
+  { key: 'high52', label: '⭐ 52주 신고가 10일↓', isHigh: true               },
+  { key: 'high26', label: '✨ 26주 신고가 10일↓', isHigh: true               },
+  { key: 'high13', label: '🔔 13주 신고가 10일↓', isHigh: true               },
+  { key: 'near52', label: '🎯 52주 신고가 3% 내', isHigh: true,  isNear: true },
+  { key: 'near26', label: '🎯 26주 신고가 3% 내', isHigh: true,  isNear: true },
+  { key: 'low52',  label: '📉 52주 신저가 10일↓', isHigh: false              },
+  { key: 'low26',  label: '📉 26주 신저가 10일↓', isHigh: false              },
+  { key: 'low13',  label: '📉 13주 신저가 10일↓', isHigh: false              },
+]
+
+function getHLResult(stock: StockItem, f: HLFilter): HLResult | null {
+  const DAYS_THRESHOLD = 10
+  const PCT_THRESHOLD  = 3.0
+  switch (f) {
+    case 'high52': { const d = stock.highs?.w52 ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
+    case 'high26': { const d = stock.highs?.w26 ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
+    case 'high13': { const d = stock.highs?.w13 ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
+    case 'near52': { const p = stock.near_highs?.w52 ?? null; return p != null && p > 0 && p <= PCT_THRESHOLD ? { value: p, isNear: true  } : null }
+    case 'near26': { const p = stock.near_highs?.w26 ?? null; return p != null && p > 0 && p <= PCT_THRESHOLD ? { value: p, isNear: true  } : null }
+    case 'low52':  { const d = stock.lows?.w52  ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
+    case 'low26':  { const d = stock.lows?.w26  ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
+    case 'low13':  { const d = stock.lows?.w13  ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
+  }
+}
+
+// 더 높은 우선순위 필터에도 해당하면 true → 하위 필터에서 제외
+// 우선순위: high52 > high26 > high13 / near52 > near26 / low52 > low26 > low13
+function isDominated(stock: StockItem, f: HLFilter): boolean {
+  switch (f) {
+    case 'high26': return getHLResult(stock, 'high52') !== null
+    case 'high13': return getHLResult(stock, 'high52') !== null || getHLResult(stock, 'high26') !== null
+    case 'near26': return getHLResult(stock, 'near52') !== null
+    case 'low26':  return getHLResult(stock, 'low52')  !== null
+    case 'low13':  return getHLResult(stock, 'low52')  !== null || getHLResult(stock, 'low26') !== null
+    default:       return false
+  }
+}
+
+function BottomUpView({
+  sectors, hlFilter, onSelectStock,
+}: {
+  sectors:       SectorItem[]
+  hlFilter:      HLFilter
+  onSelectStock: (stock: StockItem, sectorEtf: string) => void
+}) {
+  const def    = HL_DEFS.find(d => d.key === hlFilter)!
+  const isHigh = def.isHigh
+
+  const items = sectors
+    .flatMap(sec => sec.stocks.map(stock => ({ stock, sec, result: getHLResult(stock, hlFilter) })))
+    .filter(({ result, stock }) => result !== null && !isDominated(stock, hlFilter))
+    .sort((a, b) => a.result!.value - b.result!.value)
+
+  if (items.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-16 text-gray-400 text-sm">
+        해당 조건의 종목 없음
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-1.5 mt-2">
+      {items.map(({ stock, sec, result }) => {
+        const maColor  = stock.data.ma_distance_pct >= 0 ? '#166534' : '#991b1b'
+        const valColor = isHigh ? '#15803d' : '#b91c1c'
+        const badge    = result!.isNear
+          ? `🎯 -${result!.value.toFixed(1)}%`
+          : `${isHigh ? '⭐' : '📉'} ${result!.value}일 전`
+        return (
+          <button
+            key={`${sec.id}-${stock.ticker}`}
+            onClick={() => onSelectStock(stock, sec.etf)}
+            className="flex flex-col items-center justify-center gap-0.5 p-1.5 rounded border border-gray-100 hover:opacity-75 active:opacity-50 transition-opacity cursor-pointer"
+            style={{ background: getCellBg(stock.signal, stock.stage, stock.score), height: '68px' }}
+          >
+            <span className="text-[10px] font-bold text-gray-900 leading-none">{stock.ticker}</span>
+            <span className="text-[7px] text-gray-500 leading-none">{sec.name}</span>
+            <span className="text-[9px] font-bold leading-none" style={{ color: valColor }}>
+              {badge}
+            </span>
+            <span className="text-[7px] font-mono leading-none" style={{ color: maColor }}>
+              MA{stock.data.ma_distance_pct >= 0 ? '+' : ''}{stock.data.ma_distance_pct.toFixed(1)}%
+            </span>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────
 // Main
 // ─────────────────────────────────────────
 
-type FilterKey = 'all' | 'long' | 'short' | 'transition'
-
-const FILTERS: { key: FilterKey; label: string }[] = [
-  { key: 'all',        label: '전체' },
-  { key: 'long',       label: '🚀 롱' },
-  { key: 'short',      label: '📉 숏' },
-  { key: 'transition', label: '⚡ 변곡' },
-]
-
-function isTransitionStage(s: StockItem) {
-  return s.stage === 'stage2_early' || s.stage === 'stage1_late' ||
-         s.stage === 'stage3_late'  || s.stage === 'stage4_early'
-}
-
 export default function WatchlistClient() {
-  const [data,           setData]           = useState<WatchlistData | null>(null)
-  const [loading,        setLoading]        = useState(true)
-  const [selectedStock,  setSelectedStock]  = useState<StockItem | null>(null)
-  const [selectedSector, setSelectedSector] = useState<SectorItem | null>(null)
-  const [filter,         setFilter]         = useState<FilterKey>('all')
-  const [showHelp,       setShowHelp]       = useState(false)
+  const [data,              setData]              = useState<WatchlistData | null>(null)
+  const [loading,           setLoading]           = useState(true)
+  const [selectedStock,     setSelectedStock]     = useState<StockItem | null>(null)
+  const [selectedSectorEtf, setSelectedSectorEtf] = useState<string>('')
+  const [selectedSector,    setSelectedSector]    = useState<SectorItem | null>(null)
+  const [viewMode,          setViewMode]          = useState<'topdown' | 'bottomup'>('topdown')
+  const [hlFilter,          setHlFilter]          = useState<HLFilter>('high52')
+  const [showHelp,          setShowHelp]          = useState(false)
 
   useEffect(() => {
     fetch('/data/watchlist.json', { cache: 'no-store' })
@@ -617,25 +1008,18 @@ export default function WatchlistClient() {
   const mc        = data.market_context
   const allStocks = data.sectors.flatMap(s => s.stocks)
   const counts = {
-    long:       allStocks.filter(s => s.signal === 'long').length,
-    short:      allStocks.filter(s => s.signal === 'short').length,
-    transition: allStocks.filter(isTransitionStage).length,
+    long:  allStocks.filter(s => s.signal === 'long').length,
+    short: allStocks.filter(s => s.signal === 'short').length,
   }
-
-  const filteredSectors = data.sectors
-    .map(sector => ({
-      ...sector,
-      stocks:
-        filter === 'all'        ? sector.stocks :
-        filter === 'long'       ? sector.stocks.filter(s => s.signal === 'long' || s.signal === 'long_watch') :
-        filter === 'short'      ? sector.stocks.filter(s => s.signal === 'short' || s.signal === 'short_watch') :
-        sector.stocks.filter(isTransitionStage),
-    }))
-    .filter(s => filter === 'all' || s.stocks.length > 0)
 
   const mktColor =
     mc.market_state === 'bull' ? '#15803d' :
     mc.market_state === 'bear' ? '#b91c1c' : '#92400e'
+
+  const handleSelectStock = (stock: StockItem, etf: string) => {
+    setSelectedStock(stock)
+    setSelectedSectorEtf(etf)
+  }
 
   return (
     <div>
@@ -665,27 +1049,33 @@ export default function WatchlistClient() {
         <div className="flex items-center gap-3 text-xs">
           <span className="text-green-600 font-bold">롱 {counts.long}</span>
           <span className="text-red-600 font-bold">숏 {counts.short}</span>
-          <span className="text-yellow-600 font-bold">변곡 {counts.transition}</span>
           <span className="text-gray-300 hidden sm:block">{data.asOf}</span>
         </div>
       </div>
 
-      {/* ── 필터 탭 + 도움말 버튼 ── */}
+      {/* ── 뷰 모드 토글 + 도움말 ── */}
       <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-        <div className="flex gap-1.5 flex-wrap">
-          {FILTERS.map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setFilter(tab.key)}
-              className={`px-2.5 py-1 rounded text-xs font-medium border transition-all ${
-                filter === tab.key
-                  ? 'bg-gray-800 border-gray-800 text-white'
-                  : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="flex gap-1.5">
+          <button
+            onClick={() => setViewMode('topdown')}
+            className={`px-3 py-1 rounded text-xs font-medium border transition-all ${
+              viewMode === 'topdown'
+                ? 'bg-gray-800 border-gray-800 text-white'
+                : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
+            }`}
+          >
+            📊 탑다운
+          </button>
+          <button
+            onClick={() => setViewMode('bottomup')}
+            className={`px-3 py-1 rounded text-xs font-medium border transition-all ${
+              viewMode === 'bottomup'
+                ? 'bg-gray-800 border-gray-800 text-white'
+                : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
+            }`}
+          >
+            🔍 바텀업
+          </button>
         </div>
         <button
           onClick={() => setShowHelp(v => !v)}
@@ -695,11 +1085,32 @@ export default function WatchlistClient() {
         </button>
       </div>
 
+      {/* ── 바텀업 고가/저가 필터 칩 ── */}
+      {viewMode === 'bottomup' && (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {HL_DEFS.map(def => (
+            <button
+              key={def.key}
+              onClick={() => setHlFilter(def.key)}
+              className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-all ${
+                hlFilter === def.key
+                  ? (def.isNear
+                      ? 'bg-blue-600 border-blue-600 text-white'
+                      : def.isHigh
+                        ? 'bg-green-600 border-green-600 text-white'
+                        : 'bg-red-600 border-red-600 text-white')
+                  : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
+              }`}
+            >
+              {def.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* ── 도움말 패널 (토글) ── */}
       {showHelp && (
         <div className="mb-3 p-3 bg-blue-50 border border-blue-100 rounded-xl space-y-3 text-[10px]">
-
-          {/* 읽는 법 */}
           <div>
             <div className="font-semibold text-blue-700 mb-1.5">📖 히트맵 읽는 법</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-4">
@@ -711,10 +1122,8 @@ export default function WatchlistClient() {
               ))}
             </div>
           </div>
-
-          {/* 점수 구성 */}
           <div className="border-t border-blue-100 pt-2">
-            <div className="font-semibold text-blue-700 mb-1.5">📊 점수 구성 — bull/bear 각 0~105점, net = bull−bear (양수=롱, 음수=숏)</div>
+            <div className="font-semibold text-blue-700 mb-1.5">📊 점수 구성 — bull/bear 각 0~105점, net = bull−bear</div>
             <div className="space-y-1">
               {HELP_SCORES.map(g => (
                 <div key={g.item} className="flex gap-2">
@@ -724,65 +1133,75 @@ export default function WatchlistClient() {
               ))}
             </div>
           </div>
-
           <p className="border-t border-blue-100 pt-1.5 text-[9px] text-blue-500">
-            💡 RS 그래프: 0선 위(초록) = SPY보다 강함 / 0선 아래(빨강) = 약함 · 종목 RS는 52주, 섹터 RS는 60일 기준
+            💡 바텀업: N일 전 = 해당 신고가/신저가 달성 후 경과 거래일 (0=오늘) · 최근 63거래일 내 기준
           </p>
         </div>
       )}
 
-      {/* ── 컬러 범례 (항상 표시, 간단하게) ── */}
-      <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2 text-[9px] text-gray-400 items-center">
-        {[
-          { bg: 'rgba(234,179,8,0.6)',  label: '⚡ 변곡 (최우선)' },
-          { bg: 'rgba(34,197,94,0.55)', label: '🚀 롱' },
-          { bg: 'rgba(239,68,68,0.55)', label: '📉 숏' },
-          { bg: 'rgba(243,244,246,0.9)',label: '➖ 중립' },
-        ].map(({ bg, label }) => (
-          <div key={label} className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-sm" style={{ background: bg }} />
-            <span>{label}</span>
+      {viewMode === 'topdown' ? (
+        <>
+          {/* ── 컬러 범례 ── */}
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2 text-[9px] text-gray-400 items-center">
+            {[
+              { bg: 'rgba(234,179,8,0.6)',  label: '⚡ 변곡' },
+              { bg: 'rgba(34,197,94,0.55)', label: '🚀 롱' },
+              { bg: 'rgba(239,68,68,0.55)', label: '📉 숏' },
+              { bg: 'rgba(243,244,246,0.9)',label: '➖ 중립' },
+            ].map(({ bg, label }) => (
+              <div key={label} className="flex items-center gap-1">
+                <div className="w-3 h-3 rounded-sm" style={{ background: bg }} />
+                <span>{label}</span>
+              </div>
+            ))}
+            <span className="text-gray-300 ml-1">· 셀 숫자 = MA100 대비 거리 · ⭐ = 52주 신고가 10일 이내</span>
           </div>
-        ))}
-        <span className="text-gray-300 ml-1">· 셀 숫자 = MA100 대비 거리</span>
-      </div>
 
-      {/* ── 히트맵 본체
-            -mx-4 sm:-mx-6 : 레이아웃 패딩 탈출 → 풀 너비
-            bg-gray-300 + gap 3px : 회색 격자선 효과          ── */}
-      <div className="-mx-4 sm:-mx-6">
-        <div
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 bg-gray-300"
-          style={{ gap: '3px' }}
-        >
-          {filteredSectors.map(sector => (
-            <SectorBlock
-              key={sector.id}
-              sector={sector}
-              onSelectStock={setSelectedStock}
-              onSelectSector={setSelectedSector}
-            />
-          ))}
-        </div>
-      </div>
+          {/* ── 히트맵 본체 ── */}
+          <div className="-mx-4 sm:-mx-6">
+            <div
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 bg-gray-300"
+              style={{ gap: '3px' }}
+            >
+              {data.sectors.map(sector => (
+                <SectorBlock
+                  key={sector.id}
+                  sector={sector}
+                  onSelectStock={handleSelectStock}
+                  onSelectSector={setSelectedSector}
+                />
+              ))}
+            </div>
+          </div>
 
-      {/* ── 스테이지 범례 ── */}
-      <div className="mt-3 text-[9px] text-gray-400 flex flex-wrap gap-x-3 gap-y-0.5">
-        <span className="font-medium text-gray-500">스테이지:</span>
-        <span>①→ 1말</span>
-        <span className="text-yellow-600 font-semibold">②↑ 2초 ★</span>
-        <span>② 2진행</span>
-        <span>②+ 2확장</span>
-        <span className="text-orange-500 font-semibold">③→ 3말 ★</span>
-        <span className="text-orange-500 font-semibold">④↓ 4초 ★</span>
-        <span>④ 4진행</span>
-        <span>④- 4확장</span>
-        <span className="text-gray-300 ml-2">★ = 전환 타이밍 (변곡 탭에서 필터)</span>
-      </div>
+          {/* ── 스테이지 범례 ── */}
+          <div className="mt-3 text-[9px] text-gray-400 flex flex-wrap gap-x-3 gap-y-0.5">
+            <span className="font-medium text-gray-500">스테이지:</span>
+            <span>①→ 1말</span>
+            <span className="text-yellow-600 font-semibold">②↑ 2초 ★</span>
+            <span>② 2진행</span>
+            <span>②+ 2확장</span>
+            <span className="text-orange-500 font-semibold">③→ 3말 ★</span>
+            <span className="text-orange-500 font-semibold">④↓ 4초 ★</span>
+            <span>④ 4진행</span>
+            <span>④- 4확장</span>
+          </div>
+        </>
+      ) : (
+        <BottomUpView
+          sectors={data.sectors}
+          hlFilter={hlFilter}
+          onSelectStock={handleSelectStock}
+        />
+      )}
 
       {/* ── 모달들 ── */}
       {selectedStock && (
-        <StockDetailModal stock={selectedStock} onClose={() => setSelectedStock(null)} />
+        <StockDetailModal
+          stock={selectedStock}
+          sectorEtf={selectedSectorEtf}
+          onClose={() => setSelectedStock(null)}
+        />
       )}
       {selectedSector && (
         <SectorChartModal sector={selectedSector} onClose={() => setSelectedSector(null)} />

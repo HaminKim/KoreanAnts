@@ -23,6 +23,7 @@ import io
 import json
 import os
 import sys
+import concurrent.futures
 import numpy as np
 import pandas as pd
 import yfinance as yf
@@ -89,6 +90,21 @@ SECTORS = [
         "id": 16, "name": "QQQ (나스닥100)", "etf": "QQQ", "emoji": "🔷",
         "tickers": [
             "MSFT","AAPL","NVDA","AMZN","META","TSLA","GOOGL","AVGO","COST","NFLX",
+        ]
+    },
+    {
+        "id": 17, "name": "핀테크(ARKF)", "etf": "ARKF", "emoji": "💳",
+        "tickers": [
+            "COIN",   # Coinbase
+            "XYZ",    # Block (Square, 구 SQ)
+            "HOOD",   # Robinhood
+            "SOFI",   # SoFi Technologies
+            "PYPL",   # PayPal
+            "AFRM",   # Affirm Holdings
+            "BILL",   # Bill.com
+            "UPST",   # Upstart
+            "NU",     # Nu Holdings
+            "TOST",   # Toast
         ]
     },
 ]
@@ -251,6 +267,100 @@ def hint_stage(ma_distance_pct, slope_dir, days_since_slope_turn):
 
 
 # ─────────────────────────────────────────
+# 신고가/신저가 N일 추적
+# ─────────────────────────────────────────
+
+def get_high_days(prices, window, lookback=63):
+    """최근 lookback일 내에서 window 신고가 달성 후 며칠이 지났는지 반환 (0=오늘, None=없음)"""
+    prev_max = prices.shift(1).rolling(window - 1, min_periods=max(window // 2, 10)).max()
+    is_new_high = prices >= prev_max
+    recent = is_new_high.iloc[-lookback:]
+    if recent.any():
+        pos = len(recent) - 1 - recent.values[::-1].argmax()
+        return int(len(recent) - 1 - pos)
+    return None
+
+
+def get_low_days(prices, window, lookback=63):
+    """최근 lookback일 내에서 window 신저가 달성 후 며칠이 지났는지 반환 (0=오늘, None=없음)"""
+    prev_min = prices.shift(1).rolling(window - 1, min_periods=max(window // 2, 10)).min()
+    is_new_low = prices <= prev_min
+    recent = is_new_low.iloc[-lookback:]
+    if recent.any():
+        pos = len(recent) - 1 - recent.values[::-1].argmax()
+        return int(len(recent) - 1 - pos)
+    return None
+
+
+def get_near_high_pct(prices, window):
+    """현재가가 window 거래일 고점 대비 몇 % 아래인지 반환 (0.0=신고가, 양수=아래, None=데이터 부족)"""
+    rolling_high = prices.rolling(window, min_periods=max(window // 2, 10)).max()
+    if len(rolling_high.dropna()) == 0:
+        return None
+    current = float(prices.iloc[-1])
+    high = float(rolling_high.iloc[-1])
+    if high <= 0:
+        return None
+    return round((high - current) / high * 100, 2)
+
+
+# ─────────────────────────────────────────
+# EPS 서프라이즈 수집 & 추세 분석
+# ─────────────────────────────────────────
+
+def fetch_eps_data(ticker):
+    """
+    yfinance earnings_dates 로 EPS 서프라이즈 히스토리 조회
+    반환: (ticker, history) 또는 (ticker, None)
+    history = [{"d": "2024-11-15", "actual": 1.23, "estimate": 1.10, "surp": 11.8}, ...]
+              오래된 → 최신 순 (왼쪽→오른쪽)
+    """
+    try:
+        t  = yf.Ticker(ticker)
+        ed = t.get_earnings_dates(limit=12)
+        if ed is None or ed.empty:
+            return ticker, None
+
+        now  = pd.Timestamp.now(tz="UTC")
+        past = ed[ed.index <= now].dropna(subset=["Reported EPS"])
+        past = past.head(8).iloc[::-1]   # 최신 8분기, 오래된 것부터
+
+        history = []
+        for date, row in past.iterrows():
+            actual   = row.get("Reported EPS")
+            estimate = row.get("EPS Estimate")
+            surp     = row.get("Surprise(%)")
+            history.append({
+                "d":        str(date.date()),
+                "actual":   round(float(actual),   3) if pd.notna(actual)   else None,
+                "estimate": round(float(estimate), 3) if pd.notna(estimate) else None,
+                "surp":     round(float(surp),     2) if pd.notna(surp)     else None,
+            })
+
+        return ticker, (history if history else None)
+    except Exception:
+        return ticker, None
+
+
+def calc_eps_trend(history):
+    """EPS actual 선형회귀 기울기 → 'improving' / 'declining' / 'stable' / None"""
+    actuals = [q["actual"] for q in history if q.get("actual") is not None]
+    if len(actuals) < 3:
+        return None
+    n  = len(actuals)
+    x  = list(range(n))
+    mx, my = sum(x) / n, sum(actuals) / n
+    num = sum((xi - mx) * (yi - my) for xi, yi in zip(x, actuals))
+    den = sum((xi - mx) ** 2 for xi in x)
+    if den == 0:
+        return "stable"
+    slope = num / den
+    if   slope >  0.02: return "improving"
+    elif slope < -0.02: return "declining"
+    return "stable"
+
+
+# ─────────────────────────────────────────
 # 메인
 # ─────────────────────────────────────────
 
@@ -372,6 +482,23 @@ def main():
         print(f"  {bar} {s['name']:10s} ({s['etf']:4s}): {v:+.2f}%" if v is not None
               else f"  ? {s['name']:10s} ({s['etf']:4s}): N/A")
 
+    # ── EPS 병렬 수집 ──
+    print(f"\n📊 EPS 서프라이즈 수집 중... ({len(all_tickers)}개 종목, 병렬)")
+    eps_dict: dict = {}
+    try:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+            futures = {executor.submit(fetch_eps_data, t): t for t in all_tickers}
+            for future in concurrent.futures.as_completed(futures, timeout=180):
+                try:
+                    ticker_eps, hist = future.result(timeout=10)
+                    eps_dict[ticker_eps] = hist
+                except Exception:
+                    eps_dict[futures[future]] = None
+    except concurrent.futures.TimeoutError:
+        print("  ⚠️  EPS 수집 타임아웃 — 일부 데이터 누락될 수 있음")
+    eps_ok = sum(1 for v in eps_dict.values() if v)
+    print(f"   EPS 수집 완료: {eps_ok}/{len(all_tickers)}개 성공")
+
     # ── 종목별 분석 ──
     print(f"\n📈 종목 분석 중...")
     result_sectors  = []
@@ -386,7 +513,7 @@ def main():
                 continue
 
             stock_prices = prices[ticker].dropna()
-            if len(stock_prices) < MA_PERIOD + RS_WINDOW_STOCK + 10:
+            if len(stock_prices) < MA_PERIOD + 20:   # 최소 120 거래일 (신규 IPO 대응)
                 continue
 
             try:
@@ -424,12 +551,58 @@ def main():
                         else:
                             break
 
-                # RS 히스토리 (최근 120일)
-                rs_history = [
-                    {"d": str(idx.date()), "v": round(float(val), 3)}
-                    for idx, val in rs_series.tail(120).items()
-                    if not np.isnan(float(val))
-                ]
+                # RS LINE vs SPY (정규화: 1년 전=100)
+                common_spy = stock_prices.index.intersection(spy_prices.index)
+                rs_spy_line = []
+                if len(common_spy) >= 10:
+                    ratio_spy = stock_prices.loc[common_spy] / spy_prices.loc[common_spy]
+                    last252_spy = ratio_spy.iloc[-252:]
+                    base_spy = float(last252_spy.iloc[0])
+                    if base_spy != 0:
+                        rs_spy_line = [
+                            {"d": str(i.date()), "v": round(float(v / base_spy * 100), 3)}
+                            for i, v in last252_spy.items()
+                            if not np.isnan(float(v))
+                        ]
+
+                # RS LINE vs 섹터 ETF (정규화: 1년 전=100)
+                rs_sector_line = []
+                if sector["etf"] in prices.columns:
+                    etf_p = prices[sector["etf"]].dropna()
+                    common_etf = stock_prices.index.intersection(etf_p.index)
+                    if len(common_etf) >= 10:
+                        ratio_etf = stock_prices.loc[common_etf] / etf_p.loc[common_etf]
+                        last252_etf = ratio_etf.iloc[-252:]
+                        base_etf = float(last252_etf.iloc[0])
+                        if base_etf != 0:
+                            rs_sector_line = [
+                                {"d": str(i.date()), "v": round(float(v / base_etf * 100), 3)}
+                                for i, v in last252_etf.items()
+                                if not np.isnan(float(v))
+                            ]
+
+                # 신고가/신저가 N일
+                highs = {
+                    "w52": get_high_days(stock_prices, 252),
+                    "w26": get_high_days(stock_prices, 126),
+                    "w13": get_high_days(stock_prices, 63),
+                }
+                lows = {
+                    "w52": get_low_days(stock_prices, 252),
+                    "w26": get_low_days(stock_prices, 126),
+                    "w13": get_low_days(stock_prices, 63),
+                }
+                # 신고가 근접 % (0=신고가, 양수=아래 — 후보군 필터용)
+                near_highs = {
+                    "w52": get_near_high_pct(stock_prices, 252),
+                    "w26": get_near_high_pct(stock_prices, 126),
+                    "w13": get_near_high_pct(stock_prices, 63),
+                }
+
+                # EPS
+                eps_hist  = eps_dict.get(ticker)
+                eps_trend = calc_eps_trend(eps_hist) if eps_hist else None
+                eps_data  = {"history": eps_hist, "trend": eps_trend} if eps_hist else None
 
                 # MA 기울기
                 ma_slope, slope_dir, days_turn = calc_ma_slope_score(ma100_series)
@@ -474,11 +647,16 @@ def main():
                              if len(rs_series) >= RS_MA_PERIOD else None)
 
                 sector_stocks.append({
-                    "ticker":     ticker,
-                    "score":      display_score,
-                    "signal":     signal,
-                    "stage":      stage,
-                    "rs_history": rs_history,
+                    "ticker":          ticker,
+                    "score":           display_score,
+                    "signal":          signal,
+                    "stage":           stage,
+                    "rs_spy_line":     rs_spy_line,
+                    "rs_sector_line":  rs_sector_line,
+                    "highs":           highs,
+                    "lows":            lows,
+                    "near_highs":      near_highs,
+                    "eps":             eps_data,
                     "breakdown": {
                         "bull_strength":  bull,
                         "bear_strength":  bear,
