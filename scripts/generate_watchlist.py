@@ -268,7 +268,7 @@ def hint_stage(ma_distance_pct, slope_dir, days_since_slope_turn):
 # 신고가/신저가 N일 추적
 # ─────────────────────────────────────────
 
-def get_high_days(prices, window, lookback=63):
+def get_high_days(prices, window, lookback=90):
     """최근 lookback일 내에서 window 신고가 달성 후 며칠이 지났는지 반환 (0=오늘, None=없음)"""
     prev_max = prices.shift(1).rolling(window - 1, min_periods=max(window // 2, 10)).max()
     is_new_high = prices >= prev_max
@@ -279,7 +279,7 @@ def get_high_days(prices, window, lookback=63):
     return None
 
 
-def get_low_days(prices, window, lookback=63):
+def get_low_days(prices, window, lookback=90):
     """최근 lookback일 내에서 window 신저가 달성 후 며칠이 지났는지 반환 (0=오늘, None=없음)"""
     prev_min = prices.shift(1).rolling(window - 1, min_periods=max(window // 2, 10)).min()
     is_new_low = prices <= prev_min
@@ -288,6 +288,42 @@ def get_low_days(prices, window, lookback=63):
         pos = len(recent) - 1 - recent.values[::-1].argmax()
         return int(len(recent) - 1 - pos)
     return None
+
+
+def get_breakout_onset_days(prices, window, lookback=90, gap_min=10):
+    """
+    현재 신고가 스트릭(클러스터)의 '시작일'이 며칠 전인지 반환.
+
+    - 고공행진 중 종목 (NVDA 등): onset이 수개월 전 → 큰 값 반환
+    - 진짜 신선한 돌파 종목: 최근 gap_min일+ 공백 후 처음 신고가 → 작은 값 반환
+    - None: lookback 내 신고가 없음
+    """
+    prev_max = prices.shift(1).rolling(window - 1, min_periods=max(window // 2, 10)).max()
+    is_new_high = (prices >= prev_max).fillna(False)
+    recent = is_new_high.iloc[-lookback:]
+    arr = recent.values
+    n   = len(arr)
+
+    if not arr.any():
+        return None
+
+    # 가장 최근 신고가 인덱스 (arr 기준)
+    latest = n - 1 - arr[::-1].argmax()
+
+    # latest에서 거꾸로 걸으며 클러스터 시작점 탐색
+    # gap_min일 이상 신고가 없으면 → 클러스터 경계
+    gap_count = 0
+    onset = latest
+    for i in range(latest - 1, -1, -1):
+        if arr[i]:
+            onset = i
+            gap_count = 0
+        else:
+            gap_count += 1
+            if gap_count >= gap_min:
+                break
+
+    return int(n - 1 - onset)
 
 
 def get_near_high_pct(prices, window):
@@ -623,6 +659,13 @@ def main():
                     "w26": get_near_high_pct(stock_prices, 126),
                     "w13": get_near_high_pct(stock_prices, 63),
                 }
+                # 돌파 스트릭 시작일 (진짜 신선한 돌파 감지용)
+                # 고공행진 종목은 큰 값 반환, 방금 첫 돌파한 종목은 작은 값 반환
+                breakout_onsets = {
+                    "w52": get_breakout_onset_days(stock_prices, 252),
+                    "w26": get_breakout_onset_days(stock_prices, 126),
+                    "w13": get_breakout_onset_days(stock_prices, 63),
+                }
 
                 # EPS
                 eps_hist  = eps_dict.get(ticker)
@@ -681,6 +724,7 @@ def main():
                     "highs":           highs,
                     "lows":            lows,
                     "near_highs":      near_highs,
+                    "breakout_onsets": breakout_onsets,
                     "eps":             eps_data,
                     "breakdown": {
                         "bull_strength":  bull,

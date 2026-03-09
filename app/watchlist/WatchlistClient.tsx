@@ -14,8 +14,9 @@ const TradingViewChart = dynamic(
 
 type Signal  = 'long' | 'long_watch' | 'short' | 'short_watch' | 'neutral'
 type RSPoint = { d: string; v: number }
-interface HighLow  { w52: number|null; w26: number|null; w13: number|null }
-interface NearHigh { w52: number|null; w26: number|null; w13: number|null }
+interface HighLow        { w52: number|null; w26: number|null; w13: number|null }
+interface NearHigh       { w52: number|null; w26: number|null; w13: number|null }
+interface BreakoutOnsets { w52: number|null; w26: number|null; w13: number|null }
 interface EpsQuarter { d: string; actual: number|null; estimate: number|null; surp: number|null; revenue?: number|null }
 interface EpsData    { history: EpsQuarter[]; trend: string|null }
 
@@ -51,9 +52,10 @@ interface StockItem {
   stage:           string
   rs_spy_line:     RSPoint[]
   rs_sector_line:  RSPoint[]
-  highs:           HighLow
-  lows:            HighLow
-  near_highs:      NearHigh
+  highs:            HighLow
+  lows:             HighLow
+  near_highs:       NearHigh
+  breakout_onsets?: BreakoutOnsets
   eps:             EpsData | null
   breakdown:       StockBreakdown
   data:            StockData
@@ -912,48 +914,68 @@ const HELP_HOW_TO_READ = [
 // ─────────────────────────────────────────
 
 type HLFilter =
-  | 'high52' | 'high26' | 'high13'   // 신고가 달성 (10일 이내)
-  | 'near52' | 'near26'               // 신고가 후보 (3% 이내)
-  | 'low52'  | 'low26'  | 'low13'    // 신저가 달성 (10일 이내)
+  | 'break52' | 'break26' | 'break13'  // 신고가 돌파 직후 (≤5일) — 지금 막 뚫은 종목
+  | 'hold52'  | 'hold26'               // 돌파 유지 (≤60일 달성 + 고점 7% 이내)
+  | 'near52'  | 'near26'               // 고가 근접 (7% 이내, 시점 무관)
+  | 'low52'   | 'low26'   | 'low13'   // 신저가 달성 (10일 이내)
 
 type HLResult = { value: number; isNear: boolean }
 
-const HL_DEFS: { key: HLFilter; label: string; isHigh: boolean; isNear?: boolean }[] = [
-  { key: 'high52', label: '⭐ 52주 신고가 10일↓', isHigh: true               },
-  { key: 'high26', label: '✨ 26주 신고가 10일↓', isHigh: true               },
-  { key: 'high13', label: '🔔 13주 신고가 10일↓', isHigh: true               },
-  { key: 'near52', label: '🎯 52주 신고가 3% 내', isHigh: true,  isNear: true },
-  { key: 'near26', label: '🎯 26주 신고가 3% 내', isHigh: true,  isNear: true },
-  { key: 'low52',  label: '📉 52주 신저가 10일↓', isHigh: false              },
-  { key: 'low26',  label: '📉 26주 신저가 10일↓', isHigh: false              },
-  { key: 'low13',  label: '📉 13주 신저가 10일↓', isHigh: false              },
+const HL_DEFS: { key: HLFilter; label: string; isHigh: boolean }[] = [
+  { key: 'break52', label: '🔥 52주 신고가 돌파 10일↓', isHigh: true  },
+  { key: 'break26', label: '🔥 26주 신고가 돌파 10일↓', isHigh: true  },
+  { key: 'break13', label: '🔔 13주 신고가 돌파 10일↓', isHigh: true  },
+  { key: 'hold52',  label: '📈 52주 고가 유지 60일↓',   isHigh: true  },
+  { key: 'hold26',  label: '📈 26주 고가 유지 60일↓',   isHigh: true  },
+  { key: 'near52',  label: '🎯 52주 고가 근접 7%↑',     isHigh: true  },
+  { key: 'near26',  label: '🎯 26주 고가 근접 7%↑',     isHigh: true  },
+  { key: 'low52',   label: '📉 52주 신저가 10일↓',      isHigh: false },
+  { key: 'low26',   label: '📉 26주 신저가 10일↓',      isHigh: false },
+  { key: 'low13',   label: '📉 13주 신저가 10일↓',      isHigh: false },
 ]
 
 function getHLResult(stock: StockItem, f: HLFilter): HLResult | null {
-  const DAYS_THRESHOLD = 10
-  const PCT_THRESHOLD  = 3.0
+  const BREAK_DAYS = 10
+  const HOLD_DAYS  = 60
+  const HOLD_PCT   = 7.0
+  const NEAR_PCT   = 7.0
+  const LOW_DAYS   = 10
   switch (f) {
-    case 'high52': { const d = stock.highs?.w52 ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
-    case 'high26': { const d = stock.highs?.w26 ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
-    case 'high13': { const d = stock.highs?.w13 ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
-    case 'near52': { const p = stock.near_highs?.w52 ?? null; return p != null && p > 0 && p <= PCT_THRESHOLD ? { value: p, isNear: true  } : null }
-    case 'near26': { const p = stock.near_highs?.w26 ?? null; return p != null && p > 0 && p <= PCT_THRESHOLD ? { value: p, isNear: true  } : null }
-    case 'low52':  { const d = stock.lows?.w52  ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
-    case 'low26':  { const d = stock.lows?.w26  ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
-    case 'low13':  { const d = stock.lows?.w13  ?? null;      return d != null && d <= DAYS_THRESHOLD ? { value: d, isNear: false } : null }
+    // breakout_onsets = 이번 스트릭 시작일 (고공행진 중이면 큰 값, 방금 첫 돌파면 작은 값)
+    case 'break52': { const d = stock.breakout_onsets?.w52 ?? null; return d != null && d <= BREAK_DAYS ? { value: d, isNear: false } : null }
+    case 'break26': { const d = stock.breakout_onsets?.w26 ?? null; return d != null && d <= BREAK_DAYS ? { value: d, isNear: false } : null }
+    case 'break13': { const d = stock.breakout_onsets?.w13 ?? null; return d != null && d <= BREAK_DAYS ? { value: d, isNear: false } : null }
+    case 'hold52': {
+      const d = stock.highs?.w52 ?? null
+      const p = stock.near_highs?.w52 ?? null
+      return d != null && d <= HOLD_DAYS && p != null && p <= HOLD_PCT ? { value: d, isNear: false } : null
+    }
+    case 'hold26': {
+      const d = stock.highs?.w26 ?? null
+      const p = stock.near_highs?.w26 ?? null
+      return d != null && d <= HOLD_DAYS && p != null && p <= HOLD_PCT ? { value: d, isNear: false } : null
+    }
+    case 'near52': { const p = stock.near_highs?.w52 ?? null; return p != null && p <= NEAR_PCT ? { value: p, isNear: true  } : null }
+    case 'near26': { const p = stock.near_highs?.w26 ?? null; return p != null && p <= NEAR_PCT ? { value: p, isNear: true  } : null }
+    case 'low52':  { const d = stock.lows?.w52 ?? null; return d != null && d <= LOW_DAYS ? { value: d, isNear: false } : null }
+    case 'low26':  { const d = stock.lows?.w26 ?? null; return d != null && d <= LOW_DAYS ? { value: d, isNear: false } : null }
+    case 'low13':  { const d = stock.lows?.w13 ?? null; return d != null && d <= LOW_DAYS ? { value: d, isNear: false } : null }
   }
 }
 
-// 더 높은 우선순위 필터에도 해당하면 true → 하위 필터에서 제외
-// 우선순위: high52 > high26 > high13 / near52 > near26 / low52 > low26 > low13
+// 더 높은 우선순위 필터에도 해당하면 true → 하위 필터에서 중복 제외
+// break52 > break26 > break13 > hold52 > hold26 > near52 > near26 / low52 > low26 > low13
 function isDominated(stock: StockItem, f: HLFilter): boolean {
   switch (f) {
-    case 'high26': return getHLResult(stock, 'high52') !== null
-    case 'high13': return getHLResult(stock, 'high52') !== null || getHLResult(stock, 'high26') !== null
-    case 'near26': return getHLResult(stock, 'near52') !== null
-    case 'low26':  return getHLResult(stock, 'low52')  !== null
-    case 'low13':  return getHLResult(stock, 'low52')  !== null || getHLResult(stock, 'low26') !== null
-    default:       return false
+    case 'break26': return getHLResult(stock, 'break52') !== null
+    case 'break13': return getHLResult(stock, 'break52') !== null || getHLResult(stock, 'break26') !== null
+    case 'hold52':  return getHLResult(stock, 'break52') !== null
+    case 'hold26':  return getHLResult(stock, 'break52') !== null || getHLResult(stock, 'break26') !== null || getHLResult(stock, 'hold52') !== null
+    case 'near52':  return getHLResult(stock, 'break52') !== null || getHLResult(stock, 'hold52') !== null
+    case 'near26':  return getHLResult(stock, 'break52') !== null || getHLResult(stock, 'break26') !== null || getHLResult(stock, 'hold52') !== null || getHLResult(stock, 'hold26') !== null || getHLResult(stock, 'near52') !== null
+    case 'low26':   return getHLResult(stock, 'low52') !== null
+    case 'low13':   return getHLResult(stock, 'low52') !== null || getHLResult(stock, 'low26') !== null
+    default:        return false
   }
 }
 
@@ -1021,7 +1043,7 @@ export default function WatchlistClient() {
   const [selectedSectorEtf, setSelectedSectorEtf] = useState<string>('')
   const [selectedSector,    setSelectedSector]    = useState<SectorItem | null>(null)
   const [viewMode,          setViewMode]          = useState<'topdown' | 'bottomup'>('topdown')
-  const [hlFilter,          setHlFilter]          = useState<HLFilter>('high52')
+  const [hlFilter,          setHlFilter]          = useState<HLFilter>('break52')
   const [showHelp,          setShowHelp]          = useState(false)
 
   useEffect(() => {
@@ -1123,28 +1145,60 @@ export default function WatchlistClient() {
         </button>
       </div>
 
-      {/* ── 바텀업 고가/저가 필터 칩 ── */}
-      {viewMode === 'bottomup' && (
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {HL_DEFS.map(def => (
-            <button
-              key={def.key}
-              onClick={() => setHlFilter(def.key)}
-              className={`px-2.5 py-1 rounded-full text-[10px] font-semibold border transition-all ${
-                hlFilter === def.key
-                  ? (def.isNear
-                      ? 'bg-blue-600 border-blue-600 text-white'
-                      : def.isHigh
-                        ? 'bg-green-600 border-green-600 text-white'
-                        : 'bg-red-600 border-red-600 text-white')
-                  : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
-              }`}
-            >
-              {def.label}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* ── 바텀업 필터 (2단계) ── */}
+      {viewMode === 'bottomup' && (() => {
+        type Cat = { id: string; label: string; color: string; activeClass: string; keys: HLFilter[] }
+        const CATS: Cat[] = [
+          { id: 'break', label: '🔥 신고가 돌파', color: 'emerald', activeClass: 'bg-emerald-500 text-white', keys: ['break52','break26','break13'] },
+          { id: 'hold',  label: '📈 돌파 유지',   color: 'teal',    activeClass: 'bg-teal-500 text-white',    keys: ['hold52','hold26'] },
+          { id: 'near',  label: '🎯 고가 근접',    color: 'blue',    activeClass: 'bg-blue-500 text-white',    keys: ['near52','near26'] },
+          { id: 'low',   label: '📉 신저가',       color: 'rose',    activeClass: 'bg-rose-500 text-white',    keys: ['low52','low26','low13'] },
+        ]
+        const WEEKS: Record<HLFilter, string> = {
+          break52:'52주', break26:'26주', break13:'13주',
+          hold52:'52주',  hold26:'26주',
+          near52:'52주',  near26:'26주',
+          low52:'52주',   low26:'26주',   low13:'13주',
+        }
+        const activeCat = CATS.find(c => c.keys.includes(hlFilter))!
+        return (
+          <div className="mb-3 space-y-2">
+            {/* 1행: 카테고리 */}
+            <div className="flex gap-1.5">
+              {CATS.map(cat => {
+                const isActive = cat.id === activeCat.id
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setHlFilter(cat.keys[0])}
+                    className={`flex-1 py-2 rounded-xl text-[11px] font-bold transition-all ${
+                      isActive ? cat.activeClass + ' shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                )
+              })}
+            </div>
+            {/* 2행: 기간 */}
+            <div className="flex gap-1.5">
+              {activeCat.keys.map(key => (
+                <button
+                  key={key}
+                  onClick={() => setHlFilter(key)}
+                  className={`px-4 py-1.5 rounded-lg text-[11px] font-semibold border transition-all ${
+                    hlFilter === key
+                      ? activeCat.activeClass + ' border-transparent shadow-sm'
+                      : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
+                  }`}
+                >
+                  {WEEKS[key]}
+                </button>
+              ))}
+            </div>
+          </div>
+        )
+      })()}
 
       {/* ── 도움말 패널 (토글) ── */}
       {showHelp && (
