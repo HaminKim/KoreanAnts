@@ -1,7 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import { createClient } from '@/utils/supabase/client'
+import { KOREAN_NAMES } from '@/app/constants/stockNames'
 
 const TradingViewChart = dynamic(
   () => import('@/app/components/TradingViewChart'),
@@ -632,7 +635,7 @@ function SectorBlock({
   sector, onSelectStock, onSelectSector,
 }: {
   sector:         SectorItem
-  onSelectStock:  (stock: StockItem, sectorEtf: string) => void
+  onSelectStock:  (stock: StockItem, sectorEtf: string, sectorName: string) => void
   onSelectSector: (sector: SectorItem) => void
 }) {
   const rs = sector.sector_rs_excess
@@ -669,7 +672,7 @@ function SectorBlock({
       {/* 종목 그리드 — gap이 회색 격자선 */}
       <div className="grid grid-cols-5 bg-gray-200" style={{ gap: '2px', padding: '2px' }}>
         {sector.stocks.map(stock => (
-          <StockCell key={stock.ticker} stock={stock} onClick={() => onSelectStock(stock, sector.etf)} />
+          <StockCell key={stock.ticker} stock={stock} onClick={() => onSelectStock(stock, sector.etf, sector.name)} />
         ))}
         {Array.from({ length: Math.max(0, 15 - sector.stocks.length) }).map((_, i) => (
           <div key={i} className="bg-gray-50" style={{ height: '54px' }} />
@@ -683,7 +686,17 @@ function SectorBlock({
 // StockDetailModal
 // ─────────────────────────────────────────
 
-function StockDetailModal({ stock, sectorEtf, onClose }: { stock: StockItem; sectorEtf: string; onClose: () => void }) {
+function StockDetailModal({
+  stock, sectorEtf, sectorName, onClose, userId, savedTickers, onSaved,
+}: {
+  stock: StockItem
+  sectorEtf: string
+  sectorName: string
+  onClose: () => void
+  userId: string | null
+  savedTickers: Set<string>
+  onSaved: (ticker: string) => void
+}) {
   const { breakdown: b, data: d } = stock
   const net        = b.net_direction
   const netPct     = Math.min(100, Math.abs(net))
@@ -692,6 +705,24 @@ function StockDetailModal({ stock, sectorEtf, onClose }: { stock: StockItem; sec
   // 섹션별 on/off 토글
   const [show, setShow] = useState({ rs: true, eps: true, revenue: true, cards: true })
   const toggle = (key: keyof typeof show) => setShow(prev => ({ ...prev, [key]: !prev[key] }))
+
+  // ⭐ 관심종목 저장
+  const [saving, setSaving] = useState(false)
+  const isSaved = savedTickers.has(stock.ticker)
+
+  const handleStar = async () => {
+    if (!userId || isSaved || saving) return
+    setSaving(true)
+    const supabase = createClient()
+    await supabase.from('personal_watchlist').insert({
+      user_id: userId,
+      ticker: stock.ticker,
+      name: KOREAN_NAMES[stock.ticker] || null,
+      sector: sectorName || sectorEtf,
+    })
+    onSaved(stock.ticker)
+    setSaving(false)
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4" onClick={onClose}>
@@ -719,6 +750,18 @@ function StockDetailModal({ stock, sectorEtf, onClose }: { stock: StockItem; sec
           </div>
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-gray-400">MA 5·20·50·100·150</span>
+            {userId && (
+              <button
+                onClick={handleStar}
+                disabled={isSaved || saving}
+                title={isSaved ? '관심종목에 저장됨' : '관심종목에 추가'}
+                className={`text-xl leading-none transition-all ${
+                  isSaved ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-400'
+                } disabled:cursor-default`}
+              >
+                {isSaved ? '⭐' : '☆'}
+              </button>
+            )}
             <button onClick={onClose} className="text-gray-400 hover:text-gray-700 text-xl leading-none">✕</button>
           </div>
         </div>
@@ -984,7 +1027,7 @@ function BottomUpView({
 }: {
   sectors:       SectorItem[]
   hlFilter:      HLFilter
-  onSelectStock: (stock: StockItem, sectorEtf: string) => void
+  onSelectStock: (stock: StockItem, sectorEtf: string, sectorName: string) => void
 }) {
   const def    = HL_DEFS.find(d => d.key === hlFilter)!
   const isHigh = def.isHigh
@@ -1013,7 +1056,7 @@ function BottomUpView({
         return (
           <button
             key={`${sec.id}-${stock.ticker}`}
-            onClick={() => onSelectStock(stock, sec.etf)}
+            onClick={() => onSelectStock(stock, sec.etf, sec.name)}
             className="flex flex-col items-center justify-center gap-0.5 p-1.5 rounded hover:opacity-80 active:opacity-60 transition-opacity cursor-pointer"
             style={{ background: getCellBg(net), height: '68px' }}
           >
@@ -1037,20 +1080,59 @@ function BottomUpView({
 // ─────────────────────────────────────────
 
 export default function WatchlistClient() {
-  const [data,              setData]              = useState<WatchlistData | null>(null)
-  const [loading,           setLoading]           = useState(true)
-  const [selectedStock,     setSelectedStock]     = useState<StockItem | null>(null)
-  const [selectedSectorEtf, setSelectedSectorEtf] = useState<string>('')
-  const [selectedSector,    setSelectedSector]    = useState<SectorItem | null>(null)
-  const [viewMode,          setViewMode]          = useState<'topdown' | 'bottomup'>('topdown')
-  const [hlFilter,          setHlFilter]          = useState<HLFilter>('break52')
-  const [showHelp,          setShowHelp]          = useState(false)
+  const searchParams = useSearchParams()
+  const [data,               setData]              = useState<WatchlistData | null>(null)
+  const [loading,            setLoading]           = useState(true)
+  const [selectedStock,      setSelectedStock]     = useState<StockItem | null>(null)
+  const [selectedSectorEtf,  setSelectedSectorEtf] = useState<string>('')
+  const [selectedSectorName, setSelectedSectorName] = useState<string>('')
+  const [selectedSector,     setSelectedSector]    = useState<SectorItem | null>(null)
+  const [viewMode,           setViewMode]          = useState<'topdown' | 'bottomup'>('topdown')
+  const [hlFilter,           setHlFilter]          = useState<HLFilter>('break52')
+  const [showHelp,           setShowHelp]          = useState(false)
+  const [userId,             setUserId]            = useState<string | null>(null)
+  const [savedTickers,       setSavedTickers]      = useState<Set<string>>(new Set())
 
   useEffect(() => {
     fetch('/data/watchlist.json', { cache: 'no-store' })
       .then(r => r.json())
       .then((d: WatchlistData) => { setData(d); setLoading(false) })
       .catch(() => setLoading(false))
+  }, [])
+
+  // URL ?stock=TICKER 파라미터로 자동 모달 오픈
+  useEffect(() => {
+    if (!data) return
+    const ticker = searchParams.get('stock')
+    if (!ticker) return
+    const upper = ticker.toUpperCase()
+    const sector = data.sectors.find(s => s.stocks.some(st => st.ticker === upper))
+    const stock  = sector?.stocks.find(st => st.ticker === upper)
+    if (stock && sector) {
+      setSelectedStock(stock)
+      setSelectedSectorEtf(sector.etf)
+      setSelectedSectorName(sector.name)
+    }
+  }, [data, searchParams])
+
+  // 로그인 유저 + 저장된 관심종목 조회
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return
+      setUserId(user.id)
+      supabase
+        .from('personal_watchlist')
+        .select('ticker')
+        .eq('user_id', user.id)
+        .then(({ data }) => {
+          if (data) setSavedTickers(new Set(data.map((r: { ticker: string }) => r.ticker)))
+        })
+    })
+  }, [])
+
+  const handleSaved = useCallback((ticker: string) => {
+    setSavedTickers(prev => new Set([...prev, ticker]))
   }, [])
 
   if (loading) return (
@@ -1076,9 +1158,10 @@ export default function WatchlistClient() {
     mc.market_state === 'bull' ? '#15803d' :
     mc.market_state === 'bear' ? '#b91c1c' : '#92400e'
 
-  const handleSelectStock = (stock: StockItem, etf: string) => {
+  const handleSelectStock = (stock: StockItem, etf: string, sectorName: string) => {
     setSelectedStock(stock)
     setSelectedSectorEtf(etf)
+    setSelectedSectorName(sectorName)
   }
 
   return (
@@ -1260,7 +1343,11 @@ export default function WatchlistClient() {
         <StockDetailModal
           stock={selectedStock}
           sectorEtf={selectedSectorEtf}
+          sectorName={selectedSectorName}
           onClose={() => setSelectedStock(null)}
+          userId={userId}
+          savedTickers={savedTickers}
+          onSaved={handleSaved}
         />
       )}
       {selectedSector && (

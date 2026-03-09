@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
+import Link from 'next/link';
 
 export default function AuthButton() {
   const supabase = createClient();
@@ -52,9 +53,14 @@ export default function AuthButton() {
       {user ? (
         // 로그인 했을 때
         <div className="flex items-center gap-2">
+          <Link
+            href="/journal"
+            className="px-3 py-1.5 text-xs font-bold bg-gray-900 text-white hover:bg-gray-700 rounded-md transition whitespace-nowrap"
+          >
+            📒 일지
+          </Link>
           {/* 모바일에서는 이름 숨기고 로그아웃 버튼만 보여줌 */}
           <span className="text-xs text-gray-500 hidden md:block whitespace-nowrap">
-            {/* 이메일이 없으므로 닉네임을 보여줌 */}
             {user.user_metadata.profile_nickname || user.user_metadata.full_name || '회원'}님
           </span>
           <button

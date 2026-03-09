@@ -10,9 +10,11 @@ declare global {
 }
 
 interface Props {
-  symbol:   string          // e.g. "SOXX", "XLK"
-  height?:  number
-  interval?: string         // "D" | "W" | "M"
+  symbol:      string          // e.g. "SOXX", "XLK"
+  height?:     number
+  interval?:   string         // "D" | "W" | "M"
+  showStudies?: boolean
+  minimal?:    boolean         // 미리보기용: 툴바·범례·볼륨 숨김
 }
 
 // MA 5 · 20 · 50 · 100 · 150 (모두 일봉 기준)
@@ -24,8 +26,10 @@ const MA_STUDIES = [5, 20, 50, 100, 150].map(length => ({
 
 export default function TradingViewChart({
   symbol,
-  height   = 440,
-  interval = 'D',
+  height      = 440,
+  interval    = 'D',
+  showStudies = true,
+  minimal     = false,
 }: Props) {
   const uid         = useId().replace(/:/g, '')
   const containerId = `tv_${symbol}_${uid}`
@@ -38,20 +42,28 @@ export default function TradingViewChart({
       if (typeof window === 'undefined' || !window.TradingView) return
       created.current = true
       new window.TradingView.widget({
-        autosize:           true,
+        autosize:            true,
         symbol,
         interval,
-        timezone:           'America/New_York',
-        theme:              'light',
-        style:              '1',
-        locale:             'kr',
-        toolbar_bg:         '#f8fafc',
-        enable_publishing:  false,
-        hide_side_toolbar:  true,
+        timezone:            'America/New_York',
+        theme:               'light',
+        style:               '1',
+        locale:              'kr',
+        toolbar_bg:          '#f8fafc',
+        enable_publishing:   false,
+        hide_side_toolbar:   true,
         allow_symbol_change: false,
-        save_image:         false,
-        container_id:       containerId,
-        studies:            MA_STUDIES,
+        save_image:          false,
+        container_id:        containerId,
+        studies:             showStudies ? MA_STUDIES : [],
+        ...(minimal && {
+          hide_top_toolbar:  true,
+          hide_legend:       true,
+          withdateranges:    false,
+          overrides: {
+            'volume.visible': false,
+          },
+        }),
       })
     }
 
