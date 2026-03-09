@@ -16,7 +16,7 @@ type Signal  = 'long' | 'long_watch' | 'short' | 'short_watch' | 'neutral'
 type RSPoint = { d: string; v: number }
 interface HighLow  { w52: number|null; w26: number|null; w13: number|null }
 interface NearHigh { w52: number|null; w26: number|null; w13: number|null }
-interface EpsQuarter { d: string; actual: number|null; estimate: number|null; surp: number|null }
+interface EpsQuarter { d: string; actual: number|null; estimate: number|null; surp: number|null; revenue?: number|null }
 interface EpsData    { history: EpsQuarter[]; trend: string|null }
 
 interface StockBreakdown {
@@ -87,17 +87,22 @@ interface WatchlistData {
 // 색상 헬퍼
 // ─────────────────────────────────────────
 
-function getCellBg(signal: Signal, stage: string, score: number): string {
-  const t = Math.min(1, Math.max(0, score / 100))
-  if (stage === 'stage2_early' || stage === 'stage1_late')
-    return `rgba(234,179,8,${0.3 + t * 0.5})`
-  if (stage === 'stage3_late' || stage === 'stage4_early')
-    return `rgba(249,115,22,${0.3 + t * 0.5})`
-  if (signal === 'long')        return `rgba(34,197,94,${0.2 + t * 0.55})`
-  if (signal === 'long_watch')  return `rgba(34,197,94,${0.08 + t * 0.22})`
-  if (signal === 'short')       return `rgba(239,68,68,${0.2 + t * 0.55})`
-  if (signal === 'short_watch') return `rgba(239,68,68,${0.08 + t * 0.22})`
-  return `rgba(243,244,246,${0.5 + t * 0.3})`
+// net_direction 기반 그린/레드 그라데이션
+// 0 = 연회색, + = 그린, - = 레드 (스테이지 특수색 없음)
+function getCellBg(net: number): string {
+  if (net === 0) return 'hsl(220,14%,96%)'
+  const t = Math.min(1, Math.abs(net) / 72)
+  const s = Math.round(12 + t * 63)
+  const l = Math.round(97 - t * 54)
+  return `hsl(${net > 0 ? 142 : 0},${s}%,${l}%)`
+}
+
+// 배경 밝기에 따라 흰/검정 텍스트 일관 적용
+function getCellTextColor(net: number): { ticker: string; sub: string } {
+  const t = Math.min(1, Math.abs(net) / 72)
+  const l = 97 - t * 54
+  if (l < 65) return { ticker: '#fff', sub: 'rgba(255,255,255,0.68)' }
+  return { ticker: '#1f2937', sub: '#9ca3af' }
 }
 
 const STAGE_ABBR: Record<string, string> = {
@@ -109,6 +114,20 @@ const STAGE_ABBR: Record<string, string> = {
 const SIGNAL_KO: Record<Signal, string> = {
   long: '🚀 롱', long_watch: '👀 롱관심',
   short: '📉 숏', short_watch: '⚠️ 숏관심', neutral: '➖ 중립',
+}
+
+// ─────────────────────────────────────────
+// QoQ / YoY 헬퍼
+// ─────────────────────────────────────────
+
+function calcChange(curr: number, prev: number | null | undefined): number | null {
+  if (prev == null || prev === 0) return null
+  return Math.round((curr - prev) / Math.abs(prev) * 1000) / 10
+}
+
+function fmtChg(pct: number | null): { text: string; color: string } {
+  if (pct === null) return { text: '─', color: '#9ca3af' }
+  return { text: `${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%`, color: pct >= 0 ? '#15803d' : '#b91c1c' }
 }
 
 // ─────────────────────────────────────────
@@ -333,11 +352,11 @@ function RSLineChart({
 }
 
 // ─────────────────────────────────────────
-// EPSChart — 분기별 실제 EPS 바 차트
+// EPSChart — 분기별 실제 EPS 바 차트 (최대 12Q)
 //
 // 막대 = actual EPS ($), 회색 점선 = estimate
-// 초록 = beat (actual >= estimate) / 빨강 = miss / 파랑 = estimate 없음
-// 우상단 트렌드 뱃지: ↗ 개선 / ↘ 악화 / → 보합
+// 초록 = beat / 빨강 = miss / 파랑 = estimate 없음
+// 하단 테이블: $값 + 전분기대비(QoQ) + 전년대비(YoY)
 // ─────────────────────────────────────────
 
 function EPSChart({ eps }: { eps: EpsData }) {
@@ -349,7 +368,6 @@ function EPSChart({ eps }: { eps: EpsData }) {
   const innerW = W - PAD.l - PAD.r
   const innerH = H - PAD.t - PAD.b
 
-  // y축 범위: actual + estimate 전부 포함
   const allVals = [
     ...history.map(q => q.actual),
     ...history.filter(q => q.estimate !== null).map(q => q.estimate as number),
@@ -364,7 +382,7 @@ function EPSChart({ eps }: { eps: EpsData }) {
   const zeroY  = toY(0)
 
   const gap  = innerW / history.length
-  const barW = Math.max(6, gap * 0.55)
+  const barW = Math.max(5, gap * 0.55)
 
   const trend      = eps.trend
   const trendIcon  = trend === 'improving' ? '↗' : trend === 'declining' ? '↘' : '→'
@@ -374,15 +392,16 @@ function EPSChart({ eps }: { eps: EpsData }) {
   return (
     <div className="mb-3">
       <div className="flex items-center justify-between mb-0.5">
-        <span className="text-[10px] font-semibold text-gray-500">EPS 실적 (분기 / $) ─ 점선=예상치</span>
+        <span className="text-[10px] font-semibold text-gray-500">EPS (분기 / $) ─ 점선=예상치 ─ {history.length}Q</span>
         {trend && (
           <span className="text-[9px] font-bold" style={{ color: trendColor }}>
             {trendIcon} {trendLabel}
           </span>
         )}
       </div>
+
+      {/* 바 차트 */}
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ height: '80px', display: 'block' }}>
-        {/* 0 기준선 (0이 범위 안에 있을 때만) */}
         {zeroY >= PAD.t && zeroY <= H - PAD.b && (
           <line x1={PAD.l} y1={zeroY} x2={W - PAD.r} y2={zeroY}
             stroke="#9ca3af" strokeWidth={0.6} strokeDasharray="3,2" />
@@ -396,7 +415,6 @@ function EPSChart({ eps }: { eps: EpsData }) {
           const barBot  = isPos ? zeroY   : actualY
           const barH    = Math.max(2, barBot - barTop)
 
-          // 색상: beat=초록, miss=빨강, estimate없음=파랑
           let fill: string
           if (q.estimate === null) {
             fill = isPos ? 'rgba(59,130,246,0.6)' : 'rgba(239,68,68,0.6)'
@@ -404,15 +422,9 @@ function EPSChart({ eps }: { eps: EpsData }) {
             fill = q.actual >= q.estimate ? 'rgba(34,197,94,0.75)' : 'rgba(239,68,68,0.75)'
           }
 
-          const labelAbove = isPos
-          const labelY     = labelAbove ? barTop - 2 : barBot + 8
-
           return (
             <g key={q.d}>
-              {/* 실적 바 */}
               <rect x={cx - barW / 2} y={barTop} width={barW} height={barH} fill={fill} rx={1} />
-
-              {/* 예상치 점선 */}
               {q.estimate !== null && (
                 <line
                   x1={cx - barW / 2 - 1} y1={toY(q.estimate)}
@@ -420,30 +432,156 @@ function EPSChart({ eps }: { eps: EpsData }) {
                   stroke="#6b7280" strokeWidth={1.2} strokeDasharray="2,1"
                 />
               )}
-
-              {/* 실제 EPS 수치 */}
-              {barH > 5 && (
-                <text x={cx} y={labelY} fontSize={6} textAnchor="middle"
-                  fill={isPos ? '#15803d' : '#b91c1c'}>
-                  {q.actual > 0 ? '+' : ''}{q.actual.toFixed(2)}
-                </text>
-              )}
-
-              {/* 날짜 레이블 */}
-              <text x={cx} y={H - 2} fontSize={6} textAnchor="middle" fill="#9ca3af">
+              <text x={cx} y={H - 2} fontSize={5.5} textAnchor="middle" fill="#9ca3af">
                 {q.d.slice(2, 7)}
               </text>
             </g>
           )
         })}
 
-        {/* Y축 레이블 */}
-        <text x={PAD.l - 2} y={PAD.t + 3}    fontSize={6} textAnchor="end" fill="#9ca3af">${yMax.toFixed(2)}</text>
+        <text x={PAD.l - 2} y={PAD.t + 3}     fontSize={6} textAnchor="end" fill="#9ca3af">${yMax.toFixed(2)}</text>
         {zeroY >= PAD.t && zeroY <= H - PAD.b && (
           <text x={PAD.l - 2} y={zeroY} fontSize={6} textAnchor="end" fill="#9ca3af" dominantBaseline="middle">0</text>
         )}
-        <text x={PAD.l - 2} y={H - PAD.b + 2} fontSize={6} textAnchor="end" fill="#9ca3af">${yMin.toFixed(2)}</text>
+        <text x={PAD.l - 2} y={H - PAD.b + 2}  fontSize={6} textAnchor="end" fill="#9ca3af">${yMin.toFixed(2)}</text>
       </svg>
+
+      {/* QoQ / YoY 테이블 */}
+      <div className="overflow-x-auto mt-1">
+        <table className="w-full text-[9px]" style={{ borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: '#f9fafb' }}>
+              <th className="text-left px-1.5 py-0.5 text-gray-400 font-normal">분기</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">EPS</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">예상</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">전분기比</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">전년比</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...history].reverse().map((q, ri) => {
+              const i = history.length - 1 - ri
+              const qoq = calcChange(q.actual, history[i - 1]?.actual)
+              const yoy = calcChange(q.actual, history[i - 4]?.actual)
+              const qoqFmt = fmtChg(qoq)
+              const yoyFmt = fmtChg(yoy)
+              const beat = q.estimate !== null ? q.actual >= q.estimate : null
+              return (
+                <tr key={q.d} style={{ borderTop: '1px solid #f3f4f6' }}>
+                  <td className="px-1.5 py-0.5 font-mono text-gray-500">{q.d.slice(2, 7)}</td>
+                  <td className="px-1.5 py-0.5 font-mono text-right font-semibold"
+                    style={{ color: q.actual >= 0 ? '#15803d' : '#b91c1c' }}>
+                    ${q.actual.toFixed(2)}
+                  </td>
+                  <td className="px-1.5 py-0.5 font-mono text-right text-gray-400">
+                    {q.estimate != null ? `$${q.estimate.toFixed(2)}` : '─'}
+                    {beat !== null && (
+                      <span className="ml-0.5" style={{ color: beat ? '#15803d' : '#b91c1c' }}>
+                        {beat ? '▲' : '▼'}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-1.5 py-0.5 font-mono text-right" style={{ color: qoqFmt.color }}>{qoqFmt.text}</td>
+                  <td className="px-1.5 py-0.5 font-mono text-right" style={{ color: yoyFmt.color }}>{yoyFmt.text}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────
+// RevenueChart — 분기별 매출 바 차트 (최대 12Q)
+//
+// 단위: $B (십억 달러)
+// 하단 테이블: $B값 + 전분기대비(QoQ) + 전년대비(YoY)
+// ─────────────────────────────────────────
+
+function RevenueChart({ eps }: { eps: EpsData }) {
+  const history = eps.history.filter(q => q.revenue != null) as (EpsQuarter & { revenue: number })[]
+  if (history.length < 2) return null
+
+  const W = 400, H = 80
+  const PAD = { l: 36, r: 8, t: 10, b: 22 }
+  const innerW = W - PAD.l - PAD.r
+  const innerH = H - PAD.t - PAD.b
+
+  const vals   = history.map(q => q.revenue)
+  const rawMax = Math.max(...vals)
+  const rawMin = Math.min(...vals, 0)
+  const pad    = Math.max((rawMax - rawMin) * 0.12, 0.1)
+  const yMax   = rawMax + pad
+  const yMin   = Math.max(0, rawMin - pad)
+  const toY    = (v: number) => PAD.t + innerH * (1 - (v - yMin) / (yMax - yMin))
+  const baseY  = toY(yMin)
+
+  const gap  = innerW / history.length
+  const barW = Math.max(5, gap * 0.55)
+
+  return (
+    <div className="mb-3">
+      <div className="flex items-center justify-between mb-0.5">
+        <span className="text-[10px] font-semibold text-gray-500">매출 (분기 / $B) ─ {history.length}Q</span>
+      </div>
+
+      {/* 바 차트 */}
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ height: '70px', display: 'block' }}>
+        {history.map((q, i) => {
+          const cx     = PAD.l + gap * i + gap / 2
+          const topY   = toY(q.revenue)
+          const barH   = Math.max(2, baseY - topY)
+          const isGrow = i > 0 && q.revenue >= history[i - 1].revenue
+          const fill   = isGrow ? 'rgba(59,130,246,0.65)' : 'rgba(156,163,175,0.55)'
+
+          return (
+            <g key={q.d}>
+              <rect x={cx - barW / 2} y={topY} width={barW} height={barH} fill={fill} rx={1} />
+              <text x={cx} y={H - 2} fontSize={5.5} textAnchor="middle" fill="#9ca3af">
+                {q.d.slice(2, 7)}
+              </text>
+            </g>
+          )
+        })}
+
+        <text x={PAD.l - 2} y={PAD.t + 4}     fontSize={6} textAnchor="end" fill="#9ca3af">{yMax.toFixed(1)}B</text>
+        <text x={PAD.l - 2} y={H - PAD.b + 2}  fontSize={6} textAnchor="end" fill="#9ca3af">{yMin.toFixed(1)}B</text>
+      </svg>
+
+      {/* QoQ / YoY 테이블 */}
+      <div className="overflow-x-auto mt-1">
+        <table className="w-full text-[9px]" style={{ borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: '#f9fafb' }}>
+              <th className="text-left px-1.5 py-0.5 text-gray-400 font-normal">분기</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">매출($B)</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">전분기比</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">전년比</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...history].reverse().map((q, ri) => {
+              const i = history.length - 1 - ri
+              const qoq = calcChange(q.revenue, history[i - 1]?.revenue)
+              const yoy = calcChange(q.revenue, history[i - 4]?.revenue)
+              const qoqFmt = fmtChg(qoq)
+              const yoyFmt = fmtChg(yoy)
+              return (
+                <tr key={q.d} style={{ borderTop: '1px solid #f3f4f6' }}>
+                  <td className="px-1.5 py-0.5 font-mono text-gray-500">{q.d.slice(2, 7)}</td>
+                  <td className="px-1.5 py-0.5 font-mono text-right font-semibold text-blue-700">
+                    ${q.revenue.toFixed(2)}B
+                  </td>
+                  <td className="px-1.5 py-0.5 font-mono text-right" style={{ color: qoqFmt.color }}>{qoqFmt.text}</td>
+                  <td className="px-1.5 py-0.5 font-mono text-right" style={{ color: yoyFmt.color }}>{yoyFmt.text}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
@@ -453,10 +591,8 @@ function EPSChart({ eps }: { eps: EpsData }) {
 // ─────────────────────────────────────────
 
 function StockCell({ stock, onClick }: { stock: StockItem; onClick: () => void }) {
-  const isTransition =
-    stock.stage === 'stage2_early' || stock.stage === 'stage1_late' ||
-    stock.stage === 'stage3_late'  || stock.stage === 'stage4_early'
-  const maColor    = stock.data.ma_distance_pct >= 0 ? '#166534' : '#991b1b'
+  const net        = stock.breakdown.net_direction
+  const colors     = getCellTextColor(net)
   const show52High = stock.highs?.w52 != null && stock.highs.w52 <= 10
   const show52Low  = stock.lows?.w52  != null && stock.lows.w52  <= 10
 
@@ -464,23 +600,22 @@ function StockCell({ stock, onClick }: { stock: StockItem; onClick: () => void }
     <button
       onClick={onClick}
       title={`${stock.ticker} | MA100 대비 ${stock.data.ma_distance_pct >= 0 ? '+' : ''}${stock.data.ma_distance_pct.toFixed(1)}% | ${SIGNAL_KO[stock.signal]}`}
-      className="relative flex flex-col items-center justify-center w-full transition-opacity hover:opacity-75 active:opacity-50 cursor-pointer select-none"
-      style={{ background: getCellBg(stock.signal, stock.stage, stock.score), height: '54px', gap: '1px' }}
+      className="relative flex flex-col items-center justify-center w-full transition-opacity hover:opacity-80 active:opacity-60 cursor-pointer select-none"
+      style={{ background: getCellBg(net), height: '54px', gap: '1px' }}
     >
       {show52High && (
-        <span className="absolute top-0.5 right-0.5 text-[8px] leading-none">⭐</span>
+        <span className="absolute top-0.5 right-0.5 text-[8px] leading-none opacity-70">★</span>
       )}
       {!show52High && show52Low && (
-        <span className="absolute top-0.5 right-0.5 text-[8px] leading-none">📉</span>
+        <span className="absolute top-0.5 right-0.5 text-[7px] leading-none opacity-60">▼</span>
       )}
-      <span className="text-[10px] font-bold leading-none" style={{ color: isTransition ? '#1c1917' : '#111827' }}>
+      <span className="text-[10px] font-bold leading-none" style={{ color: colors.ticker }}>
         {stock.ticker}
       </span>
-      {/* MA100 대비 거리 — 기간 수익률 아님! */}
-      <span className="text-[7px] font-mono leading-none" style={{ color: maColor }}>
-        MA{stock.data.ma_distance_pct >= 0 ? '+' : ''}{stock.data.ma_distance_pct.toFixed(1)}%
+      <span className="text-[7px] font-mono leading-none" style={{ color: colors.sub }}>
+        {stock.data.ma_distance_pct >= 0 ? '+' : ''}{stock.data.ma_distance_pct.toFixed(1)}%
       </span>
-      <span className="text-[7px] leading-none text-gray-400">
+      <span className="text-[7px] leading-none" style={{ color: colors.sub, opacity: 0.8 }}>
         {STAGE_ABBR[stock.stage] ?? ''}
       </span>
     </button>
@@ -503,40 +638,29 @@ function SectorBlock({
 
   return (
     <div className="bg-white">
-      {/* 섹터 헤더 클릭 → ETF 차트 + RS 추이 */}
+      {/* 섹터 헤더 */}
       <button
         onClick={() => onSelectSector(sector)}
-        className="w-full flex items-center justify-between px-2 py-1 bg-gray-50 border-b border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-2.5 py-1.5 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
         title={`${sector.name} (${sector.etf}) — SPY 대비 60일 초과수익 ${rs !== null ? (rs >= 0 ? '+' : '') + rs.toFixed(2) + '%' : 'N/A'}`}
       >
-        <span className="text-[9px] font-semibold text-gray-600 truncate">
-          {sector.emoji} {sector.name}
-        </span>
-        <div className="flex items-center gap-1 flex-shrink-0 ml-1">
+        <span className="text-[9px] font-semibold text-gray-700 truncate">{sector.name}</span>
+        <div className="flex items-center gap-1.5 flex-shrink-0 ml-1">
           {rs !== null && (
-            <>
-              <span
-                className="text-[8px] font-mono font-bold"
-                style={{ color: rsPositive ? '#15803d' : '#b91c1c' }}
-              >
-                {rsPositive ? '▲' : '▼'}{Math.abs(rs).toFixed(1)}%
-              </span>
-              {sector.sector_rs_days > 0 && (
-                <span className="text-[7px] text-gray-400 font-mono">
-                  {sector.sector_rs_days}일
-                </span>
-              )}
-              {sector.sector_rs_slope_days > 0 && (
-                <span
-                  className="text-[7px] font-mono font-semibold"
-                  style={{ color: sector.sector_rs_slope_dir === 'up' ? '#15803d' : '#b91c1c' }}
-                >
-                  {sector.sector_rs_slope_dir === 'up' ? '↗' : '↘'}{sector.sector_rs_slope_days}d
-                </span>
-              )}
-            </>
+            <span className="text-[8px] font-mono font-bold tabular-nums"
+              style={{ color: rsPositive ? '#16a34a' : '#dc2626' }}>
+              {rsPositive ? '▲' : '▼'}{Math.abs(rs).toFixed(1)}%
+            </span>
           )}
-          <span className="text-[8px] text-gray-300">📈</span>
+          {sector.sector_rs_days > 0 && (
+            <span className="text-[7px] text-gray-400 tabular-nums">{sector.sector_rs_days}일</span>
+          )}
+          {sector.sector_rs_slope_dir !== 'flat' && sector.sector_rs_slope_days > 0 && (
+            <span className="text-[7px] font-mono font-semibold tabular-nums"
+              style={{ color: sector.sector_rs_slope_dir === 'up' ? '#16a34a' : '#dc2626' }}>
+              {sector.sector_rs_slope_dir === 'up' ? '↗' : '↘'}{sector.sector_rs_slope_days}d
+            </span>
+          )}
         </div>
       </button>
 
@@ -545,7 +669,7 @@ function SectorBlock({
         {sector.stocks.map(stock => (
           <StockCell key={stock.ticker} stock={stock} onClick={() => onSelectStock(stock, sector.etf)} />
         ))}
-        {Array.from({ length: Math.max(0, 10 - sector.stocks.length) }).map((_, i) => (
+        {Array.from({ length: Math.max(0, 15 - sector.stocks.length) }).map((_, i) => (
           <div key={i} className="bg-gray-50" style={{ height: '54px' }} />
         ))}
       </div>
@@ -563,11 +687,15 @@ function StockDetailModal({ stock, sectorEtf, onClose }: { stock: StockItem; sec
   const netPct     = Math.min(100, Math.abs(net))
   const isLongSide = net >= 0
 
+  // 섹션별 on/off 토글
+  const [show, setShow] = useState({ rs: true, eps: true, revenue: true, cards: true })
+  const toggle = (key: keyof typeof show) => setShow(prev => ({ ...prev, [key]: !prev[key] }))
+
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative bg-white border border-gray-200 rounded-2xl shadow-2xl w-full overflow-hidden"
+        className="relative bg-white border border-gray-200 rounded-2xl shadow-2xl w-full overflow-hidden flex flex-col"
         style={{ maxWidth: '800px', maxHeight: '92vh' }}
         onClick={e => e.stopPropagation()}
       >
@@ -631,138 +759,58 @@ function StockDetailModal({ stock, sectorEtf, onClose }: { stock: StockItem; sec
         )}
 
         {/* TradingView 가격 차트 */}
-        <div style={{ height: '300px' }}>
+        <div style={{ height: '300px', flexShrink: 0 }}>
           <TradingViewChart symbol={stock.ticker} height={300} />
         </div>
 
+        {/* 섹션 토글 바 */}
+        <div className="flex flex-wrap gap-1 px-4 py-2 border-b border-gray-100 bg-gray-50">
+          {([
+            { key: 'rs',      label: 'RS 차트' },
+            { key: 'eps',     label: 'EPS' },
+            { key: 'revenue', label: '매출' },
+            { key: 'cards',   label: '수치카드' },
+          ] as { key: keyof typeof show; label: string }[]).map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => toggle(key)}
+              className="text-[10px] px-2 py-0.5 rounded-full border transition-colors"
+              style={{
+                background:   show[key] ? '#1f2937' : '#fff',
+                color:        show[key] ? '#fff'    : '#9ca3af',
+                borderColor:  show[key] ? '#1f2937' : '#e5e7eb',
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
         {/* 스크롤 영역 */}
-        <div className="overflow-y-auto p-4" style={{ maxHeight: '360px' }}>
+        <div className="overflow-y-auto p-4 flex-1 min-h-0">
 
-          {/* RS LINE 차트: vs SPY */}
-          {stock.rs_spy_line && stock.rs_spy_line.length >= 3 && (
-            <RSLineChart
-              data={stock.rs_spy_line}
-              label="vs SPY (1년)"
-              uid={`spy-${stock.ticker}`}
-            />
+          {/* RS LINE 차트 */}
+          {show.rs && (
+            <>
+              {stock.rs_spy_line && stock.rs_spy_line.length >= 3 && (
+                <RSLineChart data={stock.rs_spy_line} label="vs SPY (1년)" uid={`spy-${stock.ticker}`} />
+              )}
+              {stock.rs_sector_line && stock.rs_sector_line.length >= 3 && (
+                <RSLineChart data={stock.rs_sector_line} label={`vs ${sectorEtf} (1년)`} uid={`etf-${stock.ticker}`} />
+              )}
+            </>
           )}
 
-          {/* RS LINE 차트: vs 섹터 ETF */}
-          {stock.rs_sector_line && stock.rs_sector_line.length >= 3 && (
-            <RSLineChart
-              data={stock.rs_sector_line}
-              label={`vs ${sectorEtf} (1년)`}
-              uid={`etf-${stock.ticker}`}
-            />
-          )}
+          {/* EPS 서프라이즈 차트 + 테이블 */}
+          {show.eps && stock.eps && <EPSChart eps={stock.eps} />}
 
-          {/* EPS 서프라이즈 차트 */}
-          {stock.eps && <EPSChart eps={stock.eps} />}
+          {/* 매출 차트 + 테이블 */}
+          {show.revenue && stock.eps && <RevenueChart eps={stock.eps} />}
 
-          {/* bull / bear 강도 바 */}
-          <div className="space-y-2 mb-4">
-
-            {/* bull strength */}
-            <div>
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[10px] font-mono text-green-700 w-28 flex-shrink-0">롱 강도 (bull)</span>
-                <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
-                  <div className="h-2 rounded-full bg-green-500"
-                    style={{ width: `${Math.min(100, b.bull_strength)}%` }} />
-                </div>
-                <span className="text-[9px] font-mono text-gray-400 w-12 text-right">
-                  {b.bull_strength.toFixed(1)}/100
-                </span>
-              </div>
-              {b.rs_fresh_bull > 0 && (
-                <p className="text-[9px] text-green-600 pl-28">⚡ RS 52주 0선 상향 돌파 보너스 +{b.rs_fresh_bull}</p>
-              )}
-            </div>
-
-            {/* bear strength */}
-            <div>
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[10px] font-mono text-red-700 w-28 flex-shrink-0">숏 강도 (bear)</span>
-                <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
-                  <div className="h-2 rounded-full bg-red-500"
-                    style={{ width: `${Math.min(100, b.bear_strength)}%` }} />
-                </div>
-                <span className="text-[9px] font-mono text-gray-400 w-12 text-right">
-                  {b.bear_strength.toFixed(1)}/100
-                </span>
-              </div>
-              {b.rs_fresh_bear > 0 && (
-                <p className="text-[9px] text-red-600 pl-28">⚡ RS 52주 0선 하향 돌파 보너스 +{b.rs_fresh_bear}</p>
-              )}
-            </div>
-
-            {/* net direction 미터 */}
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-[10px] font-mono text-gray-500 w-28 flex-shrink-0">방향 확신도 (net)</span>
-              <div className="flex-1 relative bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                {/* 중앙 기준선 */}
-                <div className="absolute left-1/2 top-0 w-px h-full bg-gray-400 z-10" />
-                <div
-                  className="absolute top-0 h-full rounded-full"
-                  style={{
-                    width:      `${netPct / 2}%`,
-                    left:       isLongSide ? '50%' : `${50 - netPct / 2}%`,
-                    background: isLongSide ? '#16a34a' : '#dc2626',
-                  }}
-                />
-              </div>
-              <span className="text-[9px] font-mono w-12 text-right"
-                style={{ color: isLongSide ? '#15803d' : '#b91c1c' }}>
-                {net >= 0 ? '+' : ''}{net.toFixed(1)}
-              </span>
-            </div>
-
-            {/* MA 기울기 */}
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono text-gray-600 w-28 flex-shrink-0">MA100 기울기</span>
-              <div className="flex-1 bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                <div className="h-1.5 rounded-full bg-blue-400"
-                  style={{ width: `${Math.min(100, (b.ma_slope / 13) * 100)}%` }} />
-              </div>
-              <span className="text-[9px] font-mono text-gray-400 w-12 text-right">
-                {b.ma_slope.toFixed(1)}/13
-              </span>
-            </div>
-          </div>
 
           {/* 수치 카드 */}
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            {/* MA100 + MA150 */}
-            <div className="bg-gray-50 border border-gray-100 rounded-lg p-2.5 col-span-2">
-              <div className="text-gray-400 mb-1">현재가 / MA100 / MA150</div>
-              <div className="flex items-center gap-4 flex-wrap">
-                <span className="font-semibold font-mono text-gray-800">${d.price.toFixed(2)}</span>
-                <span className="font-mono text-[11px]" style={{ color: d.ma_distance_pct >= 0 ? '#15803d' : '#b91c1c' }}>
-                  MA100 {d.ma_distance_pct >= 0 ? '+' : ''}{d.ma_distance_pct.toFixed(2)}%
-                </span>
-                {d.ma150_distance_pct != null && (
-                  <span className="font-mono text-[11px]" style={{ color: d.ma150_distance_pct >= 0 ? '#15803d' : '#b91c1c' }}>
-                    MA150 {d.ma150_distance_pct >= 0 ? '+' : ''}{d.ma150_distance_pct.toFixed(2)}%
-                  </span>
-                )}
-              </div>
-            </div>
-
+          {show.cards && <div className="grid grid-cols-2 gap-2 text-xs">
             {[
-              {
-                t: 'RS vs SPY (52주)',
-                v: d.rs_excess_pct != null
-                  ? `${d.rs_excess_pct >= 0 ? '+' : ''}${d.rs_excess_pct.toFixed(2)}%`
-                  : 'N/A',
-                s: 'SPY 대비 52주 초과수익률',
-                c: (d.rs_excess_pct ?? 0) >= 0 ? '#15803d' : '#b91c1c',
-              },
-              {
-                t: 'MA100 기울기',
-                v: d.slope_dir === 'bullish' ? '↑ 상향' : '↓ 하향',
-                s: d.days_since_slope_turn ? `${d.days_since_slope_turn}일 전 방향 전환` : '-',
-                c: d.slope_dir === 'bullish' ? '#15803d' : '#b91c1c',
-              },
               {
                 t: '섹터 RS vs SPY (60일)',
                 v: d.sector_rs_excess != null
@@ -784,7 +832,7 @@ function StockDetailModal({ stock, sectorEtf, onClose }: { stock: StockItem; sec
                 {card.s && <div className="text-gray-400 text-[9px]">{card.s}</div>}
               </div>
             ))}
-          </div>
+          </div>}
         </div>
       </div>
     </div>
@@ -850,23 +898,13 @@ function SectorChartModal({ sector, onClose }: { sector: SectorItem; onClose: ()
 // ─────────────────────────────────────────
 
 const HELP_HOW_TO_READ = [
-  { icon: '🟩', text: '초록 = 🚀 롱 시그널 (상승 기대) · 색이 진할수록 점수 높음' },
-  { icon: '🟥', text: '빨강 = 📉 숏 시그널 (하락 기대) · 색이 진할수록 점수 높음' },
-  { icon: '🟨', text: '노랑/주황 = ⚡ 변곡 (Stage 1말→2초 / 3말→4초) · 진짜 타이밍' },
-  { icon: '⬜',  text: '흰색/회색 = 중립 — 뚜렷한 방향 신호 없음' },
-  { icon: 'MA%', text: 'MA+N% = 현재 주가가 MA100(100일 이평)보다 위/아래인 거리. 기간 수익률이 아님!' },
-  { icon: 'RS%', text: '섹터 헤더 ▲▼N% = 섹터 ETF가 SPY보다 최근 60일간 얼마나 더/덜 올랐나 (기준: SPY=0%)' },
-  { icon: '📈',  text: '셀 클릭 → 가격 차트 + RS 추이 그래프 + 상세 점수' },
-  { icon: '🗂️',  text: '섹터 헤더 클릭 → 섹터 ETF 차트 + RS 추이 그래프' },
-]
-
-const HELP_SCORES = [
-  { item: 'RS 52주   (0-30)', desc: 'SPY 대비 52주 초과수익 강도 — 50% 초과 = 만점. 음수면 0점' },
-  { item: 'MA 위치   (0-20)', desc: '스위트스팟(0~+15%) = 고점 / 과연장(+30%↑) = 5점 고정 / MA아래 회복 직전도 가점' },
-  { item: 'MA 기울기  (0-13)', desc: '기울기 방향 바꾼 지 얼마나 됐나 — 최근일수록 높음' },
-  { item: '섹터 60일  (0-25)', desc: '섹터 ETF가 SPY보다 60일간 얼마나 강한가 — 25%↑ = 만점' },
-  { item: '시장      (0-12)', desc: 'SPY MA100 위 +6 / SPY 기울기 상승 +6' },
-  { item: 'RS 신선도  (+5)', desc: '52주 RS가 최근 30일 내 0선 돌파 시 보너스 +5점' },
+  { icon: '██', color: 'hsl(142,75%,43%)', text: '진한 초록 — 강한 상승 신호. 여러 지표가 동시에 강세' },
+  { icon: '░░', color: 'hsl(142,25%,82%)', text: '연한 초록 — 약한 상승 신호. 방향은 맞지만 확신 낮음' },
+  { icon: '░░', color: 'hsl(220,14%,96%)', text: '회색 — 중립. 상승/하락 신호 없음' },
+  { icon: '░░', color: 'hsl(0,25%,82%)',   text: '연한 빨강 — 약한 하락 신호' },
+  { icon: '██', color: 'hsl(0,75%,43%)',   text: '진한 빨강 — 강한 하락 신호. 여러 지표가 동시에 약세' },
+  { icon: '▲▼', color: '#15803d',          text: '섹터 헤더 ▲27%  44일  ↗32d — SPY 대비 초과수익 / 유지일수 / 변곡 후 경과일' },
+  { icon: '+%',  color: '#374151',          text: '셀 숫자 = MA100 기준 거리 (+위 / -아래)' },
 ]
 
 // ─────────────────────────────────────────
@@ -945,25 +983,25 @@ function BottomUpView({
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-1.5 mt-2">
       {items.map(({ stock, sec, result }) => {
-        const maColor  = stock.data.ma_distance_pct >= 0 ? '#166534' : '#991b1b'
-        const valColor = isHigh ? '#15803d' : '#b91c1c'
-        const badge    = result!.isNear
-          ? `🎯 -${result!.value.toFixed(1)}%`
-          : `${isHigh ? '⭐' : '📉'} ${result!.value}일 전`
+        const net    = stock.breakdown.net_direction
+        const colors = getCellTextColor(net)
+        const badge  = result!.isNear
+          ? `-${result!.value.toFixed(1)}%`
+          : `${result!.value}일 전`
         return (
           <button
             key={`${sec.id}-${stock.ticker}`}
             onClick={() => onSelectStock(stock, sec.etf)}
-            className="flex flex-col items-center justify-center gap-0.5 p-1.5 rounded border border-gray-100 hover:opacity-75 active:opacity-50 transition-opacity cursor-pointer"
-            style={{ background: getCellBg(stock.signal, stock.stage, stock.score), height: '68px' }}
+            className="flex flex-col items-center justify-center gap-0.5 p-1.5 rounded hover:opacity-80 active:opacity-60 transition-opacity cursor-pointer"
+            style={{ background: getCellBg(net), height: '68px' }}
           >
-            <span className="text-[10px] font-bold text-gray-900 leading-none">{stock.ticker}</span>
-            <span className="text-[7px] text-gray-500 leading-none">{sec.name}</span>
-            <span className="text-[9px] font-bold leading-none" style={{ color: valColor }}>
+            <span className="text-[10px] font-bold leading-none" style={{ color: colors.ticker }}>{stock.ticker}</span>
+            <span className="text-[7px] leading-none" style={{ color: colors.sub }}>{sec.name}</span>
+            <span className="text-[9px] font-bold leading-none" style={{ color: isHigh ? colors.ticker : colors.ticker }}>
               {badge}
             </span>
-            <span className="text-[7px] font-mono leading-none" style={{ color: maColor }}>
-              MA{stock.data.ma_distance_pct >= 0 ? '+' : ''}{stock.data.ma_distance_pct.toFixed(1)}%
+            <span className="text-[7px] font-mono leading-none" style={{ color: colors.sub }}>
+              {stock.data.ma_distance_pct >= 0 ? '+' : ''}{stock.data.ma_distance_pct.toFixed(1)}%
             </span>
           </button>
         )
@@ -1110,53 +1148,21 @@ export default function WatchlistClient() {
 
       {/* ── 도움말 패널 (토글) ── */}
       {showHelp && (
-        <div className="mb-3 p-3 bg-blue-50 border border-blue-100 rounded-xl space-y-3 text-[10px]">
-          <div>
-            <div className="font-semibold text-blue-700 mb-1.5">📖 히트맵 읽는 법</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-4">
-              {HELP_HOW_TO_READ.map(g => (
-                <div key={g.icon} className="flex gap-2">
-                  <span className="font-mono text-blue-500 w-8 flex-shrink-0 leading-tight">{g.icon}</span>
-                  <span className="text-gray-600 leading-tight">{g.text}</span>
-                </div>
-              ))}
-            </div>
+        <div className="mb-3 p-3 bg-gray-50 border border-gray-200 rounded-xl text-[10px]">
+          <div className="font-semibold text-gray-700 mb-2">색상 읽는 법</div>
+          <div className="space-y-1.5">
+            {HELP_HOW_TO_READ.map(g => (
+              <div key={g.text} className="flex items-center gap-2.5">
+                <div className="w-5 h-4 rounded flex-shrink-0" style={{ background: g.color }} />
+                <span className="text-gray-600 leading-tight">{g.text}</span>
+              </div>
+            ))}
           </div>
-          <div className="border-t border-blue-100 pt-2">
-            <div className="font-semibold text-blue-700 mb-1.5">📊 점수 구성 — bull/bear 각 0~105점, net = bull−bear</div>
-            <div className="space-y-1">
-              {HELP_SCORES.map(g => (
-                <div key={g.item} className="flex gap-2">
-                  <span className="font-mono text-blue-600 w-28 flex-shrink-0">{g.item}</span>
-                  <span className="text-gray-600">{g.desc}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <p className="border-t border-blue-100 pt-1.5 text-[9px] text-blue-500">
-            💡 바텀업: N일 전 = 해당 신고가/신저가 달성 후 경과 거래일 (0=오늘) · 최근 63거래일 내 기준
-          </p>
         </div>
       )}
 
       {viewMode === 'topdown' ? (
         <>
-          {/* ── 컬러 범례 ── */}
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mb-2 text-[9px] text-gray-400 items-center">
-            {[
-              { bg: 'rgba(234,179,8,0.6)',  label: '⚡ 변곡' },
-              { bg: 'rgba(34,197,94,0.55)', label: '🚀 롱' },
-              { bg: 'rgba(239,68,68,0.55)', label: '📉 숏' },
-              { bg: 'rgba(243,244,246,0.9)',label: '➖ 중립' },
-            ].map(({ bg, label }) => (
-              <div key={label} className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-sm" style={{ background: bg }} />
-                <span>{label}</span>
-              </div>
-            ))}
-            <span className="text-gray-300 ml-1">· 셀 숫자 = MA100 대비 거리 · ⭐ = 52주 신고가 10일 이내</span>
-          </div>
-
           {/* ── 히트맵 본체 ── */}
           <div className="-mx-4 sm:-mx-6">
             <div

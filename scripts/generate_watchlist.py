@@ -23,6 +23,8 @@ import io
 import json
 import os
 import sys
+import time
+import random
 import concurrent.futures
 import numpy as np
 import pandas as pd
@@ -49,62 +51,58 @@ RS_MA_PERIOD     = 20     # RS 방향성 MA (4주)
 
 SECTORS = [
     {"id":  1, "name": "반도체",     "etf": "SOXX", "emoji": "💾",
-     "tickers": ["NVDA","AVGO","TSM","AMD","INTC","QCOM","MU","AMAT","LRCX","KLAC"]},
+     "tickers": ["NVDA","AVGO","TSM","AMD","INTC","QCOM","MU","AMAT","LRCX","KLAC","ASML","MRVL","ON","TER","WOLF"]},
     {"id":  2, "name": "기술",       "etf": "XLK",  "emoji": "💻",
-     "tickers": ["AAPL","MSFT","ORCL","ADBE","CSCO","IBM","NOW","INTU","PANW","CRM"]},
+     "tickers": ["AAPL","MSFT","ORCL","ADBE","CSCO","IBM","NOW","INTU","PANW","CRM","FTNT","SNOW","PLTR","MDB","ZS"]},
     {"id":  3, "name": "커뮤니케이션","etf": "XLC",  "emoji": "📡",
-     "tickers": ["META","GOOGL","NFLX","DIS","TMUS","VZ","T","CHTR","EA","TTWO"]},
+     "tickers": ["META","GOOGL","NFLX","DIS","TMUS","VZ","T","CHTR","EA","TTWO","SNAP","PINS","SPOT","WBD","LYV"]},
     {"id":  4, "name": "소비재(임의)","etf": "XLY",  "emoji": "🛍️",
-     "tickers": ["AMZN","TSLA","HD","MCD","NKE","LOW","SBUX","TJX","BKNG","CMG"]},
+     "tickers": ["AMZN","TSLA","HD","MCD","NKE","LOW","SBUX","TJX","BKNG","CMG","ABNB","ROST","YUM","MAR","EXPE"]},
     {"id":  5, "name": "소비재(필수)","etf": "XLP",  "emoji": "🛒",
-     "tickers": ["PG","KO","PEP","COST","WMT","PM","MO","CL","MDLZ","STZ"]},
+     "tickers": ["PG","KO","PEP","COST","WMT","PM","MO","CL","MDLZ","STZ","KR","SYY","HSY","CHD","CLX"]},
     {"id":  6, "name": "헬스케어",   "etf": "XLV",  "emoji": "🏥",
-     "tickers": ["UNH","LLY","ABT","TMO","MRK","AMGN","ISRG","SYK","BSX","MDT"]},
+     "tickers": ["UNH","LLY","ABT","TMO","MRK","AMGN","ISRG","SYK","BSX","MDT","ELV","HCA","CI","MCK","HIMS"]},
     {"id":  7, "name": "바이오테크", "etf": "XBI",  "emoji": "🧬",
-     "tickers": ["MRNA","REGN","VRTX","BIIB","BMRN","ALNY","IONS","INCY","SRPT","EXAS"]},
+     "tickers": ["MRNA","REGN","VRTX","BIIB","BMRN","ALNY","IONS","INCY","SRPT","EXAS","ROIV","CRSP","NTLA","BEAM","RXRX"]},
     {"id":  8, "name": "금융",       "etf": "XLF",  "emoji": "🏦",
-     "tickers": ["JPM","BRK-B","V","MA","BAC","WFC","GS","MS","BLK","SPGI"]},
+     "tickers": ["JPM","BRK-B","V","MA","BAC","WFC","GS","MS","BLK","SPGI","AXP","CB","PGR","MET","TRV"]},
     {"id":  9, "name": "에너지",     "etf": "XLE",  "emoji": "🛢️",
-     "tickers": ["XOM","CVX","EOG","SLB","COP","MPC","OXY","WMB","PSX","VLO"]},
+     "tickers": ["XOM","CVX","EOG","SLB","COP","MPC","OXY","WMB","PSX","VLO","LNG","KMI","DVN","HAL","BKR"]},
     {"id": 10, "name": "산업재",     "etf": "XLI",  "emoji": "⚙️",
-     "tickers": ["GE","CAT","ETN","HON","UNP","MMM","DE","EMR","PH","ROK"]},
+     "tickers": ["GE","CAT","ETN","HON","UNP","MMM","DE","EMR","PH","ROK","ITW","GWW","FDX","UPS","CARR"]},
     {"id": 11, "name": "방산",       "etf": "ITA",  "emoji": "🚀",
-     "tickers": ["RTX","LMT","NOC","GD","BA","HEI","TDG","CACI","LDOS","SAIC"]},
+     "tickers": ["RTX","LMT","NOC","GD","BA","HEI","TDG","CACI","LDOS","SAIC","LHX","CW","DRS","KTOS","AXON"]},
     {"id": 12, "name": "소재",       "etf": "XLB",  "emoji": "⛏️",
-     "tickers": ["LIN","APD","SHW","FCX","ECL","NEM","NUE","VMC","DOW","ALB"]},
+     "tickers": ["LIN","APD","SHW","FCX","ECL","NEM","NUE","VMC","DOW","ALB","PPG","IP","PKG","CF","MOS"]},
     {"id": 13, "name": "유틸리티",   "etf": "XLU",  "emoji": "⚡",
-     "tickers": ["NEE","DUK","SO","D","EXC","AEP","XEL","ED","ETR","ES"]},
+     "tickers": ["NEE","DUK","SO","D","EXC","AEP","XEL","ED","ETR","ES","SRE","AWK","WEC","CMS","AES"]},
     {
         "id": 14, "name": "크립토", "etf": "MSTR", "emoji": "₿",
         "tickers": [
             "MSTR","COIN","CRCL","MARA","RIOT","CLSK","HUT","IREN","BMNR","BTBT",
+            "CORZ","WULF","CIFR","BITF","GBTC",
         ]
     },
     {
         "id": 15, "name": "양자컴퓨터", "etf": "IONQ", "emoji": "⚛️",
         "tickers": [
             "IONQ","RGTI","QUBT","QBTS","ARQQ","QTUM",
+            "IBM","GOOGL","MSFT","NVDA","INTC",
         ]
     },
     {
         "id": 16, "name": "QQQ (나스닥100)", "etf": "QQQ", "emoji": "🔷",
         "tickers": [
             "MSFT","AAPL","NVDA","AMZN","META","TSLA","GOOGL","AVGO","COST","NFLX",
+            "ADBE","PEP","CSCO","INTU","TMUS",
         ]
     },
     {
         "id": 17, "name": "핀테크(ARKF)", "etf": "ARKF", "emoji": "💳",
         "tickers": [
-            "COIN",   # Coinbase
-            "XYZ",    # Block (Square, 구 SQ)
-            "HOOD",   # Robinhood
-            "SOFI",   # SoFi Technologies
-            "PYPL",   # PayPal
-            "AFRM",   # Affirm Holdings
-            "BILL",   # Bill.com
-            "UPST",   # Upstart
-            "NU",     # Nu Holdings
-            "TOST",   # Toast
+            "COIN","XYZ","HOOD","SOFI","PYPL",
+            "AFRM","BILL","UPST","NU","TOST",
+            "SQ","V","MA","INTU","FIS",
         ]
     },
 ]
@@ -315,6 +313,7 @@ def fetch_eps_data(ticker):
     history = [{"d": "2024-11-15", "actual": 1.23, "estimate": 1.10, "surp": 11.8}, ...]
               오래된 → 최신 순 (왼쪽→오른쪽)
     """
+    time.sleep(random.uniform(0.05, 0.35))   # rate limit 방지 jitter
     try:
         t  = yf.Ticker(ticker)
         ed = t.get_earnings_dates(limit=12)
@@ -323,18 +322,44 @@ def fetch_eps_data(ticker):
 
         now  = pd.Timestamp.now(tz="UTC")
         past = ed[ed.index <= now].dropna(subset=["Reported EPS"])
-        past = past.head(8).iloc[::-1]   # 최신 8분기, 오래된 것부터
+        past = past.head(12).iloc[::-1]   # 최신 12분기, 오래된 것부터
+
+        # 분기별 매출 (quarterly income statement)
+        revenue_map: dict = {}
+        try:
+            qf = t.quarterly_income_stmt
+            if qf is not None and not qf.empty:
+                for key in ["Total Revenue", "TotalRevenue"]:
+                    if key in qf.index:
+                        rev_row = qf.loc[key]
+                        for col_date, val in rev_row.items():
+                            if pd.notna(val):
+                                ts = pd.Timestamp(col_date)
+                                revenue_map[ts.tz_localize(None)] = float(val)
+                        break
+        except Exception:
+            pass
 
         history = []
         for date, row in past.iterrows():
             actual   = row.get("Reported EPS")
             estimate = row.get("EPS Estimate")
             surp     = row.get("Surprise(%)")
+
+            # 매출: 가장 가까운 분기 날짜 (90일 이내)
+            rev_val = None
+            if revenue_map:
+                date_naive = date.tz_localize(None) if date.tzinfo else date
+                closest = min(revenue_map.keys(), key=lambda d: abs((d - date_naive).days))
+                if abs((closest - date_naive).days) <= 90:
+                    rev_val = revenue_map[closest] / 1e9  # 단위: 십억 달러(B)
+
             history.append({
                 "d":        str(date.date()),
                 "actual":   round(float(actual),   3) if pd.notna(actual)   else None,
                 "estimate": round(float(estimate), 3) if pd.notna(estimate) else None,
                 "surp":     round(float(surp),     2) if pd.notna(surp)     else None,
+                "revenue":  round(rev_val, 3) if rev_val is not None else None,
             })
 
         return ticker, (history if history else None)
@@ -486,7 +511,7 @@ def main():
     print(f"\n📊 EPS 서프라이즈 수집 중... ({len(all_tickers)}개 종목, 병렬)")
     eps_dict: dict = {}
     try:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
             futures = {executor.submit(fetch_eps_data, t): t for t in all_tickers}
             for future in concurrent.futures.as_completed(futures, timeout=180):
                 try:
@@ -687,8 +712,8 @@ def main():
                 print(f"  ⚠️  {ticker}: {e}")
                 continue
 
-        # 종목: MA 거리 오름차순 (음수 먼저 → 0 → 양수)
-        sector_stocks.sort(key=lambda x: x["data"]["ma_distance_pct"])
+        # 종목: net_direction 내림차순 (강한 불리시 → 중립 → 강한 베어리시)
+        sector_stocks.sort(key=lambda x: x["breakdown"]["net_direction"], reverse=True)
 
         result_sectors.append({
             "id":                sector["id"],

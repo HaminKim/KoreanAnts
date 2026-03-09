@@ -67,12 +67,6 @@ export default function HeaderWithModal() {
           >
             📊 히트맵
           </Link>
-          <Link
-            href="/short-tracker"
-            className="hidden sm:flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800 transition-colors px-2 py-1.5 rounded-lg hover:bg-gray-50"
-          >
-            📉 숏트래커
-          </Link>
           <span className="hidden sm:block text-gray-300">|</span>
           <Link
             href="/pricing"
