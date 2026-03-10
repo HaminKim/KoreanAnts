@@ -1,28 +1,55 @@
 {
-  "date": "2026-03-10",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-03-11",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "GOOGL",
-      "name": "GOOGL",
-      "raw_name": "ALPHABET INC CL A",
-      "value": -138481074.0,
+      "ticker": "SOXL",
+      "name": "SOXL",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 814534548.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "KORU",
+      "name": "KORU",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 239885299.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "CRCL",
+      "name": "CRCL",
+      "raw_name": "Circle Internet",
+      "value": 74124232.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
+    {
+      "rank": 1,
+      "ticker": "TSLA",
+      "name": "TSLA",
+      "raw_name": "TESLA INC",
+      "value": -194185216.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLA",
-      "name": "TSLA",
-      "raw_name": "TESLA INC",
-      "value": -114185411.0,
+      "ticker": "MU",
+      "name": "MU",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -141206861.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
@@ -31,27 +58,9 @@
       "ticker": "SNDK",
       "name": "SNDK",
       "raw_name": "SNDSK CRP ORD WI",
-      "value": -99366823.0,
+      "value": -100536281.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
-      "ticker": "MU",
-      "name": "MU",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -96310316.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "NFLX",
-      "name": "NFLX",
-      "raw_name": "NETFLIX INC",
-      "value": -63929737.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
     }
   ]
 }
