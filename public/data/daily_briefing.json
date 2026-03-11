@@ -1,55 +1,28 @@
 {
-  "date": "2026-03-11",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-03-12",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "SOXL",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1471706348.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "KORU",
-      "name": "KORU",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 202069726.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "CRCL",
-      "name": "CRCL",
-      "raw_name": "Circle Internet",
-      "value": 55029295.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
-      "ticker": "TSLA",
-      "name": "TSLA",
-      "raw_name": "TESLA INC",
-      "value": -169135973.0,
+      "ticker": "MU",
+      "name": "MU",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -171309028.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "MU",
-      "name": "MU",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -158287849.0,
+      "ticker": "TSLA",
+      "name": "TSLA",
+      "raw_name": "TESLA INC",
+      "value": -168310202.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
@@ -58,9 +31,27 @@
       "ticker": "GOOGL",
       "name": "GOOGL",
       "raw_name": "ALPHABET INC CL A",
-      "value": -135404560.0,
+      "value": -159815863.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "SNDK",
+      "name": "SNDK",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -156817850.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "PLTR",
+      "name": "PLTR",
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -127414704.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
