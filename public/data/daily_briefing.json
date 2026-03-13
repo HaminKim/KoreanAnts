@@ -1,55 +1,55 @@
 {
-  "date": "2026-03-13",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-03-14",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "KORU",
-      "name": "KORU",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 74773617.0,
+      "ticker": "SOXL",
+      "name": "SOXL",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 330849595.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "CRCL",
-      "name": "CRCL",
-      "raw_name": "Circle Internet",
-      "value": 55427502.0,
+      "ticker": "KORU",
+      "name": "KORU",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 224690573.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "EMLC",
-      "name": "EMLC",
-      "raw_name": "VANECK JP MORGAN EM LOCAL CURRENCY BOND ETF",
-      "value": 49422793.0,
+      "ticker": "MSFT",
+      "name": "MSFT",
+      "raw_name": "MICROSOFT CORP",
+      "value": 140915082.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "MRVL",
-      "name": "MRVL",
-      "raw_name": "MARVELL TECHNOLOGY INC",
-      "value": 33890271.0,
+      "ticker": "VOO",
+      "name": "VOO",
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 91234472.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "VOO",
-      "name": "VOO",
-      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 29578170.0,
+      "ticker": "QQQM",
+      "name": "QQQM",
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 82501878.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
