@@ -102,7 +102,71 @@ SECTORS = [
         "tickers": [
             "COIN","XYZ","HOOD","SOFI","PYPL",
             "AFRM","BILL","UPST","NU","TOST",
-            "SQ","V","MA","INTU","FIS",
+            "GPN","V","MA","INTU","FIS",
+        ]
+    },
+    {
+        "id": 18, "name": "2차전지", "etf": "LIT", "emoji": "🔋",
+        "tickers": [
+            "ALB","SQM","MP","LAC","SGML",
+            "QS","SLDP","RIVN","CHPT","EVGO",
+            "BLNK","STEM","PLUG","BE","FCEL",
+        ]
+    },
+    {
+        "id": 19, "name": "로봇/자동화", "etf": "ROBO", "emoji": "🤖",
+        "tickers": [
+            "ISRG","CGNX","ZBRA","TDY","PATH",
+            "ONTO","AZTA","RRX","NOVT","ROK",
+            "TER","TRMB","KEYS","BRKR","NNDM",
+        ]
+    },
+    {
+        "id": 20, "name": "귀금속", "etf": "GDX", "emoji": "🥇",
+        "tickers": [
+            "NEM","GOLD","AEM","KGC","WPM",
+            "FNV","RGLD","AU","PAAS","AGI",
+            "HL","EXK","CDE","HMY","GFI",
+        ]
+    },
+    {
+        "id": 21, "name": "클린에너지", "etf": "TAN", "emoji": "☀️",
+        "tickers": [
+            "FSLR","ENPH","SEDG","ARRY","RUN",
+            "FLNC","HASI","BEP","CWEN","MAXN",
+            "SHLS","CSIQ","JKS","ORA","AES",
+        ]
+    },
+    {
+        "id": 22, "name": "부동산(REIT)", "etf": "XLRE", "emoji": "🏢",
+        "tickers": [
+            "AMT","PLD","EQIX","CCI","PSA",
+            "WELL","DLR","O","SPG","AVB",
+            "EQR","VICI","VTR","NNN","IRM",
+        ]
+    },
+    {
+        "id": 23, "name": "원자력", "etf": "URA", "emoji": "☢️",
+        "tickers": [
+            "CCJ","LEU","UEC","DNN","NXE",
+            "UUUU","BWXT","CEG","VST","SMR",
+            "OKLO","NNE","GEV","TLN","ETN",
+        ]
+    },
+    {
+        "id": 24, "name": "우주", "etf": "ARKX", "emoji": "🛸",
+        "tickers": [
+            "RKLB","LUNR","ASTS","PL","RDW",
+            "SPIR","GSAT","IRDM","VSAT","SATL",
+            "MNTS","HON","BA","HEI","TDG",
+        ]
+    },
+    {
+        "id": 25, "name": "사이버보안", "etf": "HACK", "emoji": "🔐",
+        "tickers": [
+            "CRWD","ZS","S","CYBR","TENB",
+            "QLYS","VRNS","NET","OKTA","RPD",
+            "PANW","FTNT","CSCO","IBM","SAIL",
         ]
     },
 ]
@@ -543,22 +607,50 @@ def main():
         print(f"  {bar} {s['name']:10s} ({s['etf']:4s}): {v:+.2f}%" if v is not None
               else f"  ? {s['name']:10s} ({s['etf']:4s}): N/A")
 
+    # ── EPS 캐시 로드 ──
+    eps_cache_path = "public/data/eps_cache.json"
+    eps_cache: dict = {}
+    if os.path.exists(eps_cache_path):
+        try:
+            with open(eps_cache_path, "r", encoding="utf-8") as f:
+                eps_cache = json.load(f)
+            print(f"📦 EPS 캐시 로드: {len(eps_cache)}개 종목")
+        except Exception:
+            print("  ⚠️  EPS 캐시 로드 실패 — 빈 캐시로 시작")
+
     # ── EPS 병렬 수집 ──
     print(f"\n📊 EPS 서프라이즈 수집 중... ({len(all_tickers)}개 종목, 병렬)")
-    eps_dict: dict = {}
+    fresh_eps: dict = {}
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
             futures = {executor.submit(fetch_eps_data, t): t for t in all_tickers}
             for future in concurrent.futures.as_completed(futures, timeout=180):
                 try:
                     ticker_eps, hist = future.result(timeout=10)
-                    eps_dict[ticker_eps] = hist
+                    fresh_eps[ticker_eps] = hist
                 except Exception:
-                    eps_dict[futures[future]] = None
+                    fresh_eps[futures[future]] = None
     except concurrent.futures.TimeoutError:
         print("  ⚠️  EPS 수집 타임아웃 — 일부 데이터 누락될 수 있음")
+
+    # ── 캐시 병합: 새 데이터 있으면 업데이트, 없으면 캐시 유지 ──
+    eps_dict: dict = {}
+    new_count  = 0
+    cache_used = 0
+    for ticker in all_tickers:
+        fresh = fresh_eps.get(ticker)
+        if fresh:
+            eps_dict[ticker] = fresh
+            eps_cache[ticker] = fresh   # 캐시 갱신
+            new_count += 1
+        elif ticker in eps_cache:
+            eps_dict[ticker] = eps_cache[ticker]  # 캐시 폴백
+            cache_used += 1
+        else:
+            eps_dict[ticker] = None
+
     eps_ok = sum(1 for v in eps_dict.values() if v)
-    print(f"   EPS 수집 완료: {eps_ok}/{len(all_tickers)}개 성공")
+    print(f"   EPS 수집 완료: {eps_ok}/{len(all_tickers)}개 (신규 {new_count}개 | 캐시 {cache_used}개)")
 
     # ── 종목별 분석 ──
     print(f"\n📈 종목 분석 중...")
@@ -795,6 +887,11 @@ def main():
     out_path = "public/data/watchlist.json"
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
+
+    # ── EPS 캐시 저장 ──
+    with open(eps_cache_path, "w", encoding="utf-8") as f:
+        json.dump(eps_cache, f, ensure_ascii=False, indent=2)
+    print(f"💾 EPS 캐시 저장: {len(eps_cache)}개 종목 → {eps_cache_path}")
 
     # ── 결과 요약 ──
     all_stocks = [
