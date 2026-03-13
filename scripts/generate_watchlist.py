@@ -169,6 +169,14 @@ SECTORS = [
             "PANW","FTNT","CSCO","IBM","SAIL",
         ]
     },
+    {
+        "id": 26, "name": "시장(SPY)", "etf": "SPY", "emoji": "🇺🇸",
+        "tickers": [
+            "AAPL","MSFT","NVDA","AMZN","META",
+            "GOOGL","TSLA","AVGO","BRK-B","JPM",
+            "LLY","UNH","V","XOM","MA",
+        ]
+    },
 ]
 
 # ─────────────────────────────────────────
