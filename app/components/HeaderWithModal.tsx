@@ -53,28 +53,24 @@ export default function HeaderWithModal() {
         <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight shrink-0">
           <span>REANT</span>
         </Link>
-        <nav className="flex items-center gap-2 sm:gap-4 text-sm text-gray-600">
+        <nav className="flex items-center gap-1 text-sm">
           <button
             onClick={handleOpenManually}
-            className="flex items-center justify-center gap-1 font-bold text-red-600 bg-red-50 hover:bg-red-100 transition animate-pulse rounded-full px-2.5 py-1.5 sm:px-3 sm:py-1.5 text-xs sm:text-sm shrink-0"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-red-500 bg-red-50 hover:bg-red-100 transition-colors whitespace-nowrap shrink-0"
           >
-            <span>🔥필독🔥</span>
+            🔥 필독
           </button>
-          <span className="hidden sm:block text-gray-300">|</span>
           <Link
             href="/watchlist"
-            className="hidden sm:flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800 transition-colors px-2 py-1.5 rounded-lg hover:bg-gray-50"
+            className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors whitespace-nowrap"
           >
             📊 히트맵
           </Link>
-          <span className="hidden sm:block text-gray-300">|</span>
           <Link
             href="/pricing"
-            className="px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold shadow-sm hover:shadow-md hover:from-amber-600 hover:to-orange-700 transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm flex items-center gap-1 shrink-0"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors whitespace-nowrap shrink-0"
           >
-            <span>구독</span>
-            <span className="hidden sm:inline">하기</span>
-            <span>👑</span>
+            👑 구독
           </Link>
           <AuthButton />
         </nav>

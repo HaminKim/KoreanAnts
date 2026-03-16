@@ -45,15 +45,29 @@ function AnalysisContent() {
         const aliasData = await aliasRes.json();
         const mapData = await mapRes.json();
 
+        // 1단계: 전체 목록 생성
         const tempList: StockItem[] = [];
         Object.entries(mapData).forEach(([rawName, tickerVal]) => {
             const t = String(tickerVal).toUpperCase();
-            const n = String(rawName); // 파일명(KEYNAME)
-            const kr = aliasData[n] || n; 
-            
-            tempList.push({ ticker: t, fileTicker: n, name_en: n, name_kr: kr });
+            const n = String(rawName);
+            const kr = aliasData[n] || '';
+            tempList.push({ ticker: t, fileTicker: n, name_en: n, name_kr: kr || n });
         });
-        setAllItems(tempList);
+
+        // 2단계: 티커 기준 중복 제거 (한글명 있는 항목 우선)
+        const dedupMap = new Map<string, StockItem>();
+        tempList.forEach(item => {
+            const existing = dedupMap.get(item.ticker);
+            if (!existing) {
+                dedupMap.set(item.ticker, item);
+            } else {
+                // 현재 항목의 한글명이 더 좋으면 교체 (티커랑 다르고, 한글 포함)
+                const existingScore = scoreNameQuality(existing.name_kr, existing.ticker);
+                const newScore = scoreNameQuality(item.name_kr, item.ticker);
+                if (newScore > existingScore) dedupMap.set(item.ticker, item);
+            }
+        });
+        setAllItems(Array.from(dedupMap.values()));
 
       } catch (e) { console.error("Data loading failed", e); }
     };
@@ -79,14 +93,28 @@ function AnalysisContent() {
       return;
     }
 
-    const lowerVal = val.toLowerCase();
-    const filtered = allItems.filter(item => 
-      item.ticker.toLowerCase().includes(lowerVal) || 
-      item.name_en.toLowerCase().includes(lowerVal) || 
-      item.name_kr.includes(val)
-    ).slice(0, 5); 
+    const upper = val.toUpperCase();
+    const results = allItems
+      .filter(item =>
+        item.ticker.includes(upper) ||
+        item.name_en.toUpperCase().includes(upper) ||
+        item.name_kr.includes(val)
+      )
+      .map(item => {
+        let score = 0;
+        if (item.ticker === upper) score = 100;
+        else if (item.ticker.startsWith(upper)) score = 80;
+        else if (item.name_kr.startsWith(val)) score = 70;
+        else if (item.name_en.toUpperCase().startsWith(upper)) score = 60;
+        else if (item.ticker.includes(upper)) score = 40;
+        else if (item.name_kr.includes(val)) score = 30;
+        else score = 10;
+        return { ...item, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 7);
 
-    setSuggestions(filtered);
+    setSuggestions(results);
     setIsOpen(true);
   };
 

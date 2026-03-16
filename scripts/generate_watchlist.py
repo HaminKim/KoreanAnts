@@ -1,22 +1,29 @@
 """
 generate_watchlist.py
 
-스탠 와인스타인 스테이지 전환 감지 스크립트 v4
+스탠 와인스타인 스테이지 전환 감지 스크립트 v5
 
-방향별 강도 점수 시스템 (각 0-100점):
+▶ 방향별 강도 점수 시스템 (0-105점):
 
-  bull_strength = RS 52w(0-30) + MA 위치(0-20) + MA 기울기(0-13) + 섹터 60d(0-25) + 시장(0-12)
+  bull_strength = RS 가중(0-30) + MA 위치(0-20) + MA 기울기(0-13) + 섹터 60d(0-25) + 시장(0-12)
   bear_strength = 동일 구조, 반대 방향
 
-  net_direction = bull_strength - bear_strength
-    >= +40 → long
-    >= +20 → long_watch
-    <= -40 → short
-    <= -20 → short_watch
-    그 외  → neutral
+  RS 가중 = 단기(20d) 20% + 중기(60d) 30% + 장기(252d) 50%
+  MA 기울기 = 신선도 + 속도(기울기 크기) 복합 점수
+
+▶ 3단계 시그널 결정:
+  1단계: classify_signal(bull, bear)
+    net >= +50 → long / net >= +30 → long_watch
+    net <= -50 → short / net <= -30 → short_watch
+  2단계: apply_signal_gate (2단계 게이트)
+    long 게이트: price>MA100 AND slope_bullish AND market≠bear → 실패 시 long→long_watch
+    short 게이트: price<MA100 AND slope_bearish AND market≠bull → 실패 시 short→short_watch
+    시장 bear 시: long_watch→neutral
+  3단계: 모순 패널티 (calc_conflicts)
+    갈등 쌍마다 시그널 1단계 다운그레이드 (최대 neutral까지)
 
 섹터 정렬: 섹터 RS(60일) 내림차순 (강한 섹터 위)
-종목 정렬: MA100 거리 오름차순 (음수 → 0 → 양수)
+종목 정렬: net_direction 내림차순
 """
 
 import io
@@ -41,9 +48,12 @@ sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="repla
 BENCHMARK        = "SPY"
 MA_PERIOD        = 100
 MA_PERIOD_150    = 150
-RS_WINDOW_STOCK  = 252    # 52주 = 1년 (종목 RS)
+RS_WINDOW_STOCK  = 252    # 52주 = 1년 (종목 RS 장기)
+RS_WINDOW_60     = 60     # 중기 3개월
+RS_WINDOW_20     = 20     # 단기 1개월
 RS_WINDOW_SECTOR = 60     # 중기 3개월 (섹터 강도)
 RS_MA_PERIOD     = 20     # RS 방향성 MA (4주)
+RS_WEIGHTS       = (0.2, 0.3, 0.5)  # 20d : 60d : 252d 가중치
 
 # ─────────────────────────────────────────
 # 섹터 정의
@@ -185,7 +195,7 @@ SECTORS = [
 
 def calc_ma_slope_score(ma_series, max_score=13):
     """
-    MA100 기울기가 방향을 바꾼 지 얼마나 됐나 → 신선도 점수 (0-13)
+    MA100 기울기 강도: 신선도(방향 전환 후 경과일) + 속도(기울기 크기) = 복합 점수 (0-13)
     반환: (score, direction, days_since_turn)
     direction = "bullish" | "bearish" | "flat"
     """
@@ -199,6 +209,15 @@ def calc_ma_slope_score(ma_series, max_score=13):
     if cur_dir == 0:
         return 2.0, "flat", None
 
+    # 속도 보너스: 5일 기울기를 MA 값으로 정규화 (상대 속도 %)
+    ma_ref = abs(float(ma_series.iloc[-1]))
+    slope_pct = abs(slope_now) / ma_ref * 100 if ma_ref > 0 else 0.0
+    if   slope_pct >= 3.0: velocity_bonus = 5.0
+    elif slope_pct >= 1.5: velocity_bonus = 4.0
+    elif slope_pct >= 0.8: velocity_bonus = 2.5
+    elif slope_pct >= 0.4: velocity_bonus = 1.0
+    else:                  velocity_bonus = 0.0
+
     days_since_turn = None
     for i in range(6, min(80, len(ma_series) - 6)):
         past_slope = float(ma_series.iloc[-i] - ma_series.iloc[-(i + 5)])
@@ -208,15 +227,119 @@ def calc_ma_slope_score(ma_series, max_score=13):
             break
 
     if days_since_turn is None:
-        return 1.0, direction, None
+        return float(min(max_score, 1.0 + velocity_bonus)), direction, None
 
-    if   days_since_turn <= 5:  score = 13
-    elif days_since_turn <= 10: score = 11
-    elif days_since_turn <= 20: score = 8
-    elif days_since_turn <= 40: score = 4
-    else:                       score = 1
+    # 신선도 점수 (max_score 공간 확보를 위해 상한 낮춤)
+    if   days_since_turn <= 5:  freshness = 11
+    elif days_since_turn <= 10: freshness = 9
+    elif days_since_turn <= 20: freshness = 6
+    elif days_since_turn <= 40: freshness = 3
+    else:                       freshness = 1
 
+    score = min(max_score, freshness + velocity_bonus)
     return float(score), direction, days_since_turn
+
+
+# ─────────────────────────────────────────
+# 다기간 RS 가중 평균
+# ─────────────────────────────────────────
+
+def calc_weighted_rs(rs_20d, rs_60d, rs_252d):
+    """
+    단기(20d) 20% + 중기(60d) 30% + 장기(252d) 50% 가중 RS
+    None 값은 건너뛰고 가중치 재정규화
+    """
+    pairs = list(zip(RS_WEIGHTS, (rs_20d, rs_60d, rs_252d)))
+    available = [(w, v) for w, v in pairs if v is not None]
+    if not available:
+        return 0.0
+    total_w = sum(w for w, _ in available)
+    return round(sum(w * v for w, v in available) / total_w, 2)
+
+
+# ─────────────────────────────────────────
+# 2단계 게이트 + 갈등 패널티
+# ─────────────────────────────────────────
+
+def apply_signal_gate(signal, ma_distance_pct, slope_dir, market_regime):
+    """
+    2단계 구조: 강한 시그널은 게이트 조건을 통과해야 함.
+
+    Long 게이트 (모두 충족 시 "long" 가능):
+      - price > MA100 (ma_distance_pct > 0)
+      - MA slope bullish
+      - market != risk_off (bear)
+
+    Short 게이트 (모두 충족 시 "short" 가능):
+      - price < MA100 (ma_distance_pct < 0)
+      - MA slope bearish
+      - market != risk_on (bull)
+
+    게이트 통과 실패 시: long → long_watch, short → short_watch
+    시장 리스크오프 시: 롱계열 신호 전체를 한 단계 낮춤
+    """
+    if signal == "long":
+        gate_ok = (ma_distance_pct > 0
+                   and slope_dir == "bullish"
+                   and market_regime != "bear")
+        if not gate_ok:
+            return "long_watch"
+    elif signal == "short":
+        gate_ok = (ma_distance_pct < 0
+                   and slope_dir == "bearish"
+                   and market_regime != "bull")
+        if not gate_ok:
+            return "short_watch"
+    # 시장 리스크오프 → 롱 시그널 추가 억제
+    if market_regime == "bear" and signal == "long_watch":
+        return "neutral"
+    return signal
+
+
+def calc_conflicts(signal, rs_weighted, ma_distance_pct, slope_dir,
+                   sector_rs_60d, market_regime):
+    """
+    모순 쌍 카운트. 각 모순마다 시그널 1단계 다운그레이드.
+    롱계열 모순:
+      1. RS 강함(>+10%) but 섹터 RS 음수(<-5%) → 섹터 역풍 속 개별 강세
+      2. 가격 MA 위 but MA 기울기 하락 → 이미 꺾이는 중
+      3. 시장 베어 but 롱 신호 → 시장 역풍
+    숏계열 모순:
+      1. RS 약함(<-10%) but 섹터 RS 양수(>+5%) → 개별 약세지만 섹터 강함
+      2. 가격 MA 아래 but MA 기울기 상승 → 반등 가능성
+      3. 시장 불 but 숏 신호 → 시장 역풍
+    """
+    conflicts = 0
+    if signal in ("long", "long_watch"):
+        if rs_weighted > 10 and sector_rs_60d is not None and sector_rs_60d < -5:
+            conflicts += 1
+        if ma_distance_pct > 0 and slope_dir == "bearish":
+            conflicts += 1
+        if market_regime == "bear":
+            conflicts += 1
+    elif signal in ("short", "short_watch"):
+        if rs_weighted < -10 and sector_rs_60d is not None and sector_rs_60d > 5:
+            conflicts += 1
+        if ma_distance_pct < 0 and slope_dir == "bullish":
+            conflicts += 1
+        if market_regime == "bull":
+            conflicts += 1
+    return conflicts
+
+
+def downgrade_signal(signal, conflicts):
+    """갈등 횟수만큼 시그널 다운그레이드 (롱계열→중립 방향, 숏계열→중립 방향)"""
+    if conflicts == 0 or signal == "neutral":
+        return signal
+    order = ["long", "long_watch", "neutral", "short_watch", "short"]
+    if signal not in order:
+        return signal
+    idx = order.index(signal)
+    if signal in ("long", "long_watch"):
+        idx = min(order.index("neutral"), idx + conflicts)
+    elif signal in ("short", "short_watch"):
+        idx = max(order.index("neutral"), idx - conflicts)
+    return order[idx]
 
 
 # ─────────────────────────────────────────
@@ -523,8 +646,10 @@ def main():
         return
 
     spy_prices         = prices[BENCHMARK].dropna()
-    spy_returns_stock  = spy_prices.pct_change(RS_WINDOW_STOCK)  * 100   # 52주 (종목용)
+    spy_returns_stock  = spy_prices.pct_change(RS_WINDOW_STOCK)  * 100   # 252일 (종목 장기 RS)
     spy_returns_sector = spy_prices.pct_change(RS_WINDOW_SECTOR) * 100   # 60일 (섹터용)
+    spy_returns_60d    = spy_prices.pct_change(RS_WINDOW_60)     * 100   # 60일 (종목 중기 RS)
+    spy_returns_20d    = spy_prices.pct_change(RS_WINDOW_20)     * 100   # 20일 (종목 단기 RS)
 
     # ── SPY 시장 강도 ──
     spy_ma100_series = spy_prices.rolling(MA_PERIOD).mean().dropna()
@@ -534,14 +659,15 @@ def main():
     spy_slope_now    = float(spy_ma100_series.iloc[-1] - spy_ma100_series.iloc[-6])
     spy_slope_dir    = "bullish" if spy_slope_now > 0 else "bearish"
 
+    market_regime = ("bull"  if spy_ma_distance > 0 and spy_slope_dir == "bullish"
+                     else "bear" if spy_ma_distance < 0 and spy_slope_dir == "bearish"
+                     else "mixed")
     market_context = {
         "spy_price":    round(spy_price_now, 2),
         "spy_ma100":    round(spy_ma100, 2),
         "spy_ma_dist":  spy_ma_distance,
         "spy_slope":    spy_slope_dir,
-        "market_state": ("bull"  if spy_ma_distance > 0 and spy_slope_dir == "bullish"
-                         else "bear" if spy_ma_distance < 0 and spy_slope_dir == "bearish"
-                         else "mixed"),
+        "market_state": market_regime,
     }
     print(f"📊 시장 상태: {market_context['market_state'].upper()}  "
           f"(SPY MA100 대비 {spy_ma_distance:+.1f}%, 기울기 {spy_slope_dir})")
@@ -692,10 +818,21 @@ def main():
                     ma150              = None
                     ma150_distance_pct = None
 
-                # RS 52주
+                # RS 다기간 (252d / 60d / 20d)
                 stock_ret_52w = stock_prices.pct_change(RS_WINDOW_STOCK) * 100
                 rs_series     = (stock_ret_52w - spy_returns_stock).dropna()
                 rs_current    = float(rs_series.iloc[-1]) if len(rs_series) > 0 else None
+
+                stock_ret_60d  = stock_prices.pct_change(RS_WINDOW_60) * 100
+                rs_60d_series  = (stock_ret_60d - spy_returns_60d).dropna()
+                rs_60d_val     = float(rs_60d_series.iloc[-1]) if len(rs_60d_series) > 0 else None
+
+                stock_ret_20d  = stock_prices.pct_change(RS_WINDOW_20) * 100
+                rs_20d_series  = (stock_ret_20d - spy_returns_20d).dropna()
+                rs_20d_val     = float(rs_20d_series.iloc[-1]) if len(rs_20d_series) > 0 else None
+
+                # 가중 RS (단기 20% + 중기 30% + 장기 50%)
+                rs_weighted    = calc_weighted_rs(rs_20d_val, rs_60d_val, rs_current)
 
                 # RS 기울기 추적 (20일 MA → 10일 룩백)
                 rs_ma20 = rs_series.rolling(20).mean().dropna()
@@ -792,18 +929,25 @@ def main():
                                 rs_fresh_bear = 5.0   # 0선 하향 돌파 → 숏 보너스
                             break
 
-                # 방향별 강도
-                rs_val = rs_current or 0.0
+                # 방향별 강도 (다기간 가중 RS 사용)
                 bull   = calc_bull_strength(
-                    rs_val, ma_distance_pct, ma_slope, slope_dir,
+                    rs_weighted, ma_distance_pct, ma_slope, slope_dir,
                     sector_rs_excess, spy_ma_distance, spy_slope_dir
                 ) + rs_fresh_bull
                 bear   = calc_bear_strength(
-                    rs_val, ma_distance_pct, ma_slope, slope_dir,
+                    rs_weighted, ma_distance_pct, ma_slope, slope_dir,
                     sector_rs_excess, spy_ma_distance, spy_slope_dir
                 ) + rs_fresh_bear
                 net    = round(bull - bear, 1)
-                signal = classify_signal(bull, bear)
+
+                # 1차: 순강도 기반 분류
+                raw_signal = classify_signal(bull, bear)
+                # 2차: 2단계 게이트 (가격 위치·기울기·시장 레짐 조건)
+                gated_signal = apply_signal_gate(raw_signal, ma_distance_pct, slope_dir, market_regime)
+                # 3차: 모순 패널티 (갈등 쌍 수만큼 다운그레이드)
+                conflicts = calc_conflicts(gated_signal, rs_weighted, ma_distance_pct, slope_dir,
+                                           sector_rs_excess, market_regime)
+                signal = downgrade_signal(gated_signal, conflicts)
 
                 # 표시 점수: 롱계열→bull, 숏계열→bear
                 display_score = (bull if signal in ("long", "long_watch")
@@ -830,6 +974,9 @@ def main():
                         "bull_strength":  bull,
                         "bear_strength":  bear,
                         "net_direction":  net,
+                        "raw_signal":     raw_signal,
+                        "gated_signal":   gated_signal,
+                        "conflicts":      conflicts,
                         "ma_slope":       ma_slope,
                         "sector_rs_60d":  sector_rs_excess,
                         "rs_fresh_bull":  rs_fresh_bull,
@@ -843,8 +990,11 @@ def main():
                         "ma150_distance_pct":    ma150_distance_pct,
                         "slope_dir":             slope_dir,
                         "days_since_slope_turn": days_turn,
-                        "rs_excess_pct":         round(rs_current, 2) if rs_current is not None else None,
-                        "rs_20d_ma":             round(rs_ma_val, 2)  if rs_ma_val  is not None else None,
+                        "rs_excess_pct":         round(rs_current, 2)   if rs_current is not None else None,
+                        "rs_60d_pct":            round(rs_60d_val, 2)   if rs_60d_val  is not None else None,
+                        "rs_20d_pct":            round(rs_20d_val, 2)   if rs_20d_val  is not None else None,
+                        "rs_weighted":           rs_weighted,
+                        "rs_20d_ma":             round(rs_ma_val, 2)    if rs_ma_val   is not None else None,
                         "sector_rs_excess":      sector_rs_excess,
                         "rs_slope_dir":          rs_slope_dir,
                         "rs_slope_days":         rs_slope_days,

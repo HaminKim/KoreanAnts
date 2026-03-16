@@ -55,9 +55,9 @@ export default function AuthButton() {
         <div className="flex items-center gap-2">
           <Link
             href="/journal"
-            className="px-3 py-1.5 text-xs font-bold bg-gray-900 text-white hover:bg-gray-700 rounded-md transition whitespace-nowrap"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors whitespace-nowrap"
           >
-            📒 일지
+            📓 일지
           </Link>
           {/* 모바일에서는 이름 숨기고 로그아웃 버튼만 보여줌 */}
           <span className="text-xs text-gray-500 hidden md:block whitespace-nowrap">

@@ -642,40 +642,51 @@ function SectorBlock({
   const rsPositive = rs !== null && rs > 0
 
   return (
-    <div className="bg-white">
+    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
       {/* 섹터 헤더 */}
       <button
         onClick={() => onSelectSector(sector)}
-        className="w-full flex items-center justify-between px-2.5 py-1.5 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-3 py-2 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
         title={`${sector.name} (${sector.etf}) — SPY 대비 60일 초과수익 ${rs !== null ? (rs >= 0 ? '+' : '') + rs.toFixed(2) + '%' : 'N/A'}`}
       >
-        <span className="text-[9px] font-semibold text-gray-700 truncate">{sector.name}</span>
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-sm">{sector.emoji}</span>
+          <span className="text-[10px] font-bold text-gray-700 truncate">{sector.name}</span>
+        </div>
         <div className="flex items-center gap-1.5 flex-shrink-0 ml-1">
           {rs !== null && (
-            <span className="text-[8px] font-mono font-bold tabular-nums"
-              style={{ color: rsPositive ? '#16a34a' : '#dc2626' }}>
+            <span
+              className="text-[11px] font-black tabular-nums px-1.5 py-0.5 rounded-full"
+              style={{
+                background: rsPositive ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)',
+                color: rsPositive ? '#16a34a' : '#dc2626',
+              }}
+            >
               {rsPositive ? '▲' : '▼'}{Math.abs(rs).toFixed(1)}%
             </span>
           )}
-          {sector.sector_rs_days > 0 && (
-            <span className="text-[7px] text-gray-400 tabular-nums">{sector.sector_rs_days}일</span>
-          )}
           {sector.sector_rs_slope_dir !== 'flat' && sector.sector_rs_slope_days > 0 && (
-            <span className="text-[7px] font-mono font-semibold tabular-nums"
-              style={{ color: sector.sector_rs_slope_dir === 'up' ? '#16a34a' : '#dc2626' }}>
-              {sector.sector_rs_slope_dir === 'up' ? '↗' : '↘'}{sector.sector_rs_slope_days}d
+            <span
+              className="text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded-full border"
+              style={{
+                color:      sector.sector_rs_slope_dir === 'up' ? '#16a34a' : '#dc2626',
+                background: sector.sector_rs_slope_dir === 'up' ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.08)',
+                borderColor: sector.sector_rs_slope_dir === 'up' ? 'rgba(22,163,74,0.25)' : 'rgba(220,38,38,0.25)',
+              }}
+            >
+              {sector.sector_rs_slope_dir === 'up' ? '↗' : '↘'} {sector.sector_rs_slope_days}d
             </span>
           )}
         </div>
       </button>
 
-      {/* 종목 그리드 — gap이 회색 격자선 */}
-      <div className="grid grid-cols-5 bg-gray-200" style={{ gap: '2px', padding: '2px' }}>
+      {/* 종목 그리드 */}
+      <div className="grid grid-cols-5 bg-gray-100" style={{ gap: '1px', padding: '1px' }}>
         {sector.stocks.map(stock => (
           <StockCell key={stock.ticker} stock={stock} onClick={() => onSelectStock(stock, sector.etf, sector.name)} />
         ))}
         {Array.from({ length: Math.max(0, 15 - sector.stocks.length) }).map((_, i) => (
-          <div key={i} className="bg-gray-50" style={{ height: '54px' }} />
+          <div key={i} className="bg-white" style={{ height: '54px' }} />
         ))}
       </div>
     </div>
@@ -1166,66 +1177,81 @@ export default function WatchlistClient() {
 
   return (
     <div>
-      {/* ── 상단 시장 상태 바 ── */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm font-bold" style={{ color: mktColor }}>
-            {mc.market_state.toUpperCase()}
-          </span>
-          <span className="text-xs text-gray-500">
-            SPY{' '}
-            <span className="font-mono font-semibold" style={{ color: mc.spy_ma_dist >= 0 ? '#15803d' : '#b91c1c' }}>
-              {mc.spy_ma_dist >= 0 ? '+' : ''}{mc.spy_ma_dist.toFixed(1)}%
-            </span>
-            {' '}vs MA100
-          </span>
+      {/* ── 상단 요약 카드 ── */}
+      <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-4 shadow-sm">
+        {/* 시장 상태 + 기울기 */}
+        <div className="flex justify-between items-start mb-5">
+          <div>
+            <p className="text-gray-400 text-xs mb-1">시장 상태</p>
+            <p className="text-3xl font-black tracking-tight" style={{ color: mktColor }}>
+              {mc.market_state.toUpperCase()}
+            </p>
+            <p className="text-sm text-gray-400 mt-1">
+              SPY{' '}
+              <span className="font-mono font-semibold" style={{ color: mc.spy_ma_dist >= 0 ? '#16a34a' : '#dc2626' }}>
+                {mc.spy_ma_dist >= 0 ? '+' : ''}{mc.spy_ma_dist.toFixed(1)}%
+              </span>
+              {' '}vs MA100
+            </p>
+          </div>
           <span
-            className="text-[9px] px-1.5 py-0.5 rounded font-semibold"
+            className="text-xs px-3 py-1.5 rounded-full font-bold"
             style={{
-              background: mc.spy_slope === 'bullish' ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.12)',
-              color:      mc.spy_slope === 'bullish' ? '#15803d' : '#b91c1c',
+              background: mc.spy_slope === 'bullish' ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)',
+              color:      mc.spy_slope === 'bullish' ? '#16a34a' : '#dc2626',
             }}
           >
             기울기 {mc.spy_slope === 'bullish' ? '↑' : '↓'}
           </span>
         </div>
-        <div className="flex items-center gap-3 text-xs">
-          <span className="text-green-600 font-bold">롱 {counts.long}</span>
-          <span className="text-red-600 font-bold">숏 {counts.short}</span>
-          <span className="text-gray-300 hidden sm:block">{data.asOf}</span>
-        </div>
-      </div>
 
-      {/* ── 뷰 모드 토글 + 도움말 ── */}
-      <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-        <div className="flex gap-1.5">
+        {/* 롱/숏/업데이트 */}
+        <div className="grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
+          <div>
+            <p className="text-gray-400 text-[11px] mb-0.5">롱 시그널</p>
+            <p className="text-sm font-bold text-green-600">{counts.long}개</p>
+          </div>
+          <div>
+            <p className="text-gray-400 text-[11px] mb-0.5">숏 시그널</p>
+            <p className="text-sm font-bold text-red-600">{counts.short}개</p>
+          </div>
+          <div>
+            <p className="text-gray-400 text-[11px] mb-0.5">업데이트</p>
+            <p className="text-sm font-bold text-gray-500">{data.asOf}</p>
+          </div>
+        </div>
+
+        {/* 뷰 모드 토글 + 도움말 */}
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+          <div className="flex gap-1.5">
+            <button
+              onClick={() => setViewMode('topdown')}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                viewMode === 'topdown'
+                  ? 'bg-gray-900 text-white'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+              }`}
+            >
+              📊 탑다운
+            </button>
+            <button
+              onClick={() => setViewMode('bottomup')}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                viewMode === 'bottomup'
+                  ? 'bg-gray-900 text-white'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+              }`}
+            >
+              🔍 바텀업
+            </button>
+          </div>
           <button
-            onClick={() => setViewMode('topdown')}
-            className={`px-3 py-1 rounded text-xs font-medium border transition-all ${
-              viewMode === 'topdown'
-                ? 'bg-gray-800 border-gray-800 text-white'
-                : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
-            }`}
+            onClick={() => setShowHelp(v => !v)}
+            className="text-[10px] text-gray-400 hover:text-gray-600 flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-full transition-colors"
           >
-            📊 탑다운
-          </button>
-          <button
-            onClick={() => setViewMode('bottomup')}
-            className={`px-3 py-1 rounded text-xs font-medium border transition-all ${
-              viewMode === 'bottomup'
-                ? 'bg-gray-800 border-gray-800 text-white'
-                : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
-            }`}
-          >
-            🔍 바텀업
+            {showHelp ? '▲' : '❓'} 도움말
           </button>
         </div>
-        <button
-          onClick={() => setShowHelp(v => !v)}
-          className="text-[10px] text-gray-400 hover:text-gray-600 flex items-center gap-1 border border-gray-200 px-2 py-1 rounded"
-        >
-          {showHelp ? '▲' : '❓'} 도움말
-        </button>
       </div>
 
       {/* ── 바텀업 필터 (2단계) ── */}
