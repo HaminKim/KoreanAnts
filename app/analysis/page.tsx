@@ -13,6 +13,13 @@ type StockItem = {
   name_kr: string;
 };
 
+// 한글명 품질 점수: 한글 포함 & 티커와 다를수록 높음
+function scoreNameQuality(name: string, ticker: string): number {
+  if (!name || name === ticker) return 0;
+  const hasKorean = /[가-힣]/.test(name);
+  return hasKorean ? 2 : 1;
+}
+
 function AnalysisContent() {
   const router = useRouter();
   const searchParams = useSearchParams(); 
