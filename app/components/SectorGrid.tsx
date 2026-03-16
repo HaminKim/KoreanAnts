@@ -2,8 +2,9 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import SectorChart from './SectorChart';
-import Portal from './Portal'; 
+import Portal from './Portal';
 
 // ✨ [수정] 타입 정의 (서버에서 오는 데이터 형태)
 type SectorItem = {
@@ -168,6 +169,20 @@ export default function SectorGrid() {
             ))}
         </AnimatePresence>
       </motion.div>
+
+      {/* 히트맵 진입 배너 */}
+      <Link href="/watchlist" className="mt-3 mb-1 flex items-center justify-between w-full bg-white hover:bg-gray-50 active:scale-[0.99] transition-all rounded-2xl px-5 py-3.5 border border-gray-200 group">
+        <div className="flex items-center gap-3">
+          <span className="text-xl">🗺️</span>
+          <div>
+            <div className="text-gray-900 text-sm font-bold leading-none mb-0.5">섹터 히트맵</div>
+            <div className="text-gray-400 text-[11px]">시장을 주도하는 종목 · 시장의 추세를 확인하라!</div>
+          </div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 text-gray-300 group-hover:text-gray-600 group-hover:translate-x-0.5 transition-all">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+      </Link>
 
       {/* ✨ [수술 부위] 사장님 원본 코드 그대로 복구 + 데이터 연결 */}
       <Portal>

@@ -77,16 +77,16 @@ SECTORS = [
     {"id": 13, "name": "유틸리티",   "etf": "XLU",  "emoji": "⚡",
      "tickers": ["NEE","DUK","SO","D","EXC","AEP","XEL","ED","ETR","ES","SRE","AWK","WEC","CMS","AES"]},
     {
-        "id": 14, "name": "크립토", "etf": "MSTR", "emoji": "₿",
+        "id": 14, "name": "크립토", "etf": "IBIT", "emoji": "₿",
         "tickers": [
-            "MSTR","COIN","CRCL","MARA","RIOT","CLSK","HUT","IREN","BMNR","BTBT",
+            "IBIT","MSTR","COIN","CRCL","MARA","RIOT","CLSK","HUT","IREN","BMNR","BTBT",
             "CORZ","WULF","CIFR","BITF","GBTC",
         ]
     },
     {
-        "id": 15, "name": "양자컴퓨터", "etf": "IONQ", "emoji": "⚛️",
+        "id": 15, "name": "양자컴퓨터", "etf": "QTUM", "emoji": "⚛️",
         "tickers": [
-            "IONQ","RGTI","QUBT","QBTS","ARQQ","QTUM",
+            "QTUM","IONQ","RGTI","QUBT","QBTS","ARQQ",
             "IBM","GOOGL","MSFT","NVDA","INTC",
         ]
     },
