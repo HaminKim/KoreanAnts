@@ -1,57 +1,66 @@
 {
-  "date": "2026-03-17",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-03-18",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "PLTR",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -145058861.0,
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 783583627.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "KORU",
+      "name": "",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 133562129.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "ORCL",
+      "name": "",
+      "raw_name": "ORACLE CORP",
+      "value": 71048737.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
+    {
+      "rank": 1,
+      "ticker": "NVDA",
+      "name": "",
+      "raw_name": "NVIDIA CORP",
+      "value": -181389144.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "SOXL",
+      "ticker": "PLTR",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -99509511.0,
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -176641487.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "NVDA",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -69074543.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": -176478994.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
-      "ticker": "AMZN",
-      "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": -68589691.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "JAAA",
-      "name": "",
-      "raw_name": "JANUS HENDERSON AAA CLO ETF",
-      "value": -62987008.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
     }
   ]
 }
