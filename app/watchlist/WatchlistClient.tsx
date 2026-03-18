@@ -642,7 +642,7 @@ function SectorBlock({
   const rsPositive = rs !== null && rs > 0
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+    <div className="bg-white border-r border-b border-gray-200 overflow-hidden">
       {/* 섹터 헤더 */}
       <button
         onClick={() => onSelectSector(sector)}
@@ -954,13 +954,8 @@ function SectorChartModal({ sector, onClose }: { sector: SectorItem; onClose: ()
 // ─────────────────────────────────────────
 
 const HELP_HOW_TO_READ = [
-  { icon: '██', color: 'hsl(142,75%,43%)', text: '진한 초록 — 강한 상승 신호. 여러 지표가 동시에 강세' },
-  { icon: '░░', color: 'hsl(142,25%,82%)', text: '연한 초록 — 약한 상승 신호. 방향은 맞지만 확신 낮음' },
-  { icon: '░░', color: 'hsl(220,14%,96%)', text: '회색 — 중립. 상승/하락 신호 없음' },
-  { icon: '░░', color: 'hsl(0,25%,82%)',   text: '연한 빨강 — 약한 하락 신호' },
-  { icon: '██', color: 'hsl(0,75%,43%)',   text: '진한 빨강 — 강한 하락 신호. 여러 지표가 동시에 약세' },
-  { icon: '▲▼', color: '#15803d',          text: '섹터 헤더 ▲27%  44일  ↗32d — SPY 대비 초과수익 / 유지일수 / 변곡 후 경과일' },
-  { icon: '+%',  color: '#374151',          text: '셀 숫자 = MA100 기준 거리 (+위 / -아래)' },
+  { color: 'hsl(142,75%,43%)', text: '초록 — 시장보다 강한 종목' },
+  { color: 'hsl(0,75%,43%)',   text: '빨강 — 시장보다 약한 종목' },
 ]
 
 // ─────────────────────────────────────────
@@ -1161,8 +1156,8 @@ export default function WatchlistClient() {
   const mc        = data.market_context
   const allStocks = data.sectors.flatMap(s => s.stocks)
   const counts = {
-    long:  allStocks.filter(s => s.signal === 'long').length,
-    short: allStocks.filter(s => s.signal === 'short').length,
+    long:  allStocks.filter(s => s.data.rs_excess_pct !== null && s.data.rs_excess_pct > 0).length,
+    short: allStocks.filter(s => s.data.rs_excess_pct !== null && s.data.rs_excess_pct < 0).length,
   }
 
   const mktColor =
@@ -1179,50 +1174,38 @@ export default function WatchlistClient() {
     <div>
       {/* ── 상단 요약 카드 ── */}
       <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-4 shadow-sm">
-        {/* 시장 상태 + 기울기 */}
-        <div className="flex justify-between items-start mb-5">
-          <div>
-            <p className="text-gray-400 text-xs mb-1">시장 상태</p>
-            <p className="text-3xl font-black tracking-tight" style={{ color: mktColor }}>
-              {mc.market_state.toUpperCase()}
-            </p>
-            <p className="text-sm text-gray-400 mt-1">
-              SPY{' '}
-              <span className="font-mono font-semibold" style={{ color: mc.spy_ma_dist >= 0 ? '#16a34a' : '#dc2626' }}>
-                {mc.spy_ma_dist >= 0 ? '+' : ''}{mc.spy_ma_dist.toFixed(1)}%
-              </span>
-              {' '}vs MA100
-            </p>
-          </div>
-          <span
-            className="text-xs px-3 py-1.5 rounded-full font-bold"
-            style={{
-              background: mc.spy_slope === 'bullish' ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)',
-              color:      mc.spy_slope === 'bullish' ? '#16a34a' : '#dc2626',
-            }}
-          >
-            기울기 {mc.spy_slope === 'bullish' ? '↑' : '↓'}
-          </span>
-        </div>
-
-        {/* 롱/숏/업데이트 */}
-        <div className="grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
-          <div>
-            <p className="text-gray-400 text-[11px] mb-0.5">롱 시그널</p>
-            <p className="text-sm font-bold text-green-600">{counts.long}개</p>
-          </div>
-          <div>
-            <p className="text-gray-400 text-[11px] mb-0.5">숏 시그널</p>
-            <p className="text-sm font-bold text-red-600">{counts.short}개</p>
-          </div>
-          <div>
-            <p className="text-gray-400 text-[11px] mb-0.5">업데이트</p>
-            <p className="text-sm font-bold text-gray-500">{data.asOf}</p>
-          </div>
-        </div>
+        {/* 두 핵심 지표 */}
+        {(() => {
+          const total = counts.long + counts.short
+          const bullPct = total > 0 ? Math.round((counts.long / total) * 100) : 50
+          return (
+            <div className="mb-4">
+              <p className="text-gray-700 text-sm font-semibold mb-2 text-center">S&P 500 대비 종목 강도</p>
+              <div className="flex items-center justify-center gap-4 mb-3">
+                <div className="text-center">
+                  <p className="text-3xl font-black tracking-tight text-green-500">{counts.long}</p>
+                  <p className="text-[11px] text-green-500 font-medium mt-0.5">강한 종목</p>
+                </div>
+                <span className="text-gray-300 font-light text-2xl">|</span>
+                <div className="text-center">
+                  <p className="text-3xl font-black tracking-tight text-red-500">{counts.short}</p>
+                  <p className="text-[11px] text-red-500 font-medium mt-0.5">약한 종목</p>
+                </div>
+              </div>
+              <div className="flex h-1.5 rounded-full overflow-hidden bg-gray-100">
+                <div className="h-full bg-green-500 transition-all" style={{ width: `${bullPct}%` }} />
+                <div className="h-full flex-1 bg-red-500" />
+              </div>
+              <div className="flex justify-between mt-2">
+                <span className="text-[11px] text-gray-400">{counts.long}개 강함</span>
+                <span className="text-[11px] text-gray-400">{counts.short}개 약함</span>
+              </div>
+            </div>
+          )
+        })()}
 
         {/* 뷰 모드 토글 + 도움말 */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <div className="flex gap-1.5">
             <button
               onClick={() => setViewMode('topdown')}
@@ -1329,8 +1312,7 @@ export default function WatchlistClient() {
           {/* ── 히트맵 본체 ── */}
           <div className="-mx-4 sm:-mx-6">
             <div
-              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 bg-gray-300"
-              style={{ gap: '3px' }}
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 border-l border-t border-gray-200"
             >
               {data.sectors.map(sector => (
                 <SectorBlock
