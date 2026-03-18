@@ -17,9 +17,8 @@ function formatMoneyKR(val: number) {
     return `${val.toLocaleString()}$`;
 }
 
-// ✨ [설정] 기본 3회 + 보너스 2회 = 5회
-const FREE_LIMIT = 3;
-const BONUS_ADD = 2;
+const FREE_LIMIT = 9999;
+const BONUS_ADD = 0;
 
 export default function FlowClient() {
   const params = useSearchParams();
@@ -194,22 +193,7 @@ export default function FlowClient() {
       </div>
 
       <div className="w-full mt-2 relative">
-        {/* 잠금 화면 (구독자는 볼 일 없음) */}
-        {isLocked && (
-            <div className="absolute inset-0 z-50 flex flex-col items-center justify-center p-6 text-center rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-white/60 backdrop-blur-md"></div>
-                <div className="relative z-10 bg-white p-6 rounded-2xl shadow-xl border border-gray-100 max-w-xs w-full">
-                    <div className="text-4xl mb-3">🔒</div>
-                    <h3 className="text-lg font-black text-gray-900 mb-2">무료 조회 한도 초과</h3>
-                    <p className="text-sm text-gray-500 mb-6 leading-relaxed">오늘의 무료 리포트를 모두 확인하셨네요.<br/>친구에게 <span className="text-blue-500 font-bold">공유하면 +{BONUS_ADD}회</span> 더 볼 수 있어요.</p>
-                    <button onClick={handleShare} className="block w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3.5 rounded-xl active:scale-95 transition-all mb-2 shadow-lg shadow-blue-200">📤 공유하고 +{BONUS_ADD}회 받기</button>
-                    <Link href="/pricing" className="block w-full bg-gray-100 text-gray-600 hover:bg-gray-200 font-bold py-3.5 rounded-xl transition-colors">👑모든 종목 잠금 해제</Link>
-                    <button onClick={() => window.location.href = '/'} className="mt-3 text-xs text-gray-400 underline decoration-gray-300 underline-offset-4">홈으로 돌아가기</button>
-                </div>
-            </div>
-        )}
-
-        <div className={isLocked ? 'blur-sm pointer-events-none select-none' : ''}>
+        <div className="">
             {insightMessage && (<div className="px-2 pt-2 pb-4"><div className="bg-gray-50/50 rounded-2xl p-5 border border-gray-100 text-center"><p className="text-lg text-gray-700 font-medium leading-relaxed break-keep">{insightMessage.periodText} <span className={`font-bold ${insightMessage.targetChange > 0 ? 'text-red-400' : 'text-blue-400'}`}>{Math.abs(insightMessage.targetChange).toFixed(1)}% {insightMessage.targetChange > 0 ? '상승' : '하락'}</span>했고,<br />{' '}서학개미들은 <span className={`font-bold ${insightMessage.isNetBuy ? 'text-red-400' : 'text-blue-400'}`}>{formatMoneyKR(insightMessage.netSum5d)} {insightMessage.isNetBuy ? '순매수' : '순매도'}</span>했어요.</p></div></div>)}
             <div className="relative w-full px-1 pb-4">
                 {loading && <div className="h-80 flex items-center justify-center text-gray-400 text-sm">데이터 로딩 중...</div>}
