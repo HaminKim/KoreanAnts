@@ -1,55 +1,28 @@
 {
-  "date": "2026-03-18",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-03-19",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "PLTR",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 783583627.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "KORU",
-      "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 133562129.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "ORCL",
-      "name": "",
-      "raw_name": "ORACLE CORP",
-      "value": 71048737.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
-      "ticker": "NVDA",
-      "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -181389144.0,
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -262177733.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "PLTR",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -176641487.0,
+      "raw_name": "NVIDIA CORP",
+      "value": -161149580.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
@@ -58,9 +31,27 @@
       "ticker": "GOOGL",
       "name": "",
       "raw_name": "ALPHABET INC CL A",
-      "value": -176478994.0,
+      "value": -128960282.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "AMZN",
+      "name": "",
+      "raw_name": "AMAZON.COM INC",
+      "value": -103544720.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "NFLX",
+      "name": "",
+      "raw_name": "NETFLIX INC",
+      "value": -98375650.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
