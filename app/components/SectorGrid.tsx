@@ -171,17 +171,20 @@ export default function SectorGrid() {
       </motion.div>
 
       {/* 히트맵 진입 배너 */}
-      <Link href="/watchlist" className="mt-3 mb-1 flex items-center justify-between w-full bg-white hover:bg-gray-50 active:scale-[0.99] transition-all rounded-2xl px-5 py-3.5 border border-gray-200 group">
+      <Link href="/watchlist" className="mt-3 mb-1 flex items-center justify-between w-full bg-slate-900 hover:bg-slate-800 active:scale-[0.99] transition-all rounded-2xl px-5 py-4 group shadow-md">
         <div className="flex items-center gap-3">
-          <span className="text-xl">🗺️</span>
+          <span className="text-2xl">🗺️</span>
           <div>
-            <div className="text-gray-900 text-sm font-bold leading-none mb-0.5">섹터 히트맵</div>
-            <div className="text-gray-400 text-[11px]">시장을 주도하는 종목 · 시장의 추세를 확인하라!</div>
+            <div className="text-white text-sm font-bold leading-none mb-1">섹터 히트맵</div>
+            <div className="text-slate-300 text-xs font-semibold">시장을 주도하는 종목을 확인하라!</div>
           </div>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 text-gray-300 group-hover:text-gray-600 group-hover:translate-x-0.5 transition-all">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-        </svg>
+        <div className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1.5 group-hover:bg-white/20 transition-colors">
+          <span className="text-white text-xs font-bold">보러가기</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5 text-white group-hover:translate-x-0.5 transition-transform">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </div>
       </Link>
 
       {/* ✨ [수술 부위] 사장님 원본 코드 그대로 복구 + 데이터 연결 */}
