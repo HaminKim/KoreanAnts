@@ -15,7 +15,10 @@ export const metadata: Metadata = {
     apple: '/icon.png',
   },
   verification: {
-    google: 'YxyiRFV2A7ub4mFChMZaJRr06Ybrs-TJJezPOjRtufY', 
+    google: 'YxyiRFV2A7ub4mFChMZaJRr06Ybrs-TJJezPOjRtufY',
+  },
+  other: {
+    'google-adsense-account': 'ca-pub-9107127166272654',
   },
   openGraph: {
     title: '리앤트(REANT) - 개미와 반대로 투자하라',
