@@ -185,14 +185,12 @@ export default function HomeClient() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
                 {visibleItems.map((item, index) => {
                     const rank = index + 1;
-                    const isLocked = (rank <= 3) && !isLoggedIn;
 
                     return (
                         <div key={item.fileTicker + index} className="relative group">
-                            {/* ✨ [수정 1] 내용물: 흐림 효과 제거 (덮개가 흐리게 할 것임) */}
                             <div className={`
                                 flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl border transition-all bg-white
-                                ${isLocked ? 'pointer-events-none select-none' : 'hover:shadow-lg hover:-translate-y-1 cursor-pointer'}
+                                hover:shadow-lg hover:-translate-y-1 cursor-pointer
                                 ${isBuy ? 'hover:border-red-100 border-gray-100' : 'hover:border-blue-100 border-gray-100'}
                             `}>
                                 <div className={`w-8 h-8 flex items-center justify-center rounded-lg font-black text-sm md:text-lg shadow-sm shrink-0 ${rank <= 5 ? (isBuy ? 'bg-red-500 text-white' : 'bg-blue-500 text-white') : 'bg-gray-100 text-gray-500'}`}>{rank}</div>
@@ -208,25 +206,7 @@ export default function HomeClient() {
                                 </div>
                             </div>
 
-                            {/* 🔒 잠금 화면: ✨ [수정 2] 유리창 효과 (backdrop-blur-sm) 적용 */}
-                            {isLocked && (
-                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/20 backdrop-blur-sm rounded-2xl">
-                                    <button 
-                                        onClick={() => handleLockAction(rank)} 
-                                        className="bg-gray-900 shadow-xl px-4 py-2.5 rounded-full flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform border border-gray-700 pointer-events-auto"
-                                    >
-                                        <span className="text-lg">🔒</span>
-                                        <div className="flex flex-col items-start leading-none">
-                                            <span className="text-[10px] text-gray-300 font-medium mb-0.5">Member Only</span>
-                                            <span className="text-sm font-bold text-white">로그인하고 무료 보기</span>
-                                        </div>
-                                    </button>
-                                </div>
-                            )}
-
-                            {!isLocked && (
-                                <Link href={`/flow?ticker=${item.ticker}&fileTicker=${encodeURIComponent(item.fileTicker)}&side=${side}&days=${days}`} className="absolute inset-0 z-0" />
-                            )}
+                            <Link href={`/flow?ticker=${item.ticker}&fileTicker=${encodeURIComponent(item.fileTicker)}&side=${side}&days=${days}`} className="absolute inset-0 z-0" />
                         </div>
                     );
                 })}
