@@ -1,57 +1,57 @@
 {
-  "date": "2026-03-19",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-03-20",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "PLTR",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -262177733.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 58232825.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "NVDA",
+      "ticker": "SPSB",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -161149580.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "SPDR PORTFOLIO SHORT TERM CORPORATE BOND ETF",
+      "value": 54078782.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "GOOGL",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": -128960282.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "TESLA INC",
+      "value": 45172231.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "AMZN",
+      "ticker": "VOO",
       "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": -103544720.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 43584819.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "NFLX",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "NETFLIX INC",
-      "value": -98375650.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 35842038.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
