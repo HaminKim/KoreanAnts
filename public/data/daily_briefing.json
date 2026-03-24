@@ -1,19 +1,46 @@
 {
-  "date": "2026-03-24",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-03-25",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
+    {
+      "rank": 1,
+      "ticker": "TSLA",
+      "name": "",
+      "raw_name": "TESLA INC",
+      "value": 149430168.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "MU",
+      "name": "",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 138513056.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "TQQQ",
+      "name": "",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 119163202.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
     {
       "rank": 1,
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -221515577.0,
+      "value": -397450354.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -22,36 +49,18 @@
       "ticker": "PLTR",
       "name": "",
       "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -106027235.0,
+      "value": -240380863.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "KORU",
-      "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": -53017023.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
       "ticker": "GOOGL",
       "name": "",
       "raw_name": "ALPHABET INC CL A",
-      "value": -48072859.0,
+      "value": -89012977.0,
       "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "LITE",
-      "name": "",
-      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": -21229564.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "desc_key": "매도 3위"
     }
   ]
 }
