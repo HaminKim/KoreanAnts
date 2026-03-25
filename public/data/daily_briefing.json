@@ -1,46 +1,19 @@
 {
-  "date": "2026-03-25",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-03-26",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
-      "name": "",
-      "raw_name": "TESLA INC",
-      "value": 149430168.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "MU",
-      "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 138513056.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "TQQQ",
-      "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 119163202.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -397450354.0,
+      "value": -470236854.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -49,7 +22,7 @@
       "ticker": "PLTR",
       "name": "",
       "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -240380863.0,
+      "value": -254562151.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
@@ -58,9 +31,27 @@
       "ticker": "GOOGL",
       "name": "",
       "raw_name": "ALPHABET INC CL A",
-      "value": -89012977.0,
+      "value": -81182076.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "AMZN",
+      "name": "",
+      "raw_name": "AMAZON.COM INC",
+      "value": -67986580.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "NFLX",
+      "name": "",
+      "raw_name": "NETFLIX INC",
+      "value": -46457442.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
