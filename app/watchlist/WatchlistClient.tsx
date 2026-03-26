@@ -644,41 +644,67 @@ function SectorBlock({
   return (
     <div className="bg-white border-r border-b border-gray-200 overflow-hidden">
       {/* 섹터 헤더 */}
-      <button
-        onClick={() => onSelectSector(sector)}
-        className="w-full flex items-center justify-between px-3 py-2 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
-        title={`${sector.name} (${sector.etf}) — SPY 대비 60일 초과수익 ${rs !== null ? (rs >= 0 ? '+' : '') + rs.toFixed(2) + '%' : 'N/A'}`}
-      >
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-sm">{sector.emoji}</span>
-          <span className="text-[10px] font-bold text-gray-700 truncate">{sector.name}</span>
-        </div>
-        <div className="flex items-center gap-1.5 flex-shrink-0 ml-1">
-          {rs !== null && (
-            <span
-              className="text-[11px] font-black tabular-nums px-1.5 py-0.5 rounded-full"
-              style={{
-                background: rsPositive ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)',
-                color: rsPositive ? '#16a34a' : '#dc2626',
-              }}
-            >
-              {rsPositive ? '▲' : '▼'}{Math.abs(rs).toFixed(1)}%
-            </span>
-          )}
-          {sector.sector_rs_slope_dir !== 'flat' && sector.sector_rs_slope_days > 0 && (
-            <span
-              className="text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded-full border"
-              style={{
-                color:      sector.sector_rs_slope_dir === 'up' ? '#16a34a' : '#dc2626',
-                background: sector.sector_rs_slope_dir === 'up' ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.08)',
-                borderColor: sector.sector_rs_slope_dir === 'up' ? 'rgba(22,163,74,0.25)' : 'rgba(220,38,38,0.25)',
-              }}
-            >
-              {sector.sector_rs_slope_dir === 'up' ? '↗' : '↘'} {sector.sector_rs_slope_days}d
-            </span>
-          )}
-        </div>
-      </button>
+      {sector.etf === 'SPY' ? (
+        <button
+          onClick={() => onSelectSector(sector)}
+          className="w-full flex items-center justify-between px-3 py-2 bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+          title="미국 시장 기준 (SPY)"
+        >
+          <div className="flex items-center gap-1.5 min-w-0">
+            {/* 미국 국기 SVG */}
+            <svg width="18" height="12" viewBox="0 0 18 12" style={{ flexShrink: 0, borderRadius: '1px', overflow: 'hidden' }}>
+              {[0,1,2,3,4,5,6,7,8,9,10,11,12].map(i => (
+                <rect key={i} x="0" y={i * 12/13} width="18" height={12/13 + 0.1} fill={i % 2 === 0 ? '#B22234' : '#FFFFFF'} />
+              ))}
+              <rect x="0" y="0" width="7.2" height={12 * 7/13} fill="#3C3B6E" />
+              {[0,1,2,3,4,1,2,3,4,0].map((col, i) => {
+                const row = Math.floor(i / 5)
+                return <circle key={i} cx={1.2 + col * 1.4 + (row % 2 === 1 ? 0.7 : 0)} cy={1.1 + row * 1.6} r="0.55" fill="white" />
+              })}
+            </svg>
+            <span className="text-[10px] font-bold text-gray-800 truncate">시장 SPY</span>
+          </div>
+          <span className="text-[11px] font-black tabular-nums px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">
+            = 0
+          </span>
+        </button>
+      ) : (
+        <button
+          onClick={() => onSelectSector(sector)}
+          className="w-full flex items-center justify-between px-3 py-2 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+          title={`${sector.name} (${sector.etf}) — SPY 대비 60일 초과수익 ${rs !== null ? (rs >= 0 ? '+' : '') + rs.toFixed(2) + '%' : 'N/A'}`}
+        >
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="text-sm">{sector.emoji}</span>
+            <span className="text-[10px] font-bold text-gray-700 truncate">{sector.name}</span>
+          </div>
+          <div className="flex items-center gap-1.5 flex-shrink-0 ml-1">
+            {rs !== null && (
+              <span
+                className="text-[11px] font-black tabular-nums px-1.5 py-0.5 rounded-full"
+                style={{
+                  background: rsPositive ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)',
+                  color: rsPositive ? '#16a34a' : '#dc2626',
+                }}
+              >
+                {rsPositive ? '▲' : '▼'}{Math.abs(rs).toFixed(1)}%
+              </span>
+            )}
+            {sector.sector_rs_slope_dir !== 'flat' && sector.sector_rs_slope_days > 0 && (
+              <span
+                className="text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded-full border"
+                style={{
+                  color:      sector.sector_rs_slope_dir === 'up' ? '#16a34a' : '#dc2626',
+                  background: sector.sector_rs_slope_dir === 'up' ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.08)',
+                  borderColor: sector.sector_rs_slope_dir === 'up' ? 'rgba(22,163,74,0.25)' : 'rgba(220,38,38,0.25)',
+                }}
+              >
+                {sector.sector_rs_slope_dir === 'up' ? '↗' : '↘'} {sector.sector_rs_slope_days}d
+              </span>
+            )}
+          </div>
+        </button>
+      )}
 
       {/* 종목 그리드 */}
       <div className="grid grid-cols-5 bg-gray-100" style={{ gap: '1px', padding: '1px' }}>
@@ -717,6 +743,9 @@ function StockDetailModal({
   const [show, setShow] = useState({ rs: true, eps: true, revenue: true, cards: true })
   const toggle = (key: keyof typeof show) => setShow(prev => ({ ...prev, [key]: !prev[key] }))
 
+  // 풀스크린
+  const [fullscreen, setFullscreen] = useState(false)
+
   // ⭐ 관심종목 저장
   const [saving, setSaving] = useState(false)
   const isSaved = savedTickers.has(stock.ticker)
@@ -736,11 +765,14 @@ function StockDetailModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-2 sm:p-4" onClick={onClose}>
+    <div
+      className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center ${fullscreen ? 'p-0' : 'p-2 sm:p-4'}`}
+      onClick={onClose}
+    >
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative bg-white border border-gray-200 rounded-2xl shadow-2xl w-full overflow-hidden flex flex-col"
-        style={{ maxWidth: '800px', maxHeight: '92vh' }}
+        className={`relative bg-white border border-gray-200 shadow-2xl w-full overflow-hidden flex flex-col ${fullscreen ? 'rounded-none' : 'rounded-2xl'}`}
+        style={fullscreen ? { maxWidth: '100vw', maxHeight: '100vh', height: '100vh' } : { maxWidth: '800px', maxHeight: '92vh' }}
         onClick={e => e.stopPropagation()}
       >
         {/* 헤더 */}
@@ -761,6 +793,13 @@ function StockDetailModal({
           </div>
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-gray-400">MA 5·20·50·100·150</span>
+            <button
+              onClick={() => setFullscreen(v => !v)}
+              title={fullscreen ? '작게 보기' : '전체화면으로 크게 보기'}
+              className="text-gray-400 hover:text-gray-700 text-lg leading-none transition-colors"
+            >
+              {fullscreen ? '⊡' : '⤢'}
+            </button>
             {userId && (
               <button
                 onClick={handleStar}
@@ -777,8 +816,8 @@ function StockDetailModal({
           </div>
         </div>
 
-        {/* 신고가/신저가 뱃지 행 */}
-        {(stock.highs?.w52 != null || stock.highs?.w26 != null || stock.highs?.w13 != null ||
+        {/* 신고가/신저가 뱃지 행 (풀스크린에서는 숨김) */}
+        {!fullscreen && (stock.highs?.w52 != null || stock.highs?.w26 != null || stock.highs?.w13 != null ||
           stock.lows?.w52  != null || stock.lows?.w26  != null || stock.lows?.w13  != null) && (
           <div className="flex flex-wrap gap-1.5 px-4 py-2 border-b border-gray-100 bg-gray-50">
             {stock.highs?.w52 != null && (
@@ -814,13 +853,15 @@ function StockDetailModal({
           </div>
         )}
 
-        {/* TradingView 가격 차트 */}
-        <div style={{ height: '300px', flexShrink: 0 }}>
-          <TradingViewChart symbol={stock.ticker} height={300} />
-        </div>
+        {/* TradingView 가격 차트 (풀스크린에서는 숨김) */}
+        {!fullscreen && (
+          <div style={{ height: '300px', flexShrink: 0 }}>
+            <TradingViewChart symbol={stock.ticker} height={300} />
+          </div>
+        )}
 
-        {/* 섹션 토글 바 */}
-        <div className="flex flex-wrap gap-1 px-4 py-2 border-b border-gray-100 bg-gray-50">
+        {/* 섹션 토글 바 (풀스크린에서는 숨김) */}
+        {!fullscreen && <div className="flex flex-wrap gap-1 px-4 py-2 border-b border-gray-100 bg-gray-50">
           {([
             { key: 'rs',      label: 'RS 차트' },
             { key: 'eps',     label: 'EPS' },
@@ -840,11 +881,51 @@ function StockDetailModal({
               {label}
             </button>
           ))}
-        </div>
+        </div>}
 
         {/* 스크롤 영역 */}
-        <div className="overflow-y-auto p-4 flex-1 min-h-0">
+        <div className={`flex-1 min-h-0 overflow-y-auto ${fullscreen ? 'p-6' : 'p-4'}`}>
 
+          {fullscreen ? (
+            /* 풀스크린: 세로 단일 컬럼, 가운데 정렬 */
+            <div className="flex flex-col items-center gap-6 max-w-2xl mx-auto">
+              {stock.rs_spy_line && stock.rs_spy_line.length >= 3 && (
+                <div className="w-full">
+                  <RSLineChart data={stock.rs_spy_line} label="vs SPY (1년)" uid={`spy-fs-${stock.ticker}`} />
+                </div>
+              )}
+              {stock.rs_sector_line && stock.rs_sector_line.length >= 3 && (
+                <div className="w-full">
+                  <RSLineChart data={stock.rs_sector_line} label={`vs ${sectorEtf} (1년)`} uid={`etf-fs-${stock.ticker}`} />
+                </div>
+              )}
+              {stock.eps && <div className="w-full"><EPSChart eps={stock.eps} /></div>}
+              {stock.eps && <div className="w-full"><RevenueChart eps={stock.eps} /></div>}
+              <div className="w-full grid grid-cols-2 gap-3 text-xs">
+                {[
+                  {
+                    t: '섹터 RS vs SPY (60일)',
+                    v: d.sector_rs_excess != null ? `${d.sector_rs_excess >= 0 ? '+' : ''}${d.sector_rs_excess.toFixed(2)}%` : 'N/A',
+                    s: '섹터 ETF 60일 초과수익률',
+                    c: (d.sector_rs_excess ?? 0) >= 0 ? '#15803d' : '#b91c1c',
+                  },
+                  {
+                    t: 'RS 기울기 (20MA)',
+                    v: d.rs_slope_dir === 'up' ? '↗ 상향' : d.rs_slope_dir === 'down' ? '↘ 하향' : '→ 보합',
+                    s: d.rs_slope_days > 0 ? `${d.rs_slope_days}일째 유지` : '-',
+                    c: d.rs_slope_dir === 'up' ? '#15803d' : d.rs_slope_dir === 'down' ? '#b91c1c' : '#6b7280',
+                  },
+                ].map(card => (
+                  <div key={card.t} className="bg-gray-50 border border-gray-100 rounded-xl p-3">
+                    <div className="text-gray-400 text-[10px] mb-1">{card.t}</div>
+                    <div className="font-bold font-mono text-sm" style={{ color: card.c }}>{card.v}</div>
+                    {card.s && <div className="text-gray-400 text-[9px] mt-0.5">{card.s}</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
           {/* RS LINE 차트 */}
           {show.rs && (
             <>
@@ -889,6 +970,8 @@ function StockDetailModal({
               </div>
             ))}
           </div>}
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -1093,11 +1176,12 @@ export default function WatchlistClient() {
   const [selectedSectorEtf,  setSelectedSectorEtf] = useState<string>('')
   const [selectedSectorName, setSelectedSectorName] = useState<string>('')
   const [selectedSector,     setSelectedSector]    = useState<SectorItem | null>(null)
-  const [viewMode,           setViewMode]          = useState<'topdown' | 'bottomup'>('topdown')
+  const [viewMode,           setViewMode]          = useState<'topdown' | 'bottomup' | 'compare'>('topdown')
   const [hlFilter,           setHlFilter]          = useState<HLFilter>('break52')
   const [showHelp,           setShowHelp]          = useState(false)
   const [userId,             setUserId]            = useState<string | null>(null)
   const [savedTickers,       setSavedTickers]      = useState<Set<string>>(new Set())
+  const [compareRight,       setCompareRight]      = useState<SectorItem | null>(null)
 
   useEffect(() => {
     fetch('/data/watchlist.json', { cache: 'no-store' })
@@ -1170,6 +1254,14 @@ export default function WatchlistClient() {
     setSelectedSectorName(sectorName)
   }
 
+  const handleSelectSector = (sector: SectorItem) => {
+    if (viewMode === 'compare') {
+      if (sector.etf !== 'SPY') setCompareRight(sector)
+      return
+    }
+    setSelectedSector(sector)
+  }
+
   return (
     <div>
       {/* ── 상단 요약 카드 ── */}
@@ -1226,6 +1318,16 @@ export default function WatchlistClient() {
               }`}
             >
               🔍 바텀업
+            </button>
+            <button
+              onClick={() => { setViewMode('compare'); setCompareRight(null) }}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                viewMode === 'compare'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+              }`}
+            >
+              ⚖️ 비교
             </button>
           </div>
           <button
@@ -1319,7 +1421,7 @@ export default function WatchlistClient() {
                   key={sector.id}
                   sector={sector}
                   onSelectStock={handleSelectStock}
-                  onSelectSector={setSelectedSector}
+                  onSelectSector={handleSelectSector}
                 />
               ))}
             </div>
@@ -1338,12 +1440,172 @@ export default function WatchlistClient() {
             <span>④- 4확장</span>
           </div>
         </>
-      ) : (
+      ) : viewMode === 'bottomup' ? (
         <BottomUpView
           sectors={data.sectors}
           hlFilter={hlFilter}
           onSelectStock={handleSelectStock}
         />
+      ) : (
+        /* ── 비교 모드 (항상 SPY 기준) ── */
+        (() => {
+          const spySector = data.sectors.find(s => s.etf === 'SPY')
+          return (
+            <div className="mt-2">
+              {!compareRight ? (
+                /* 섹터 선택 */
+                <div>
+                  <p className="text-center text-sm font-semibold text-gray-600 mb-1">SPY와 비교할 섹터를 선택하세요</p>
+                  <p className="text-center text-[11px] text-gray-400 mb-3">🇺🇸 시장 SPY = 0 기준</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {data.sectors.filter(s => s.etf !== 'SPY').map(sector => (
+                      <button
+                        key={sector.id}
+                        onClick={() => setCompareRight(sector)}
+                        className="flex items-center gap-2 p-3 rounded-xl bg-gray-50 hover:bg-indigo-50 hover:border-indigo-200 border border-gray-200 text-left transition-colors"
+                      >
+                        <span className="text-xl">{sector.emoji}</span>
+                        <div>
+                          <div className="text-xs font-bold text-gray-700">{sector.name}</div>
+                          <div className="text-[10px] text-gray-400">{sector.etf}</div>
+                          {sector.sector_rs_excess !== null && (
+                            <div className="text-[10px] font-mono font-bold" style={{ color: sector.sector_rs_excess >= 0 ? '#16a34a' : '#dc2626' }}>
+                              {sector.sector_rs_excess >= 0 ? '▲' : '▼'}{Math.abs(sector.sector_rs_excess).toFixed(1)}%
+                            </div>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                /* 비교 뷰: SPY vs 선택 섹터 */
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <button
+                      onClick={() => setCompareRight(null)}
+                      className="text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+                    >
+                      ↺ 다시 선택
+                    </button>
+                    <span className="text-xs text-gray-400">
+                      🇺🇸 SPY vs {compareRight.emoji} {compareRight.name}
+                    </span>
+                  </div>
+
+                  <div className="flex gap-2 items-start">
+                    {/* 왼쪽: SPY */}
+                    <div className="flex-1 min-w-0 border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                      <div className="px-3 py-2 bg-white border-b border-gray-200 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <svg width="18" height="12" viewBox="0 0 18 12" style={{ flexShrink: 0, borderRadius: '1px', overflow: 'hidden' }}>
+                            {[0,1,2,3,4,5,6,7,8,9,10,11,12].map(i => (
+                              <rect key={i} x="0" y={i * 12/13} width="18" height={12/13 + 0.1} fill={i % 2 === 0 ? '#B22234' : '#FFFFFF'} />
+                            ))}
+                            <rect x="0" y="0" width="7.2" height={12 * 7/13} fill="#3C3B6E" />
+                            {[0,1,2,3,4,1,2,3,4,0].map((col, i) => {
+                              const row = Math.floor(i / 5)
+                              return <circle key={i} cx={1.2 + col * 1.4 + (row % 2 === 1 ? 0.7 : 0)} cy={1.1 + row * 1.6} r="0.55" fill="white" />
+                            })}
+                          </svg>
+                          <span className="text-xs font-bold text-gray-800">시장 SPY</span>
+                        </div>
+                        <span className="text-[11px] font-black px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">
+                          = 0
+                        </span>
+                      </div>
+                      {spySector && (
+                        <div className="grid grid-cols-5 bg-gray-100" style={{ gap: '1px', padding: '1px' }}>
+                          {spySector.stocks.map(stock => (
+                            <StockCell key={stock.ticker} stock={stock} onClick={() => handleSelectStock(stock, spySector.etf, spySector.name)} />
+                          ))}
+                          {Array.from({ length: Math.max(0, 15 - spySector.stocks.length) }).map((_, i) => (
+                            <div key={i} className="bg-white" style={{ height: '54px' }} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* VS */}
+                    <div className="flex-shrink-0 self-center px-1">
+                      <span className="text-base font-black text-gray-400">VS</span>
+                    </div>
+
+                    {/* 오른쪽: 선택 섹터 */}
+                    <div className="flex-1 min-w-0 border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                      <div className="px-3 py-2 bg-indigo-50 border-b border-indigo-100 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-base">{compareRight.emoji}</span>
+                          <span className="text-xs font-bold text-gray-800">{compareRight.name}</span>
+                        </div>
+                        {compareRight.sector_rs_excess !== null && (
+                          <span className="text-[11px] font-black" style={{ color: compareRight.sector_rs_excess >= 0 ? '#16a34a' : '#dc2626' }}>
+                            {compareRight.sector_rs_excess >= 0 ? '▲' : '▼'}{Math.abs(compareRight.sector_rs_excess).toFixed(1)}%
+                          </span>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-5 bg-gray-100" style={{ gap: '1px', padding: '1px' }}>
+                        {compareRight.stocks.map(stock => (
+                          <StockCell key={stock.ticker} stock={stock} onClick={() => handleSelectStock(stock, compareRight.etf, compareRight.name)} />
+                        ))}
+                        {Array.from({ length: Math.max(0, 15 - compareRight.stocks.length) }).map((_, i) => (
+                          <div key={i} className="bg-white" style={{ height: '54px' }} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* RS 비교 — 발산형 바 */}
+                  {compareRight.sector_rs_excess !== null && (() => {
+                    const rs = compareRight.sector_rs_excess
+                    const pct = Math.min(50, Math.abs(rs) / 50 * 50) // 최대 ±50% → 50% 너비
+                    const isPos = rs >= 0
+                    return (
+                      <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                        <p className="text-[10px] text-gray-400 mb-3 text-center font-semibold">SPY 대비 60일 초과수익</p>
+                        <div className="relative h-8 flex items-center">
+                          {/* 전체 트랙 */}
+                          <div className="absolute inset-0 flex">
+                            <div className="flex-1 bg-red-50 rounded-l-full" />
+                            <div className="flex-1 bg-green-50 rounded-r-full" />
+                          </div>
+                          {/* 중앙 0선 */}
+                          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-400 z-10" />
+                          {/* 발산 막대 */}
+                          <div
+                            className="absolute top-1.5 bottom-1.5 z-20"
+                            style={{
+                              left:  isPos ? '50%' : `${50 - pct}%`,
+                              width: `${pct}%`,
+                              background: isPos ? '#16a34a' : '#dc2626',
+                              opacity: 0.85,
+                              borderRadius: isPos ? '0 9999px 9999px 0' : '9999px 0 0 9999px',
+                            }}
+                          />
+                          {/* 수치 라벨 */}
+                          <span
+                            className="absolute text-xs font-black font-mono z-30"
+                            style={{
+                              left: isPos ? `calc(50% + ${pct}% + 6px)` : `calc(${50 - pct}% - 48px)`,
+                              color: isPos ? '#15803d' : '#b91c1c',
+                            }}
+                          >
+                            {isPos ? '+' : ''}{rs.toFixed(2)}%
+                          </span>
+                        </div>
+                        <div className="flex justify-between mt-1 px-1">
+                          <span className="text-[9px] text-red-400 font-semibold">SPY 하회</span>
+                          <span className="text-[9px] text-gray-400">0</span>
+                          <span className="text-[9px] text-green-500 font-semibold">SPY 상회</span>
+                        </div>
+                      </div>
+                    )
+                  })()}
+                </div>
+              )}
+            </div>
+          )
+        })()
       )}
 
       {/* ── 모달들 ── */}
