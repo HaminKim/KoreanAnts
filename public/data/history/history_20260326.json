@@ -1,45 +1,17 @@
 {
   "fire": [
     {
-      "name": "ADVANCED MICRO DEVICES INC",
-      "name_kr": "AMD",
-      "ticker": "AMD",
-      "file_ticker": "ADVANCED MICRO DEVICES INC",
-      "close": 215.37,
-      "price_change": 0.06973625391148856,
-      "net_buy_sum": -8604296,
-      "buy_score": 1,
-      "sell_score": 5,
-      "last_date": "2026-03-26",
-      "comment": "개미 털고 세력 떡상 중 🚀"
-    },
-    {
       "name": "OCCIDENTAL PETROLEUM CORP",
       "name_kr": "",
       "ticker": "OXY",
       "file_ticker": "OCCIDENTAL PETROLEUM CORP",
-      "close": 62.6,
-      "price_change": 0.031131609290067544,
-      "net_buy_sum": -11874269,
-      "buy_score": 2,
+      "close": 63.68,
+      "price_change": 0.04892110031296325,
+      "net_buy_sum": -8672138,
+      "buy_score": 3,
       "sell_score": 2,
       "last_date": "2026-03-26",
       "comment": "개미 털고 세력 떡상 중 🚀"
-    }
-  ],
-  "top": [
-    {
-      "name": "TESLA INC",
-      "name_kr": "테슬라",
-      "ticker": "TSLA",
-      "file_ticker": "TESLA INC",
-      "close": 383.23,
-      "price_change": 0.04149907598652038,
-      "net_buy_sum": 66020660,
-      "buy_score": 4,
-      "sell_score": 3,
-      "last_date": "2026-03-26",
-      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
     }
   ],
   "bottom": [
@@ -48,8 +20,8 @@
       "name_kr": "아이렌",
       "ticker": "IREN",
       "file_ticker": "IRIS ENERGY LTD",
-      "close": 39.57,
-      "price_change": -0.041656575441995615,
+      "close": 38.11,
+      "price_change": -0.07701622668927101,
       "net_buy_sum": -5303590,
       "buy_score": 0,
       "sell_score": 5,
@@ -57,14 +29,14 @@
       "comment": "공포에 줍줍할 기회인가 💎"
     },
     {
-      "name": "ORACLE CORP",
-      "name_kr": "",
-      "ticker": "ORCL",
-      "file_ticker": "ORACLE CORP",
-      "close": 146.03,
-      "price_change": -0.024385355424906503,
-      "net_buy_sum": -6845026,
-      "buy_score": 1,
+      "name": "Circle Internet",
+      "name_kr": "서클 인터넷",
+      "ticker": "CRCL",
+      "file_ticker": "Circle Internet",
+      "close": 98.69,
+      "price_change": -0.21693247639450927,
+      "net_buy_sum": -81089648,
+      "buy_score": 4,
       "sell_score": 4,
       "last_date": "2026-03-26",
       "comment": "공포에 줍줍할 기회인가 💎"
@@ -72,15 +44,28 @@
   ],
   "knife": [
     {
+      "name": "MICROSOFT CORP",
+      "name_kr": "마이크로소프트",
+      "ticker": "MSFT",
+      "file_ticker": "MICROSOFT CORP",
+      "close": 367.79,
+      "price_change": -0.03687118652944715,
+      "net_buy_sum": 18365465,
+      "buy_score": 6,
+      "sell_score": 2,
+      "last_date": "2026-03-26",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    },
+    {
       "name": "SNDSK CRP ORD WI",
       "name_kr": "샌디스크",
       "ticker": "SNDK",
       "file_ticker": "SNDSK CRP ORD WI",
-      "close": 627.95,
-      "price_change": -0.11520198390892053,
-      "net_buy_sum": 22057471,
+      "close": 621.3,
+      "price_change": -0.1245720082850743,
+      "net_buy_sum": 9273650,
       "buy_score": 5,
-      "sell_score": 2,
+      "sell_score": 3,
       "last_date": "2026-03-26",
       "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     }

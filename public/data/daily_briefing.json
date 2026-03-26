@@ -1,57 +1,57 @@
 {
-  "date": "2026-03-26",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-03-27",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -470236854.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 144979604.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "PLTR",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -254562151.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "TESLA INC",
+      "value": 100812939.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "GOOGL",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": -81182076.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "NVIDIA CORP",
+      "value": 60181007.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "AMZN",
+      "ticker": "RKLB",
       "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": -67986580.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
+      "value": 58480741.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "NFLX",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "NETFLIX INC",
-      "value": -46457442.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 57821613.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
