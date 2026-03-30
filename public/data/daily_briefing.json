@@ -1,7 +1,7 @@
 {
-  "date": "2026-03-30",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-03-31",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "TQQQ",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 138501645.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -91721661.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLA",
+      "ticker": "ORCL",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": 106419603.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "ORACLE CORP",
+      "value": -86349377.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "LITE",
+      "ticker": "PLTR",
       "name": "",
-      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": 50407151.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -83637161.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "TOWER SEMICONDUCTOR LTD",
-      "name": "TOWER SEMICONDUCTOR LTD",
-      "raw_name": "TOWER SEMICONDUCTOR LTD",
-      "value": 46126857.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "CRCL",
+      "name": "",
+      "raw_name": "Circle Internet",
+      "value": -79092757.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "RKLB",
+      "ticker": "SNDK",
       "name": "",
-      "raw_name": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
-      "value": 43095915.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -39736260.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
