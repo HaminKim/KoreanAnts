@@ -44,6 +44,19 @@
   ],
   "knife": [
     {
+      "name": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
+      "name_kr": "로캣 랩",
+      "ticker": "RKLB",
+      "file_ticker": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
+      "close": 64.22,
+      "price_change": -0.11882546652030732,
+      "net_buy_sum": 16862419,
+      "buy_score": 8,
+      "sell_score": 0,
+      "last_date": "2026-03-31",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    },
+    {
       "name": "TESLA INC",
       "name_kr": "테슬라",
       "ticker": "TSLA",
@@ -53,19 +66,6 @@
       "net_buy_sum": 40695370,
       "buy_score": 6,
       "sell_score": 2,
-      "last_date": "2026-03-31",
-      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
-    },
-    {
-      "name": "IONQ INC",
-      "name_kr": "아이온큐",
-      "ticker": "IONQ",
-      "file_ticker": "IONQ INC",
-      "close": 28.83,
-      "price_change": -0.09793491864831047,
-      "net_buy_sum": 33671720,
-      "buy_score": 6,
-      "sell_score": 1,
       "last_date": "2026-03-31",
       "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     }
