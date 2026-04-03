@@ -1,55 +1,55 @@
 {
-  "date": "2026-04-03",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-04-04",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 557106017.0,
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 373307914.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TQQQ",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 169250787.0,
+      "raw_name": "TESLA INC",
+      "value": 185113196.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "KORU",
+      "ticker": "VOO",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 59539665.0,
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 180599614.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "VOO",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 52994014.0,
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 128381811.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "QLD",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 48178507.0,
+      "raw_name": "IONQ INC",
+      "value": 113489694.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
