@@ -1,16 +1,261 @@
 {
-  "asOf": "2026-04-06",
+  "asOf": "2026-04-07",
   "days": 1,
   "range": {
-    "start": "2026-04-06",
-    "end": "2026-04-06",
+    "start": "2026-04-07",
+    "end": "2026-04-07",
     "count": 1
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "Intercont (Cayman) Ltd",
-      "value": -24494.0
+      "ticker": "TESLA INC",
+      "value": 35571235.0
+    },
+    {
+      "rank": 2,
+      "ticker": "ISHARES 0-3 MONTH TREASURY BOND ETF",
+      "value": 14984164.0
+    },
+    {
+      "rank": 3,
+      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "value": 12288078.0
+    },
+    {
+      "rank": 4,
+      "ticker": "PROSHARES TRUST II ULTRA BLOOMBERG NATURAL GAS SPLR 966515394 US74347Y7638",
+      "value": 7993620.0
+    },
+    {
+      "rank": 5,
+      "ticker": "NIKE INC CL B",
+      "value": 7108183.0
+    },
+    {
+      "rank": 6,
+      "ticker": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": 6074678.0
+    },
+    {
+      "rank": 7,
+      "ticker": "EXXON MOBIL CORP",
+      "value": 5420364.0
+    },
+    {
+      "rank": 8,
+      "ticker": "PLANET LABS PBC",
+      "value": 4861708.0
+    },
+    {
+      "rank": 9,
+      "ticker": "MARVELL TECHNOLOGY INC",
+      "value": 4820293.0
+    },
+    {
+      "rank": 10,
+      "ticker": "ARM HOLDINGS PLC SPON ADS EACH REP 1 ORD SHS",
+      "value": 4389442.0
+    },
+    {
+      "rank": 11,
+      "ticker": "VS TRUST 2X LONG VIX FUTURES ETF NEW SPLR 969626124 US92891H5072",
+      "value": 2872706.0
+    },
+    {
+      "rank": 12,
+      "ticker": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 2729953.0
+    },
+    {
+      "rank": 13,
+      "ticker": "SCHWAB US DIVIDEND EQUITY ETF",
+      "value": 2380031.0
+    },
+    {
+      "rank": 14,
+      "ticker": "IONQ INC",
+      "value": 2373399.0
+    },
+    {
+      "rank": 15,
+      "ticker": "PROSHARES ULTRASHORT BLOOMBERG CRUDE OIL SPLR 009280245 US74347Y8628",
+      "value": 2251457.0
+    },
+    {
+      "rank": 16,
+      "ticker": "PROSHARES ULTRAPRO SHORT QQ ULTRAPRO SHORT QQQ NEW SPLR 987751298 US74347G1922",
+      "value": 1742225.0
+    },
+    {
+      "rank": 17,
+      "ticker": "VISA INC CL A",
+      "value": -302022.0
+    },
+    {
+      "rank": 18,
+      "ticker": "II-VI INCORPORATED Com CHAN 009623241 US9021041085",
+      "value": -599586.0
+    },
+    {
+      "rank": 19,
+      "ticker": "VANECK SEMICONDUCTOR ETF CHAN 39610601171 US57060U2336",
+      "value": -1199576.0
+    },
+    {
+      "rank": 20,
+      "ticker": "INVESCO QQQ TRUST SRS 1 ETF",
+      "value": -1425915.0
+    },
+    {
+      "rank": 21,
+      "ticker": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": -1912105.0
+    },
+    {
+      "rank": 22,
+      "ticker": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
+      "value": -2617576.0
+    },
+    {
+      "rank": 23,
+      "ticker": "IRIS ENERGY LTD",
+      "value": -2620817.0
+    },
+    {
+      "rank": 24,
+      "ticker": "PROSHARES ULTRA SILVER ETF",
+      "value": -3024021.0
+    },
+    {
+      "rank": 25,
+      "ticker": "DEFIAN DIY TT 2X LO IREN ETF SPLR 2641253609002 US88636W6509",
+      "value": -3350116.0
+    },
+    {
+      "rank": 26,
+      "ticker": "Circle Internet",
+      "value": -3422604.0
+    },
+    {
+      "rank": 27,
+      "ticker": "AST SPACEMOBILE INC CL A EXOF 008072919 US64822P2056",
+      "value": -3939863.0
+    },
+    {
+      "rank": 28,
+      "ticker": "MicroSectors Gold Miners 3X Leveraged ETN",
+      "value": -4040699.0
+    },
+    {
+      "rank": 29,
+      "ticker": "DEFIANCE DAILY TARGET 2X LONG RKLB ETF",
+      "value": -4471007.0
+    },
+    {
+      "rank": 30,
+      "ticker": "DXN MU BUL2X ETF",
+      "value": -4568998.0
+    },
+    {
+      "rank": 31,
+      "ticker": "SPDR GOLD SHARES ETF",
+      "value": -5048447.0
+    },
+    {
+      "rank": 32,
+      "ticker": "MICROSOFT CORP",
+      "value": -5080696.0
+    },
+    {
+      "rank": 33,
+      "ticker": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
+      "value": -5254122.0
+    },
+    {
+      "rank": 34,
+      "ticker": "PROSHARES ULTRA QQQ ETF",
+      "value": -5448601.0
+    },
+    {
+      "rank": 35,
+      "ticker": "OCCIDENTAL PETROLEUM CORP",
+      "value": -5714361.0
+    },
+    {
+      "rank": 36,
+      "ticker": "YANDEX NV CL A",
+      "value": -6406493.0
+    },
+    {
+      "rank": 37,
+      "ticker": "SEADRILL LTD EXOF 008989464 BMG7998G1069",
+      "value": -7028697.0
+    },
+    {
+      "rank": 38,
+      "ticker": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
+      "value": -7533829.0
+    },
+    {
+      "rank": 39,
+      "ticker": "INFLECTION POINT ACQUISITIO INTUITIVE MACHINES INC MRGR 944502928 KYG478741211",
+      "value": -8484404.0
+    },
+    {
+      "rank": 40,
+      "ticker": "MICRON TECHNOLOGY INC",
+      "value": -8599816.0
+    },
+    {
+      "rank": 41,
+      "ticker": "ADVANCED MICRO DEVICES INC",
+      "value": -9077806.0
+    },
+    {
+      "rank": 42,
+      "ticker": "VANECK JP MORGAN EM LOCAL CURRENCY BOND ETF",
+      "value": -9787503.0
+    },
+    {
+      "rank": 43,
+      "ticker": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -11374523.0
+    },
+    {
+      "rank": 44,
+      "ticker": "INTEL CORP",
+      "value": -12091495.0
+    },
+    {
+      "rank": 45,
+      "ticker": "TRADR 2X LONG SNDK DAILY ETF",
+      "value": -13714707.0
+    },
+    {
+      "rank": 46,
+      "ticker": "ALPHABET INC CL A",
+      "value": -15470207.0
+    },
+    {
+      "rank": 47,
+      "ticker": "SNDSK CRP ORD WI",
+      "value": -19223066.0
+    },
+    {
+      "rank": 48,
+      "ticker": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -26378637.0
+    },
+    {
+      "rank": 49,
+      "ticker": "NVIDIA CORP",
+      "value": -29357507.0
+    },
+    {
+      "rank": 50,
+      "ticker": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -178264235.0
     }
   ]
 }
