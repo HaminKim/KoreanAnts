@@ -1,66 +1,57 @@
 {
-  "date": "2026-04-08",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-04-09",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TQQQ",
-      "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 202235450.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "QQQ",
-      "name": "",
-      "raw_name": "INVESCO QQQ TRUST SRS 1 ETF",
-      "value": 75348305.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "QQQM",
-      "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 72555194.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -592361493.0,
+      "value": -367502430.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "CRCL",
+      "ticker": "SNDK",
       "name": "",
-      "raw_name": "Circle Internet",
-      "value": -105814701.0,
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -101021073.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "PLTR",
+      "ticker": "CRCL",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -103846365.0,
+      "raw_name": "Circle Internet",
+      "value": -92916115.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "ORCL",
+      "name": "",
+      "raw_name": "ORACLE CORP",
+      "value": -79504351.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "MU",
+      "name": "",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -65073634.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
