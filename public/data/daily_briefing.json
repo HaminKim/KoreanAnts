@@ -1,37 +1,37 @@
 {
-  "date": "2026-04-17",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-04-18",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "value": 159779426.0,
+      "ticker": "TSLA",
+      "name": "",
+      "raw_name": "TESLA INC",
+      "value": 302828689.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "SNDK",
+      "ticker": "TSLL",
       "name": "",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 145346547.0,
+      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": 225625850.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 103283142.0,
+      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "value": 199671702.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
@@ -40,16 +40,16 @@
       "ticker": "MSFT",
       "name": "",
       "raw_name": "MICROSOFT CORP",
-      "value": 101664907.0,
+      "value": 190803755.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "TSLA",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": 100291968.0,
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 136193506.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
