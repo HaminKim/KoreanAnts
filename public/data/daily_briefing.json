@@ -1,55 +1,55 @@
 {
-  "date": "2026-04-19",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-04-20",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": 302828689.0,
+      "raw_name": "MICROSOFT CORP",
+      "value": 107892993.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLL",
+      "ticker": "SNDK",
       "name": "",
-      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": 225625850.0,
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": 104837424.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "value": 199671702.0,
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 94659500.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "MSFT",
-      "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": 190803755.0,
+      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "value": 86351837.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "QQQM",
+      "ticker": "CRWV",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 136193506.0,
+      "raw_name": "CoreWeave Inc",
+      "value": 61222995.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
