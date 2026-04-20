@@ -1,7 +1,7 @@
 {
-  "date": "2026-04-20",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-04-21",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "MSFT",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": 107892993.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -400357236.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "SNDK",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 104837424.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "NVIDIA CORP",
+      "value": -283080719.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 94659500.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "TQQQ",
+      "name": "",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -209120070.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "value": 86351837.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "MU",
+      "name": "",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -111645721.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "CRWV",
+      "ticker": "NVDL",
       "name": "",
-      "raw_name": "CoreWeave Inc",
-      "value": 61222995.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
+      "value": -70988134.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
