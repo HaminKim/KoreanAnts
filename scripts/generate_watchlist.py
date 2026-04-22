@@ -1070,7 +1070,8 @@ def main():
         b  = s["breakdown"]
         d  = s["data"]
         sr = f"{d['sector_rs_excess']:+.1f}%" if d["sector_rs_excess"] is not None else " N/A "
-        return (f"  {s['ticker']:6s} "
+        ticker = s["ticker"] or "N/A"
+        return (f"  {ticker:6s} "
                 f"bull={b['bull_strength']:5.1f} bear={b['bear_strength']:5.1f} net={b['net_direction']:+5.1f}  "
                 f"[{s['stage']:18s}]  "
                 f"MA{d['ma_distance_pct']:+.1f}%  "
