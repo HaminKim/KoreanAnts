@@ -168,7 +168,7 @@ SECTORS = [
         "tickers": [
             "RKLB","LUNR","ASTS","PL","RDW",
             "SPIR","GSAT","IRDM","VSAT","SATL",
-            "MNTS","HON","BA","HEI","TDG",
+            "HON","BA","HEI","TDG",
         ]
     },
     {
@@ -1069,13 +1069,16 @@ def main():
     def _row(s):
         b  = s["breakdown"]
         d  = s["data"]
-        sr = f"{d['sector_rs_excess']:+.1f}%" if d["sector_rs_excess"] is not None else " N/A "
+        sr  = f"{d['sector_rs_excess']:+.1f}%" if d["sector_rs_excess"] is not None else " N/A "
+        rsp = f"RS{d['rs_excess_pct']:+.1f}%"  if d["rs_excess_pct"]   is not None else "RS  N/A "
+        ma  = f"MA{d['ma_distance_pct']:+.1f}%" if d["ma_distance_pct"] is not None else "MA  N/A "
         ticker = s["ticker"] or "N/A"
+        stage  = s["stage"]  or "unknown"
         return (f"  {ticker:6s} "
                 f"bull={b['bull_strength']:5.1f} bear={b['bear_strength']:5.1f} net={b['net_direction']:+5.1f}  "
-                f"[{s['stage']:18s}]  "
-                f"MA{d['ma_distance_pct']:+.1f}%  "
-                f"RS{d['rs_excess_pct']:+.1f}%  "
+                f"[{stage:18s}]  "
+                f"{ma}  "
+                f"{rsp}  "
                 f"섹터{sr}  {s['sector_name']}")
 
     print(f"\n{'─'*65}")
