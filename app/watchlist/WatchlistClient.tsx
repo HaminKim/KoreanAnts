@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { createClient } from '@/utils/supabase/client'
@@ -1168,6 +1168,286 @@ function BottomUpView({
 // Main
 // ─────────────────────────────────────────
 
+// ─────────────────────────────────────────
+// 섹터 순위 범프 차트
+// ─────────────────────────────────────────
+
+const BUMP_COLORS = [
+  '#ef4444','#f97316','#eab308','#84cc16','#22c55e',
+  '#14b8a6','#06b6d4','#3b82f6','#6366f1','#8b5cf6',
+  '#a855f7','#ec4899','#f43f5e','#dc2626','#d97706',
+  '#f59e0b','#16a34a','#0891b2','#2563eb','#7c3aed',
+  '#c026d3','#db2777','#059669','#ca8a04','#0284c7',
+  '#be123c',
+]
+
+function SectorRankingView({ sectors }: { sectors: SectorItem[] }) {
+  const [days, setDays] = useState(60)
+  const [hoveredEtf, setHoveredEtf] = useState<string | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [containerWidth, setContainerWidth] = useState(0)
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const obs = new ResizeObserver(entries => setContainerWidth(entries[0].contentRect.width))
+    obs.observe(el)
+    setContainerWidth(el.clientWidth)
+    return () => obs.disconnect()
+  }, [])
+
+  // SPY 제외
+  const activeSectors = sectors.filter(s => s.etf !== 'SPY')
+  const allDates = activeSectors[0].sector_rs_history.map(h => h.d)
+  const sliced = allDates.slice(-days)
+  const startIdx = allDates.length - days
+  const D = sliced.length
+  const N = activeSectors.length // 25
+
+  // 날짜별 순위 계산 (RS 높을수록 1위)
+  const ranksByDate: Map<string, number>[] = sliced.map((_, di) => {
+    const absIdx = startIdx + di
+    const vals = activeSectors.map(s => ({
+      etf: s.etf,
+      v: s.sector_rs_history[absIdx]?.v ?? -Infinity,
+    }))
+    vals.sort((a, b) => b.v - a.v)
+    const map = new Map<string, number>()
+    vals.forEach((s, i) => map.set(s.etf, i + 1))
+    return map
+  })
+
+  const LEFT_PAD = 34
+  const RIGHT_PAD = 28   // 이모지만 표시 — 호버 시 툴팁으로 풀네임
+  const DATE_LABEL_H = 36
+  const BOT_PAD = 10
+  const ROW_H = 30
+
+  // 컨테이너 너비를 꽉 채우도록 COL_W 계산, 최소 8px
+  const COL_W = containerWidth > 0
+    ? Math.max(8, Math.floor((containerWidth - LEFT_PAD - RIGHT_PAD) / D))
+    : 14
+
+  const W = LEFT_PAD + D * COL_W + RIGHT_PAD
+  const H = DATE_LABEL_H + N * ROW_H + BOT_PAD
+
+  const xOf = (di: number) => LEFT_PAD + di * COL_W + COL_W / 2
+  const yOf = (rank: number) => DATE_LABEL_H + (rank - 1) * ROW_H + ROW_H / 2
+
+  // COL_W에 따라 날짜 표시 간격
+  const dateStep = COL_W >= 28 ? 1 : COL_W >= 18 ? 2 : COL_W >= 12 ? 3 : 5
+
+  if (containerWidth === 0) return <div ref={containerRef} style={{ minHeight: 200 }} />
+
+  return (
+    <div className="mt-2" ref={containerRef}>
+      {/* 날짜 범위 선택 */}
+      <div className="flex items-center gap-1.5 mb-3">
+        <span className="text-[11px] text-gray-400 font-semibold mr-1">기간</span>
+        {([20, 30, 60] as const).map(d => (
+          <button
+            key={d}
+            onClick={() => setDays(d)}
+            className={`px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
+              days === d ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+            }`}
+          >
+            {d}일
+          </button>
+        ))}
+        <span className="ml-auto text-[10px] text-gray-400">위쪽 = SPY 초과 강함</span>
+      </div>
+
+      <div className="overflow-x-auto">
+        <svg width={W} height={H} style={{ display: 'block' }}>
+          <defs>
+            <filter id="shadow" x="-10%" y="-30%" width="130%" height="160%">
+              <feDropShadow dx="0" dy="1" stdDeviation="2" floodOpacity="0.12" />
+            </filter>
+          </defs>
+          {/* 배경 줄 (짝수 행) */}
+          {Array.from({ length: N }, (_, i) => (
+            <rect
+              key={i}
+              x={LEFT_PAD}
+              y={DATE_LABEL_H + i * ROW_H}
+              width={D * COL_W}
+              height={ROW_H}
+              fill={i % 2 === 0 ? 'rgba(243,244,246,0.6)' : 'transparent'}
+            />
+          ))}
+
+          {/* 5위 단위 수평 가이드선 */}
+          {[5, 10, 15, 20, 25].map(r => (
+            <line
+              key={r}
+              x1={LEFT_PAD} x2={LEFT_PAD + D * COL_W}
+              y1={yOf(r)} y2={yOf(r)}
+              stroke="#e5e7eb" strokeWidth={0.8} strokeDasharray="4,3"
+            />
+          ))}
+
+          {/* 좌측 순위 라벨 */}
+          {[1, 5, 10, 15, 20, 25].map(r => (
+            <text
+              key={r}
+              x={LEFT_PAD - 5}
+              y={yOf(r)}
+              fontSize={9}
+              textAnchor="end"
+              fill="#9ca3af"
+              dominantBaseline="middle"
+              fontWeight={r === 1 ? 'bold' : 'normal'}
+            >
+              {r}위
+            </text>
+          ))}
+
+          {/* 날짜 라벨 — 기울여서 겹침 방지 */}
+          {sliced.map((d, di) => {
+            if (di % dateStep !== 0 && di !== D - 1) return null
+            const x = xOf(di)
+            const y = DATE_LABEL_H - 4
+            return (
+              <text
+                key={d}
+                x={x}
+                y={y}
+                fontSize={9}
+                textAnchor="end"
+                fill={di === D - 1 ? '#374151' : '#9ca3af'}
+                fontWeight={di === D - 1 ? 'bold' : 'normal'}
+                transform={`rotate(-40, ${x}, ${y})`}
+              >
+                {d.slice(5)}
+              </text>
+            )
+          })}
+
+          {/* 오늘 수직선 */}
+          <line
+            x1={xOf(D - 1)} x2={xOf(D - 1)}
+            y1={DATE_LABEL_H} y2={DATE_LABEL_H + N * ROW_H}
+            stroke="#d1d5db" strokeWidth={1} strokeDasharray="3,3"
+          />
+
+          {/* 섹터 라인 */}
+          {activeSectors.map((sector, si) => {
+            const color = BUMP_COLORS[si % BUMP_COLORS.length]
+            const isHovered = hoveredEtf === sector.etf
+            const dimmed = hoveredEtf !== null && !isHovered
+
+            const points = sliced.map((_, di) => ({
+              x: xOf(di),
+              y: yOf(ranksByDate[di].get(sector.etf) ?? N),
+            }))
+
+            // 베지어 커브
+            const path = points
+              .map((p, i) => {
+                if (i === 0) return `M${p.x.toFixed(1)},${p.y.toFixed(1)}`
+                const prev = points[i - 1]
+                const cx = ((prev.x + p.x) / 2).toFixed(1)
+                return `C${cx},${prev.y.toFixed(1)} ${cx},${p.y.toFixed(1)} ${p.x.toFixed(1)},${p.y.toFixed(1)}`
+              })
+              .join(' ')
+
+            const lastRank = ranksByDate[D - 1].get(sector.etf) ?? N
+            const prevRank = D >= 2 ? (ranksByDate[D - 2].get(sector.etf) ?? N) : lastRank
+            const delta = prevRank - lastRank
+            const lastY = yOf(lastRank)
+
+            return (
+              <g
+                key={sector.etf}
+                onMouseEnter={() => setHoveredEtf(sector.etf)}
+                onMouseLeave={() => setHoveredEtf(null)}
+                style={{ cursor: 'pointer' }}
+              >
+                <path
+                  d={path}
+                  fill="none"
+                  stroke={color}
+                  strokeWidth={isHovered ? 3 : 1.8}
+                  opacity={dimmed ? 0.1 : isHovered ? 1 : 0.75}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                {/* 끝점 원 */}
+                <circle
+                  cx={points[D - 1].x}
+                  cy={lastY}
+                  r={isHovered ? 5 : 3}
+                  fill={color}
+                  opacity={dimmed ? 0.1 : 1}
+                />
+                {/* 우측 라벨 — 평소: 이모지만, 호버: 풀 툴팁 */}
+                {isHovered ? (
+                  <g>
+                    <rect
+                      x={xOf(D - 1) + 8}
+                      y={lastY - 10}
+                      width={118}
+                      height={20}
+                      rx={4}
+                      fill="white"
+                      stroke={color}
+                      strokeWidth={1}
+                      filter="url(#shadow)"
+                    />
+                    <text
+                      x={xOf(D - 1) + 14}
+                      y={lastY}
+                      fontSize={10.5}
+                      fill={color}
+                      fontWeight="bold"
+                      dominantBaseline="middle"
+                    >
+                      {`${lastRank}위 ${sector.emoji} ${sector.name}`}
+                      {delta > 0 ? ` ▲${delta}` : delta < 0 ? ` ▼${Math.abs(delta)}` : ''}
+                    </text>
+                  </g>
+                ) : (
+                  <text
+                    x={xOf(D - 1) + 8}
+                    y={lastY}
+                    fontSize={11}
+                    fill={dimmed ? '#e5e7eb' : '#374151'}
+                    dominantBaseline="middle"
+                  >
+                    {sector.emoji}
+                  </text>
+                )}
+              </g>
+            )
+          })}
+        </svg>
+      </div>
+
+      {/* 하단 범례 */}
+      <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-1">
+        {activeSectors.map((sector, si) => {
+          const color = BUMP_COLORS[si % BUMP_COLORS.length]
+          const lastRank = ranksByDate[D - 1].get(sector.etf) ?? N
+          return (
+            <button
+              key={sector.etf}
+              onMouseEnter={() => setHoveredEtf(sector.etf)}
+              onMouseLeave={() => setHoveredEtf(null)}
+              className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] transition-all ${
+                hoveredEtf === sector.etf ? 'bg-gray-100 font-bold' : 'hover:bg-gray-50'
+              }`}
+            >
+              <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: color, flexShrink: 0 }} />
+              <span className="text-gray-600 truncate">{lastRank}위 {sector.emoji} {sector.name}</span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default function WatchlistClient() {
   const searchParams = useSearchParams()
   const [data,               setData]              = useState<WatchlistData | null>(null)
@@ -1176,7 +1456,7 @@ export default function WatchlistClient() {
   const [selectedSectorEtf,  setSelectedSectorEtf] = useState<string>('')
   const [selectedSectorName, setSelectedSectorName] = useState<string>('')
   const [selectedSector,     setSelectedSector]    = useState<SectorItem | null>(null)
-  const [viewMode,           setViewMode]          = useState<'topdown' | 'bottomup' | 'compare'>('topdown')
+  const [viewMode,           setViewMode]          = useState<'topdown' | 'bottomup' | 'compare' | 'ranking'>('topdown')
   const [hlFilter,           setHlFilter]          = useState<HLFilter>('break52')
   const [showHelp,           setShowHelp]          = useState(false)
   const [userId,             setUserId]            = useState<string | null>(null)
@@ -1329,6 +1609,16 @@ export default function WatchlistClient() {
             >
               ⚖️ 비교
             </button>
+            <button
+              onClick={() => setViewMode('ranking')}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                viewMode === 'ranking'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+              }`}
+            >
+              📈 순위
+            </button>
           </div>
           <button
             onClick={() => setShowHelp(v => !v)}
@@ -1446,6 +1736,8 @@ export default function WatchlistClient() {
           hlFilter={hlFilter}
           onSelectStock={handleSelectStock}
         />
+      ) : viewMode === 'ranking' ? (
+        <SectorRankingView sectors={data.sectors} />
       ) : (
         /* ── 비교 모드 (항상 SPY 기준) ── */
         (() => {
