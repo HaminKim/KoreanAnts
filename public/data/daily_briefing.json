@@ -1,57 +1,57 @@
 {
-  "date": "2026-04-23",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-04-24",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "OKLO",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -1441454336.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "ALTC ACQUISITION CORP",
+      "value": 63846763.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "NVDA",
-      "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -446619668.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "value": 62485138.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -421196386.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 57249417.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "MU",
+      "ticker": "HOOD",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -129411750.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "ROBINHOOD MARKETS INC",
+      "value": 54389871.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "KORU",
-      "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": -120549882.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 51132438.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
