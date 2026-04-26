@@ -584,7 +584,7 @@ def main():
     sector_rs_dict["KOSPI"]            = 0.0
     sector_rs_history_dict["KOSPI"]    = [
         {"d": str(idx.date()), "v": 0.0}
-        for idx in bench_returns_sector.dropna().index.tail(60)
+        for idx in bench_returns_sector.dropna().index[-60:]
     ]
     sector_rs_days_dict["KOSPI"]       = 0
     sector_rs_slope_dir_dict["KOSPI"]  = "flat"
