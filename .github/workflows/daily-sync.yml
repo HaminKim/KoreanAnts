@@ -101,6 +101,10 @@ jobs:
       - name: 6. Generate Watchlist
         run: python scripts/generate_watchlist.py
 
+      # 7-7. 코스피 워치리스트 히트맵 데이터 생성
+      - name: 7. Generate Watchlist KR
+        run: python scripts/generate_watchlist_kr.py
+
       # ----------------------------------------------------------------
 
       # 8. 최종 결과물(JSON) 업로드
