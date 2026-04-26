@@ -1,11 +1,11 @@
 {
-  "date": "2026-04-26",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-04-27",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,43 +13,43 @@
       "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
       "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
       "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "value": 264846150.0,
+      "value": 80861739.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLA",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": 223156237.0,
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 56423440.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "TSLL",
+      "ticker": "OKLO",
       "name": "",
-      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": 209296032.0,
+      "raw_name": "ALTC ACQUISITION CORP",
+      "value": 51218929.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 168063085.0,
+      "ticker": "ORCL",
+      "name": "",
+      "raw_name": "ORACLE CORP",
+      "value": 47712523.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "MSFT",
-      "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": 161957839.0,
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 47501974.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
