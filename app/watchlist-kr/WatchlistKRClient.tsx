@@ -2,14 +2,12 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
-import dynamic from 'next/dynamic'
 import { createClient } from '@/utils/supabase/client'
-import { KR_STOCK_NAMES, displayTicker, tradingViewSymbol } from '@/app/constants/stockNamesKR'
+import { KR_STOCK_NAMES, displayTicker } from '@/app/constants/stockNamesKR'
 
-const TradingViewChart = dynamic(
-  () => import('@/app/components/TradingViewChart'),
-  { ssr: false, loading: () => <div className="flex items-center justify-center h-full text-gray-400 text-sm">차트 로딩 중...</div> }
-)
+function naverUrl(ticker: string): string {
+  return `https://finance.naver.com/item/main.naver?code=${displayTicker(ticker)}`
+}
 
 // ─────────────────────────────────────────
 // Types (미국 버전과 동일 구조)
@@ -396,8 +394,9 @@ function StockDetailModal({
   const [show, setShow] = useState({ rs: true, cards: true })
   const toggle = (key: keyof typeof show) => setShow(prev => ({ ...prev, [key]: !prev[key] }))
   const [fullscreen, setFullscreen] = useState(false)
-  const [saving, setSaving] = useState(false)
+  const [saving, setSaving]   = useState(false)
   const isSaved = savedTickers.has(stock.ticker)
+  const stockUrl = naverUrl(stock.ticker)
 
   const handleStar = async () => {
     if (!userId || isSaved || saving) return
@@ -412,8 +411,6 @@ function StockDetailModal({
     onSaved(stock.ticker)
     setSaving(false)
   }
-
-  const tvSymbol = tradingViewSymbol(stock.ticker)
 
   return (
     <div
@@ -477,10 +474,19 @@ function StockDetailModal({
           </div>
         )}
 
-        {/* TradingView */}
+        {/* 네이버 금융 링크 */}
         {!fullscreen && (
-          <div style={{ height: '300px', flexShrink: 0 }}>
-            <TradingViewChart symbol={tvSymbol} height={300} />
+          <div className="flex items-center justify-center py-4 border-b border-gray-100 bg-gray-50">
+            <a
+              href={stockUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#03C75A] hover:bg-[#02b350] text-white text-sm font-bold transition-colors shadow-sm"
+            >
+              <span>📈</span>
+              <span>네이버 금융에서 차트 보기</span>
+              <span className="text-xs opacity-80">({displayTicker(stock.ticker)})</span>
+            </a>
           </div>
         )}
 
@@ -596,7 +602,7 @@ function SectorChartModal({ sector, onClose }: { sector: SectorItem; onClose: ()
   const rs = sector.sector_rs_excess
   const rsPositive = rs !== null && rs > 0
   const isMarket = sector.etf === 'KOSPI'
-  const tvSymbol = isMarket ? null : tradingViewSymbol(sector.etf)
+  const etfUrl   = isMarket ? null : naverUrl(sector.etf)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
@@ -633,12 +639,20 @@ function SectorChartModal({ sector, onClose }: { sector: SectorItem; onClose: ()
           </div>
         )}
 
-        {tvSymbol && (
-          <div style={{ height: '430px' }}>
-            <TradingViewChart symbol={tvSymbol} height={430} />
+        {etfUrl ? (
+          <div className="flex items-center justify-center py-8 bg-gray-50">
+            <a
+              href={etfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#03C75A] hover:bg-[#02b350] text-white text-sm font-bold transition-colors shadow-sm"
+            >
+              <span>📈</span>
+              <span>네이버 금융에서 ETF 차트 보기</span>
+              <span className="text-xs opacity-80">({displayTicker(sector.etf)})</span>
+            </a>
           </div>
-        )}
-        {!tvSymbol && (
+        ) : (
           <div className="flex items-center justify-center py-16 text-gray-400 text-sm">
             코스피 지수 기준 섹터 — ETF 차트 없음
           </div>
