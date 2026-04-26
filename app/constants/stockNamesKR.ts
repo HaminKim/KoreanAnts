@@ -376,5 +376,6 @@ export function displayTicker(ticker: string): string {
 }
 
 export function tradingViewSymbol(ticker: string): string {
-  return `KRX:${ticker.replace(/\.(KS|KQ)$/, '')}`
+  const code = ticker.replace(/\.(KS|KQ)$/, '')
+  return ticker.endsWith('.KQ') ? `KOSDAQ:${code}` : `KRX:${code}`
 }
