@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { createClient } from '@/utils/supabase/client';
 import { KOREAN_NAMES } from '@/app/constants/stockNames';
+import { KR_STOCK_NAMES, displayTicker, tradingViewSymbol } from '@/app/constants/stockNamesKR';
 
 const TradingViewChart = dynamic(
   () => import('@/app/components/TradingViewChart'),
@@ -83,30 +84,33 @@ export default function JournalClient({ userId }: { userId: string }) {
 
 // ─── Tab 1: 관심종목 ─────────────────────────────────────
 function WatchlistTab({ userId, supabase }: { userId: string; supabase: ReturnType<typeof createClient> }) {
+  const [market, setMarket] = useState<'us' | 'kr'>('us');
   const [items, setItems] = useState<WatchItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ ticker: '', name: '', sector: '', memo: '' });
   const [saving, setSaving] = useState(false);
 
+  const tableName = market === 'kr' ? 'personal_watchlist_kr' : 'personal_watchlist';
+
   const load = useCallback(async () => {
     setLoading(true);
     const { data } = await supabase
-      .from('personal_watchlist')
+      .from(tableName)
       .select('*')
       .order('added_at', { ascending: false });
     setItems(data ?? []);
     setLoading(false);
-  }, [supabase]);
+  }, [supabase, tableName]);
 
   useEffect(() => { load(); }, [load]);
 
   const save = async () => {
     if (!form.ticker.trim()) return;
     setSaving(true);
-    await supabase.from('personal_watchlist').insert({
+    await supabase.from(tableName).insert({
       user_id: userId,
-      ticker: form.ticker.trim().toUpperCase(),
+      ticker: form.ticker.trim(),
       name: form.name.trim() || null,
       sector: form.sector.trim() || null,
       memo: form.memo.trim() || null,
@@ -118,7 +122,7 @@ function WatchlistTab({ userId, supabase }: { userId: string; supabase: ReturnTy
   };
 
   const remove = async (id: string) => {
-    await supabase.from('personal_watchlist').delete().eq('id', id);
+    await supabase.from(tableName).delete().eq('id', id);
     setItems(prev => prev.filter(i => i.id !== id));
   };
 
@@ -126,17 +130,33 @@ function WatchlistTab({ userId, supabase }: { userId: string; supabase: ReturnTy
     const patch = Object.fromEntries(
       Object.entries(fields).map(([k, v]) => [k, (v as string)?.trim() || null])
     );
-    await supabase.from('personal_watchlist').update(patch).eq('id', id);
+    await supabase.from(tableName).update(patch).eq('id', id);
     setItems(prev => prev.map(i => i.id === id ? { ...i, ...patch } : i));
   };
 
   return (
     <div className="space-y-4">
+      {/* 🇺🇸 / 🇰🇷 마켓 토글 */}
+      <div className="flex gap-1 bg-gray-100 p-1 rounded-xl">
+        <button
+          onClick={() => { setMarket('us'); setShowForm(false); }}
+          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${market === 'us' ? 'bg-white shadow text-black' : 'text-gray-500 hover:text-gray-700'}`}
+        >
+          🇺🇸 미국
+        </button>
+        <button
+          onClick={() => { setMarket('kr'); setShowForm(false); }}
+          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${market === 'kr' ? 'bg-white shadow text-black' : 'text-gray-500 hover:text-gray-700'}`}
+        >
+          🇰🇷 한국
+        </button>
+      </div>
+
       {/* 다크 요약 카드 */}
       <div className="bg-gray-950 text-white rounded-2xl p-5">
         <div className="flex justify-between items-start mb-5">
           <div>
-            <p className="text-gray-400 text-xs mb-1">관심 종목</p>
+            <p className="text-gray-400 text-xs mb-1">관심 종목 ({market === 'kr' ? '한국' : '미국'})</p>
             <p className="text-3xl font-black tracking-tight">{items.length}<span className="text-lg font-semibold text-gray-400 ml-1">개</span></p>
             {items.length > 0 && (
               <p className="text-sm text-gray-500 mt-1">
@@ -160,13 +180,14 @@ function WatchlistTab({ userId, supabase }: { userId: string; supabase: ReturnTy
         <div className="bg-gray-50 border rounded-xl p-4 space-y-2">
           <div className="grid grid-cols-2 gap-2">
             <input
-              placeholder="티커 (예: AAPL) *"
+              placeholder={market === 'kr' ? '티커 (예: 005930.KS) *' : '티커 (예: AAPL) *'}
               value={form.ticker}
               onChange={e => {
-                const t = e.target.value.toUpperCase();
-                setForm(p => ({ ...p, ticker: t, name: KOREAN_NAMES[t] || p.name }));
+                const t = market === 'kr' ? e.target.value : e.target.value.toUpperCase();
+                const autoName = market === 'kr' ? (KR_STOCK_NAMES[t] || '') : (KOREAN_NAMES[t] || '');
+                setForm(p => ({ ...p, ticker: t, name: autoName || p.name }));
               }}
-              className="border rounded-lg px-3 py-2 text-sm uppercase"
+              className="border rounded-lg px-3 py-2 text-sm"
             />
             <input
               placeholder="종목명"
@@ -204,7 +225,7 @@ function WatchlistTab({ userId, supabase }: { userId: string; supabase: ReturnTy
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {items.map(item => (
-            <WatchCard key={item.id} item={item} onRemove={remove} onUpdate={updateField} supabase={supabase} userId={userId} />
+            <WatchCard key={item.id} item={item} onRemove={remove} onUpdate={updateField} supabase={supabase} userId={userId} market={market} />
           ))}
         </div>
       )}
@@ -261,29 +282,33 @@ function InlineEdit({
 
 // ─── WatchCard ───────────────────────────────────────────
 function WatchCard({
-  item, onRemove, onUpdate, supabase, userId,
+  item, onRemove, onUpdate, supabase, userId, market,
 }: {
   item: WatchItem
   onRemove: (id: string) => void
   onUpdate: (id: string, fields: Partial<Pick<WatchItem, 'memo' | 'name' | 'sector'>>) => Promise<void>
   supabase: ReturnType<typeof createClient>
   userId: string
+  market: 'us' | 'kr'
 }) {
-  const router = useRouter();
+  const router  = useRouter();
+  const tvSym   = market === 'kr' ? tradingViewSymbol(item.ticker) : item.ticker;
+  const dispTkr = market === 'kr' ? displayTicker(item.ticker) : item.ticker;
+  const wlLink  = market === 'kr' ? `/watchlist-kr?stock=${item.ticker}` : `/watchlist?stock=${item.ticker}`;
 
   return (
     <div className="border rounded-2xl overflow-hidden hover:shadow-lg transition-shadow bg-white">
       <div style={{ height: 260 }}>
-        <TradingViewChart symbol={item.ticker} height={260} showStudies={false} minimal={true} />
+        <TradingViewChart symbol={tvSym} height={260} showStudies={false} minimal={true} />
       </div>
       <div className="p-3 border-t border-gray-100 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
             <button
-              onClick={() => router.push(`/watchlist?stock=${item.ticker}`)}
+              onClick={() => router.push(wlLink)}
               className="font-black text-base tracking-tight hover:text-blue-600 transition-colors"
             >
-              {item.ticker}
+              {dispTkr}
             </button>
             <InlineEdit
               value={item.name}
