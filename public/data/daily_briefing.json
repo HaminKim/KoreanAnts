@@ -1,7 +1,7 @@
 {
-  "date": "2026-04-27",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-04-28",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "value": 80861739.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -217991944.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "QQQM",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 56423440.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "NVIDIA CORP",
+      "value": -186590206.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "OKLO",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "ALTC ACQUISITION CORP",
-      "value": 51218929.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -153696813.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "ORCL",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "ORACLE CORP",
-      "value": 47712523.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "IONQ INC",
+      "value": -76996495.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 47501974.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "ASTS",
+      "name": "",
+      "raw_name": "AST SPACEMOBILE INC CL A EXOF 008072919 US64822P2056",
+      "value": -57136230.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
