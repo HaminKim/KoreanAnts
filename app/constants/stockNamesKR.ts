@@ -405,6 +405,20 @@ export const KR_STOCK_NAMES: Record<string, string> = {
 
   // ── KODEX 200 (시장)
   '069500.KS': 'KODEX 200',
+
+  // ── 섹터 ETF
+  '102970.KS': 'KODEX 증권',
+  '139260.KS': 'TIGER 200 IT',
+  '300950.KS': 'KODEX 게임산업',
+  '228810.KS': 'TIGER 미디어컨텐츠',
+  '117460.KS': 'KODEX 에너지화학',
+  '227560.KS': 'TIGER 200 생활소비재',
+  '307510.KS': 'TIGER 의료기기',
+  '140710.KS': 'KODEX 운송',
+  '329200.KS': 'TIGER 리츠부동산인프라',
+  '385510.KS': 'KODEX 신재생에너지액티브',
+  '228790.KS': 'TIGER 화장품',
+  '0080G0.KS': 'KODEX 방산TOP10',
 }
 
 export function displayTicker(ticker: string): string {

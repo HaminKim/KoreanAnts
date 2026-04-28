@@ -954,7 +954,7 @@ function StockDetailModal({
               )}
               {stock.rs_sector_line && stock.rs_sector_line.length >= 3 && (
                 <div className="w-full">
-                  <RSLineChart data={stock.rs_sector_line} label={`vs ${displayTicker(sectorEtf)} (1년)`} uid={`etf-fs-${stock.ticker}`} />
+                  <RSLineChart data={stock.rs_sector_line} label={`vs ${KR_STOCK_NAMES[sectorEtf] ?? sectorName} (1년)`} uid={`etf-fs-${stock.ticker}`} />
                 </div>
               )}
               <div className="w-full grid grid-cols-2 gap-3 text-xs">
@@ -988,7 +988,7 @@ function StockDetailModal({
                     <RSLineChart data={stock.rs_spy_line} label="vs 코스피 (1년)" uid={`kospi-${stock.ticker}`} />
                   )}
                   {stock.rs_sector_line && stock.rs_sector_line.length >= 3 && (
-                    <RSLineChart data={stock.rs_sector_line} label={`vs ${displayTicker(sectorEtf)} (1년)`} uid={`etf-${stock.ticker}`} />
+                    <RSLineChart data={stock.rs_sector_line} label={`vs ${KR_STOCK_NAMES[sectorEtf] ?? sectorName} (1년)`} uid={`etf-${stock.ticker}`} />
                   )}
                 </>
               )}
@@ -1052,7 +1052,9 @@ function SectorChartModal({ sector, onClose }: { sector: SectorItem; onClose: ()
           <div className="flex items-center gap-2">
             <span className="text-lg">{sector.emoji}</span>
             <span className="font-bold text-gray-900">{sector.name}</span>
-            <span className="text-sm text-gray-400">{displayTicker(sector.etf)}</span>
+            {KR_STOCK_NAMES[sector.etf] && (
+              <span className="text-xs text-gray-400">{KR_STOCK_NAMES[sector.etf]}</span>
+            )}
             {rs !== null && (
               <span className="text-xs font-mono font-bold" style={{ color: rsPositive ? '#15803d' : '#b91c1c' }}>
                 {rsPositive ? '▲' : '▼'} {Math.abs(rs).toFixed(2)}% vs 코스피
@@ -1069,7 +1071,7 @@ function SectorChartModal({ sector, onClose }: { sector: SectorItem; onClose: ()
           <div className="px-4 pt-3 pb-2 border-b border-gray-100 bg-gray-50">
             <RSSparkline
               data={sector.sector_rs_history}
-              label={`${displayTicker(sector.etf)} RS vs 코스피  (섹터 60일 초과수익률,  최근 ${sector.sector_rs_history.length}거래일)`}
+              label={`${KR_STOCK_NAMES[sector.etf] ?? sector.name} RS vs 코스피  (섹터 60일 초과수익률,  최근 ${sector.sector_rs_history.length}거래일)`}
               uid={`sec-kr-${sector.etf}`}
             />
           </div>
@@ -1446,17 +1448,15 @@ export default function WatchlistKRClient() {
   return (
     <div>
       {/* ── 시장 전환 버튼 ── */}
-      <div className="flex gap-2 mb-3">
-        <button
-          className="flex-1 py-2 rounded-xl text-[12px] font-bold border-2 border-blue-600 bg-blue-600 text-white shadow-sm"
-        >
-          🇰🇷 한국 (KR)
+      <div className="flex gap-1 mb-3 p-1 bg-gray-100 rounded-xl">
+        <button className="flex-1 py-1.5 rounded-lg text-[13px] font-bold bg-white text-gray-900 shadow-sm">
+          코스피
         </button>
         <button
           onClick={() => router.push('/watchlist')}
-          className="flex-1 py-2 rounded-xl text-[12px] font-semibold border-2 border-gray-200 bg-white text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors"
+          className="flex-1 py-1.5 rounded-lg text-[13px] font-medium text-gray-400 hover:text-gray-600 transition-colors"
         >
-          🇺🇸 미국 (US)
+          나스닥
         </button>
       </div>
 

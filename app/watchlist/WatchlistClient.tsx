@@ -1546,17 +1546,15 @@ export default function WatchlistClient() {
   return (
     <div>
       {/* ── 시장 전환 버튼 ── */}
-      <div className="flex gap-2 mb-3">
+      <div className="flex gap-1 mb-3 p-1 bg-gray-100 rounded-xl">
         <button
           onClick={() => router.push('/watchlist-kr')}
-          className="flex-1 py-2 rounded-xl text-[12px] font-semibold border-2 border-gray-200 bg-white text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors"
+          className="flex-1 py-1.5 rounded-lg text-[13px] font-medium text-gray-400 hover:text-gray-600 transition-colors"
         >
-          🇰🇷 한국 (KR)
+          코스피
         </button>
-        <button
-          className="flex-1 py-2 rounded-xl text-[12px] font-bold border-2 border-blue-600 bg-blue-600 text-white shadow-sm"
-        >
-          🇺🇸 미국 (US)
+        <button className="flex-1 py-1.5 rounded-lg text-[13px] font-bold bg-white text-gray-900 shadow-sm">
+          나스닥
         </button>
       </div>
 
