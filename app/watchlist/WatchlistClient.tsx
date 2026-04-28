@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { createClient } from '@/utils/supabase/client'
 import { KOREAN_NAMES } from '@/app/constants/stockNames'
@@ -1450,6 +1450,7 @@ function SectorRankingView({ sectors }: { sectors: SectorItem[] }) {
 
 export default function WatchlistClient() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [data,               setData]              = useState<WatchlistData | null>(null)
   const [loading,            setLoading]           = useState(true)
   const [selectedStock,      setSelectedStock]     = useState<StockItem | null>(null)
@@ -1544,6 +1545,21 @@ export default function WatchlistClient() {
 
   return (
     <div>
+      {/* ── 시장 전환 버튼 ── */}
+      <div className="flex gap-2 mb-3">
+        <button
+          onClick={() => router.push('/watchlist-kr')}
+          className="flex-1 py-2 rounded-xl text-[12px] font-semibold border-2 border-gray-200 bg-white text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors"
+        >
+          🇰🇷 한국 (KR)
+        </button>
+        <button
+          className="flex-1 py-2 rounded-xl text-[12px] font-bold border-2 border-blue-600 bg-blue-600 text-white shadow-sm"
+        >
+          🇺🇸 미국 (US)
+        </button>
+      </div>
+
       {/* ── 상단 요약 카드 ── */}
       <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-4 shadow-sm">
         {/* 두 핵심 지표 */}

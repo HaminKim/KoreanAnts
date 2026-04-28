@@ -1,15 +1,10 @@
 'use client'
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { useSearchParams } from 'next/navigation'
-import dynamic from 'next/dynamic'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
-import { KR_STOCK_NAMES, displayTicker, tradingViewSymbol } from '@/app/constants/stockNamesKR'
-
-const TradingViewChart = dynamic(
-  () => import('@/app/components/TradingViewChart'),
-  { ssr: false, loading: () => <div className="flex items-center justify-center h-full text-gray-400 text-sm">차트 로딩 중...</div> }
-)
+import { KR_STOCK_NAMES, displayTicker } from '@/app/constants/stockNamesKR'
+import { createChart, ColorType, AreaSeries, LineSeries, HistogramSeries } from 'lightweight-charts'
 
 function naverUrl(ticker: string): string {
   return `https://finance.naver.com/item/main.naver?code=${displayTicker(ticker)}`
@@ -30,6 +25,8 @@ type RSPoint = { d: string; v: number }
 interface HighLow        { w52: number|null; w26: number|null; w13: number|null }
 interface NearHigh       { w52: number|null; w26: number|null; w13: number|null }
 interface BreakoutOnsets { w52: number|null; w26: number|null; w13: number|null }
+interface EpsQuarter { d: string; actual: number|null; estimate: number|null; surp: number|null; revenue?: number|null }
+interface EpsData    { history: EpsQuarter[]; trend: string|null }
 
 interface StockBreakdown {
   bull_strength: number
@@ -67,6 +64,7 @@ interface StockItem {
   lows:             HighLow
   near_highs:       NearHigh
   breakout_onsets?: BreakoutOnsets
+  eps?:             EpsData | null
   breakdown:       StockBreakdown
   data:            StockData
 }
@@ -384,7 +382,423 @@ function SectorBlock({
 }
 
 // ─────────────────────────────────────────
-// StockDetailModal (EPS/Revenue 없음)
+// KRStockChart — Lightweight Charts 인라인 주가 차트
+// ─────────────────────────────────────────
+
+function formatKoreanWon(v: number): string {
+  if (v >= 100_000_000) {
+    const uk  = Math.floor(v / 100_000_000)
+    const man = Math.floor((v % 100_000_000) / 10_000)
+    return man > 0 ? `${uk}억 ${man}만` : `${uk}억`
+  }
+  if (v >= 10_000) {
+    const man  = Math.floor(v / 10_000)
+    const rest = Math.round(v % 10_000)
+    return rest > 0 ? `${man}만 ${rest.toLocaleString()}` : `${man}만`
+  }
+  return Math.round(v).toLocaleString()
+}
+
+function formatVolume(v: number): string {
+  if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(1)}M`
+  if (v >= 1_000)     return `${(v / 1_000).toFixed(0)}K`
+  return String(v)
+}
+
+function KRStockChart({ ticker }: { ticker: string }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState(false)
+
+  useEffect(() => {
+    if (!containerRef.current) return
+    let cancelled = false
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let chart: any = null
+
+    // prevent modal scroll from swallowing wheel events on the chart
+    const el = containerRef.current
+    const stopWheel = (e: WheelEvent) => e.stopPropagation()
+    el.addEventListener('wheel', stopWheel, { passive: false })
+
+    async function load() {
+      try {
+        const res  = await fetch(`/api/chart?ticker=${encodeURIComponent(ticker)}`)
+        const json = await res.json()
+        if (cancelled || !containerRef.current) return
+        if (!json.data || json.data.length === 0) { setError(true); return }
+
+        const raw: { time: string; value: number; volume?: number }[] = json.data
+        const data    = raw.map(d => ({ time: d.time, value: d.value }))
+        const volData = raw
+          .filter(d => d.volume != null && d.volume > 0)
+          .map(d => ({ time: d.time, value: d.volume as number, color: 'rgba(100,116,139,0.35)' }))
+
+        function calcMA(n: number) {
+          return data.flatMap((_, i) => {
+            if (i < n - 1) return []
+            const avg = data.slice(i - n + 1, i + 1).reduce((s, d) => s + d.value, 0) / n
+            return [{ time: data[i].time, value: avg }]
+          })
+        }
+
+        chart = createChart(containerRef.current!, {
+          layout:  { background: { type: ColorType.Solid, color: 'transparent' }, textColor: '#9ca3af' },
+          grid:    { vertLines: { color: '#f3f4f6' }, horzLines: { color: '#f3f4f6' } },
+          rightPriceScale: { borderColor: '#e5e7eb' },
+          timeScale:       { borderColor: '#e5e7eb', timeVisible: false },
+          crosshair: { mode: 1 },
+          handleScroll: { mouseWheel: true, pressedMouseMove: true },
+          handleScale:  { mouseWheel: true, pinch: true },
+          width:  containerRef.current!.clientWidth,
+          height: 320,
+          localization: {
+            priceFormatter: (v: number) => formatKoreanWon(v),
+          },
+        })
+
+        // ── 주가 영역
+        const area = chart.addSeries(AreaSeries, {
+          lineColor:        '#3b82f6',
+          topColor:         'rgba(59,130,246,0.10)',
+          bottomColor:      'rgba(59,130,246,0)',
+          lineWidth:        1.5,
+          priceLineVisible: false,
+          lastValueVisible: true,
+          priceScaleId:     'right',
+        })
+        area.setData(data)
+
+        // ── MA선
+        const MA_DEFS = [
+          { n: 5,   color: '#f59e0b' },
+          { n: 20,  color: '#10b981' },
+          { n: 60,  color: '#8b5cf6' },
+          { n: 100, color: '#ef4444' },
+          { n: 150, color: '#06b6d4' },
+        ]
+        for (const { n, color } of MA_DEFS) {
+          const maData = calcMA(n)
+          if (maData.length < 2) continue
+          const line = chart.addSeries(LineSeries, {
+            color, lineWidth: 1,
+            priceLineVisible: false, lastValueVisible: false, crossHairMarkerVisible: false,
+            priceScaleId: 'right',
+          })
+          line.setData(maData)
+        }
+
+        // ── 거래량 히스토그램 (별도 스케일) — v5: add series first, then applyOptions on the series
+        if (volData.length > 0) {
+          const vol = chart.addSeries(HistogramSeries, {
+            priceScaleId:    'vol',
+            priceLineVisible: false,
+            lastValueVisible: false,
+            priceFormat: { type: 'custom', formatter: (v: number) => formatVolume(v) },
+          })
+          vol.priceScale().applyOptions({
+            scaleMargins: { top: 0.80, bottom: 0 },
+            borderVisible: false,
+          })
+          vol.setData(volData)
+        }
+
+        chart.timeScale().fitContent()
+        setLoading(false)
+      } catch {
+        if (!cancelled) setError(true)
+      }
+    }
+
+    load()
+    return () => {
+      cancelled = true
+      el.removeEventListener('wheel', stopWheel)
+      try { chart?.remove() } catch { /* ignore */ }
+    }
+  }, [ticker])
+
+  return (
+    <div className="relative bg-white" style={{ height: '320px' }}>
+      {loading && !error && (
+        <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm z-10">
+          차트 로딩 중...
+        </div>
+      )}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-sm z-10">
+          차트 데이터 없음
+        </div>
+      )}
+      <div ref={containerRef} style={{ height: '320px' }} />
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────
+// EPS / Revenue 헬퍼
+// ─────────────────────────────────────────
+
+function calcChange(cur: number | null | undefined, prev: number | null | undefined): number | null {
+  if (cur == null || prev == null || prev === 0) return null
+  return (cur - prev) / Math.abs(prev) * 100
+}
+
+function fmtChg(v: number | null): { text: string; color: string } {
+  if (v == null) return { text: '─', color: '#9ca3af' }
+  const sign = v >= 0 ? '+' : ''
+  return { text: `${sign}${v.toFixed(1)}%`, color: v >= 0 ? '#15803d' : '#b91c1c' }
+}
+
+function fmtKRW(v: number): string {
+  const abs = Math.abs(v)
+  if (abs >= 10000) return `${(v / 10000).toFixed(0)}만`
+  if (abs >= 1000)  return `${(v / 1000).toFixed(1)}천`
+  return v.toFixed(0)
+}
+
+function fmtAuk(v: number): string {
+  if (v >= 10000) {
+    const jo = Math.floor(v / 10000)
+    const ok = Math.round(v % 10000)
+    return ok > 0 ? `${jo}조 ${ok.toLocaleString()}억` : `${jo}조`
+  }
+  if (v >= 1000)  return `${Math.round(v).toLocaleString()}억`
+  return `${v.toFixed(0)}억`
+}
+
+// ─────────────────────────────────────────
+// EPSChartKR — 분기별 EPS (원화)
+// ─────────────────────────────────────────
+
+function EPSChartKR({ eps }: { eps: EpsData }) {
+  const history = eps.history.filter(q => q.actual !== null) as (EpsQuarter & { actual: number })[]
+  if (history.length < 2) return null
+
+  const W = 400, H = 100
+  const PAD = { l: 52, r: 8, t: 14, b: 22 }
+  const innerW = W - PAD.l - PAD.r
+  const innerH = H - PAD.t - PAD.b
+
+  const allVals = [
+    ...history.map(q => q.actual),
+    ...history.filter(q => q.estimate != null).map(q => q.estimate as number),
+    0,
+  ]
+  const rawMax = Math.max(...allVals)
+  const rawMin = Math.min(...allVals)
+  const pad    = Math.max((rawMax - rawMin) * 0.18, 1)
+  const yMax   = rawMax + pad
+  const yMin   = rawMin - pad
+  const toY    = (v: number) => PAD.t + innerH * (1 - (v - yMin) / (yMax - yMin))
+  const zeroY  = toY(0)
+
+  const gap  = innerW / history.length
+  const barW = Math.max(5, gap * 0.55)
+
+  const trend      = eps.trend
+  const trendIcon  = trend === 'improving' ? '↗' : trend === 'declining' ? '↘' : '→'
+  const trendColor = trend === 'improving' ? '#15803d' : trend === 'declining' ? '#b91c1c' : '#6b7280'
+  const trendLabel = trend === 'improving' ? '개선' : trend === 'declining' ? '악화' : '보합'
+  const hasEstimate = history.some(q => q.estimate != null)
+
+  const latestDate = history[history.length - 1]?.d ?? ''
+  const isStale = latestDate < '2025-10'
+
+  return (
+    <div className="mb-3">
+      <div className="flex items-center justify-between mb-0.5">
+        <span className="text-[10px] font-semibold text-gray-500">
+          EPS (분기 / ₩) — 점선=추정치 — {history.length}Q
+          {isStale && <span className="ml-1 text-orange-400">⚠ 구데이터</span>}
+        </span>
+        {trend && (
+          <span className="text-[9px] font-bold" style={{ color: trendColor }}>
+            {trendIcon} {trendLabel} <span className="text-gray-300 font-normal">({latestDate.slice(2, 7)})</span>
+          </span>
+        )}
+      </div>
+
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ height: '90px', display: 'block' }}>
+        {/* 0선 */}
+        {zeroY >= PAD.t && zeroY <= H - PAD.b && (
+          <line x1={PAD.l} y1={zeroY} x2={W - PAD.r} y2={zeroY}
+            stroke="#9ca3af" strokeWidth={0.6} strokeDasharray="3,2" />
+        )}
+
+        {history.map((q, i) => {
+          const cx      = PAD.l + gap * i + gap / 2
+          const actualY = toY(q.actual)
+          const isPos   = q.actual >= 0
+          const barTop  = isPos ? actualY : zeroY
+          const barBot  = isPos ? zeroY   : actualY
+          const barH    = Math.max(2, barBot - barTop)
+
+          // 추정치 있으면 beat/miss 색상, 없으면 기본 파랑/빨강
+          let fill: string
+          if (q.estimate != null) {
+            fill = q.actual >= q.estimate
+              ? 'rgba(34,197,94,0.75)'   // beat → 초록
+              : 'rgba(239,68,68,0.75)'   // miss → 빨강
+          } else {
+            fill = isPos ? 'rgba(59,130,246,0.60)' : 'rgba(239,68,68,0.60)'
+          }
+
+          return (
+            <g key={q.d}>
+              <rect x={cx - barW / 2} y={barTop} width={barW} height={barH} fill={fill} rx={1} />
+              {/* 추정치 점선 */}
+              {q.estimate != null && (
+                <line
+                  x1={cx - barW / 2 - 1} y1={toY(q.estimate)}
+                  x2={cx + barW / 2 + 1} y2={toY(q.estimate)}
+                  stroke="#6b7280" strokeWidth={1.2} strokeDasharray="2,1"
+                />
+              )}
+              <text x={cx} y={H - 2} fontSize={5.5} textAnchor="middle" fill="#9ca3af">
+                {q.d.slice(2, 7)}
+              </text>
+            </g>
+          )
+        })}
+
+        <text x={PAD.l - 2} y={PAD.t + 3}     fontSize={6} textAnchor="end" fill="#9ca3af">₩{fmtKRW(yMax)}</text>
+        {zeroY >= PAD.t && zeroY <= H - PAD.b && (
+          <text x={PAD.l - 2} y={zeroY} fontSize={6} textAnchor="end" fill="#9ca3af" dominantBaseline="middle">0</text>
+        )}
+        <text x={PAD.l - 2} y={H - PAD.b + 2} fontSize={6} textAnchor="end" fill="#9ca3af">₩{fmtKRW(yMin)}</text>
+      </svg>
+
+      <div className="overflow-x-auto mt-1">
+        <table className="w-full text-[9px]" style={{ borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: '#f9fafb' }}>
+              <th className="text-left px-1.5 py-0.5 text-gray-400 font-normal">분기</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">EPS(₩)</th>
+              {hasEstimate && <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">추정치</th>}
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">전분기比</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">전년比</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...history].reverse().map((q, ri) => {
+              const i    = history.length - 1 - ri
+              const qoq  = calcChange(q.actual, history[i - 1]?.actual)
+              const yoy  = calcChange(q.actual, history[i - 4]?.actual)
+              const beat = q.estimate != null ? q.actual >= q.estimate : null
+              return (
+                <tr key={q.d} style={{ borderTop: '1px solid #f3f4f6' }}>
+                  <td className="px-1.5 py-0.5 font-mono text-gray-500">{q.d.slice(2, 7)}</td>
+                  <td className="px-1.5 py-0.5 font-mono text-right font-semibold"
+                    style={{ color: q.actual >= 0 ? '#15803d' : '#b91c1c' }}>
+                    ₩{q.actual.toLocaleString()}
+                  </td>
+                  {hasEstimate && (
+                    <td className="px-1.5 py-0.5 font-mono text-right text-gray-400">
+                      {q.estimate != null ? `₩${q.estimate.toLocaleString()}` : '─'}
+                      {beat !== null && (
+                        <span className="ml-0.5" style={{ color: beat ? '#15803d' : '#b91c1c' }}>
+                          {beat ? '▲' : '▼'}
+                        </span>
+                      )}
+                    </td>
+                  )}
+                  <td className="px-1.5 py-0.5 font-mono text-right" style={{ color: fmtChg(qoq).color }}>{fmtChg(qoq).text}</td>
+                  <td className="px-1.5 py-0.5 font-mono text-right" style={{ color: fmtChg(yoy).color }}>{fmtChg(yoy).text}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────
+// RevenueChartKR — 분기별 매출 (억원)
+// ─────────────────────────────────────────
+
+function RevenueChartKR({ eps }: { eps: EpsData }) {
+  const history = eps.history.filter(q => q.revenue != null) as (EpsQuarter & { revenue: number })[]
+  if (history.length < 2) return null
+
+  const W = 400, H = 80
+  const PAD = { l: 48, r: 8, t: 10, b: 22 }
+  const innerW = W - PAD.l - PAD.r
+  const innerH = H - PAD.t - PAD.b
+
+  const vals   = history.map(q => q.revenue)
+  const rawMax = Math.max(...vals)
+  const rawMin = Math.min(...vals, 0)
+  const pad    = Math.max((rawMax - rawMin) * 0.12, 1)
+  const yMax   = rawMax + pad
+  const yMin   = Math.max(0, rawMin - pad)
+  const toY    = (v: number) => PAD.t + innerH * (1 - (v - yMin) / (yMax - yMin))
+  const baseY  = toY(yMin)
+
+  const gap  = innerW / history.length
+  const barW = Math.max(5, gap * 0.55)
+
+  return (
+    <div className="mb-3">
+      <div className="flex items-center justify-between mb-0.5">
+        <span className="text-[10px] font-semibold text-gray-500">매출 (분기 / 억원) — {history.length}Q</span>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ height: '70px', display: 'block' }}>
+        {history.map((q, i) => {
+          const cx     = PAD.l + gap * i + gap / 2
+          const topY   = toY(q.revenue)
+          const barH   = Math.max(2, baseY - topY)
+          const isGrow = i > 0 && q.revenue >= history[i - 1].revenue
+          const fill   = isGrow ? 'rgba(59,130,246,0.65)' : 'rgba(156,163,175,0.55)'
+          return (
+            <g key={q.d}>
+              <rect x={cx - barW / 2} y={topY} width={barW} height={barH} fill={fill} rx={1} />
+              <text x={cx} y={H - 2} fontSize={5.5} textAnchor="middle" fill="#9ca3af">
+                {q.d.slice(2, 7)}
+              </text>
+            </g>
+          )
+        })}
+        <text x={PAD.l - 2} y={PAD.t + 4}     fontSize={6} textAnchor="end" fill="#9ca3af">{fmtAuk(yMax)}</text>
+        <text x={PAD.l - 2} y={H - PAD.b + 2}  fontSize={6} textAnchor="end" fill="#9ca3af">{fmtAuk(yMin)}</text>
+      </svg>
+      <div className="overflow-x-auto mt-1">
+        <table className="w-full text-[9px]" style={{ borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: '#f9fafb' }}>
+              <th className="text-left px-1.5 py-0.5 text-gray-400 font-normal">분기</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">매출(억원)</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">전분기比</th>
+              <th className="text-right px-1.5 py-0.5 text-gray-400 font-normal">전년比</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...history].reverse().map((q, ri) => {
+              const i   = history.length - 1 - ri
+              const qoq = calcChange(q.revenue, history[i - 1]?.revenue)
+              const yoy = calcChange(q.revenue, history[i - 4]?.revenue)
+              return (
+                <tr key={q.d} style={{ borderTop: '1px solid #f3f4f6' }}>
+                  <td className="px-1.5 py-0.5 font-mono text-gray-500">{q.d.slice(2, 7)}</td>
+                  <td className="px-1.5 py-0.5 font-mono text-right font-semibold text-blue-700">
+                    {fmtAuk(q.revenue)}
+                  </td>
+                  <td className="px-1.5 py-0.5 font-mono text-right" style={{ color: fmtChg(qoq).color }}>{fmtChg(qoq).text}</td>
+                  <td className="px-1.5 py-0.5 font-mono text-right" style={{ color: fmtChg(yoy).color }}>{fmtChg(yoy).text}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────
+// StockDetailModal
 // ─────────────────────────────────────────
 
 function StockDetailModal({
@@ -403,13 +817,12 @@ function StockDetailModal({
   const netPct     = Math.min(100, Math.abs(net))
   const isLongSide = net >= 0
 
-  const [show, setShow] = useState({ rs: true, cards: true })
+  const [show, setShow] = useState({ rs: true, cards: true, eps: true, revenue: true })
   const toggle = (key: keyof typeof show) => setShow(prev => ({ ...prev, [key]: !prev[key] }))
   const [fullscreen, setFullscreen] = useState(false)
   const [saving, setSaving]   = useState(false)
-  const isSaved    = savedTickers.has(stock.ticker)
-  const stockUrl   = naverUrl(stock.ticker)
-  const tvSymbol   = tradingViewSymbol(stock.ticker)
+  const isSaved  = savedTickers.has(stock.ticker)
+  const stockUrl = naverUrl(stock.ticker)
 
   const handleStar = async () => {
     if (!userId || isSaved || saving) return
@@ -487,31 +900,32 @@ function StockDetailModal({
           </div>
         )}
 
-        {/* TradingView 차트 + 네이버 금융 링크 */}
+        {/* 주가 차트 */}
         {!fullscreen && (
-          <>
-            <div style={{ height: '300px', flexShrink: 0 }}>
-              <TradingViewChart symbol={tvSymbol} height={300} />
-            </div>
-            <div className="flex items-center justify-end px-4 py-1.5 border-b border-gray-100 bg-gray-50">
+          <div className="border-b border-gray-100">
+            <KRStockChart ticker={stock.ticker} />
+            <div className="flex items-center justify-between px-4 py-1.5 bg-gray-50">
+              <span className="text-[9px] text-gray-300">MA 5·20·60·100·150</span>
               <a
                 href={stockUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-[10px] text-[#03C75A] hover:underline font-semibold"
               >
-                📈 네이버 금융에서 보기
+                네이버 금융 ↗
               </a>
             </div>
-          </>
+          </div>
         )}
 
         {/* 섹션 토글 */}
         {!fullscreen && (
           <div className="flex flex-wrap gap-1 px-4 py-2 border-b border-gray-100 bg-gray-50">
             {([
-              { key: 'rs',    label: 'RS 차트' },
-              { key: 'cards', label: '수치카드' },
+              { key: 'rs',      label: 'RS 차트' },
+              { key: 'cards',   label: '수치카드' },
+              { key: 'eps',     label: 'EPS' },
+              { key: 'revenue', label: '매출' },
             ] as { key: keyof typeof show; label: string }[]).map(({ key, label }) => (
               <button
                 key={key}
@@ -602,6 +1016,12 @@ function StockDetailModal({
                   ))}
                 </div>
               )}
+              {show.eps && stock.eps && stock.eps.history.filter(q => q.actual !== null).length >= 2 && (
+                <EPSChartKR eps={stock.eps} />
+              )}
+              {show.revenue && stock.eps && stock.eps.history.some(q => q.revenue != null) && (
+                <RevenueChartKR eps={stock.eps} />
+              )}
             </>
           )}
         </div>
@@ -619,7 +1039,6 @@ function SectorChartModal({ sector, onClose }: { sector: SectorItem; onClose: ()
   const rsPositive = rs !== null && rs > 0
   const isMarket = sector.etf === 'KOSPI'
   const etfUrl   = isMarket ? null : naverUrl(sector.etf)
-  const tvSymbol = isMarket ? null : tradingViewSymbol(sector.etf)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
@@ -656,26 +1075,25 @@ function SectorChartModal({ sector, onClose }: { sector: SectorItem; onClose: ()
           </div>
         )}
 
-        {tvSymbol ? (
-          <>
-            <div style={{ height: '380px' }}>
-              <TradingViewChart symbol={tvSymbol} height={380} />
-            </div>
-            {etfUrl && (
-              <div className="flex items-center justify-end px-4 py-1.5 border-t border-gray-100 bg-gray-50">
+        {!isMarket ? (
+          <div className="border-t border-gray-100">
+            <KRStockChart ticker={sector.etf} />
+            <div className="flex items-center justify-between px-4 py-1.5 bg-gray-50">
+              <span className="text-[9px] text-gray-300">MA 5·20·60·100·150</span>
+              {etfUrl && (
                 <a
                   href={etfUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-[10px] text-[#03C75A] hover:underline font-semibold"
                 >
-                  📈 네이버 금융에서 보기
+                  네이버 금융 ↗
                 </a>
-              </div>
-            )}
-          </>
+              )}
+            </div>
+          </div>
         ) : (
-          <div className="flex items-center justify-center py-16 text-gray-400 text-sm">
+          <div className="flex items-center justify-center py-8 text-gray-400 text-sm">
             코스피 지수 기준 섹터 — ETF 차트 없음
           </div>
         )}
@@ -799,7 +1217,7 @@ const BUMP_COLORS = [
 
 function SectorRankingView({ sectors }: { sectors: SectorItem[] }) {
   const [days, setDays] = useState(60)
-  const [hoveredEtf, setHoveredEtf] = useState<string | null>(null)
+  const [hoveredId, setHoveredId] = useState<number | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerWidth, setContainerWidth] = useState(0)
 
@@ -821,12 +1239,12 @@ function SectorRankingView({ sectors }: { sectors: SectorItem[] }) {
   const D         = sliced.length
   const N         = activeSectors.length
 
-  const ranksByDate: Map<string, number>[] = sliced.map((_, di) => {
+  const ranksByDate: Map<number, number>[] = sliced.map((_, di) => {
     const absIdx = startIdx + di
-    const vals   = activeSectors.map(s => ({ etf: s.etf, v: s.sector_rs_history[absIdx]?.v ?? -Infinity }))
+    const vals   = activeSectors.map(s => ({ id: s.id, v: s.sector_rs_history[absIdx]?.v ?? -Infinity }))
     vals.sort((a, b) => b.v - a.v)
-    const map = new Map<string, number>()
-    vals.forEach((s, i) => map.set(s.etf, i + 1))
+    const map = new Map<number, number>()
+    vals.forEach((s, i) => map.set(s.id, i + 1))
     return map
   })
 
@@ -865,9 +1283,9 @@ function SectorRankingView({ sectors }: { sectors: SectorItem[] }) {
 
           {activeSectors.map((sector, si) => {
             const color   = BUMP_COLORS[si % BUMP_COLORS.length]
-            const ranks   = sliced.map((_, di) => ranksByDate[di].get(sector.etf) ?? N)
-            const dimmed  = hoveredEtf !== null && hoveredEtf !== sector.etf
-            const isHover = hoveredEtf === sector.etf
+            const ranks   = sliced.map((_, di) => ranksByDate[di].get(sector.id) ?? N)
+            const dimmed  = hoveredId !== null && hoveredId !== sector.id
+            const isHover = hoveredId === sector.id
 
             const pathD = ranks
               .map((rank, di) => `${di === 0 ? 'M' : 'L'}${xOf(di).toFixed(1)},${yOf(rank).toFixed(1)}`)
@@ -879,7 +1297,7 @@ function SectorRankingView({ sectors }: { sectors: SectorItem[] }) {
             const delta    = prevRank - lastRank
 
             return (
-              <g key={sector.etf} onMouseEnter={() => setHoveredEtf(sector.etf)} onMouseLeave={() => setHoveredEtf(null)}>
+              <g key={sector.id} onMouseEnter={() => setHoveredId(sector.id)} onMouseLeave={() => setHoveredId(null)}>
                 <path d={pathD} fill="none" stroke={dimmed ? '#e5e7eb' : color}
                   strokeWidth={isHover ? 2.5 : 1.5} strokeLinejoin="round" strokeLinecap="round" opacity={dimmed ? 0.4 : 1} />
                 {isHover && ranks.map((rank, di) => (
@@ -904,13 +1322,13 @@ function SectorRankingView({ sectors }: { sectors: SectorItem[] }) {
       <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-1">
         {activeSectors.map((sector, si) => {
           const color    = BUMP_COLORS[si % BUMP_COLORS.length]
-          const lastRank = ranksByDate[D - 1].get(sector.etf) ?? N
+          const lastRank = ranksByDate[D - 1].get(sector.id) ?? N
           return (
             <button
-              key={sector.etf}
-              onMouseEnter={() => setHoveredEtf(sector.etf)}
-              onMouseLeave={() => setHoveredEtf(null)}
-              className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] transition-all ${hoveredEtf === sector.etf ? 'bg-gray-100 font-bold' : 'hover:bg-gray-50'}`}
+              key={sector.id}
+              onMouseEnter={() => setHoveredId(sector.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] transition-all ${hoveredId === sector.id ? 'bg-gray-100 font-bold' : 'hover:bg-gray-50'}`}
             >
               <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: color, flexShrink: 0 }} />
               <span className="text-gray-600 truncate">{lastRank}위 {sector.emoji} {sector.name}</span>
@@ -933,6 +1351,7 @@ const HELP_HOW_TO_READ = [
 
 export default function WatchlistKRClient() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [data,               setData]              = useState<WatchlistData | null>(null)
   const [loading,            setLoading]           = useState(true)
   const [selectedStock,      setSelectedStock]     = useState<StockItem | null>(null)
@@ -1000,8 +1419,8 @@ export default function WatchlistKRClient() {
   const mc        = data.market_context
   const allStocks = data.sectors.flatMap(s => s.stocks)
   const counts = {
-    long:  allStocks.filter(s => s.data.rs_excess_pct !== null && s.data.rs_excess_pct > 0).length,
-    short: allStocks.filter(s => s.data.rs_excess_pct !== null && s.data.rs_excess_pct < 0).length,
+    long:  allStocks.filter(s => s.breakdown.net_direction > 0).length,
+    short: allStocks.filter(s => s.breakdown.net_direction < 0).length,
   }
 
   const mktColor =
@@ -1026,6 +1445,21 @@ export default function WatchlistKRClient() {
 
   return (
     <div>
+      {/* ── 시장 전환 버튼 ── */}
+      <div className="flex gap-2 mb-3">
+        <button
+          className="flex-1 py-2 rounded-xl text-[12px] font-bold border-2 border-blue-600 bg-blue-600 text-white shadow-sm"
+        >
+          🇰🇷 한국 (KR)
+        </button>
+        <button
+          onClick={() => router.push('/watchlist')}
+          className="flex-1 py-2 rounded-xl text-[12px] font-semibold border-2 border-gray-200 bg-white text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors"
+        >
+          🇺🇸 미국 (US)
+        </button>
+      </div>
+
       {/* ── 상단 요약 카드 ── */}
       <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-4 shadow-sm">
         {(() => {

@@ -97,7 +97,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 7, "name": "증권", "etf": "016360.KS", "emoji": "📈",
+        "id": 7, "name": "증권", "etf": "102970.KS", "emoji": "📈",
         "tickers": [
             "016360.KS", "006800.KS", "071050.KS", "078020.KS", "001500.KS",
             "001720.KS", "039490.KS", "025540.KS", "003490.KS", "001510.KS",
@@ -105,7 +105,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 8, "name": "인터넷/플랫폼", "etf": "035420.KS", "emoji": "🌐",
+        "id": 8, "name": "인터넷/플랫폼", "etf": "139260.KS", "emoji": "🌐",
         "tickers": [
             "035420.KS", "035720.KS", "323410.KS", "377300.KS", "018280.KS",
             "053800.KS", "032500.KQ", "041510.KS", "035900.KS", "122870.KS",
@@ -113,7 +113,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 9, "name": "게임", "etf": "117700.KS", "emoji": "🎮",
+        "id": 9, "name": "게임", "etf": "300950.KS", "emoji": "🎮",
         "tickers": [
             "036570.KS", "251270.KS", "259960.KS", "293490.KS", "112040.KQ",
             "078340.KQ", "263750.KQ", "069080.KQ", "192080.KQ", "194480.KQ",
@@ -121,7 +121,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 10, "name": "엔터/미디어", "etf": "352820.KS", "emoji": "🎤",
+        "id": 10, "name": "엔터/미디어", "etf": "228810.KS", "emoji": "🎤",
         "tickers": [
             "352820.KS", "041510.KS", "035900.KS", "122870.KS", "035760.KS",
             "253450.KS", "036420.KS", "160550.KS", "298000.KS", "241840.KQ",
@@ -137,7 +137,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 12, "name": "화학", "etf": "098530.KS", "emoji": "⚗️",
+        "id": 12, "name": "화학", "etf": "117460.KS", "emoji": "⚗️",
         "tickers": [
             "051910.KS", "011170.KS", "009830.KS", "011790.KS", "298050.KS",
             "120110.KS", "011780.KS", "010060.KS", "285130.KS", "000990.KS",
@@ -153,7 +153,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 14, "name": "유통/소비재", "etf": "023530.KS", "emoji": "🛒",
+        "id": 14, "name": "유통/소비재", "etf": "227560.KS", "emoji": "🛒",
         "tickers": [
             "023530.KS", "139480.KS", "004170.KS", "069960.KS", "007070.KS",
             "005300.KS", "180640.KS", "271560.KS", "028150.KS", "001680.KS",
@@ -177,7 +177,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 17, "name": "방산", "etf": "012450.KS", "emoji": "🚀",
+        "id": 17, "name": "방산", "etf": "0080G0.KS", "emoji": "🚀",
         "tickers": [
             "012450.KS", "079550.KS", "047810.KS", "064350.KS", "272210.KS",
             "065620.KS", "000880.KS", "007860.KS", "071970.KS", "004490.KS",
@@ -193,7 +193,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 19, "name": "의료기기", "etf": "041830.KS", "emoji": "🏥",
+        "id": 19, "name": "의료기기", "etf": "307510.KS", "emoji": "🏥",
         "tickers": [
             "041830.KS", "100120.KQ", "214450.KQ", "228850.KQ", "214150.KQ",
             "039200.KQ", "091700.KQ", "286940.KS", "196170.KQ", "237690.KQ",
@@ -201,7 +201,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 20, "name": "물류/운송", "etf": "086280.KS", "emoji": "🚢",
+        "id": 20, "name": "물류/운송", "etf": "140710.KS", "emoji": "🚢",
         "tickers": [
             "086280.KS", "000120.KS", "002320.KS", "003490.KS", "020560.KS",
             "089590.KS", "035250.KS", "006490.KS", "048410.KS", "001250.KS",
@@ -209,7 +209,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 21, "name": "부동산/리츠", "etf": "088980.KS", "emoji": "🏢",
+        "id": 21, "name": "부동산/리츠", "etf": "329200.KS", "emoji": "🏢",
         "tickers": [
             "088980.KS", "330590.KS", "395400.KS", "432320.KS", "357120.KS",
             "448730.KS", "451800.KS", "293940.KS", "377190.KS", "348950.KS",
@@ -217,7 +217,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 22, "name": "클린에너지", "etf": "112610.KS", "emoji": "☀️",
+        "id": 22, "name": "클린에너지", "etf": "385510.KS", "emoji": "☀️",
         "tickers": [
             "112610.KS", "009830.KS", "010060.KS", "038870.KS", "006090.KS",
             "078130.KS", "389260.KS", "298260.KS", "175330.KS", "077970.KS",
@@ -225,7 +225,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 23, "name": "IT서비스", "etf": "018260.KS", "emoji": "💻",
+        "id": 23, "name": "IT서비스", "etf": "139260.KS", "emoji": "💻",
         "tickers": [
             "018260.KS", "034730.KS", "012510.KS", "030520.KS", "032500.KQ",
             "047310.KQ", "093520.KQ", "079000.KQ", "023350.KS", "099430.KQ",
@@ -233,7 +233,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 24, "name": "화장품/뷰티", "etf": "051900.KS", "emoji": "💄",
+        "id": 24, "name": "화장품/뷰티", "etf": "228790.KS", "emoji": "💄",
         "tickers": [
             "051900.KS", "090430.KS", "161890.KS", "044820.KS", "237880.KQ",
             "018290.KQ", "257720.KQ", "214420.KQ", "192820.KQ", "024720.KS",
@@ -249,7 +249,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 26, "name": "시장(코스피)", "etf": "KOSPI", "emoji": "🇰🇷",
+        "id": 26, "name": "시장(코스피)", "etf": "069500.KS", "emoji": "🇰🇷",
         "tickers": [
             "005930.KS", "000660.KS", "373220.KS", "207940.KS", "005380.KS",
             "000270.KS", "005490.KS", "051910.KS", "068270.KS", "006400.KS",
@@ -517,6 +517,187 @@ def calc_rs_line_sector(stock_prices, sector_prices, window=252):
 
 
 # ─────────────────────────────────────────
+# EPS / 매출 수집 (yfinance 한국주식)
+# ─────────────────────────────────────────
+
+MAX_EPS_QUARTERS = 20  # 최대 5년치 분기 보존
+
+
+def merge_eps_history(old: list | None, new: list | None) -> list | None:
+    """
+    기존 캐시(old)와 신규 수집(new)을 날짜 기준으로 병합.
+    - 같은 날짜: 신규 데이터 우선
+    - 기존에만 있는 날짜: 보존
+    - 최신 MAX_EPS_QUARTERS개 유지
+    """
+    if not old and not new:
+        return None
+    if not old:
+        return new
+    if not new:
+        return old
+    by_date: dict = {}
+    for q in old:
+        by_date[q["d"]] = q
+    for q in new:
+        # 신규 데이터로 덮어쓰되, 기존에 있던 non-None 필드가 신규에서 None이면 기존 유지
+        existing = by_date.get(q["d"])
+        if existing:
+            merged_q = dict(existing)
+            for k, v in q.items():
+                if v is not None:
+                    merged_q[k] = v
+            by_date[q["d"]] = merged_q
+        else:
+            by_date[q["d"]] = q
+    sorted_history = sorted(by_date.values(), key=lambda x: x["d"])
+    return sorted_history[-MAX_EPS_QUARTERS:]
+
+def _fetch_revenue_map_kr(t) -> dict:
+    """quarterly_income_stmt에서 날짜→억원 매출 맵 반환."""
+    revenue_map: dict = {}
+    try:
+        qf = t.quarterly_income_stmt
+        if qf is None or qf.empty:
+            return revenue_map
+        for key in ["Total Revenue", "TotalRevenue", "Operating Revenue"]:
+            if key in qf.index:
+                for col_date, val in qf.loc[key].items():
+                    if pd.notna(val):
+                        ts = pd.Timestamp(col_date)
+                        revenue_map[ts.tz_localize(None)] = float(val)
+                break
+    except Exception:
+        pass
+    return revenue_map
+
+
+def _match_revenue(revenue_map: dict, date) -> float | None:
+    if not revenue_map:
+        return None
+    date_naive = date.tz_localize(None) if hasattr(date, "tzinfo") and date.tzinfo else date
+    closest = min(revenue_map.keys(), key=lambda d: abs((d - date_naive).days))
+    if abs((closest - date_naive).days) <= 90:
+        return revenue_map[closest] / 1e8  # 억원
+    return None
+
+
+def fetch_eps_data_kr(ticker):
+    """
+    1차: earnings_dates → 실제 EPS + 기관 추정치 + 매출 (최대 12분기)
+    2차: quarterly_income_stmt → 실제 EPS만 + 매출 (폴백, 추정치 없음)
+    실패 시 (ticker, None) 반환.
+    """
+    time.sleep(random.uniform(0.05, 0.20))
+    try:
+        t = yf.Ticker(ticker)
+
+        # ── 1차: earnings_dates (추정치 포함) ──────────────────────────
+        try:
+            ed = t.get_earnings_dates(limit=24)  # 6년치 시도
+            if ed is not None and not ed.empty:
+                now  = pd.Timestamp.now(tz="UTC")
+                past = ed[ed.index <= now].dropna(subset=["Reported EPS"])
+                if not past.empty:
+                    past = past.head(MAX_EPS_QUARTERS).iloc[::-1]
+                    revenue_map = _fetch_revenue_map_kr(t)
+                    history = []
+                    for date, row in past.iterrows():
+                        actual   = row.get("Reported EPS")
+                        estimate = row.get("EPS Estimate")
+                        surp     = row.get("Surprise(%)")
+                        rev_val  = _match_revenue(revenue_map, date)
+                        history.append({
+                            "d":        str(date.date()),
+                            "actual":   round(float(actual),   0) if pd.notna(actual)   else None,
+                            "estimate": round(float(estimate), 0) if pd.notna(estimate) else None,
+                            "surp":     round(float(surp),     2) if pd.notna(surp)     else None,
+                            "revenue":  round(rev_val, 1)         if rev_val is not None else None,
+                        })
+                    if history:
+                        return ticker, history
+        except Exception:
+            pass
+
+        # ── 2차: quarterly_income_stmt 폴백 (추정치 없음) ──────────────
+        qi = t.quarterly_income_stmt
+        if qi is None or qi.empty:
+            return ticker, None
+
+        rev_series = None
+        for key in ["Total Revenue", "TotalRevenue", "Operating Revenue"]:
+            if key in qi.index:
+                rev_series = qi.loc[key]
+                break
+
+        eps_series = None
+        for key in ["Basic EPS", "Diluted EPS"]:
+            if key in qi.index:
+                eps_series = qi.loc[key]
+                break
+
+        if eps_series is None:
+            for key in ["Net Income", "Net Income Common Stockholders"]:
+                if key in qi.index:
+                    try:
+                        shares = (t.info or {}).get("sharesOutstanding") or \
+                                 (t.info or {}).get("impliedSharesOutstanding")
+                    except Exception:
+                        shares = None
+                    if shares and shares > 0:
+                        eps_series = qi.loc[key] / shares
+                    break
+
+        if eps_series is None and rev_series is None:
+            return ticker, None
+
+        ref   = eps_series if eps_series is not None else rev_series
+        dates = sorted(ref.index)
+        history = []
+        for date in dates:
+            actual = revenue = None
+            if eps_series is not None and date in eps_series.index:
+                v = eps_series[date]
+                if pd.notna(v):
+                    actual = round(float(v), 0)
+            if rev_series is not None and date in rev_series.index:
+                v = rev_series[date]
+                if pd.notna(v):
+                    revenue = round(float(v) / 1e8, 1)
+            if actual is None and revenue is None:
+                continue
+            d_str = date.strftime("%Y-%m-%d") if hasattr(date, "strftime") else str(date)[:10]
+            history.append({"d": d_str, "actual": actual, "estimate": None, "surp": None, "revenue": revenue})
+
+        return ticker, (history[-MAX_EPS_QUARTERS:] if history else None)
+
+    except Exception:
+        return ticker, None
+
+
+def calc_eps_trend_kr(history):
+    if not history or len(history) < 3:
+        return None
+    actuals = [q["actual"] for q in history if q["actual"] is not None]
+    if len(actuals) < 3:
+        return None
+    n      = len(actuals)
+    xs     = list(range(n))
+    mx, my = sum(xs) / n, sum(actuals) / n
+    num    = sum((x - mx) * (y - my) for x, y in zip(xs, actuals))
+    den    = sum((x - mx) ** 2 for x in xs)
+    if den == 0:
+        return "stable"
+    slope = num / den
+    scale = max(abs(my), 1.0)
+    if slope / scale > 0.05:
+        return "improving"
+    elif slope / scale < -0.05:
+        return "declining"
+    return "stable"
+
+
+# ─────────────────────────────────────────
 # 메인
 # ─────────────────────────────────────────
 
@@ -527,8 +708,53 @@ def main():
     print(f"{'='*65}\n")
 
     all_tickers  = list({t for s in SECTORS_KR for t in s["tickers"]})
-    sector_etfs  = list({s["etf"] for s in SECTORS_KR if s["etf"] != "KOSPI"})
+    sector_etfs  = list({s["etf"] for s in SECTORS_KR})
     download_list = list(set(all_tickers + sector_etfs + [BENCHMARK]))
+
+    # ── EPS 캐시 로드
+    eps_cache_path = "public/data/eps_cache_kr.json"
+    eps_cache: dict = {}
+    if os.path.exists(eps_cache_path):
+        try:
+            with open(eps_cache_path, "r", encoding="utf-8") as f:
+                eps_cache = json.load(f)
+            print(f"📦 EPS 캐시(KR) 로드: {len(eps_cache)}개 종목")
+        except Exception:
+            print("  ⚠️  EPS 캐시(KR) 로드 실패 — 빈 캐시로 시작")
+
+    # ── EPS 병렬 수집
+    print(f"\n📊 EPS 수집 중... ({len(all_tickers)}개 종목, 병렬)")
+    fresh_eps: dict = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        futures = {executor.submit(fetch_eps_data_kr, t): t for t in all_tickers}
+        for future in concurrent.futures.as_completed(futures, timeout=120):
+            try:
+                tkr, hist = future.result(timeout=15)
+                fresh_eps[tkr] = hist
+            except Exception:
+                fresh_eps[futures[future]] = None
+
+    eps_dict: dict = {}
+    new_count = cache_used = merged_count = 0
+    for ticker in all_tickers:
+        fresh = fresh_eps.get(ticker)
+        old   = eps_cache.get(ticker)
+        if fresh:
+            # 신규 데이터를 기존 캐시와 병합 → 과거 분기 데이터 보존
+            merged = merge_eps_history(old, fresh)
+            eps_dict[ticker]  = merged
+            eps_cache[ticker] = merged
+            if old:
+                merged_count += 1
+            else:
+                new_count += 1
+        elif old:
+            eps_dict[ticker] = old
+            cache_used += 1
+        else:
+            eps_dict[ticker] = None
+    eps_ok = sum(1 for v in eps_dict.values() if v)
+    print(f"   EPS 완료: {eps_ok}/{len(all_tickers)}개 (신규 {new_count}개 | 병합 {merged_count}개 | 캐시전용 {cache_used}개)")
 
     print(f"📥 {len(all_tickers)}개 종목 + {len(sector_etfs)}개 섹터 ETF + 코스피 수집 중...")
     raw = yf.download(
@@ -579,16 +805,6 @@ def main():
     sector_rs_days_dict       = {}
     sector_rs_slope_dir_dict  = {}
     sector_rs_slope_days_dict = {}
-
-    # KOSPI 자체 섹터: RS = 0 고정
-    sector_rs_dict["KOSPI"]            = 0.0
-    sector_rs_history_dict["KOSPI"]    = [
-        {"d": str(idx.date()), "v": 0.0}
-        for idx in bench_returns_sector.dropna().index[-60:]
-    ]
-    sector_rs_days_dict["KOSPI"]       = 0
-    sector_rs_slope_dir_dict["KOSPI"]  = "flat"
-    sector_rs_slope_days_dict["KOSPI"] = 0
 
     for etf in sector_etfs:
         if etf not in prices.columns:
@@ -773,7 +989,7 @@ def main():
                 "lows":            lows,
                 "near_highs":      near_highs,
                 "breakout_onsets": breakout_onsets,
-                "eps":             None,             # 한국판: EPS 없음
+                "eps":             ({"history": eps_dict.get(ticker), "trend": calc_eps_trend_kr(eps_dict.get(ticker))} if eps_dict.get(ticker) else None),
                 "breakdown": {
                     "bull_strength": bull,
                     "bear_strength": bear,
@@ -818,9 +1034,9 @@ def main():
         })
         print(f"  ✓ {s_name:16s}  종목 {len(stocks_out):2d}개")
 
-    # 섹터 정렬 (섹터 RS 내림차순, KOSPI는 마지막)
-    non_market = [s for s in sectors_out if s["etf"] != "KOSPI"]
-    market_sec = [s for s in sectors_out if s["etf"] == "KOSPI"]
+    # 섹터 정렬 (섹터 RS 내림차순, 코스피 시장 섹터는 마지막)
+    non_market = [s for s in sectors_out if s["id"] != 26]
+    market_sec = [s for s in sectors_out if s["id"] == 26]
     non_market.sort(key=lambda x: x["sector_rs_excess"] or 0, reverse=True)
     sectors_out = non_market + market_sec
 
@@ -840,6 +1056,11 @@ def main():
     out_path = os.path.normpath(out_path)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
+
+    # ── EPS 캐시 저장
+    with open(eps_cache_path, "w", encoding="utf-8") as f:
+        json.dump(eps_cache, f, ensure_ascii=False, indent=2)
+    print(f"💾 EPS 캐시(KR) 저장: {len(eps_cache)}개 종목 → {eps_cache_path}")
 
     print(f"\n✅ 완료!  총 {total_count}개 종목  →  {out_path}")
     print(f"   코스피 상태: {market_regime.upper()}  |  날짜: {today_str}\n")

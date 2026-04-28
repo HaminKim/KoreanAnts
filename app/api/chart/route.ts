@@ -10,9 +10,8 @@ export async function GET(request: Request) {
   }
 
   try {
-    // ✨ 야후 파이낸스에서 1년치 일봉 데이터 가져오기
     const response = await fetch(
-      `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=1y&interval=1d`,
+      `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=10y&interval=1d`,
       { cache: 'no-store' }
     );
 
@@ -28,9 +27,10 @@ export async function GET(request: Request) {
 
     // 차트 라이브러리가 좋아하는 형태로 가공
     const formattedData = timestamps.map((time: number, index: number) => ({
-      time: new Date(time * 1000).toISOString().split('T')[0], // YYYY-MM-DD
-      value: quotes.close[index], // 종가
-    })).filter((item: any) => item.value !== null); // 결측치 제거
+      time:   new Date(time * 1000).toISOString().split('T')[0],
+      value:  quotes.close[index],
+      volume: quotes.volume?.[index] ?? null,
+    })).filter((item: any) => item.value !== null);
 
     return NextResponse.json({ data: formattedData });
   } catch (error) {

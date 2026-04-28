@@ -23,7 +23,17 @@
       "Bash(\"$PYTHON\":*)",
       "Bash(\"C:/Users/xfg1/AppData/Local/Programs/Python/Python314/python.exe\":*)",
       "Bash(npx tsc:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(python scripts/generate_watchlist_kr.py)",
+      "Bash(echo \"exit: $?\")",
+      "Read(//tmp/**)",
+      "Bash(pip show *)",
+      "PowerShell(python --version; python -c \"import sys; print\\(sys.executable\\)\")",
+      "PowerShell(Get-Command *)",
+      "PowerShell(py *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\)['data']; print\\(d[0]\\); print\\('volume exists:', 'volume' in d[0]\\); print\\('sample price:', d[-1]['value'], 'volume:', d[-1].get\\('volume'\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\('version'\\)\\)\")",
+      "WebSearch"
     ]
   }
 }
