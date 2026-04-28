@@ -33,7 +33,21 @@
       "PowerShell(py *)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\)['data']; print\\(d[0]\\); print\\('volume exists:', 'volume' in d[0]\\); print\\('sample price:', d[-1]['value'], 'volume:', d[-1].get\\('volume'\\)\\)\")",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\('version'\\)\\)\")",
-      "WebSearch"
+      "WebSearch",
+      "Bash(npm run *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); tickers=[s['ticker'] for sec in d['sectors'] for s in sec['stocks']]; missing=[t for t in tickers if t not in open\\('app/constants/stockNamesKR.ts'\\).read\\(\\)]; print\\(f'Total: {len\\(tickers\\)}, Missing names: {len\\(missing\\)}'\\); print\\('Missing:', missing[:20]\\)\")",
+      "Bash(python3 *)",
+      "Bash(where python3 *)",
+      "Bash(where python *)",
+      "Bash(where py *)",
+      "Bash(node *)",
+      "Bash(where pip3 *)",
+      "Bash(where pip *)",
+      "Bash(py -m pip show yfinance)",
+      "Bash(py -c ' *)",
+      "Bash(py scripts/generate_watchlist_kr.py)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
