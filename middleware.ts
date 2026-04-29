@@ -11,6 +11,6 @@ export const config = {
     /*
      * 이미지나 아이콘 같은 건 검사 안 하고 통과시킴
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|data/.*\\.json$|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

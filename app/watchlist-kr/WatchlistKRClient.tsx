@@ -1368,10 +1368,10 @@ export default function WatchlistKRClient() {
   const [compareRight,       setCompareRight]      = useState<SectorItem | null>(null)
 
   useEffect(() => {
-    fetch('/data/watchlist_kr.json', { cache: 'no-store' })
+    fetch('/api/watchlist-kr', { cache: 'no-store' })
       .then(r => r.json())
       .then((d: WatchlistData) => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
+      .catch((e) => { console.error('watchlist-kr 로드 실패:', e); setLoading(false) })
   }, [])
 
   useEffect(() => {
