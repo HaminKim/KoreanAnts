@@ -3,14 +3,113 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { createChart, ColorType, AreaSeries, LineSeries } from 'lightweight-charts';
 import { createClient } from '@/utils/supabase/client';
 import { KOREAN_NAMES } from '@/app/constants/stockNames';
-import { KR_STOCK_NAMES, displayTicker, tradingViewSymbol } from '@/app/constants/stockNamesKR';
+import { KR_STOCK_NAMES, displayTicker } from '@/app/constants/stockNamesKR';
 
 const TradingViewChart = dynamic(
   () => import('@/app/components/TradingViewChart'),
   { ssr: false, loading: () => <div className="flex items-center justify-center h-full text-gray-300 text-xs">차트 로딩 중...</div> }
 )
+
+function formatKoreanWon(v: number): string {
+  if (v >= 100_000_000) {
+    const uk  = Math.floor(v / 100_000_000)
+    const man = Math.floor((v % 100_000_000) / 10_000)
+    return man > 0 ? `${uk}억 ${man}만` : `${uk}억`
+  }
+  if (v >= 10_000) {
+    const man  = Math.floor(v / 10_000)
+    const rest = Math.round(v % 10_000)
+    return rest > 0 ? `${man}만 ${rest.toLocaleString()}` : `${man}만`
+  }
+  return Math.round(v).toLocaleString()
+}
+
+function KRMiniChart({ ticker, height }: { ticker: string; height: number }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState(false)
+
+  useEffect(() => {
+    if (!containerRef.current) return
+    let cancelled = false
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let chart: any = null
+
+    async function load() {
+      try {
+        const res  = await fetch(`/api/chart?ticker=${encodeURIComponent(ticker)}`)
+        const json = await res.json()
+        if (cancelled || !containerRef.current) return
+        if (!json.data || json.data.length === 0) { setError(true); return }
+
+        const raw: { time: string; value: number }[] = json.data
+        const data = raw.map(d => ({ time: d.time, value: d.value }))
+
+        function calcMA(n: number) {
+          return data.flatMap((_, i) => {
+            if (i < n - 1) return []
+            const avg = data.slice(i - n + 1, i + 1).reduce((s, d) => s + d.value, 0) / n
+            return [{ time: data[i].time, value: avg }]
+          })
+        }
+
+        chart = createChart(containerRef.current!, {
+          layout:  { background: { type: ColorType.Solid, color: 'transparent' }, textColor: '#9ca3af' },
+          grid:    { vertLines: { color: '#f3f4f6' }, horzLines: { color: '#f3f4f6' } },
+          rightPriceScale: { borderColor: '#e5e7eb' },
+          timeScale:       { borderColor: '#e5e7eb', timeVisible: false },
+          crosshair: { mode: 1 },
+          handleScroll: { mouseWheel: true, pressedMouseMove: true },
+          handleScale:  { mouseWheel: true, pinch: true },
+          width:  containerRef.current!.clientWidth,
+          height,
+          localization: { priceFormatter: (v: number) => formatKoreanWon(v) },
+        })
+
+        const area = chart.addSeries(AreaSeries, {
+          lineColor: '#3b82f6', topColor: 'rgba(59,130,246,0.10)', bottomColor: 'rgba(59,130,246,0)',
+          lineWidth: 1.5, priceLineVisible: false, lastValueVisible: true,
+        })
+        area.setData(data)
+
+        for (const { n, color } of [{ n: 20, color: '#10b981' }, { n: 60, color: '#8b5cf6' }, { n: 100, color: '#ef4444' }]) {
+          const maData = calcMA(n)
+          if (maData.length < 2) continue
+          const line = chart.addSeries(LineSeries, {
+            color, lineWidth: 1, priceLineVisible: false, lastValueVisible: false, crossHairMarkerVisible: false,
+          })
+          line.setData(maData)
+        }
+
+        chart.timeScale().fitContent()
+        setLoading(false)
+      } catch {
+        if (!cancelled) setError(true)
+      }
+    }
+
+    load()
+    return () => {
+      cancelled = true
+      try { chart?.remove() } catch { /* ignore */ }
+    }
+  }, [ticker, height])
+
+  return (
+    <div className="relative bg-white" style={{ height: `${height}px` }}>
+      {loading && !error && (
+        <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs z-10">차트 로딩 중...</div>
+      )}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-xs z-10">차트 데이터 없음</div>
+      )}
+      <div ref={containerRef} style={{ height: `${height}px` }} />
+    </div>
+  )
+}
 
 // ─── Types ───────────────────────────────────────────────
 type WatchItem = {
@@ -292,14 +391,16 @@ function WatchCard({
   market: 'us' | 'kr'
 }) {
   const router  = useRouter();
-  const tvSym   = market === 'kr' ? tradingViewSymbol(item.ticker) : item.ticker;
   const dispTkr = market === 'kr' ? displayTicker(item.ticker) : item.ticker;
   const wlLink  = market === 'kr' ? `/watchlist-kr?stock=${item.ticker}` : `/watchlist?stock=${item.ticker}`;
 
   return (
     <div className="border rounded-2xl overflow-hidden hover:shadow-lg transition-shadow bg-white">
       <div style={{ height: 260 }}>
-        <TradingViewChart symbol={tvSym} height={260} showStudies={false} minimal={true} />
+        {market === 'kr'
+          ? <KRMiniChart ticker={item.ticker} height={260} />
+          : <TradingViewChart symbol={item.ticker} height={260} showStudies={false} minimal={true} />
+        }
       </div>
       <div className="p-3 border-t border-gray-100 space-y-2">
         <div className="flex items-center justify-between">
