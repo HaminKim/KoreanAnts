@@ -956,10 +956,10 @@ def main():
             except Exception:
                 highs = lows = near_highs = breakout_onsets = {"w52": None, "w26": None, "w13": None}
 
-            # ── RS 라인 (1년, 정규화)
+            # ── RS 라인 (6개월, 정규화)
             try:
-                rs_bench_line  = calc_rs_line(stock_prices, benchmark_prices, window=252)
-                rs_sector_line = calc_rs_line_sector(stock_prices, sector_prices_col, window=252) if sector_prices_col is not None else []
+                rs_bench_line  = calc_rs_line(stock_prices, benchmark_prices, window=120)
+                rs_sector_line = calc_rs_line_sector(stock_prices, sector_prices_col, window=120) if sector_prices_col is not None else []
             except Exception:
                 rs_bench_line  = []
                 rs_sector_line = []
@@ -1055,7 +1055,7 @@ def main():
     out_path = os.path.join(os.path.dirname(__file__), "..", "public", "data", "watchlist_kr.json")
     out_path = os.path.normpath(out_path)
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(result, f, ensure_ascii=False, indent=2)
+        json.dump(result, f, ensure_ascii=False, separators=(',', ':'))
 
     # ── EPS 캐시 저장
     with open(eps_cache_path, "w", encoding="utf-8") as f:
