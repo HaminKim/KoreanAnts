@@ -1,57 +1,57 @@
 {
-  "date": "2026-04-30",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-05-01",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "NVDA",
-      "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -416636499.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "TQQQ",
-      "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -393939622.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
-    },
-    {
-      "rank": 3,
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -247942776.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "value": 216469135.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "INTC",
+      "name": "",
+      "raw_name": "INTEL CORP",
+      "value": 99353097.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "value": 81326613.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "KORU",
+      "ticker": "TSLL",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": -116643275.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": 68096144.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "MU",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -103463624.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 67542029.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
