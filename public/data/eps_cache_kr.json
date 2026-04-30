@@ -5406,13 +5406,6 @@
   ],
   "105560.KS": [
     {
-      "d": "2022-10-24",
-      "actual": 3097.0,
-      "estimate": 3167.0,
-      "surp": -2.21,
-      "revenue": null
-    },
-    {
       "d": "2023-03-07",
       "actual": 819.0,
       "estimate": 1948.0,
@@ -5530,6 +5523,13 @@
       "estimate": 4379.0,
       "surp": 1.7,
       "revenue": 50361.6
+    },
+    {
+      "d": "2025-12-31",
+      "actual": null,
+      "estimate": null,
+      "surp": null,
+      "revenue": 56633.7
     },
     {
       "d": "2026-02-05",
