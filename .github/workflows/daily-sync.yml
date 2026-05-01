@@ -102,13 +102,16 @@ jobs:
         run: python scripts/generate_watchlist.py
 
       # 7-7. 코스피 워치리스트 히트맵 데이터 생성
+      # if: always() → 앞 스텝 실패해도 반드시 실행
       - name: 7. Generate Watchlist KR
+        if: always()
         run: python scripts/generate_watchlist_kr.py
 
       # ----------------------------------------------------------------
 
       # 8. 최종 결과물(JSON) 업로드
       - name: Commit and push JSONs
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

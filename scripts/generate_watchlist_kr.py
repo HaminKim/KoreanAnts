@@ -952,12 +952,22 @@ def main():
     fresh_eps: dict = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
         futures = {executor.submit(fetch_eps_data_kr, t): t for t in all_tickers}
-        for future in concurrent.futures.as_completed(futures, timeout=600):
-            try:
-                tkr, hist = future.result(timeout=15)
-                fresh_eps[tkr] = hist
-            except Exception:
-                fresh_eps[futures[future]] = None
+        try:
+            for future in concurrent.futures.as_completed(futures, timeout=600):
+                try:
+                    tkr, hist = future.result(timeout=15)
+                    fresh_eps[tkr] = hist
+                except Exception:
+                    fresh_eps[futures[future]] = None
+        except concurrent.futures.TimeoutError:
+            print("  ⚠️  EPS 수집 timeout — 완료된 것만 사용하고 계속 진행")
+            for future, tkr in futures.items():
+                if future.done() and tkr not in fresh_eps:
+                    try:
+                        _, hist = future.result()
+                        fresh_eps[tkr] = hist
+                    except Exception:
+                        fresh_eps[tkr] = None
 
     eps_dict: dict = {}
     new_count = cache_used = merged_count = 0
