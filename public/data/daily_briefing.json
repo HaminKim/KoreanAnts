@@ -1,55 +1,55 @@
 {
-  "date": "2026-05-03",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-05-04",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "value": 364592533.0,
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 183315267.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLL",
+      "ticker": "INTC",
       "name": "",
-      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": 238459118.0,
+      "raw_name": "INTEL CORP",
+      "value": 122514519.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 216519551.0,
+      "ticker": "SNDK",
+      "name": "",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": 85954185.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "SNDK",
-      "name": "",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 201374179.0,
+      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "value": 72111515.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "INTC",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 175875293.0,
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 66342824.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
