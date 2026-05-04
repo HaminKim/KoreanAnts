@@ -1,7 +1,7 @@
 {
-  "date": "2026-05-04",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-05-05",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -13,45 +13,45 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 183315267.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "value": -151736258.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "INTC",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 122514519.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -130547988.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "SNDK",
+      "ticker": "KORU",
       "name": "",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 85954185.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": -126226311.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "value": 72111515.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "TSLA",
+      "name": "",
+      "raw_name": "TESLA INC",
+      "value": -76684768.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "QQQM",
+      "ticker": "PLTR",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 66342824.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -52193870.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
