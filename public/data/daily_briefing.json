@@ -1,19 +1,46 @@
 {
-  "date": "2026-05-05",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-05-06",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
+    {
+      "rank": 1,
+      "ticker": "INTC",
+      "name": "",
+      "raw_name": "INTEL CORP",
+      "value": 218000978.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "value": 131322030.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "QQQM",
+      "name": "",
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 120452192.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
     {
       "rank": 1,
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -151736258.0,
+      "value": -318661776.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -22,36 +49,18 @@
       "ticker": "TQQQ",
       "name": "",
       "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -130547988.0,
+      "value": -264937015.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "KORU",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": -126226311.0,
+      "raw_name": "NVIDIA CORP",
+      "value": -179580108.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
-      "ticker": "TSLA",
-      "name": "",
-      "raw_name": "TESLA INC",
-      "value": -76684768.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "PLTR",
-      "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -52193870.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
     }
   ]
 }
