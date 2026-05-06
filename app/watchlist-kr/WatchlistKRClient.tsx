@@ -370,8 +370,8 @@ function SectorBlock({
       )}
 
       <div className="grid grid-cols-5 bg-gray-100" style={{ gap: '1px', padding: '1px' }}>
-        {sector.stocks.map(stock => (
-          <StockCell key={stock.ticker} stock={stock} onClick={() => onSelectStock(stock, sector.etf, sector.name, sector.stocks)} />
+        {sector.stocks.map((stock, i) => (
+          <StockCell key={`${stock.ticker}-${i}`} stock={stock} onClick={() => onSelectStock(stock, sector.etf, sector.name, sector.stocks)} />
         ))}
         {Array.from({ length: Math.max(0, 15 - sector.stocks.length) }).map((_, i) => (
           <div key={i} className="bg-white" style={{ height: '54px' }} />
