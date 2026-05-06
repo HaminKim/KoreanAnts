@@ -5,14 +5,16 @@ on:
     # -----------------------------------------------------------
     # GitHub Actions는 UTC 기준입니다. (KST - 9시간)
     # -----------------------------------------------------------
-    # [NEW] 0. 00:20 KST (UTC 15:20) -> 장 초반 (Early Trading)
-    - cron: "20 15 * * *"
-    
-    # 1. 01:00 KST (UTC 16:00) -> 장 중 (Intraday)
-    # 2. 06:00 KST (UTC 21:00) -> 정규장 마감 (Market Close)
-    # 3. 07:00 KST (UTC 22:00) -> 애프터장 변동 체크
-    # 4. 10:00 KST (UTC 01:00) -> 애프터장 최종 마감 (Day End)
-    - cron: "0 16,21,22,1 * * *"
+    # 1. 01:00 KST (UTC 16:00) -> US 장 중 (Intraday)
+    # 2. 06:00 KST (UTC 21:00) -> US 정규장 마감 (Market Close)
+    # 3. 10:00 KST (UTC 01:00) -> US 애프터장 최종 마감 (Day End)
+    - cron: "0 16,21,1 * * *"
+
+    # 4. 09:00 KST (UTC 00:00) -> 한국장 시작 (KR Market Open)
+    - cron: "0 0 * * *"
+
+    # 5. 15:30 KST (UTC 06:30) -> 한국장 마감 (KR Market Close)
+    - cron: "30 6 * * *"
   workflow_dispatch: {}
 
 permissions:
