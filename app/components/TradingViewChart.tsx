@@ -34,8 +34,13 @@ export default function TradingViewChart({
   const uid         = useId().replace(/:/g, '')
   const containerId = `tv_${symbol}_${uid}`
   const created     = useRef(false)
+  const prevSymbol  = useRef(symbol)
 
   useEffect(() => {
+    if (symbol !== prevSymbol.current) {
+      created.current = false
+      prevSymbol.current = symbol
+    }
     if (created.current) return
 
     const build = () => {

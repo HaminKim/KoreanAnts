@@ -892,7 +892,7 @@ function StockDetailModal({
         {/* TradingView 가격 차트 (풀스크린에서는 숨김) */}
         {!fullscreen && (
           <div style={{ height: '300px', flexShrink: 0 }}>
-            <TradingViewChart symbol={stock.ticker} height={300} />
+            <TradingViewChart key={stock.ticker} symbol={stock.ticker} height={300} />
           </div>
         )}
 
