@@ -1,11 +1,11 @@
 {
-  "date": "2026-05-08",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-05-09",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
@@ -13,34 +13,34 @@
       "ticker": "INTC",
       "name": "",
       "raw_name": "INTEL CORP",
-      "value": 200194627.0,
+      "value": 473697745.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
-      "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 131292690.0,
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 291308378.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
-      "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 91843070.0,
+      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
+      "value": 281256507.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 72286190.0,
+      "ticker": "QQQM",
+      "name": "",
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 220340424.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
@@ -49,7 +49,7 @@
       "ticker": "SNDK",
       "name": "",
       "raw_name": "SNDSK CRP ORD WI",
-      "value": 58142997.0,
+      "value": 203172048.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
