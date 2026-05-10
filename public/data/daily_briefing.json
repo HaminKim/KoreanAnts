@@ -1,11 +1,11 @@
 {
-  "date": "2026-05-10",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-05-11",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,43 +13,43 @@
       "ticker": "INTC",
       "name": "",
       "raw_name": "INTEL CORP",
-      "value": 473697745.0,
+      "value": 287713298.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 291308378.0,
+      "ticker": "GOOGL",
+      "name": "",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 185750395.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY SEMICONDUCTOR BEAR 3X SHS (R",
-      "value": 281256507.0,
+      "ticker": "MU",
+      "name": "",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 149783386.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "QQQM",
-      "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 220340424.0,
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 100690438.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "SNDK",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 203172048.0,
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 72165135.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
