@@ -1,7 +1,7 @@
 {
-  "date": "2026-05-11",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-05-12",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "INTC",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 287713298.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "TESLA INC",
+      "value": -221927277.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 185750395.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -154740035.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 149783386.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "NVIDIA CORP",
+      "value": -142829016.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 100690438.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "IREN",
+      "name": "",
+      "raw_name": "IRIS ENERGY LTD",
+      "value": -112702762.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "QQQM",
+      "ticker": "TSLL",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 72165135.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": -92356612.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
