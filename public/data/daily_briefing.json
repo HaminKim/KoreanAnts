@@ -1,11 +1,11 @@
 {
-  "date": "2026-05-14",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-05-15",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,45 +13,45 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -663726345.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "value": 305285418.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLA",
+      "ticker": "INTC",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -463035647.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "INTEL CORP",
+      "value": 246959851.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -268759817.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 216500626.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "TSLL",
-      "name": "",
-      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": -232199724.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 135575476.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "IREN",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "IRIS ENERGY LTD",
-      "value": -216825030.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "ALPHABET INC CL A",
+      "value": 123259521.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
