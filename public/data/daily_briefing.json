@@ -1,37 +1,37 @@
 {
-  "date": "2026-05-17",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-05-18",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "INTC",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 618074937.0,
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 223966926.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 320937339.0,
+      "ticker": "INTC",
+      "name": "",
+      "raw_name": "INTEL CORP",
+      "value": 170864016.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
-      "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 307098217.0,
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 124288461.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
@@ -40,16 +40,16 @@
       "ticker": "QQQM",
       "name": "",
       "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 292833840.0,
+      "value": 97902441.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "GOOGL",
-      "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 234711161.0,
+      "ticker": "SNXX",
+      "name": "SNXX",
+      "raw_name": "TRADR 2X LONG SNDK DAILY ETF",
+      "value": 88625763.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
