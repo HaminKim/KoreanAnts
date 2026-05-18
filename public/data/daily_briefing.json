@@ -1,7 +1,7 @@
 {
-  "date": "2026-05-18",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-05-19",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "MU",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 223966926.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "TESLA INC",
+      "value": -319608939.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "INTC",
+      "ticker": "PLTR",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 170864016.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -181833530.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 124288461.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -173270140.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "QQQM",
+      "ticker": "TSLL",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 97902441.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": -168194481.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "SNXX",
-      "name": "SNXX",
-      "raw_name": "TRADR 2X LONG SNDK DAILY ETF",
-      "value": 88625763.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "IONQ",
+      "name": "",
+      "raw_name": "IONQ INC",
+      "value": -151762710.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
