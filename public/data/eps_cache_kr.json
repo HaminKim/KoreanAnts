@@ -6085,13 +6085,6 @@
   ],
   "009830.KS": [
     {
-      "d": "2022-11-11",
-      "actual": 795.0,
-      "estimate": 1271.0,
-      "surp": -37.49,
-      "revenue": null
-    },
-    {
       "d": "2023-02-22",
       "actual": -610.0,
       "estimate": 586.0,
@@ -6142,7 +6135,7 @@
     },
     {
       "d": "2024-09-30",
-      "actual": -2309.0,
+      "actual": -2191.0,
       "estimate": null,
       "surp": null,
       "revenue": null
@@ -6170,7 +6163,7 @@
     },
     {
       "d": "2025-03-31",
-      "actual": -316.0,
+      "actual": -300.0,
       "estimate": null,
       "surp": null,
       "revenue": 30944.8
@@ -6184,7 +6177,7 @@
     },
     {
       "d": "2025-06-30",
-      "actual": -1221.0,
+      "actual": -1159.0,
       "estimate": null,
       "surp": null,
       "revenue": 31172.7
@@ -6198,7 +6191,7 @@
     },
     {
       "d": "2025-09-30",
-      "actual": -128.0,
+      "actual": -121.0,
       "estimate": null,
       "surp": null,
       "revenue": 33643.2
@@ -6223,6 +6216,13 @@
       "estimate": -2497.0,
       "surp": 26.08,
       "revenue": 37570.0
+    },
+    {
+      "d": "2026-03-31",
+      "actual": -319.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": 38819.5
     }
   ],
   "078130.KS": [
