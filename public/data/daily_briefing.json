@@ -1,46 +1,19 @@
 {
-  "date": "2026-05-20",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-05-21",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "INTC",
-      "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 242610506.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "SOXL",
-      "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 208683427.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "GOOGL",
-      "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 194570230.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "TSLA",
       "name": "",
       "raw_name": "TESLA INC",
-      "value": -590345567.0,
+      "value": -636549622.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -49,18 +22,36 @@
       "ticker": "PLTR",
       "name": "",
       "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -272059604.0,
+      "value": -331267445.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
+      "ticker": "TQQQ",
+      "name": "",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -274620113.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
       "ticker": "TSLL",
       "name": "",
       "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": -261104386.0,
+      "value": -269277820.0,
       "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "IONQ",
+      "name": "",
+      "raw_name": "IONQ INC",
+      "value": -207133453.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
