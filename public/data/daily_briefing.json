@@ -1,57 +1,57 @@
 {
-  "date": "2026-05-21",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-05-22",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -636549622.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 452207804.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "PLTR",
+      "ticker": "YNDX",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -331267445.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "YANDEX NV CL A",
+      "value": 125299320.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -274620113.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "NVIDIA CORP",
+      "value": 98261697.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "TSLL",
-      "name": "",
-      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": -269277820.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "SNXX",
+      "name": "SNXX",
+      "raw_name": "TRADR 2X LONG SNDK DAILY ETF",
+      "value": 77941189.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "IONQ",
-      "name": "",
-      "raw_name": "IONQ INC",
-      "value": -207133453.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "Tema Space Innovators ETF",
+      "name": "Tema Space Innovators ETF",
+      "raw_name": "Tema Space Innovators ETF",
+      "value": 74698477.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
