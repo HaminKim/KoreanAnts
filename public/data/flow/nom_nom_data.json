@@ -5,8 +5,8 @@
       "name_kr": "아이온큐",
       "ticker": "IONQ",
       "file_ticker": "IONQ INC",
-      "close": 64.0,
-      "price_change": 0.29791117420401536,
+      "close": 63.64,
+      "price_change": 0.2906104238491178,
       "net_buy_sum": -38126955,
       "buy_score": 0,
       "sell_score": 8,
@@ -18,8 +18,8 @@
       "name_kr": "테슬라",
       "ticker": "TSLA",
       "file_ticker": "TESLA INC",
-      "close": 430.54,
-      "price_change": 0.050123173735944805,
+      "close": 426.01,
+      "price_change": 0.03907412375911603,
       "net_buy_sum": -138591243,
       "buy_score": 0,
       "sell_score": 8,
@@ -33,8 +33,8 @@
       "name_kr": "마이크론 테크놀로지",
       "ticker": "MU",
       "file_ticker": "MICRON TECHNOLOGY INC",
-      "close": 772.02,
-      "price_change": 0.13275816533145526,
+      "close": 751.0,
+      "price_change": 0.10191624849605312,
       "net_buy_sum": 71710870,
       "buy_score": 4,
       "sell_score": 4,
@@ -46,13 +46,28 @@
       "name_kr": "인텔",
       "ticker": "INTC",
       "file_ticker": "INTEL CORP",
-      "close": 121.01,
-      "price_change": 0.11870204308033654,
+      "close": 119.84,
+      "price_change": 0.10788573541647409,
       "net_buy_sum": 66329026,
       "buy_score": 4,
       "sell_score": 4,
       "last_date": "2026-05-22",
       "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    }
+  ],
+  "knife": [
+    {
+      "name": "NVIDIA CORP",
+      "name_kr": "엔비디아",
+      "ticker": "NVDA",
+      "file_ticker": "NVIDIA CORP",
+      "close": 215.33,
+      "price_change": -0.03144116588700963,
+      "net_buy_sum": 28541551,
+      "buy_score": 3,
+      "sell_score": 5,
+      "last_date": "2026-05-22",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     }
   ]
 }
