@@ -1,55 +1,55 @@
 {
-  "date": "2026-05-24",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-05-25",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "INTC",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 519989348.0,
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 173129305.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "YNDX",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 311871320.0,
+      "raw_name": "YANDEX NV CL A",
+      "value": 109735910.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 281998060.0,
+      "ticker": "NVDA",
+      "name": "",
+      "raw_name": "NVIDIA CORP",
+      "value": 90806413.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "QQQM",
-      "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 263511818.0,
+      "ticker": "Tema Space Innovators ETF",
+      "name": "Tema Space Innovators ETF",
+      "raw_name": "Tema Space Innovators ETF",
+      "value": 57567575.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "MU",
-      "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 213557090.0,
+      "ticker": "SNXX",
+      "name": "SNXX",
+      "raw_name": "TRADR 2X LONG SNDK DAILY ETF",
+      "value": 57253996.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
