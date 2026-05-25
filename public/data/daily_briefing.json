@@ -1,7 +1,7 @@
 {
-  "date": "2026-05-25",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-05-26",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 173129305.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "TESLA INC",
+      "value": -231373373.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "YNDX",
+      "ticker": "SNDK",
       "name": "",
-      "raw_name": "YANDEX NV CL A",
-      "value": 109735910.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -161616982.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "NVDA",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": 90806413.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -146873690.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "Tema Space Innovators ETF",
-      "name": "Tema Space Innovators ETF",
-      "raw_name": "Tema Space Innovators ETF",
-      "value": 57567575.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "PLTR",
+      "name": "",
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -111560204.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "SNXX",
-      "name": "SNXX",
-      "raw_name": "TRADR 2X LONG SNDK DAILY ETF",
-      "value": 57253996.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "AMD",
+      "name": "",
+      "raw_name": "ADVANCED MICRO DEVICES INC",
+      "value": -97829815.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
