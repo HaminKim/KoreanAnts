@@ -1,57 +1,66 @@
 {
-  "date": "2026-05-26",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-05-27",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
+    {
+      "rank": 1,
+      "ticker": "INTC",
+      "name": "",
+      "raw_name": "INTEL CORP",
+      "value": 172464521.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "YNDX",
+      "name": "",
+      "raw_name": "YANDEX NV CL A",
+      "value": 165277970.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 130669184.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
     {
       "rank": 1,
       "ticker": "TSLA",
       "name": "",
       "raw_name": "TESLA INC",
-      "value": -231373373.0,
+      "value": -550982312.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "SNDK",
+      "ticker": "PLTR",
       "name": "",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": -161616982.0,
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -293393734.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -146873690.0,
+      "raw_name": "IONQ INC",
+      "value": -245748860.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
-      "ticker": "PLTR",
-      "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -111560204.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "AMD",
-      "name": "",
-      "raw_name": "ADVANCED MICRO DEVICES INC",
-      "value": -97829815.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
     }
   ]
 }
