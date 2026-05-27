@@ -1,66 +1,57 @@
 {
-  "date": "2026-05-27",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-05-28",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "INTC",
-      "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 172464521.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "YNDX",
-      "name": "",
-      "raw_name": "YANDEX NV CL A",
-      "value": 165277970.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 130669184.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "TSLA",
       "name": "",
       "raw_name": "TESLA INC",
-      "value": -550982312.0,
+      "value": -511929135.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "PLTR",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -293393734.0,
+      "raw_name": "IONQ INC",
+      "value": -311060555.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "IONQ",
+      "ticker": "PLTR",
       "name": "",
-      "raw_name": "IONQ INC",
-      "value": -245748860.0,
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -284208337.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "TQQQ",
+      "name": "",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -162882762.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "TSLL",
+      "name": "",
+      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": -155356076.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
