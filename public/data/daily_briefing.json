@@ -1,11 +1,11 @@
 {
-  "date": "2026-05-31",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-06-01",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,43 +13,43 @@
       "ticker": "MU",
       "name": "",
       "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 585438609.0,
+      "value": 425699040.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "INTC",
+      "ticker": "MRVL",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 496519462.0,
+      "raw_name": "MARVELL TECHNOLOGY INC",
+      "value": 179572631.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "GOOGL",
-      "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 358190716.0,
+      "ticker": "Tema Space Innovators ETF",
+      "name": "Tema Space Innovators ETF",
+      "raw_name": "Tema Space Innovators ETF",
+      "value": 173995965.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 315225561.0,
+      "ticker": "SOXX",
+      "name": "",
+      "raw_name": "ISHARES SEMICONDUCTOR ETF",
+      "value": 148638161.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "QQQM",
+      "ticker": "INTC",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 267681762.0,
+      "raw_name": "INTEL CORP",
+      "value": 146836109.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
