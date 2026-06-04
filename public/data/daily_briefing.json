@@ -1,57 +1,57 @@
 {
-  "date": "2026-06-04",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-06-05",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -592153741.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 563031512.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLA",
+      "ticker": "ARM",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -591037161.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "ARM HOLDINGS PLC SPON ADS EACH REP 1 ORD SHS",
+      "value": 165477745.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "IONQ",
+      "ticker": "AVGO",
       "name": "",
-      "raw_name": "IONQ INC",
-      "value": -344159680.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "value": 137687763.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "PLTR",
-      "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -258466108.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "Tema Space Innovators ETF",
+      "name": "Tema Space Innovators ETF",
+      "raw_name": "Tema Space Innovators ETF",
+      "value": 136320919.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "RKLB",
+      "ticker": "MUU",
       "name": "",
-      "raw_name": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
-      "value": -251763344.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "DXN MU BUL2X ETF",
+      "value": 132208472.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
