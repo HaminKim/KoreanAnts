@@ -119,7 +119,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 8, "name": "인터넷/플랫폼", "etf": "139260.KS", "emoji": "🌐",
+        "id": 8, "name": "인터넷/플랫폼", "etf": "427120.KS", "emoji": "🌐",
         "tickers": [
             "035420.KS", "035720.KS", "323410.KS", "377300.KS", "018280.KS",
             "053800.KS", "032500.KQ", "041510.KS", "035900.KS", "122870.KS",
@@ -219,7 +219,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 18, "name": "디스플레이", "etf": "034220.KS", "emoji": "🖥️",
+        "id": 18, "name": "디스플레이", "etf": "266370.KS", "emoji": "🖥️",
         "tickers": [
             "034220.KS", "213420.KS", "357780.KS", "138360.KS", "067160.KS",
             "036540.KS", "011070.KS", "178920.KS", "080160.KS", "038290.KS",
@@ -269,7 +269,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 23, "name": "IT서비스", "etf": "139260.KS", "emoji": "💻",
+        "id": 23, "name": "IT서비스", "etf": "266370.KS", "emoji": "💻",
         "tickers": [
             "018260.KS", "034730.KS", "012510.KS", "030520.KS", "032500.KQ",
             "047310.KQ", "093520.KQ", "079000.KQ", "023350.KS", "099430.KQ",
@@ -358,7 +358,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 32, "name": "우주/위성", "etf": "139260.KS", "emoji": "🛸",
+        "id": 32, "name": "우주/위성", "etf": "494670.KS", "emoji": "🛸",
         "tickers": [
             "047810.KS", "099320.KS", "277410.KQ", "079550.KS", "012450.KS",
             "064350.KS", "272210.KS", "000880.KS", "337840.KS", "241560.KS",
@@ -368,7 +368,7 @@ SECTORS_KR = [
         ]
     },
     {
-        "id": 33, "name": "AI/소프트웨어", "etf": "139260.KS", "emoji": "🧠",
+        "id": 33, "name": "AI/소프트웨어", "etf": "0105D0.KS", "emoji": "🧠",
         "tickers": [
             "035420.KS", "035720.KS", "304100.KQ", "122900.KQ",
             "022100.KS", "018260.KS", "030520.KS", "047310.KQ", "079000.KQ",
@@ -1278,11 +1278,13 @@ def main():
         "sectors":        sectors_out,
     }
 
-    # ── 저장
+    # ── 저장 (atomic write: 임시 파일에 먼저 쓴 뒤 rename → 실패해도 기존 파일 보존)
     out_path = os.path.join(os.path.dirname(__file__), "..", "public", "data", "watchlist_kr.json")
     out_path = os.path.normpath(out_path)
-    with open(out_path, "w", encoding="utf-8") as f:
+    tmp_path = out_path + ".tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, separators=(',', ':'))
+    os.replace(tmp_path, out_path)
 
     # ── EPS 캐시 저장
     with open(eps_cache_path, "w", encoding="utf-8") as f:

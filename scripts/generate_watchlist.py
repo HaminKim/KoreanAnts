@@ -61,36 +61,37 @@ RS_WEIGHTS       = (0.2, 0.3, 0.5)  # 20d : 60d : 252d 가중치
 
 SECTORS = [
     {"id":  1, "name": "반도체",     "etf": "SOXX", "emoji": "💾",
-     "tickers": ["NVDA","AVGO","TSM","AMD","INTC","QCOM","MU","AMAT","LRCX","KLAC","ASML","MRVL","ON","TER","WOLF"]},
+     "tickers": ["NVDA","AVGO","TSM","AMD","INTC","QCOM","MU","AMAT","LRCX","KLAC","ASML","MRVL","ON","TER","WOLF","SMCI","MPWR","NXPI","MCHP","SWKS"]},
     {"id":  2, "name": "기술",       "etf": "XLK",  "emoji": "💻",
-     "tickers": ["AAPL","MSFT","ORCL","ADBE","CSCO","IBM","NOW","INTU","PANW","CRM","FTNT","SNOW","PLTR","MDB","ZS"]},
+     "tickers": ["AAPL","MSFT","ORCL","ADBE","CSCO","IBM","NOW","INTU","PANW","CRM","FTNT","SNOW","PLTR","MDB","ZS","WDAY","DDOG","TEAM","TTD","GTLB"]},
     {"id":  3, "name": "커뮤니케이션","etf": "XLC",  "emoji": "📡",
-     "tickers": ["META","GOOGL","NFLX","DIS","TMUS","VZ","T","CHTR","EA","TTWO","SNAP","PINS","SPOT","WBD","LYV"]},
+     "tickers": ["META","GOOGL","NFLX","DIS","TMUS","VZ","T","CHTR","EA","TTWO","SNAP","PINS","SPOT","WBD","LYV","ROKU","CMCSA","PARA","FOX","LBRDA"]},
     {"id":  4, "name": "소비재(임의)","etf": "XLY",  "emoji": "🛍️",
-     "tickers": ["AMZN","TSLA","HD","MCD","NKE","LOW","SBUX","TJX","BKNG","CMG","ABNB","ROST","YUM","MAR","EXPE"]},
+     "tickers": ["AMZN","TSLA","HD","MCD","NKE","LOW","SBUX","TJX","BKNG","CMG","ABNB","ROST","YUM","MAR","EXPE","LULU","ETSY","F","GM","GPC"]},
     {"id":  5, "name": "소비재(필수)","etf": "XLP",  "emoji": "🛒",
-     "tickers": ["PG","KO","PEP","COST","WMT","PM","MO","CL","MDLZ","STZ","KR","SYY","HSY","CHD","CLX"]},
+     "tickers": ["PG","KO","PEP","COST","WMT","PM","MO","CL","MDLZ","STZ","KR","SYY","HSY","CHD","CLX","EL","TSN","ADM","BG","GIS"]},
     {"id":  6, "name": "헬스케어",   "etf": "XLV",  "emoji": "🏥",
-     "tickers": ["UNH","LLY","ABT","TMO","MRK","AMGN","ISRG","SYK","BSX","MDT","ELV","HCA","CI","MCK","HIMS"]},
+     "tickers": ["UNH","LLY","ABT","TMO","MRK","AMGN","ISRG","SYK","BSX","MDT","ELV","HCA","CI","MCK","HIMS","CVS","DHR","IQV","ZBH","IDXX"]},
     {"id":  7, "name": "바이오테크", "etf": "XBI",  "emoji": "🧬",
-     "tickers": ["MRNA","REGN","VRTX","BIIB","BMRN","ALNY","IONS","INCY","SRPT","EXAS","ROIV","CRSP","NTLA","BEAM","RXRX"]},
+     "tickers": ["MRNA","REGN","VRTX","BIIB","BMRN","ALNY","IONS","INCY","SRPT","EXAS","ROIV","CRSP","NTLA","BEAM","RXRX","GILD","RARE","FOLD","HALO","ACAD"]},
     {"id":  8, "name": "금융",       "etf": "XLF",  "emoji": "🏦",
-     "tickers": ["JPM","BRK-B","V","MA","BAC","WFC","GS","MS","BLK","SPGI","AXP","CB","PGR","MET","TRV"]},
+     "tickers": ["JPM","BRK-B","V","MA","BAC","WFC","GS","MS","BLK","SPGI","AXP","CB","PGR","MET","TRV","COF","USB","TFC","SCHW","ICE"]},
     {"id":  9, "name": "에너지",     "etf": "XLE",  "emoji": "🛢️",
-     "tickers": ["XOM","CVX","EOG","SLB","COP","MPC","OXY","WMB","PSX","VLO","LNG","KMI","DVN","HAL","BKR"]},
+     "tickers": ["XOM","CVX","EOG","SLB","COP","MPC","OXY","WMB","PSX","VLO","LNG","KMI","DVN","HAL","BKR","FANG","MRO","APA","TRGP","ET"]},
     {"id": 10, "name": "산업재",     "etf": "XLI",  "emoji": "⚙️",
-     "tickers": ["GE","CAT","ETN","HON","UNP","MMM","DE","EMR","PH","ROK","ITW","GWW","FDX","UPS","CARR"]},
+     "tickers": ["GE","CAT","ETN","HON","UNP","MMM","DE","EMR","PH","ROK","ITW","GWW","FDX","UPS","CARR","PCAR","TT","OTIS","JCI","VLTO"]},
     {"id": 11, "name": "방산",       "etf": "ITA",  "emoji": "🚀",
-     "tickers": ["RTX","LMT","NOC","GD","BA","HEI","TDG","CACI","LDOS","SAIC","LHX","CW","DRS","KTOS","AXON"]},
+     "tickers": ["RTX","LMT","NOC","GD","BA","HEI","TDG","CACI","LDOS","SAIC","LHX","CW","DRS","KTOS","AXON","AVAV","HII","BWXT","MRCY","TDY"]},
     {"id": 12, "name": "소재",       "etf": "XLB",  "emoji": "⛏️",
-     "tickers": ["LIN","APD","SHW","FCX","ECL","NEM","NUE","VMC","DOW","ALB","PPG","IP","PKG","CF","MOS"]},
+     "tickers": ["LIN","APD","SHW","FCX","ECL","NEM","NUE","VMC","DOW","ALB","PPG","IP","PKG","CF","MOS","DD","BHP","RIO","MLM","SEE"]},
     {"id": 13, "name": "유틸리티",   "etf": "XLU",  "emoji": "⚡",
-     "tickers": ["NEE","DUK","SO","D","EXC","AEP","XEL","ED","ETR","ES","SRE","AWK","WEC","CMS","AES"]},
+     "tickers": ["NEE","DUK","SO","D","EXC","AEP","XEL","ED","ETR","ES","SRE","AWK","WEC","CMS","AES","PCG","EIX","PEG","NRG","EVRG"]},
     {
         "id": 14, "name": "크립토", "etf": "IBIT", "emoji": "₿",
         "tickers": [
             "IBIT","MSTR","COIN","CRCL","MARA","RIOT","CLSK","HUT","IREN","BMNR","BTBT",
             "CORZ","WULF","CIFR","BITF","GBTC",
+            "SMLR","BKKT","HIVE","BTDR",
         ]
     },
     {
@@ -98,6 +99,7 @@ SECTORS = [
         "tickers": [
             "QTUM","IONQ","RGTI","QUBT","QBTS","ARQQ",
             "IBM","GOOGL","MSFT","NVDA","INTC",
+            "AMZN","META","HON","RTX","CRM","ORCL","BIDU","APLD","SOUN",
         ]
     },
     {
@@ -105,6 +107,7 @@ SECTORS = [
         "tickers": [
             "MSFT","AAPL","NVDA","AMZN","META","TSLA","GOOGL","AVGO","COST","NFLX",
             "ADBE","PEP","CSCO","INTU","TMUS",
+            "ISRG","QCOM","ARM","PANW","AMAT",
         ]
     },
     {
@@ -113,6 +116,7 @@ SECTORS = [
             "COIN","XYZ","HOOD","SOFI","PYPL",
             "AFRM","BILL","UPST","NU","TOST",
             "GPN","V","MA","INTU","FIS",
+            "FISV","PAYX","WEX","FOUR","GDOT",
         ]
     },
     {
@@ -121,6 +125,7 @@ SECTORS = [
             "ALB","SQM","MP","LAC","SGML",
             "QS","SLDP","RIVN","CHPT","EVGO",
             "BLNK","STEM","PLUG","BE","FCEL",
+            "MVST","ENVX","CBAK","LCID","ACHR",
         ]
     },
     {
@@ -129,6 +134,7 @@ SECTORS = [
             "ISRG","CGNX","ZBRA","TDY","PATH",
             "ONTO","AZTA","RRX","NOVT","ROK",
             "TER","TRMB","KEYS","BRKR","NNDM",
+            "ABB","AEVA","RCAT","GTLS","ESAB",
         ]
     },
     {
@@ -137,6 +143,7 @@ SECTORS = [
             "NEM","GOLD","AEM","KGC","WPM",
             "FNV","RGLD","AU","PAAS","AGI",
             "HL","EXK","CDE","HMY","GFI",
+            "SILV","SVM","MAG","SAND","OR",
         ]
     },
     {
@@ -145,6 +152,7 @@ SECTORS = [
             "FSLR","ENPH","SEDG","ARRY","RUN",
             "FLNC","HASI","BEP","CWEN","MAXN",
             "SHLS","CSIQ","JKS","ORA","AES",
+            "NEP","ITRI","GNRC","BEPC","CLNE",
         ]
     },
     {
@@ -153,6 +161,7 @@ SECTORS = [
             "AMT","PLD","EQIX","CCI","PSA",
             "WELL","DLR","O","SPG","AVB",
             "EQR","VICI","VTR","NNN","IRM",
+            "CBRE","JLL","HST","KIM","BXP",
         ]
     },
     {
@@ -161,6 +170,7 @@ SECTORS = [
             "CCJ","LEU","UEC","DNN","NXE",
             "UUUU","BWXT","CEG","VST","SMR",
             "OKLO","NNE","GEV","TLN","ETN",
+            "LTBR","AEE","PSEG","D","PPL",
         ]
     },
     {
@@ -169,6 +179,7 @@ SECTORS = [
             "RKLB","LUNR","ASTS","PL","RDW",
             "SPIR","GSAT","IRDM","VSAT","SATL",
             "HON","BA","HEI","TDG",
+            "BKSY","ATRO","RTX","NOC","LMT","KTOS",
         ]
     },
     {
@@ -177,6 +188,7 @@ SECTORS = [
             "CRWD","ZS","S","CYBR","TENB",
             "QLYS","VRNS","NET","OKTA","RPD",
             "PANW","FTNT","CSCO","IBM","SAIL",
+            "CHKP","GEN","BB","BAH","SAIC",
         ]
     },
     {
@@ -185,6 +197,7 @@ SECTORS = [
             "AAPL","MSFT","NVDA","AMZN","META",
             "GOOGL","TSLA","AVGO","BRK-B","JPM",
             "LLY","UNH","V","XOM","MA",
+            "COST","JNJ","HD","PG","ABBV",
         ]
     },
 ]
