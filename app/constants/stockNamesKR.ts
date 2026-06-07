@@ -409,6 +409,10 @@ export const KR_STOCK_NAMES: Record<string, string> = {
   // ── 기존 섹터 ETF
   '102970.KS': 'KODEX 증권',
   '139260.KS': 'TIGER 200 IT',
+  '266370.KS': 'KODEX IT',
+  '427120.KS': 'RISE AI&IT인터넷플랫폼',
+  '494670.KS': 'KODEX 미국우주항공',
+  '0105D0.KS': 'SOL 한국AI소프트웨어',
   '300950.KS': 'KODEX 게임산업',
   '228810.KS': 'TIGER 미디어컨텐츠',
   '117460.KS': 'KODEX 에너지화학',
