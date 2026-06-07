@@ -1,11 +1,11 @@
 {
-  "date": "2026-06-07",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-06-08",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,43 +13,43 @@
       "ticker": "MU",
       "name": "",
       "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 749910034.0,
+      "value": 256314495.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "MRVL",
+      "ticker": "AVGO",
       "name": "",
-      "raw_name": "MARVELL TECHNOLOGY INC",
-      "value": 363461556.0,
+      "raw_name": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "value": 180864981.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 325841895.0,
+      "ticker": "ARM",
+      "name": "",
+      "raw_name": "ARM HOLDINGS PLC SPON ADS EACH REP 1 ORD SHS",
+      "value": 163701269.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "Tema Space Innovators ETF",
-      "name": "Tema Space Innovators ETF",
-      "raw_name": "Tema Space Innovators ETF",
-      "value": 307499630.0,
+      "ticker": "MRVL",
+      "name": "",
+      "raw_name": "MARVELL TECHNOLOGY INC",
+      "value": 157840553.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "QQQM",
+      "ticker": "IBM",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 281400262.0,
+      "raw_name": "INTERNATIONAL BUSINESS MACHINES CORP",
+      "value": 92162395.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
