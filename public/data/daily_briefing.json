@@ -1,7 +1,7 @@
 {
-  "date": "2026-06-08",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-06-09",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "MU",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 256314495.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "TESLA INC",
+      "value": -295956023.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "AVGO",
+      "ticker": "INTC",
       "name": "",
-      "raw_name": "BROADCOM INC EXOF 005644980 SG9999014823",
-      "value": 180864981.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "INTEL CORP",
+      "value": -253333552.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "ARM",
+      "ticker": "RKLB",
       "name": "",
-      "raw_name": "ARM HOLDINGS PLC SPON ADS EACH REP 1 ORD SHS",
-      "value": 163701269.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
+      "value": -191422421.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "MRVL",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "MARVELL TECHNOLOGY INC",
-      "value": 157840553.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "IONQ INC",
+      "value": -174408792.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "IBM",
+      "ticker": "AMD",
       "name": "",
-      "raw_name": "INTERNATIONAL BUSINESS MACHINES CORP",
-      "value": 92162395.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "ADVANCED MICRO DEVICES INC",
+      "value": -81039361.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
