@@ -1,57 +1,66 @@
 {
-  "date": "2026-06-09",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-06-10",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
+    {
+      "rank": 1,
+      "ticker": "MU",
+      "name": "",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 488672898.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 374354741.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "MRVL",
+      "name": "",
+      "raw_name": "MARVELL TECHNOLOGY INC",
+      "value": 292443316.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
     {
       "rank": 1,
       "ticker": "TSLA",
       "name": "",
       "raw_name": "TESLA INC",
-      "value": -295956023.0,
+      "value": -608534606.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "INTC",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": -253333552.0,
+      "raw_name": "IONQ INC",
+      "value": -377343431.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "RKLB",
+      "ticker": "INTC",
       "name": "",
-      "raw_name": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
-      "value": -191422421.0,
+      "raw_name": "INTEL CORP",
+      "value": -374769985.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
-      "ticker": "IONQ",
-      "name": "",
-      "raw_name": "IONQ INC",
-      "value": -174408792.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "AMD",
-      "name": "",
-      "raw_name": "ADVANCED MICRO DEVICES INC",
-      "value": -81039361.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
     }
   ]
 }
