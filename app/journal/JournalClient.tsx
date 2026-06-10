@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { createChart, ColorType, AreaSeries, LineSeries } from 'lightweight-charts';
 import { createClient } from '@/utils/supabase/client';
@@ -176,7 +175,7 @@ export default function JournalClient({ userId }: { userId: string }) {
       </div>
 
       {tab === 'watchlist' && <WatchlistTab userId={userId} supabase={supabase} />}
-      {tab === 'paper' && <PaperTab userId={userId} supabase={supabase} />}
+      {tab === 'paper'     && <PaperTab     userId={userId} supabase={supabase} />}
     </div>
   );
 }
@@ -189,8 +188,21 @@ function WatchlistTab({ userId, supabase }: { userId: string; supabase: ReturnTy
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ ticker: '', name: '', sector: '', memo: '' });
   const [saving, setSaving] = useState(false);
+  const [popupItem, setPopupItem] = useState<WatchItem | null>(null);
 
   const tableName = market === 'kr' ? 'personal_watchlist_kr' : 'personal_watchlist';
+
+  useEffect(() => {
+    if (!popupItem) return;
+    const handler = (e: KeyboardEvent) => {
+      const idx = items.findIndex(i => i.id === popupItem.id);
+      if (e.key === 'ArrowLeft' && idx > 0) setPopupItem(items[idx - 1]);
+      else if (e.key === 'ArrowRight' && idx < items.length - 1) setPopupItem(items[idx + 1]);
+      else if (e.key === 'Escape') setPopupItem(null);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [popupItem, items]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -324,10 +336,27 @@ function WatchlistTab({ userId, supabase }: { userId: string; supabase: ReturnTy
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {items.map(item => (
-            <WatchCard key={item.id} item={item} onRemove={remove} onUpdate={updateField} supabase={supabase} userId={userId} market={market} />
+            <WatchCard key={item.id} item={item} onRemove={remove} onUpdate={updateField} supabase={supabase} userId={userId} market={market} onOpenPopup={setPopupItem} />
           ))}
         </div>
       )}
+
+      {popupItem && (() => {
+        const idx = items.findIndex(i => i.id === popupItem.id);
+        return (
+          <StockPopup
+            item={popupItem}
+            index={idx}
+            total={items.length}
+            market={market}
+            userId={userId}
+            supabase={supabase}
+            onClose={() => setPopupItem(null)}
+            onPrev={() => idx > 0 && setPopupItem(items[idx - 1])}
+            onNext={() => idx < items.length - 1 && setPopupItem(items[idx + 1])}
+          />
+        );
+      })()}
     </div>
   );
 }
@@ -381,7 +410,7 @@ function InlineEdit({
 
 // ─── WatchCard ───────────────────────────────────────────
 function WatchCard({
-  item, onRemove, onUpdate, supabase, userId, market,
+  item, onRemove, onUpdate, supabase, userId, market, onOpenPopup,
 }: {
   item: WatchItem
   onRemove: (id: string) => void
@@ -389,10 +418,9 @@ function WatchCard({
   supabase: ReturnType<typeof createClient>
   userId: string
   market: 'us' | 'kr'
+  onOpenPopup: (item: WatchItem) => void
 }) {
-  const router  = useRouter();
   const dispTkr = market === 'kr' ? displayTicker(item.ticker) : item.ticker;
-  const wlLink  = market === 'kr' ? `/watchlist-kr?stock=${item.ticker}` : `/watchlist?stock=${item.ticker}`;
 
   return (
     <div className="border rounded-2xl overflow-hidden hover:shadow-lg transition-shadow bg-white">
@@ -406,7 +434,7 @@ function WatchCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
             <button
-              onClick={() => router.push(wlLink)}
+              onClick={() => onOpenPopup(item)}
               className="font-black text-base tracking-tight hover:text-blue-600 transition-colors"
             >
               {dispTkr}
@@ -434,6 +462,79 @@ function WatchCard({
       </div>
     </div>
   );
+}
+
+// ─── StockPopup ───────────────────────────────────────────
+function StockPopup({
+  item, index, total, market, userId, supabase, onClose, onPrev, onNext,
+}: {
+  item: WatchItem
+  index: number
+  total: number
+  market: 'us' | 'kr'
+  userId: string
+  supabase: ReturnType<typeof createClient>
+  onClose: () => void
+  onPrev: () => void
+  onNext: () => void
+}) {
+  const dispTkr = market === 'kr' ? displayTicker(item.ticker) : item.ticker
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl w-full max-w-lg max-h-[92vh] overflow-hidden shadow-2xl flex flex-col"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* 헤더 */}
+        <div className="flex items-center justify-between px-4 py-3 border-b shrink-0">
+          <button
+            onClick={onPrev}
+            disabled={index === 0}
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-20 transition-all text-lg"
+          >
+            ←
+          </button>
+          <div className="text-center">
+            <div className="font-black text-lg tracking-tight">{dispTkr}</div>
+            {item.name && <div className="text-xs text-gray-400 mt-0.5">{item.name}</div>}
+            <div className="text-[10px] text-gray-300 mt-0.5">{index + 1} / {total}</div>
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={onNext}
+              disabled={index === total - 1}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-20 transition-all text-lg"
+            >
+              →
+            </button>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-300 hover:text-gray-700 hover:bg-gray-100 transition-all text-xl ml-1"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+
+        {/* 차트 */}
+        <div className="shrink-0" style={{ height: 300 }}>
+          {market === 'kr'
+            ? <KRMiniChart ticker={item.ticker} height={300} />
+            : <TradingViewChart symbol={item.ticker} height={300} showStudies={false} minimal={true} />
+          }
+        </div>
+
+        {/* 메모 */}
+        <div className="flex-1 overflow-y-auto px-4 pb-4 border-t">
+          <MemoList watchlistId={item.id} userId={userId} supabase={supabase} />
+        </div>
+      </div>
+    </div>
+  )
 }
 
 // ─── MemoList ─────────────────────────────────────────────
