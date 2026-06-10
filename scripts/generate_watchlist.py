@@ -1063,8 +1063,11 @@ def main():
 
     os.makedirs("public/data", exist_ok=True)
     out_path = "public/data/watchlist.json"
+    import re as _re
+    json_str = json.dumps(output, ensure_ascii=False, indent=2)
+    json_str = _re.sub(r'\bNaN\b', 'null', json_str)
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
+        f.write(json_str)
 
     # ── EPS 캐시 저장 ──
     with open(eps_cache_path, "w", encoding="utf-8") as f:

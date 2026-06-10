@@ -1410,8 +1410,9 @@ export default function WatchlistKRClient() {
     fetch('/data/watchlist_kr.json', { cache: 'no-store' })
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`)
-        return r.json()
+        return r.text()
       })
+      .then(text => JSON.parse(text.replace(/:(\s*)NaN/g, ':$1null')) as WatchlistData)
       .then((d: WatchlistData) => {
         try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)) } catch {}
         setData(d)

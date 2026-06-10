@@ -1282,8 +1282,11 @@ def main():
     out_path = os.path.join(os.path.dirname(__file__), "..", "public", "data", "watchlist_kr.json")
     out_path = os.path.normpath(out_path)
     tmp_path = out_path + ".tmp"
+    import re as _re
+    json_str = json.dumps(result, ensure_ascii=False, separators=(',', ':'))
+    json_str = _re.sub(r'\bNaN\b', 'null', json_str)
     with open(tmp_path, "w", encoding="utf-8") as f:
-        json.dump(result, f, ensure_ascii=False, separators=(',', ':'))
+        f.write(json_str)
     os.replace(tmp_path, out_path)
 
     # ── EPS 캐시 저장
