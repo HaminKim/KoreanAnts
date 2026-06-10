@@ -26,6 +26,31 @@ function formatKoreanWon(v: number): string {
   return Math.round(v).toLocaleString()
 }
 
+function LazyChart({ children, height }: { children: React.ReactNode; height: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect() } },
+      { rootMargin: '120px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div ref={ref} style={{ height }}>
+      {visible
+        ? children
+        : <div className="flex items-center justify-center h-full text-gray-200 text-xs">차트 준비 중...</div>
+      }
+    </div>
+  )
+}
+
 function KRMiniChart({ ticker, height }: { ticker: string; height: number }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState(true)
@@ -424,12 +449,12 @@ function WatchCard({
 
   return (
     <div className="border rounded-2xl overflow-hidden hover:shadow-lg transition-shadow bg-white">
-      <div style={{ height: 260 }}>
+      <LazyChart height={260}>
         {market === 'kr'
           ? <KRMiniChart ticker={item.ticker} height={260} />
           : <TradingViewChart symbol={item.ticker} height={260} showStudies={false} minimal={true} />
         }
-      </div>
+      </LazyChart>
       <div className="p-3 border-t border-gray-100 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
