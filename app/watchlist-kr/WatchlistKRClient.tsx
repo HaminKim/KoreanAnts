@@ -1405,10 +1405,22 @@ export default function WatchlistKRClient() {
   const [compareRight,       setCompareRight]      = useState<SectorItem | null>(null)
 
   useEffect(() => {
+    const CACHE_KEY = 'watchlist_kr_cache'
     fetch('/data/watchlist_kr.json', { cache: 'no-store' })
       .then(r => r.json())
-      .then((d: WatchlistData) => { setData(d); setLoading(false) })
-      .catch((e) => { console.error('watchlist-kr 로드 실패:', e); setLoading(false) })
+      .then((d: WatchlistData) => {
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)) } catch {}
+        setData(d)
+        setLoading(false)
+      })
+      .catch((e) => {
+        console.error('watchlist-kr 로드 실패:', e)
+        try {
+          const cached = localStorage.getItem(CACHE_KEY)
+          if (cached) setData(JSON.parse(cached))
+        } catch {}
+        setLoading(false)
+      })
   }, [])
 
   useEffect(() => {

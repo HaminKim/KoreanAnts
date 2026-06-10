@@ -768,17 +768,24 @@ def main():
     # ── EPS 병렬 수집 ──
     print(f"\n📊 EPS 서프라이즈 수집 중... ({len(all_tickers)}개 종목, 병렬)")
     fresh_eps: dict = {}
-    try:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-            futures = {executor.submit(fetch_eps_data, t): t for t in all_tickers}
-            for future in concurrent.futures.as_completed(futures, timeout=180):
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        futures = {executor.submit(fetch_eps_data, t): t for t in all_tickers}
+        try:
+            for future in concurrent.futures.as_completed(futures, timeout=600):
                 try:
-                    ticker_eps, hist = future.result(timeout=10)
+                    ticker_eps, hist = future.result(timeout=15)
                     fresh_eps[ticker_eps] = hist
                 except Exception:
                     fresh_eps[futures[future]] = None
-    except concurrent.futures.TimeoutError:
-        print("  ⚠️  EPS 수집 타임아웃 — 일부 데이터 누락될 수 있음")
+        except concurrent.futures.TimeoutError:
+            print("  ⚠️  EPS 수집 타임아웃 — 완료된 것만 사용하고 계속 진행")
+            for future, tkr in futures.items():
+                if future.done() and tkr not in fresh_eps:
+                    try:
+                        _, hist = future.result()
+                        fresh_eps[tkr] = hist
+                    except Exception:
+                        fresh_eps[tkr] = None
 
     # ── 캐시 병합: 새 데이터 있으면 업데이트, 없으면 캐시 유지 ──
     eps_dict: dict = {}

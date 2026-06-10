@@ -1502,10 +1502,22 @@ export default function WatchlistClient() {
   const [compareRight,       setCompareRight]      = useState<SectorItem | null>(null)
 
   useEffect(() => {
+    const CACHE_KEY = 'watchlist_us_cache'
     fetch('/data/watchlist.json', { cache: 'no-store' })
       .then(r => r.json())
-      .then((d: WatchlistData) => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
+      .then((d: WatchlistData) => {
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)) } catch {}
+        setData(d)
+        setLoading(false)
+      })
+      .catch((e) => {
+        console.error('watchlist 로드 실패:', e)
+        try {
+          const cached = localStorage.getItem(CACHE_KEY)
+          if (cached) setData(JSON.parse(cached))
+        } catch {}
+        setLoading(false)
+      })
   }, [])
 
   // URL ?stock=TICKER 파라미터로 자동 모달 오픈
