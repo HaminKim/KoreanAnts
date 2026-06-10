@@ -1391,6 +1391,7 @@ export default function WatchlistKRClient() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [data,               setData]              = useState<WatchlistData | null>(null)
+  const [loadError,          setLoadError]         = useState<string | null>(null)
   const [loading,            setLoading]           = useState(true)
   const [selectedStock,      setSelectedStock]     = useState<StockItem | null>(null)
   const [selectedSectorEtf,  setSelectedSectorEtf] = useState<string>('')
@@ -1407,18 +1408,23 @@ export default function WatchlistKRClient() {
   useEffect(() => {
     const CACHE_KEY = 'watchlist_kr_cache'
     fetch('/data/watchlist_kr.json', { cache: 'no-store' })
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        return r.json()
+      })
       .then((d: WatchlistData) => {
         try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)) } catch {}
         setData(d)
         setLoading(false)
       })
       .catch((e) => {
-        console.error('watchlist-kr 로드 실패:', e)
+        const errMsg = e instanceof Error ? e.message : String(e)
+        console.error('watchlist-kr 로드 실패:', errMsg)
         try {
           const cached = localStorage.getItem(CACHE_KEY)
-          if (cached) setData(JSON.parse(cached))
+          if (cached) { setData(JSON.parse(cached)); setLoading(false); return }
         } catch {}
+        setLoadError(errMsg)
         setLoading(false)
       })
   }, [])
@@ -1463,8 +1469,9 @@ export default function WatchlistKRClient() {
   )
 
   if (!data) return (
-    <div className="flex items-center justify-center py-32 text-gray-400 text-sm">
-      데이터 없음 — generate_watchlist_kr.py 를 먼저 실행해 주세요.
+    <div className="flex flex-col items-center justify-center py-32 text-gray-400 text-sm gap-1">
+      <span>데이터 로드 실패</span>
+      {loadError && <span className="text-xs text-red-400">{loadError}</span>}
     </div>
   )
 
