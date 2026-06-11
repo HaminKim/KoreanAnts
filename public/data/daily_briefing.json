@@ -1,57 +1,57 @@
 {
-  "date": "2026-06-11",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-06-12",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -577705641.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 1601819546.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "INTC",
+      "ticker": "MRVL",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": -352210697.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "MARVELL TECHNOLOGY INC",
+      "value": 233762259.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "IONQ",
+      "ticker": "KORU",
       "name": "",
-      "raw_name": "IONQ INC",
-      "value": -301833999.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 210134028.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "RKLB",
+      "ticker": "MRVL",
       "name": "",
-      "raw_name": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
-      "value": -254809671.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "GRANITESHARES 2X LONG MRVL DAILY ETF",
+      "value": 79041486.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "PLTR",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -210126507.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 50035097.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
