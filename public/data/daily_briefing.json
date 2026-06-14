@@ -1,11 +1,11 @@
 {
-  "date": "2026-06-14",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-06-15",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,16 +13,16 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 939952100.0,
+      "value": 1757431767.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "MU",
+      "ticker": "KORU",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 568927109.0,
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 206796249.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
@@ -31,25 +31,25 @@
       "ticker": "MRVL",
       "name": "",
       "raw_name": "MARVELL TECHNOLOGY INC",
-      "value": 466782354.0,
+      "value": 103320798.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "Tema Space Innovators ETF",
-      "name": "Tema Space Innovators ETF",
-      "raw_name": "Tema Space Innovators ETF",
-      "value": 315141999.0,
+      "ticker": "MUU",
+      "name": "",
+      "raw_name": "DXN MU BUL2X ETF",
+      "value": 52418596.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "ARM",
+      "ticker": "QLD",
       "name": "",
-      "raw_name": "ARM HOLDINGS PLC SPON ADS EACH REP 1 ORD SHS",
-      "value": 235759487.0,
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 48812839.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
