@@ -1,7 +1,7 @@
 {
-  "date": "2026-06-15",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-06-16",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1757431767.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "NVIDIA CORP",
+      "value": -120842570.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "KORU",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 206796249.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "ALPHABET INC CL A",
+      "value": -72769696.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "MRVL",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "MARVELL TECHNOLOGY INC",
-      "value": 103320798.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "IONQ INC",
+      "value": -61945562.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "MUU",
+      "ticker": "SOXX",
       "name": "",
-      "raw_name": "DXN MU BUL2X ETF",
-      "value": 52418596.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "ISHARES SEMICONDUCTOR ETF",
+      "value": -47913992.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "QLD",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 48812839.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "TESLA INC",
+      "value": -43514819.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
