@@ -1,28 +1,55 @@
 {
-  "date": "2026-06-16",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-06-17",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "NVDA",
+      "ticker": "SPACE EXPLORATION TECHN-CL A",
+      "name": "SPACE EXPLORATION TECHN-CL A",
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 795930032.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "MRVL",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -120842570.0,
+      "raw_name": "MARVELL TECHNOLOGY INC",
+      "value": 382129742.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "KORU",
+      "name": "",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 195305836.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
+    {
+      "rank": 1,
+      "ticker": "TSLA",
+      "name": "",
+      "raw_name": "TESLA INC",
+      "value": -312582319.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "INTC",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": -72769696.0,
+      "raw_name": "INTEL CORP",
+      "value": -302885858.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
@@ -31,27 +58,9 @@
       "ticker": "IONQ",
       "name": "",
       "raw_name": "IONQ INC",
-      "value": -61945562.0,
+      "value": -211361379.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
-      "ticker": "SOXX",
-      "name": "",
-      "raw_name": "ISHARES SEMICONDUCTOR ETF",
-      "value": -47913992.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "TSLA",
-      "name": "",
-      "raw_name": "TESLA INC",
-      "value": -43514819.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
     }
   ]
 }
