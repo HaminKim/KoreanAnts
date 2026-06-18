@@ -1,57 +1,57 @@
 {
-  "date": "2026-06-18",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-06-19",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
-      "name": "",
-      "raw_name": "TESLA INC",
-      "value": -312582319.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "ticker": "SPACE EXPLORATION TECHN-CL A",
+      "name": "SPACE EXPLORATION TECHN-CL A",
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 1466056718.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "INTC",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": -302885858.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 76965769.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "IONQ",
+      "ticker": "QLD",
       "name": "",
-      "raw_name": "IONQ INC",
-      "value": -211361379.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 71022578.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "RKLB",
-      "name": "",
-      "raw_name": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
-      "value": -166197120.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
+      "name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
+      "raw_name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
+      "value": 55097311.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "GOOGL",
+      "ticker": "MRVL",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": -137676006.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "MARVELL TECHNOLOGY INC",
+      "value": 49881177.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
