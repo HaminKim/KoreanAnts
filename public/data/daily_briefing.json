@@ -1,7 +1,7 @@
 {
-  "date": "2026-06-22",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-06-23",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SPACE EXPLORATION TECHN-CL A",
-      "name": "SPACE EXPLORATION TECHN-CL A",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 1602730712.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -961299134.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "QLD",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 76362161.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "TESLA INC",
+      "value": -230806810.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 68781342.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "ALPHABET INC CL A",
+      "value": -158436674.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 64066426.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "KORU",
+      "name": "",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": -79156198.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "raw_name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "value": 59901546.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "NVDA",
+      "name": "",
+      "raw_name": "NVIDIA CORP",
+      "value": -77045939.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
