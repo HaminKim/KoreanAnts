@@ -1,66 +1,57 @@
 {
-  "date": "2026-06-24",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-06-25",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SPACE EXPLORATION TECHN-CL A",
-      "name": "SPACE EXPLORATION TECHN-CL A",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 1540459163.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "QLD",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 123253801.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "raw_name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "value": 117923945.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
-      "ticker": "TSLA",
-      "name": "",
-      "raw_name": "TESLA INC",
-      "value": -345512695.0,
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -903387595.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "NVDA",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -264815735.0,
+      "raw_name": "TESLA INC",
+      "value": -407549018.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "SOXL",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -258759416.0,
+      "raw_name": "NVIDIA CORP",
+      "value": -191708529.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "GOOGL",
+      "name": "",
+      "raw_name": "ALPHABET INC CL A",
+      "value": -159317979.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "AMD",
+      "name": "",
+      "raw_name": "ADVANCED MICRO DEVICES INC",
+      "value": -102236490.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
