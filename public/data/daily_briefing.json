@@ -1,55 +1,55 @@
 {
-  "date": "2026-06-26",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-06-27",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "MU",
-      "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 158419763.0,
+      "ticker": "SPACE EXPLORATION TECHN-CL A",
+      "name": "SPACE EXPLORATION TECHN-CL A",
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 1533526765.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 140256077.0,
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 1449106573.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "INTC",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 116223725.0,
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 891427773.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "raw_name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "value": 82956725.0,
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 364199019.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "QLD",
+      "ticker": "MRVL",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 68108164.0,
+      "raw_name": "MARVELL TECHNOLOGY INC",
+      "value": 353450962.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
