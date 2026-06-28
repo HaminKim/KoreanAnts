@@ -1,55 +1,55 @@
 {
-  "date": "2026-06-28",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-06-29",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SPACE EXPLORATION TECHN-CL A",
-      "name": "SPACE EXPLORATION TECHN-CL A",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 1533526765.0,
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 627676525.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "SOXL",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1449106573.0,
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 301259244.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
-      "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 891427773.0,
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "name": "ROUNDHILL MEMORY ETF",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 208404964.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 364199019.0,
+      "ticker": "INTC",
+      "name": "",
+      "raw_name": "INTEL CORP",
+      "value": 134064046.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "MRVL",
-      "name": "",
-      "raw_name": "MARVELL TECHNOLOGY INC",
-      "value": 353450962.0,
+      "ticker": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
+      "name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
+      "raw_name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
+      "value": 78152490.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
