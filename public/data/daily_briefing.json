@@ -1,7 +1,7 @@
 {
-  "date": "2026-06-29",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-06-30",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 627676525.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "TESLA INC",
+      "value": -284780183.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "MU",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 301259244.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "NVIDIA CORP",
+      "value": -169934513.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "name": "ROUNDHILL MEMORY ETF",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 208404964.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "AMD",
+      "name": "",
+      "raw_name": "ADVANCED MICRO DEVICES INC",
+      "value": -111952275.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "INTC",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": 134064046.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "ALPHABET INC CL A",
+      "value": -105486432.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "raw_name": "LEVERAGE SHARES 2X LONG SPCX DAILY ETF",
-      "value": 78152490.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "PLTR",
+      "name": "",
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -104885157.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
