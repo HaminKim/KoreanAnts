@@ -1,57 +1,57 @@
 {
-  "date": "2026-07-02",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-07-03",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -548533823.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 271332037.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
-      "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": -271802890.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "raw_name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "value": 216268353.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "NVDA",
+      "ticker": "AMAT",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -221113661.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "APPLIED MATERIALS INC",
+      "value": 92994559.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "PLTR",
+      "ticker": "CAT",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -116378067.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "CATERPILLAR INC",
+      "value": 92159227.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "AMD",
+      "ticker": "QLD",
       "name": "",
-      "raw_name": "ADVANCED MICRO DEVICES INC",
-      "value": -113858947.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 75753297.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
