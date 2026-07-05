@@ -1,46 +1,46 @@
 {
-  "date": "2026-07-05",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-07-06",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SPACE EXPLORATION TECHN-CL A",
-      "name": "SPACE EXPLORATION TECHN-CL A",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 1567583570.0,
+      "ticker": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "raw_name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "value": 210662829.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "SOXL",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1253874789.0,
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 118842597.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
+      "ticker": "AMAT",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 447238858.0,
+      "raw_name": "APPLIED MATERIALS INC",
+      "value": 103160959.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "MRVL",
+      "ticker": "CAT",
       "name": "",
-      "raw_name": "MARVELL TECHNOLOGY INC",
-      "value": 286839085.0,
+      "raw_name": "CATERPILLAR INC",
+      "value": 92159227.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
@@ -49,7 +49,7 @@
       "ticker": "KORU",
       "name": "",
       "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 262908731.0,
+      "value": 81288326.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
