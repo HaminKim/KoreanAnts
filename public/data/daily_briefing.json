@@ -1,11 +1,11 @@
 {
-  "date": "2026-07-07",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-07-08",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
@@ -13,45 +13,54 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -409307233.0,
+      "value": 905698619.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "MU",
+      "name": "",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 316832883.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "raw_name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "value": 241575990.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
+    {
+      "rank": 1,
+      "ticker": "TSLA",
+      "name": "",
+      "raw_name": "TESLA INC",
+      "value": -410687480.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLA",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -169588915.0,
+      "raw_name": "NVIDIA CORP",
+      "value": -283203563.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "NVDA",
-      "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -117031791.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
       "ticker": "GOOGL",
       "name": "",
       "raw_name": "ALPHABET INC CL A",
-      "value": -78033112.0,
+      "value": -170460116.0,
       "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "TSLL",
-      "name": "",
-      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": -73919129.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "desc_key": "매도 3위"
     }
   ]
 }
