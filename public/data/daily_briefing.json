@@ -1,46 +1,19 @@
 {
-  "date": "2026-07-08",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-07-09",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 905698619.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "MU",
-      "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 316832883.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "raw_name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "value": 241575990.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "TSLA",
       "name": "",
       "raw_name": "TESLA INC",
-      "value": -410687480.0,
+      "value": -385842522.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -49,18 +22,36 @@
       "ticker": "NVDA",
       "name": "",
       "raw_name": "NVIDIA CORP",
-      "value": -283203563.0,
+      "value": -243484676.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "GOOGL",
+      "ticker": "AMD",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": -170460116.0,
+      "raw_name": "ADVANCED MICRO DEVICES INC",
+      "value": -126499435.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "YNDX",
+      "name": "",
+      "raw_name": "YANDEX NV CL A",
+      "value": -116381897.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "LITE",
+      "name": "",
+      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
+      "value": -113467386.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
