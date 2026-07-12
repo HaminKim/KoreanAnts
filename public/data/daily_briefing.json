@@ -1,55 +1,55 @@
 {
-  "date": "2026-07-12",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-07-13",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SPACE EXPLORATION TECHN-CL A",
-      "name": "SPACE EXPLORATION TECHN-CL A",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 1606176866.0,
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 1341125073.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "SOXL",
+      "ticker": "KORU",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 875886817.0,
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 151807688.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
-      "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 296256829.0,
+      "ticker": "SNXX",
+      "name": "SNXX",
+      "raw_name": "TRADR 2X LONG SNDK DAILY ETF",
+      "value": 107154861.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "QLD",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 288326782.0,
+      "raw_name": "MICROSOFT CORP",
+      "value": 98740564.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "raw_name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "value": 272993834.0,
+      "ticker": "IREN",
+      "name": "",
+      "raw_name": "IRIS ENERGY LTD",
+      "value": 96290308.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
