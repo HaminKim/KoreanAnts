@@ -1,7 +1,7 @@
 {
-  "date": "2026-07-13",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-07-14",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1341125073.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -171184824.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "KORU",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 151807688.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "NVIDIA CORP",
+      "value": -125936847.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "SNXX",
-      "name": "SNXX",
-      "raw_name": "TRADR 2X LONG SNDK DAILY ETF",
-      "value": 107154861.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "YNDX",
+      "name": "",
+      "raw_name": "YANDEX NV CL A",
+      "value": -100043377.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "MSFT",
+      "ticker": "INTC",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": 98740564.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "INTEL CORP",
+      "value": -90241114.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "IREN",
+      "ticker": "LITE",
       "name": "",
-      "raw_name": "IRIS ENERGY LTD",
-      "value": 96290308.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
+      "value": -81053748.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
