@@ -1,57 +1,66 @@
 {
-  "date": "2026-07-14",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-07-15",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "MU",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -171184824.0,
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 929635175.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "KORU",
+      "name": "",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 167974130.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "AMAT",
+      "name": "",
+      "raw_name": "APPLIED MATERIALS INC",
+      "value": 164382496.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
+    {
+      "rank": 1,
+      "ticker": "NVDA",
+      "name": "",
+      "raw_name": "NVIDIA CORP",
+      "value": -239245955.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "NVDA",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -125936847.0,
+      "raw_name": "TESLA INC",
+      "value": -203720324.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "YNDX",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "YANDEX NV CL A",
-      "value": -100043377.0,
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -119728033.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
-      "ticker": "INTC",
-      "name": "",
-      "raw_name": "INTEL CORP",
-      "value": -90241114.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "LITE",
-      "name": "",
-      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": -81053748.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
     }
   ]
 }
