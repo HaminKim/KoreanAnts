@@ -1,66 +1,57 @@
 {
-  "date": "2026-07-15",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-07-16",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 929635175.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "KORU",
-      "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 167974130.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "AMAT",
-      "name": "",
-      "raw_name": "APPLIED MATERIALS INC",
-      "value": 164382496.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "NVDA",
       "name": "",
       "raw_name": "NVIDIA CORP",
-      "value": -239245955.0,
+      "value": -257941604.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLA",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -203720324.0,
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -230236982.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -119728033.0,
+      "raw_name": "TESLA INC",
+      "value": -179992724.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "YNDX",
+      "name": "",
+      "raw_name": "YANDEX NV CL A",
+      "value": -124353359.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "INTC",
+      "name": "",
+      "raw_name": "INTEL CORP",
+      "value": -117943227.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
