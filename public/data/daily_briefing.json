@@ -1,57 +1,57 @@
 {
-  "date": "2026-07-16",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-07-17",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "NVDA",
-      "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -257941604.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "ticker": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": 477897934.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "MU",
+      "ticker": "KORU",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -230236982.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 110203820.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "TSLA",
+      "ticker": "AMAT",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -179992724.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "APPLIED MATERIALS INC",
+      "value": 96608000.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "YNDX",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "YANDEX NV CL A",
-      "value": -124353359.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 54833624.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "INTC",
+      "ticker": "IREN",
       "name": "",
-      "raw_name": "INTEL CORP",
-      "value": -117943227.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "IRIS ENERGY LTD",
+      "value": 52728116.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
