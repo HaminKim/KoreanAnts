@@ -1,11 +1,11 @@
 {
-  "date": "2026-07-19",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-07-20",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,7 +13,7 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1595588493.0,
+      "value": 579215503.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -28,28 +28,28 @@
     },
     {
       "rank": 3,
-      "ticker": "KORU",
+      "ticker": "AMAT",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 275048164.0,
+      "raw_name": "APPLIED MATERIALS INC",
+      "value": 102031485.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "raw_name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "value": 269247099.0,
+      "ticker": "KORU",
+      "name": "",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 84704036.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "QLD",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 268711778.0,
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 55335999.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
