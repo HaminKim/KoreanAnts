@@ -1,0 +1,101 @@
+{
+  "fire": [
+    {
+      "name": "APPLE INC",
+      "name_kr": "애플",
+      "ticker": "AAPL",
+      "file_ticker": "APPLE INC",
+      "close": 324.57,
+      "price_change": 0.030839103093438288,
+      "net_buy_sum": -5717082,
+      "buy_score": 1,
+      "sell_score": 6,
+      "last_date": "2026-07-20",
+      "comment": "개미 털고 세력 떡상 중 🚀"
+    }
+  ],
+  "top": [
+    {
+      "name": "IRIS ENERGY LTD",
+      "name_kr": "아이렌",
+      "ticker": "IREN",
+      "file_ticker": "IRIS ENERGY LTD",
+      "close": 40.55,
+      "price_change": 0.050790360196942046,
+      "net_buy_sum": 9279189,
+      "buy_score": 5,
+      "sell_score": 0,
+      "last_date": "2026-07-20",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    },
+    {
+      "name": "MICROSOFT CORP",
+      "name_kr": "마이크로소프트",
+      "ticker": "MSFT",
+      "file_ticker": "MICROSOFT CORP",
+      "close": 402.11,
+      "price_change": 0.04463149144000209,
+      "net_buy_sum": 1054061,
+      "buy_score": 4,
+      "sell_score": 4,
+      "last_date": "2026-07-20",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    }
+  ],
+  "bottom": [
+    {
+      "name": "NVIDIA CORP",
+      "name_kr": "엔비디아",
+      "ticker": "NVDA",
+      "file_ticker": "NVIDIA CORP",
+      "close": 203.86,
+      "price_change": -0.03748819641170915,
+      "net_buy_sum": -59038470,
+      "buy_score": 0,
+      "sell_score": 8,
+      "last_date": "2026-07-20",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    },
+    {
+      "name": "TESLA INC",
+      "name_kr": "테슬라",
+      "ticker": "TSLA",
+      "file_ticker": "TESLA INC",
+      "close": 372.12,
+      "price_change": -0.06072997122520067,
+      "net_buy_sum": -21004433,
+      "buy_score": 1,
+      "sell_score": 7,
+      "last_date": "2026-07-20",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    }
+  ],
+  "knife": [
+    {
+      "name": "IONQ INC",
+      "name_kr": "아이온큐",
+      "ticker": "IONQ",
+      "file_ticker": "IONQ INC",
+      "close": 34.92,
+      "price_change": -0.11122423008399078,
+      "net_buy_sum": 35379190,
+      "buy_score": 7,
+      "sell_score": 1,
+      "last_date": "2026-07-20",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    },
+    {
+      "name": "TAIWAN SEMICONDUCTOR MANUFACTURING CO LTD ADR",
+      "name_kr": "TSMC",
+      "ticker": "TSM",
+      "file_ticker": "TAIWAN SEMICONDUCTOR MANUFACTURING CO LTD ADR",
+      "close": 403.73,
+      "price_change": -0.03962986750398432,
+      "net_buy_sum": 13707194,
+      "buy_score": 6,
+      "sell_score": 2,
+      "last_date": "2026-07-20",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    }
+  ]
+}
