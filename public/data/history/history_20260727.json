@@ -1,1 +1,58 @@
-{}
+{
+  "bottom": [
+    {
+      "name": "NVIDIA CORP",
+      "name_kr": "엔비디아",
+      "ticker": "NVDA",
+      "file_ticker": "NVIDIA CORP",
+      "close": 195.89,
+      "price_change": -0.05499541704857931,
+      "net_buy_sum": -28297845,
+      "buy_score": 0,
+      "sell_score": 4,
+      "last_date": "2026-07-27",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    },
+    {
+      "name": "MICRON TECHNOLOGY INC",
+      "name_kr": "마이크론 테크놀로지",
+      "ticker": "MU",
+      "file_ticker": "MICRON TECHNOLOGY INC",
+      "close": 871.53,
+      "price_change": -0.10227436599987647,
+      "net_buy_sum": -10543492,
+      "buy_score": 2,
+      "sell_score": 2,
+      "last_date": "2026-07-27",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    }
+  ],
+  "knife": [
+    {
+      "name": "INTEL CORP",
+      "name_kr": "인텔",
+      "ticker": "INTC",
+      "file_ticker": "INTEL CORP",
+      "close": 89.86,
+      "price_change": -0.14784257942152682,
+      "net_buy_sum": 11860723,
+      "buy_score": 3,
+      "sell_score": 1,
+      "last_date": "2026-07-27",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    },
+    {
+      "name": "TESLA INC",
+      "name_kr": "테슬라",
+      "ticker": "TSLA",
+      "file_ticker": "TESLA INC",
+      "close": 307.93,
+      "price_change": -0.18736969888897687,
+      "net_buy_sum": 54518622,
+      "buy_score": 2,
+      "sell_score": 2,
+      "last_date": "2026-07-27",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    }
+  ]
+}

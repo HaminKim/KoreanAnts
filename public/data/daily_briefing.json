@@ -1,7 +1,7 @@
 {
-  "date": "2026-07-27",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-07-28",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1421868597.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "NVIDIA CORP",
+      "value": -122343656.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": 547475378.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "ticker": "MU",
+      "name": "",
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -115404690.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "KORU",
+      "ticker": "ARM",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 71826476.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "ARM HOLDINGS PLC SPON ADS EACH REP 1 ORD SHS",
+      "value": -72880388.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "META",
-      "name": "",
-      "raw_name": "META PLATFORMS INC CL A",
-      "value": 56189841.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "NXT",
+      "name": "NXT",
+      "raw_name": "NEXTRACKER INC",
+      "value": -65686026.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "QQQM",
+      "ticker": "SNDK",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 55433048.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -59110292.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
