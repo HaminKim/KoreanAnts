@@ -1,11 +1,11 @@
 {
-  "date": "2026-08-02",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-08-03",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,7 +13,7 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 2563352496.0,
+      "value": 1615856567.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -28,28 +28,28 @@
     },
     {
       "rank": 3,
-      "ticker": "QLD",
+      "ticker": "TSLL",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 278640625.0,
+      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": 140114446.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "KORU",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 265547265.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 130522549.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "raw_name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "value": 262793580.0,
+      "ticker": "TQQQ",
+      "name": "",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 94219495.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
