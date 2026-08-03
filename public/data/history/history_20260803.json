@@ -1,1 +1,73 @@
-{}
+{
+  "fire": [
+    {
+      "name": "MICROSOFT CORP",
+      "name_kr": "마이크로소프트",
+      "ticker": "MSFT",
+      "file_ticker": "MICROSOFT CORP",
+      "close": 488.88,
+      "price_change": 0.24286259056819617,
+      "net_buy_sum": -125076885,
+      "buy_score": 0,
+      "sell_score": 2,
+      "last_date": "2026-08-03",
+      "comment": "개미 털고 세력 떡상 중 🚀"
+    },
+    {
+      "name": "NVIDIA CORP",
+      "name_kr": "엔비디아",
+      "ticker": "NVDA",
+      "file_ticker": "NVIDIA CORP",
+      "close": 207.8,
+      "price_change": 0.054768793462260906,
+      "net_buy_sum": -1423948,
+      "buy_score": 0,
+      "sell_score": 2,
+      "last_date": "2026-08-03",
+      "comment": "개미 털고 세력 떡상 중 🚀"
+    }
+  ],
+  "top": [
+    {
+      "name": "SNDSK CRP ORD WI",
+      "name_kr": "샌디스크",
+      "ticker": "SNDK",
+      "file_ticker": "SNDSK CRP ORD WI",
+      "close": 1299.02,
+      "price_change": 0.18512909406076097,
+      "net_buy_sum": 74552007,
+      "buy_score": 2,
+      "sell_score": 0,
+      "last_date": "2026-08-03",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    },
+    {
+      "name": "TESLA INC",
+      "name_kr": "테슬라",
+      "ticker": "TSLA",
+      "file_ticker": "TESLA INC",
+      "close": 322.73,
+      "price_change": 0.049733281290658404,
+      "net_buy_sum": 14269993,
+      "buy_score": 2,
+      "sell_score": 0,
+      "last_date": "2026-08-03",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    }
+  ],
+  "bottom": [
+    {
+      "name": "APPLE INC",
+      "name_kr": "애플",
+      "ticker": "AAPL",
+      "file_ticker": "APPLE INC",
+      "close": 306.72,
+      "price_change": -0.09809456598447412,
+      "net_buy_sum": -19345977,
+      "buy_score": 0,
+      "sell_score": 2,
+      "last_date": "2026-08-03",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    }
+  ]
+}
