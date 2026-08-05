@@ -1,40 +1,13 @@
 {
-  "date": "2026-08-05",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-08-06",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
-    {
-      "rank": 1,
-      "ticker": "SOXL",
-      "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1114485105.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": 709312611.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "GOOGL",
-      "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 202629300.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
     {
       "rank": 1,
       "ticker": "NVDA",
@@ -61,6 +34,24 @@
       "value": -119634700.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "MSFT",
+      "name": "",
+      "raw_name": "MICROSOFT CORP",
+      "value": -92050508.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "PLTR",
+      "name": "",
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -77275679.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
