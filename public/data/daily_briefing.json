@@ -10,37 +10,37 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "NVDA",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -236813220.0,
+      "raw_name": "MICROSOFT CORP",
+      "value": -220470588.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "MU",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -175413328.0,
+      "raw_name": "NVIDIA CORP",
+      "value": -180861395.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "ARM",
+      "ticker": "SNDK",
       "name": "",
-      "raw_name": "ARM HOLDINGS PLC SPON ADS EACH REP 1 ORD SHS",
-      "value": -119634700.0,
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -136395219.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "MSFT",
+      "ticker": "MSFU",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -92050508.0,
+      "raw_name": "DIREXION DAILY MSFT BULL 1 5X ETF",
+      "value": -58846667.0,
       "type": "NET_SELL",
       "desc_key": "매도 4위"
     },
@@ -49,7 +49,7 @@
       "ticker": "PLTR",
       "name": "",
       "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -77275679.0,
+      "value": -49666284.0,
       "type": "NET_SELL",
       "desc_key": "매도 5위"
     }
