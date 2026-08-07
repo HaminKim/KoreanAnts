@@ -1,57 +1,57 @@
 {
-  "date": "2026-08-06",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-08-07",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "MSFT",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -220470588.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 386444298.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "NVDA",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -180861395.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 116287023.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "SNDK",
-      "name": "",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": -136395219.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "ticker": "SKHY",
+      "name": "SKHY",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": 96910785.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "MSFU",
+      "ticker": "AMZN",
       "name": "",
-      "raw_name": "DIREXION DAILY MSFT BULL 1 5X ETF",
-      "value": -58846667.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "AMAZON.COM INC",
+      "value": 92760146.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "PLTR",
+      "ticker": "QLD",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -49666284.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 92471704.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
