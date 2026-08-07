@@ -1,11 +1,11 @@
 {
-  "date": "2026-08-07",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-08-08",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
@@ -13,34 +13,34 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 386444298.0,
+      "value": 1153546916.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TQQQ",
-      "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 116287023.0,
+      "ticker": "SKHY",
+      "name": "SKHY",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": 940385984.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "SKHY",
-      "name": "SKHY",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": 96910785.0,
+      "ticker": "TQQQ",
+      "name": "",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 331332152.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "AMZN",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": 92760146.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 331331847.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
@@ -49,7 +49,7 @@
       "ticker": "QLD",
       "name": "",
       "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 92471704.0,
+      "value": 294155390.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
