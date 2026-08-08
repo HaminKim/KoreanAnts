@@ -3,6 +3,29 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* ── 리포트 톤 디자인 토큰 ── */
+  --surface:      #fcfcfb;
+  --plane:        #f6f5f1;
+  --ink:          #0b0b0b;
+  --ink-2:        #5c5952;
+  --ink-mute:     #8c887f;
+  --hairline:     #ddd9d0;
+  --hairline-2:   #cfcbc0;
+  --accent:       #1f3547;
+
+  /* 5단계 diverging (강세=g / 약세=r), neu = 등락 거의 없음 */
+  --g1: #dcece2; --g2: #8ec2a1; --g3: #2f8a5b; --g4: #1c6b45; --g5: #0f4d30;
+  --r1: #f2ded9; --r2: #d99686; --r3: #ac4530; --r4: #872f1f; --r5: #5c1f13;
+  --neu: #f0efec;
+
+  /* 각 단계 위에 얹는 텍스트 색 (명암비 계산됨) */
+  --gt1: var(--ink); --gt2: var(--ink); --gt3: var(--ink); --gt4: #fff; --gt5: #fff;
+  --rt1: var(--ink); --rt2: var(--ink); --rt3: #fff; --rt4: #fff; --rt5: #fff;
+  --neut: var(--ink);
+
+  --up-text:   #145c34;
+  --down-text: #8a2c1c;
 }
 
 @theme inline {
@@ -16,11 +39,34 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --surface:      #15140f;
+    --plane:        #0d0c09;
+    --ink:          #f5f4ef;
+    --ink-2:        #b9b6ab;
+    --ink-mute:     #83806f;
+    --hairline:     #2c2a24;
+    --hairline-2:   #3a372f;
+    --accent:       #7fa8c4;
+
+    --g1: #16241c; --g2: #234a33; --g3: #3f9463; --g4: #5cb583; --g5: #8ddba8;
+    --r1: #2a1a15; --r2: #5c2c1d; --r3: #b8542f; --r4: #d97847; --r5: #f0a878;
+    --neu: #1d1c17;
+
+    --gt1: #fff; --gt2: #fff; --gt3: #0d0d0d; --gt4: #0d0d0d; --gt5: #0d0d0d;
+    --rt1: #fff; --rt2: #fff; --rt3: #fff; --rt4: #0d0d0d; --rt5: #0d0d0d;
+    --neut: var(--ink);
+
+    --up-text:   #7fd6a5;
+    --down-text: #e8a487;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
+
+.serif { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; }
+.mono  { font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas, monospace; font-variant-numeric: tabular-nums; }

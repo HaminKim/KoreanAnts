@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { createClient } from '@/utils/supabase/client'
 import { KOREAN_NAMES } from '@/app/constants/stockNames'
+import { getCellBg, getCellTextColor } from '@/app/lib/heatmapColor'
 
 const TradingViewChart = dynamic(
   () => import('@/app/components/TradingViewChart'),
@@ -89,26 +90,8 @@ interface WatchlistData {
 }
 
 // ─────────────────────────────────────────
-// 색상 헬퍼
+// 색상 헬퍼 (app/lib/heatmapColor.ts 공유 — import는 파일 상단 참고)
 // ─────────────────────────────────────────
-
-// net_direction 기반 그린/레드 그라데이션
-// 0 = 연회색, + = 그린, - = 레드 (스테이지 특수색 없음)
-function getCellBg(net: number): string {
-  if (net === 0) return 'hsl(220,14%,96%)'
-  const t = Math.min(1, Math.abs(net) / 72)
-  const s = Math.round(12 + t * 63)
-  const l = Math.round(97 - t * 54)
-  return `hsl(${net > 0 ? 142 : 0},${s}%,${l}%)`
-}
-
-// 배경 밝기에 따라 흰/검정 텍스트 일관 적용
-function getCellTextColor(net: number): { ticker: string; sub: string } {
-  const t = Math.min(1, Math.abs(net) / 72)
-  const l = 97 - t * 54
-  if (l < 65) return { ticker: '#fff', sub: 'rgba(255,255,255,0.68)' }
-  return { ticker: '#1f2937', sub: '#9ca3af' }
-}
 
 const STAGE_ABBR: Record<string, string> = {
   stage1_late: '①→', stage2_early: '②↑', stage2: '②',
@@ -609,15 +592,15 @@ function StockCell({ stock, onClick }: { stock: StockItem; onClick: () => void }
       style={{ background: getCellBg(net), height: '54px', gap: '1px' }}
     >
       {show52High && (
-        <span className="absolute top-0.5 right-0.5 text-[8px] leading-none opacity-70">★</span>
+        <span className="absolute top-0.5 right-0.5 text-[8px] leading-none opacity-70" style={{ color: colors.sub }}>★</span>
       )}
       {!show52High && show52Low && (
-        <span className="absolute top-0.5 right-0.5 text-[7px] leading-none opacity-60">▼</span>
+        <span className="absolute top-0.5 right-0.5 text-[7px] leading-none opacity-60" style={{ color: colors.sub }}>▼</span>
       )}
-      <span className="text-[10px] font-bold leading-none" style={{ color: colors.ticker }}>
+      <span className="text-[10px] font-bold leading-none mono" style={{ color: colors.ticker }}>
         {stock.ticker}
       </span>
-      <span className="text-[7px] font-mono leading-none" style={{ color: colors.sub }}>
+      <span className="text-[7px] leading-none mono" style={{ color: colors.sub }}>
         {stock.data.ma_distance_pct >= 0 ? '+' : ''}{stock.data.ma_distance_pct.toFixed(1)}%
       </span>
       <span className="text-[7px] leading-none" style={{ color: colors.sub, opacity: 0.8 }}>
@@ -642,17 +625,18 @@ function SectorBlock({
   const rsPositive = rs !== null && rs > 0
 
   return (
-    <div className="bg-white border-r border-b border-gray-200 overflow-hidden">
+    <div className="overflow-hidden" style={{ borderRight: '1px solid var(--hairline)', borderBottom: '1px solid var(--hairline)', background: 'var(--surface)' }}>
       {/* 섹터 헤더 */}
       {sector.etf === 'SPY' ? (
         <button
           onClick={() => onSelectSector(sector)}
-          className="w-full flex items-center justify-between px-3 py-2 bg-white border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-between px-3 py-2 transition-colors cursor-pointer"
+          style={{ background: 'var(--surface)', borderBottom: '1px solid var(--hairline)' }}
           title="미국 시장 기준 (SPY)"
         >
           <div className="flex items-center gap-1.5 min-w-0">
             {/* 미국 국기 SVG */}
-            <svg width="18" height="12" viewBox="0 0 18 12" style={{ flexShrink: 0, borderRadius: '1px', overflow: 'hidden' }}>
+            <svg width="16" height="11" viewBox="0 0 18 12" style={{ flexShrink: 0, opacity: 0.85 }}>
               {[0,1,2,3,4,5,6,7,8,9,10,11,12].map(i => (
                 <rect key={i} x="0" y={i * 12/13} width="18" height={12/13 + 0.1} fill={i % 2 === 0 ? '#B22234' : '#FFFFFF'} />
               ))}
@@ -662,42 +646,35 @@ function SectorBlock({
                 return <circle key={i} cx={1.2 + col * 1.4 + (row % 2 === 1 ? 0.7 : 0)} cy={1.1 + row * 1.6} r="0.55" fill="white" />
               })}
             </svg>
-            <span className="text-[10px] font-bold text-gray-800 truncate">시장 SPY</span>
+            <span className="text-[10px] font-bold truncate" style={{ color: 'var(--ink)' }}>시장 SPY</span>
           </div>
-          <span className="text-[11px] font-black tabular-nums px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">
+          <span className="text-[11px] font-bold mono" style={{ color: 'var(--ink-mute)' }}>
             = 0
           </span>
         </button>
       ) : (
         <button
           onClick={() => onSelectSector(sector)}
-          className="w-full flex items-center justify-between px-3 py-2 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
+          className="w-full flex items-center justify-between px-3 py-2 transition-colors cursor-pointer"
+          style={{ background: 'var(--surface)', borderBottom: '1px solid var(--hairline)' }}
           title={`${sector.name} (${sector.etf}) — SPY 대비 60일 초과수익 ${rs !== null ? (rs >= 0 ? '+' : '') + rs.toFixed(2) + '%' : 'N/A'}`}
         >
           <div className="flex items-center gap-1.5 min-w-0">
-            <span className="text-sm">{sector.emoji}</span>
-            <span className="text-[10px] font-bold text-gray-700 truncate">{sector.name}</span>
+            <span className="text-[10px] font-bold truncate" style={{ color: 'var(--ink)' }}>{sector.name}</span>
           </div>
-          <div className="flex items-center gap-1.5 flex-shrink-0 ml-1">
+          <div className="flex items-center gap-2 flex-shrink-0 ml-1">
             {rs !== null && (
               <span
-                className="text-[11px] font-black tabular-nums px-1.5 py-0.5 rounded-full"
-                style={{
-                  background: rsPositive ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)',
-                  color: rsPositive ? '#16a34a' : '#dc2626',
-                }}
+                className="text-[11px] font-bold mono"
+                style={{ color: rsPositive ? 'var(--up-text)' : 'var(--down-text)' }}
               >
                 {rsPositive ? '▲' : '▼'}{Math.abs(rs).toFixed(1)}%
               </span>
             )}
             {sector.sector_rs_slope_dir !== 'flat' && sector.sector_rs_slope_days > 0 && (
               <span
-                className="text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded-full border"
-                style={{
-                  color:      sector.sector_rs_slope_dir === 'up' ? '#16a34a' : '#dc2626',
-                  background: sector.sector_rs_slope_dir === 'up' ? 'rgba(22,163,74,0.08)' : 'rgba(220,38,38,0.08)',
-                  borderColor: sector.sector_rs_slope_dir === 'up' ? 'rgba(22,163,74,0.25)' : 'rgba(220,38,38,0.25)',
-                }}
+                className="text-[10px] font-bold mono"
+                style={{ color: sector.sector_rs_slope_dir === 'up' ? 'var(--up-text)' : 'var(--down-text)' }}
               >
                 {sector.sector_rs_slope_dir === 'up' ? '↗' : '↘'} {sector.sector_rs_slope_days}d
               </span>
@@ -707,12 +684,12 @@ function SectorBlock({
       )}
 
       {/* 종목 그리드 */}
-      <div className="grid grid-cols-5 bg-gray-100" style={{ gap: '1px', padding: '1px' }}>
+      <div className="grid grid-cols-5" style={{ gap: '1px', padding: '1px', background: 'var(--hairline)' }}>
         {sector.stocks.map(stock => (
           <StockCell key={stock.ticker} stock={stock} onClick={() => onSelectStock(stock, sector.etf, sector.name, sector.stocks)} />
         ))}
         {Array.from({ length: Math.max(0, 15 - sector.stocks.length) }).map((_, i) => (
-          <div key={i} className="bg-white" style={{ height: '54px' }} />
+          <div key={i} style={{ height: '54px', background: 'var(--surface)' }} />
         ))}
       </div>
     </div>
@@ -1073,8 +1050,8 @@ function SectorChartModal({ sector, onClose }: { sector: SectorItem; onClose: ()
 // ─────────────────────────────────────────
 
 const HELP_HOW_TO_READ = [
-  { color: 'hsl(142,75%,43%)', text: '초록 — 시장보다 강한 종목' },
-  { color: 'hsl(0,75%,43%)',   text: '빨강 — 시장보다 약한 종목' },
+  { color: 'var(--g3)', text: '초록 — 시장보다 강한 종목' },
+  { color: 'var(--r3)', text: '빨강 — 시장보다 약한 종목' },
 ]
 
 // ─────────────────────────────────────────
@@ -1557,8 +1534,8 @@ export default function WatchlistClient() {
   }, [])
 
   if (loading) return (
-    <div className="flex items-center justify-center py-32 text-gray-400 text-sm">
-      📊 분석 데이터 로딩 중...
+    <div className="flex items-center justify-center py-32 text-gray-400 text-sm mono">
+      분석 데이터 로딩 중...
     </div>
   )
 
@@ -1597,111 +1574,85 @@ export default function WatchlistClient() {
   return (
     <div>
       {/* ── 시장 전환 버튼 ── */}
-      <div className="flex gap-1 mb-3 p-1 bg-gray-100 rounded-xl">
+      <div className="flex mb-3" style={{ border: '1px solid var(--hairline)' }}>
         <button
           onClick={() => router.push('/watchlist-kr')}
-          className="flex-1 py-1.5 rounded-lg text-[13px] font-medium text-gray-400 hover:text-gray-600 transition-colors"
+          className="flex-1 py-2 text-[13px] font-medium transition-colors"
+          style={{ color: 'var(--ink-mute)', borderRight: '1px solid var(--hairline)' }}
         >
           코스피
         </button>
-        <button className="flex-1 py-1.5 rounded-lg text-[13px] font-bold bg-white text-gray-900 shadow-sm">
+        <button className="flex-1 py-2 text-[13px] font-bold" style={{ background: 'var(--accent)', color: '#fff' }}>
           나스닥
         </button>
       </div>
 
       {/* ── 상단 요약 카드 ── */}
-      <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-4 shadow-sm">
+      <div className="mb-4 pb-4" style={{ background: 'var(--surface)', border: '1px solid var(--hairline)', borderRadius: 4 }}>
         {/* 두 핵심 지표 */}
         {(() => {
           const total = counts.long + counts.short
           const bullPct = total > 0 ? Math.round((counts.long / total) * 100) : 50
           return (
-            <div className="mb-4">
-              <p className="text-gray-700 text-sm font-semibold mb-2 text-center">S&P 500 대비 종목 강도</p>
-              <div className="flex items-center justify-center gap-4 mb-3">
-                <div className="text-center">
-                  <p className="text-3xl font-black tracking-tight text-green-500">{counts.long}</p>
-                  <p className="text-[11px] text-green-500 font-medium mt-0.5">강한 종목</p>
-                </div>
-                <span className="text-gray-300 font-light text-2xl">|</span>
-                <div className="text-center">
-                  <p className="text-3xl font-black tracking-tight text-red-500">{counts.short}</p>
-                  <p className="text-[11px] text-red-500 font-medium mt-0.5">약한 종목</p>
-                </div>
+            <div className="px-5 pt-4 pb-4" style={{ borderBottom: '1px solid var(--hairline)' }}>
+              <p className="text-sm mb-2 text-center" style={{ color: 'var(--ink-mute)' }}>S&amp;P 500 대비 종목 강도</p>
+              <div className="flex items-center justify-center gap-3 mono">
+                <p className="text-[26px] font-bold" style={{ color: 'var(--up-text)' }}>{counts.long}</p>
+                <span className="font-light text-xl" style={{ color: 'var(--hairline-2)' }}>/</span>
+                <p className="text-[26px] font-bold" style={{ color: 'var(--down-text)' }}>{counts.short}</p>
               </div>
-              <div className="flex h-1.5 rounded-full overflow-hidden bg-gray-100">
-                <div className="h-full bg-green-500 transition-all" style={{ width: `${bullPct}%` }} />
-                <div className="h-full flex-1 bg-red-500" />
-              </div>
-              <div className="flex justify-between mt-2">
-                <span className="text-[11px] text-gray-400">{counts.long}개 강함</span>
-                <span className="text-[11px] text-gray-400">{counts.short}개 약함</span>
+              <div className="flex h-1 mt-2.5 mx-auto" style={{ maxWidth: 320 }}>
+                <div className="h-full transition-all" style={{ width: `${bullPct}%`, background: 'var(--g3)' }} />
+                <div className="h-full flex-1" style={{ background: 'var(--r3)' }} />
               </div>
             </div>
           )
         })()}
 
         {/* 뷰 모드 토글 + 도움말 */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <div className="flex gap-1.5">
-            <button
-              onClick={() => setViewMode('topdown')}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                viewMode === 'topdown'
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-              }`}
-            >
-              📊 탑다운
-            </button>
-            <button
-              onClick={() => setViewMode('bottomup')}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                viewMode === 'bottomup'
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-              }`}
-            >
-              🔍 바텀업
-            </button>
-            <button
-              onClick={() => { setViewMode('compare'); setCompareRight(null) }}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                viewMode === 'compare'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-              }`}
-            >
-              ⚖️ 비교
-            </button>
-            <button
-              onClick={() => setViewMode('ranking')}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                viewMode === 'ranking'
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-              }`}
-            >
-              📈 순위
-            </button>
+        <div className="flex items-center justify-between px-5 pt-3">
+          <div className="flex gap-4">
+            {([
+              ['topdown', '탑다운'],
+              ['bottomup', '바텀업'],
+              ['compare', '비교'],
+              ['ranking', '순위'],
+            ] as const).map(([mode, label]) => (
+              <button
+                key={mode}
+                onClick={() => {
+                  if (mode === 'compare') setCompareRight(null)
+                  setViewMode(mode)
+                }}
+                className="text-xs pb-1.5 border-b-2 transition-colors"
+                style={{
+                  color: viewMode === mode ? 'var(--ink)' : 'var(--ink-mute)',
+                  borderColor: viewMode === mode ? 'var(--accent)' : 'transparent',
+                  fontWeight: viewMode === mode ? 600 : 500,
+                }}
+              >
+                {label}
+              </button>
+            ))}
           </div>
           <button
             onClick={() => setShowHelp(v => !v)}
-            className="text-[10px] text-gray-400 hover:text-gray-600 flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-2.5 py-1.5 rounded-full transition-colors"
+            className="text-[11px] transition-colors"
+            style={{ color: 'var(--ink-mute)' }}
           >
-            {showHelp ? '▲' : '❓'} 도움말
+            {showHelp ? '색상 읽는 법 닫기 ▲' : '색상 읽는 법 ?'}
           </button>
         </div>
       </div>
 
       {/* ── 바텀업 필터 (2단계) ── */}
       {viewMode === 'bottomup' && (() => {
-        type Cat = { id: string; label: string; color: string; activeClass: string; keys: HLFilter[] }
+        type Cat = { id: string; label: string; keys: HLFilter[] }
         const CATS: Cat[] = [
-          { id: 'break', label: '🔥 신고가 돌파', color: 'emerald', activeClass: 'bg-emerald-500 text-white', keys: ['break52','break26','break13'] },
-          { id: 'hold',  label: '📈 돌파 유지',   color: 'teal',    activeClass: 'bg-teal-500 text-white',    keys: ['hold52','hold26'] },
-          { id: 'near',  label: '🎯 고가 근접',    color: 'blue',    activeClass: 'bg-blue-500 text-white',    keys: ['near52','near26'] },
-          { id: 'low',   label: '📉 신저가',       color: 'rose',    activeClass: 'bg-rose-500 text-white',    keys: ['low52','low26','low13'] },
+          { id: 'break', label: '신고가 돌파', keys: ['break52','break26','break13'] },
+          { id: 'hold',  label: '돌파 유지',   keys: ['hold52','hold26'] },
+          { id: 'near',  label: '고가 근접',    keys: ['near52','near26'] },
+          { id: 'low',   label: '신저가',       keys: ['low52','low26','low13'] },
         ]
         const WEEKS: Record<HLFilter, string> = {
           break52:'52주', break26:'26주', break13:'13주',
@@ -1713,16 +1664,19 @@ export default function WatchlistClient() {
         return (
           <div className="mb-3 space-y-2">
             {/* 1행: 카테고리 */}
-            <div className="flex gap-1.5">
+            <div className="flex" style={{ border: '1px solid var(--hairline)' }}>
               {CATS.map(cat => {
                 const isActive = cat.id === activeCat.id
                 return (
                   <button
                     key={cat.id}
                     onClick={() => setHlFilter(cat.keys[0])}
-                    className={`flex-1 py-2 rounded-xl text-[11px] font-bold transition-all ${
-                      isActive ? cat.activeClass + ' shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                    }`}
+                    className="flex-1 py-2 text-[11px] font-semibold transition-all"
+                    style={{
+                      background: isActive ? 'var(--accent)' : 'transparent',
+                      color: isActive ? '#fff' : 'var(--ink-mute)',
+                      borderRight: '1px solid var(--hairline)',
+                    }}
                   >
                     {cat.label}
                   </button>
@@ -1735,11 +1689,12 @@ export default function WatchlistClient() {
                 <button
                   key={key}
                   onClick={() => setHlFilter(key)}
-                  className={`px-4 py-1.5 rounded-lg text-[11px] font-semibold border transition-all ${
-                    hlFilter === key
-                      ? activeCat.activeClass + ' border-transparent shadow-sm'
-                      : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'
-                  }`}
+                  className="px-4 py-1.5 text-[11px] font-semibold transition-all mono"
+                  style={{
+                    background: hlFilter === key ? 'var(--accent)' : 'var(--surface)',
+                    color: hlFilter === key ? '#fff' : 'var(--ink-mute)',
+                    border: `1px solid ${hlFilter === key ? 'var(--accent)' : 'var(--hairline)'}`,
+                  }}
                 >
                   {WEEKS[key]}
                 </button>
@@ -1751,13 +1706,13 @@ export default function WatchlistClient() {
 
       {/* ── 도움말 패널 (토글) ── */}
       {showHelp && (
-        <div className="mb-3 p-3 bg-gray-50 border border-gray-200 rounded-xl text-[10px]">
-          <div className="font-semibold text-gray-700 mb-2">색상 읽는 법</div>
+        <div className="mb-3 p-3 text-[10px]" style={{ background: 'var(--plane)', border: '1px solid var(--hairline)' }}>
+          <div className="font-semibold mb-2" style={{ color: 'var(--ink-2)' }}>색상 읽는 법</div>
           <div className="space-y-1.5">
             {HELP_HOW_TO_READ.map(g => (
               <div key={g.text} className="flex items-center gap-2.5">
-                <div className="w-5 h-4 rounded flex-shrink-0" style={{ background: g.color }} />
-                <span className="text-gray-600 leading-tight">{g.text}</span>
+                <div className="w-5 h-4 flex-shrink-0" style={{ background: g.color, border: '1px solid var(--hairline-2)' }} />
+                <span className="leading-tight" style={{ color: 'var(--ink-2)' }}>{g.text}</span>
               </div>
             ))}
           </div>
@@ -1769,7 +1724,8 @@ export default function WatchlistClient() {
           {/* ── 히트맵 본체 ── */}
           <div className="-mx-4 sm:-mx-6">
             <div
-              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 border-l border-t border-gray-200"
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+              style={{ borderLeft: '1px solid var(--hairline)', borderTop: '1px solid var(--hairline)' }}
             >
               {data.sectors.map(sector => (
                 <SectorBlock
@@ -1783,14 +1739,14 @@ export default function WatchlistClient() {
           </div>
 
           {/* ── 스테이지 범례 ── */}
-          <div className="mt-3 text-[9px] text-gray-400 flex flex-wrap gap-x-3 gap-y-0.5">
-            <span className="font-medium text-gray-500">스테이지:</span>
+          <div className="mt-3 text-[9px] flex flex-wrap gap-x-3 gap-y-0.5 mono" style={{ color: 'var(--ink-mute)' }}>
+            <span className="font-medium" style={{ color: 'var(--ink-2)' }}>스테이지:</span>
             <span>①→ 1말</span>
-            <span className="text-yellow-600 font-semibold">②↑ 2초 ★</span>
+            <span className="font-semibold" style={{ color: 'var(--up-text)' }}>②↑ 2초 ★</span>
             <span>② 2진행</span>
             <span>②+ 2확장</span>
-            <span className="text-orange-500 font-semibold">③→ 3말 ★</span>
-            <span className="text-orange-500 font-semibold">④↓ 4초 ★</span>
+            <span className="font-semibold" style={{ color: 'var(--down-text)' }}>③→ 3말 ★</span>
+            <span className="font-semibold" style={{ color: 'var(--down-text)' }}>④↓ 4초 ★</span>
             <span>④ 4진행</span>
             <span>④- 4확장</span>
           </div>
@@ -1813,20 +1769,20 @@ export default function WatchlistClient() {
                 /* 섹터 선택 */
                 <div>
                   <p className="text-center text-sm font-semibold text-gray-600 mb-1">SPY와 비교할 섹터를 선택하세요</p>
-                  <p className="text-center text-[11px] text-gray-400 mb-3">🇺🇸 시장 SPY = 0 기준</p>
+                  <p className="text-center text-[11px] text-gray-400 mb-3">시장 SPY = 0 기준</p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {data.sectors.filter(s => s.etf !== 'SPY').map(sector => (
                       <button
                         key={sector.id}
                         onClick={() => setCompareRight(sector)}
-                        className="flex items-center gap-2 p-3 rounded-xl bg-gray-50 hover:bg-indigo-50 hover:border-indigo-200 border border-gray-200 text-left transition-colors"
+                        className="flex items-center gap-2 p-3 text-left transition-colors"
+                        style={{ border: '1px solid var(--hairline)' }}
                       >
-                        <span className="text-xl">{sector.emoji}</span>
                         <div>
                           <div className="text-xs font-bold text-gray-700">{sector.name}</div>
-                          <div className="text-[10px] text-gray-400">{sector.etf}</div>
+                          <div className="text-[10px] text-gray-400 mono">{sector.etf}</div>
                           {sector.sector_rs_excess !== null && (
-                            <div className="text-[10px] font-mono font-bold" style={{ color: sector.sector_rs_excess >= 0 ? '#16a34a' : '#dc2626' }}>
+                            <div className="text-[10px] font-bold mono" style={{ color: sector.sector_rs_excess >= 0 ? 'var(--up-text)' : 'var(--down-text)' }}>
                               {sector.sector_rs_excess >= 0 ? '▲' : '▼'}{Math.abs(sector.sector_rs_excess).toFixed(1)}%
                             </div>
                           )}
@@ -1846,7 +1802,7 @@ export default function WatchlistClient() {
                       ↺ 다시 선택
                     </button>
                     <span className="text-xs text-gray-400">
-                      🇺🇸 SPY vs {compareRight.emoji} {compareRight.name}
+                      SPY vs {compareRight.name}
                     </span>
                   </div>
 
@@ -1890,13 +1846,12 @@ export default function WatchlistClient() {
 
                     {/* 오른쪽: 선택 섹터 */}
                     <div className="flex-1 min-w-0 border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-                      <div className="px-3 py-2 bg-indigo-50 border-b border-indigo-100 flex items-center justify-between">
+                      <div className="px-3 py-2 flex items-center justify-between" style={{ background: 'var(--plane)', borderBottom: '1px solid var(--hairline)' }}>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-base">{compareRight.emoji}</span>
                           <span className="text-xs font-bold text-gray-800">{compareRight.name}</span>
                         </div>
                         {compareRight.sector_rs_excess !== null && (
-                          <span className="text-[11px] font-black" style={{ color: compareRight.sector_rs_excess >= 0 ? '#16a34a' : '#dc2626' }}>
+                          <span className="text-[11px] font-bold mono" style={{ color: compareRight.sector_rs_excess >= 0 ? 'var(--up-text)' : 'var(--down-text)' }}>
                             {compareRight.sector_rs_excess >= 0 ? '▲' : '▼'}{Math.abs(compareRight.sector_rs_excess).toFixed(1)}%
                           </span>
                         )}
@@ -1923,8 +1878,8 @@ export default function WatchlistClient() {
                         <div className="relative h-8 flex items-center">
                           {/* 전체 트랙 */}
                           <div className="absolute inset-0 flex">
-                            <div className="flex-1 bg-red-50 rounded-l-full" />
-                            <div className="flex-1 bg-green-50 rounded-r-full" />
+                            <div className="flex-1" style={{ background: 'var(--r1)' }} />
+                            <div className="flex-1" style={{ background: 'var(--g1)' }} />
                           </div>
                           {/* 중앙 0선 */}
                           <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-400 z-10" />
@@ -1934,17 +1889,16 @@ export default function WatchlistClient() {
                             style={{
                               left:  isPos ? '50%' : `${50 - pct}%`,
                               width: `${pct}%`,
-                              background: isPos ? '#16a34a' : '#dc2626',
-                              opacity: 0.85,
-                              borderRadius: isPos ? '0 9999px 9999px 0' : '9999px 0 0 9999px',
+                              background: isPos ? 'var(--g3)' : 'var(--r3)',
+                              opacity: 0.9,
                             }}
                           />
                           {/* 수치 라벨 */}
                           <span
-                            className="absolute text-xs font-black font-mono z-30"
+                            className="absolute text-xs font-bold z-30 mono"
                             style={{
                               left: isPos ? `calc(50% + ${pct}% + 6px)` : `calc(${50 - pct}% - 48px)`,
-                              color: isPos ? '#15803d' : '#b91c1c',
+                              color: isPos ? 'var(--up-text)' : 'var(--down-text)',
                             }}
                           >
                             {isPos ? '+' : ''}{rs.toFixed(2)}%

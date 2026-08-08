@@ -51,7 +51,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className="bg-white text-black">
+      <body>
         <div className="max-w-5xl mx-auto">
           
           {/* ✨ 기존의 복잡한 <header>를 제거하고 이거 한 줄로 끝! */}

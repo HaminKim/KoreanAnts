@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import AuthButton from './AuthButton';
 
 // ✨ 캐시 방지 v=12 (사이즈 최적화)
@@ -14,8 +15,11 @@ const INTRO_IMAGES = [
 
 export default function HeaderWithModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [step, setStep] = useState(0); 
+  const [step, setStep] = useState(0);
   const totalSteps = INTRO_IMAGES.length + 1;
+  const pathname = usePathname();
+  const isHeatmap = pathname?.startsWith('/watchlist');
+  const isPricing = pathname?.startsWith('/pricing');
 
   useEffect(() => {
     const todayStr = new Date().toISOString().split('T')[0];
@@ -48,29 +52,43 @@ export default function HeaderWithModal() {
 
   return (
     <>
-      {/* ================= 헤더 (기존 동일) ================= */}
-      <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b bg-white relative z-40 h-[70px]">
-        <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight shrink-0">
-          <span>REANT</span>
+      {/* ================= 헤더 ================= */}
+      <header
+        className="flex items-center justify-between px-4 sm:px-6 h-[60px]"
+        style={{ background: 'var(--surface)', borderBottom: '1px solid var(--ink)' }}
+      >
+        <Link href="/" className="serif text-lg font-bold tracking-tight shrink-0" style={{ color: 'var(--ink)' }}>
+          REANT
         </Link>
-        <nav className="flex items-center gap-1 text-sm">
+        <nav className="flex items-center gap-5 text-sm">
           <button
             onClick={handleOpenManually}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-red-500 bg-red-50 hover:bg-red-100 transition-colors whitespace-nowrap shrink-0"
+            className="text-xs font-medium whitespace-nowrap pb-1 border-b-2 border-transparent transition-colors"
+            style={{ color: 'var(--down-text)' }}
           >
-            🔥 필독
+            필독
           </button>
           <Link
             href="/watchlist"
-            className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors whitespace-nowrap"
+            className="hidden sm:inline text-xs font-medium whitespace-nowrap pb-1 border-b-2 transition-colors"
+            style={{
+              color: isHeatmap ? 'var(--ink)' : 'var(--ink-2)',
+              borderColor: isHeatmap ? 'var(--accent)' : 'transparent',
+              fontWeight: isHeatmap ? 600 : 500,
+            }}
           >
-            📊 히트맵
+            히트맵
           </Link>
           <Link
             href="/pricing"
-            className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors whitespace-nowrap shrink-0"
+            className="text-xs font-medium whitespace-nowrap pb-1 border-b-2 transition-colors"
+            style={{
+              color: isPricing ? 'var(--ink)' : 'var(--ink-2)',
+              borderColor: isPricing ? 'var(--accent)' : 'transparent',
+              fontWeight: isPricing ? 600 : 500,
+            }}
           >
-            👑 구독
+            구독
           </Link>
           <AuthButton />
         </nav>
