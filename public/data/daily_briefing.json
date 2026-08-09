@@ -1,55 +1,55 @@
 {
-  "date": "2026-08-09",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-08-10",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "AMZN",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1834791276.0,
+      "raw_name": "AMAZON.COM INC",
+      "value": 176206869.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "SKHY",
-      "name": "SKHY",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": 917086930.0,
+      "ticker": "SNDK",
+      "name": "",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": 161439812.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "GOOGL",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 350620076.0,
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 111035765.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "QLD",
+      "ticker": "BE",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 288467691.0,
+      "raw_name": "BLOOM ENERGY CORP CL A",
+      "value": 108481895.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "TQQQ",
+      "ticker": "",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 285487959.0,
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 94493991.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
