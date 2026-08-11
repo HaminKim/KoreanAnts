@@ -1,11 +1,11 @@
 {
-  "date": "2026-08-11",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-08-12",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
@@ -13,45 +13,54 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -478584238.0,
+      "value": 883684752.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "AMZN",
+      "name": "",
+      "raw_name": "AMAZON.COM INC",
+      "value": 170877716.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "QLD",
+      "name": "",
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 161346276.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
+    {
+      "rank": 1,
+      "ticker": "PLTR",
+      "name": "",
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -288945936.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "PLTR",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -250109108.0,
+      "raw_name": "MICROSOFT CORP",
+      "value": -288548473.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "MSFT",
-      "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -122536639.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
       "ticker": "NVDA",
       "name": "",
       "raw_name": "NVIDIA CORP",
-      "value": -105653498.0,
+      "value": -209685152.0,
       "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "TQQQ",
-      "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -52384005.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "desc_key": "매도 3위"
     }
   ]
 }
