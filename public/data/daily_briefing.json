@@ -1,46 +1,19 @@
 {
-  "date": "2026-08-12",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-08-13",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 883684752.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "AMZN",
-      "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": 170877716.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "QLD",
-      "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 161346276.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "PLTR",
       "name": "",
       "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -288945936.0,
+      "value": -301550232.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -49,7 +22,7 @@
       "ticker": "MSFT",
       "name": "",
       "raw_name": "MICROSOFT CORP",
-      "value": -288548473.0,
+      "value": -301393519.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
@@ -58,9 +31,27 @@
       "ticker": "NVDA",
       "name": "",
       "raw_name": "NVIDIA CORP",
-      "value": -209685152.0,
+      "value": -213667087.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -189040909.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "SNDK",
+      "name": "",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -172571935.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
