@@ -3183,13 +3183,6 @@
   ],
   "BTBT": [
     {
-      "d": "2023-08-15",
-      "actual": 0.02,
-      "estimate": -0.01,
-      "surp": 300.0,
-      "revenue": null
-    },
-    {
       "d": "2023-11-14",
       "actual": -0.03,
       "estimate": -0.01,
@@ -3265,6 +3258,13 @@
       "estimate": -0.04,
       "surp": -1185.71,
       "revenue": 0.028
+    },
+    {
+      "d": "2026-08-13",
+      "actual": -0.31,
+      "estimate": -0.05,
+      "surp": -520.0,
+      "revenue": null
     }
   ],
   "LIN": [
