@@ -1,55 +1,55 @@
 {
-  "date": "2026-08-14",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-08-15",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 126705180.0,
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 2029673046.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "AMZN",
-      "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": 94287542.0,
+      "ticker": "SKHY",
+      "name": "SKHY",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": 419231567.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "COHR",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "II-VI INCORPORATED Com CHAN 009623241 US9021041085",
-      "value": 87200981.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 412833837.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "AAOI",
-      "name": "AAOI",
-      "raw_name": "APPLIED OPTOELECTRONICS INC",
-      "value": 64846709.0,
+      "ticker": "QLD",
+      "name": "",
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 294870952.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "SGOV",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 63152821.0,
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 288369790.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
