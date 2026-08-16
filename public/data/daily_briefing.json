@@ -1,19 +1,19 @@
 {
-  "date": "2026-08-16",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-08-17",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 843846877.0,
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 93387130.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -22,25 +22,25 @@
       "ticker": "GOOGL",
       "name": "",
       "raw_name": "ALPHABET INC CL A",
-      "value": 430287748.0,
+      "value": 90351446.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "SKHY",
-      "name": "SKHY",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": 361747306.0,
+      "ticker": "TSLA",
+      "name": "",
+      "raw_name": "TESLA INC",
+      "value": 77442962.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "",
+      "ticker": "SGOV",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 286676094.0,
+      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
+      "value": 54195135.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
@@ -49,7 +49,7 @@
       "ticker": "QLD",
       "name": "",
       "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 283828437.0,
+      "value": 46768320.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
