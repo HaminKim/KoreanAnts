@@ -8578,6 +8578,13 @@
       "estimate": -0.26,
       "surp": 31.43,
       "revenue": 0.0
+    },
+    {
+      "d": "2026-08-12",
+      "actual": -0.19,
+      "estimate": -0.26,
+      "surp": 28.3,
+      "revenue": null
     }
   ],
   "ON": [
@@ -28868,13 +28875,6 @@
   ],
   "ENVX": [
     {
-      "d": "2023-07-26",
-      "actual": -0.19,
-      "estimate": -0.22,
-      "surp": 11.95,
-      "revenue": null
-    },
-    {
       "d": "2023-11-07",
       "actual": -0.19,
       "estimate": -0.23,
@@ -28950,6 +28950,13 @@
       "estimate": -0.15,
       "surp": 7.06,
       "revenue": 0.008
+    },
+    {
+      "d": "2026-08-12",
+      "actual": -0.13,
+      "estimate": -0.15,
+      "surp": 10.9,
+      "revenue": null
     }
   ],
   "CVS": [
