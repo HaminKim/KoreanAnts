@@ -1,7 +1,7 @@
 {
-  "date": "2026-08-22",
-  "day_of_week": "Saturday",
-  "theme_code": "THEME_WEEKEND_TOTAL",
+  "date": "2026-08-23",
+  "day_of_week": "Sunday",
+  "theme_code": "THEME_WEEKEND_BUY",
   "meta_info": {
     "period_days": 20,
     "total_count": 5,
@@ -10,46 +10,46 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "GOOGL",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 438691840.0,
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 1130127595.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 258172230.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 415365321.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "QLD",
-      "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 232579155.0,
+      "ticker": "SKHY",
+      "name": "SKHY",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": 277206850.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "SKHY",
-      "name": "SKHY",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": 219759234.0,
+      "ticker": "",
+      "name": "",
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 250648309.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "QQQM",
+      "ticker": "QLD",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 196020341.0,
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 231006423.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
