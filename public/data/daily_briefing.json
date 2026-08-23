@@ -1,19 +1,19 @@
 {
-  "date": "2026-08-23",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-08-24",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1130127595.0,
+      "ticker": "DRAM",
+      "name": "DRAM",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 100715453.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -22,34 +22,34 @@
       "ticker": "GOOGL",
       "name": "",
       "raw_name": "ALPHABET INC CL A",
-      "value": 415365321.0,
+      "value": 70388996.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "SKHY",
-      "name": "SKHY",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": 277206850.0,
+      "ticker": "SNDK",
+      "name": "",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": 53659406.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "",
-      "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 250648309.0,
+      "ticker": "RAM40676-USD",
+      "name": "RAM40676-USD",
+      "raw_name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
+      "value": 45857042.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "QLD",
+      "ticker": "",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 231006423.0,
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 40860358.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
