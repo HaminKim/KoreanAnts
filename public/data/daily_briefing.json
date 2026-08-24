@@ -1,7 +1,7 @@
 {
-  "date": "2026-08-24",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-08-25",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "DRAM",
-      "name": "DRAM",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": 100715453.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "ticker": "PLTR",
+      "name": "",
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -150354106.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 70388996.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "NVIDIA CORP",
+      "value": -78750160.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "SNDK",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 53659406.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "MICROSOFT CORP",
+      "value": -45728837.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "RAM40676-USD",
-      "name": "RAM40676-USD",
-      "raw_name": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "value": 45857042.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "RDDT",
+      "name": "",
+      "raw_name": "REDDIT INC",
+      "value": -36351576.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "",
+      "ticker": "LITE",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 40860358.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
+      "value": -35946371.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
