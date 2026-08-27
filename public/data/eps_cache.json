@@ -18674,13 +18674,6 @@
   ],
   "CSIQ": [
     {
-      "d": "2023-08-22",
-      "actual": 2.39,
-      "estimate": 1.58,
-      "surp": 51.21,
-      "revenue": null
-    },
-    {
       "d": "2023-11-14",
       "actual": 0.32,
       "estimate": 0.7,
@@ -18756,6 +18749,13 @@
       "estimate": -0.78,
       "surp": -136.89,
       "revenue": 1.078
+    },
+    {
+      "d": "2026-08-27",
+      "actual": -1.01,
+      "estimate": -1.23,
+      "surp": 17.93,
+      "revenue": null
     }
   ],
   "SAIL": [

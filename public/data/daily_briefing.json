@@ -1,57 +1,57 @@
 {
-  "date": "2026-08-27",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-08-28",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "PLTR",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -259154550.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 718792685.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "NVDA",
-      "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -134317520.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "ticker": "DRAM",
+      "name": "DRAM",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": 80843186.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MSFT",
+      "ticker": "MSTR",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -116497751.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "MICROSTRATEGY INC CL A",
+      "value": 54591381.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "AMD",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "ADVANCED MICRO DEVICES INC",
-      "value": -83442724.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "ALPHABET INC CL A",
+      "value": 51784222.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "SKHY",
-      "name": "SKHY",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": -51433384.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "VOO",
+      "name": "",
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 49362618.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
