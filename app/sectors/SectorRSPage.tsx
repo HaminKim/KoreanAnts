@@ -122,22 +122,14 @@ export default function SectorRSPage() {
     return out
   })()
 
-  // 끝점 라벨 위치 겹침 완화 (greedy declutter)
-  const endLabels = series
-    .map(({ s, pts }) => ({ etf: s.etf, emoji: s.emoji, name: s.name, v: pts[pts.length - 1].v, y: yOf(pts[pts.length - 1].v) }))
-    .sort((a, b) => a.y - b.y)
-  const MIN_GAP = 14
-  for (let i = 1; i < endLabels.length; i++) {
-    if (endLabels[i].y - endLabels[i - 1].y < MIN_GAP) endLabels[i].y = endLabels[i - 1].y + MIN_GAP
-  }
-  // 아래로 넘쳤으면 위로 되밀기
-  const overflow = endLabels.length ? endLabels[endLabels.length - 1].y - (H - 8) : 0
-  if (overflow > 0) {
-    for (let i = endLabels.length - 1; i >= 0; i--) {
-      endLabels[i].y -= overflow
-      if (i > 0 && endLabels[i].y - endLabels[i - 1].y >= MIN_GAP) break
-    }
-  }
+  // 우측 순위 컬럼 — RS 강한 순으로 균등 배치 (그래프 선과 잇지 않음)
+  const RIGHT_X = PAD.l + iW + 12
+  const rowH = Math.min(20, iH / Math.max(ordered.length, 1))
+  const rankRows = ordered.map((s, i) => ({
+    etf: s.etf, emoji: s.emoji,
+    v: s.sector_rs_excess ?? 0,
+    y: PAD.t + rowH / 2 + i * rowH,
+  }))
 
   const active = solo ?? hover
   const dateStep = D > 45 ? 5 : D > 24 ? 3 : 2
@@ -239,19 +231,19 @@ export default function SectorRSPage() {
               )
             })}
 
-            {/* 끝점 라벨 */}
-            {endLabels.map(l => {
-              const color = colorOf.get(l.etf)!
-              const isActive = active === l.etf
+            {/* 우측 순위 컬럼 (그래프와 잇지 않음) */}
+            {rankRows.map((r, i) => {
+              const color = colorOf.get(r.etf)!
+              const isActive = active === r.etf
               const dim = active !== null && !isActive
               return (
-                <g key={l.etf} opacity={dim ? 0.2 : 1} style={{ cursor: 'pointer' }}
-                  onMouseEnter={() => setHover(l.etf)} onMouseLeave={() => setHover(null)}
-                  onClick={() => setSolo(v => v === l.etf ? null : l.etf)}>
-                  <line x1={PAD.l + iW} x2={PAD.l + iW + 6} y1={yOf(l.v)} y2={l.y} stroke={color} strokeWidth={1} opacity={0.5} />
-                  <text x={PAD.l + iW + 9} y={l.y} fontSize={isActive ? 11.5 : 10} dominantBaseline="middle"
-                    fill={color} fontWeight={isActive ? 700 : 500}>
-                    {l.emoji} {l.v > 0 ? '+' : ''}{l.v.toFixed(1)}%
+                <g key={r.etf} opacity={dim ? 0.28 : 1} style={{ cursor: 'pointer' }}
+                  onMouseEnter={() => setHover(r.etf)} onMouseLeave={() => setHover(null)}
+                  onClick={() => setSolo(v => v === r.etf ? null : r.etf)}>
+                  <rect x={RIGHT_X} y={r.y - 4} width={7} height={7} rx={1.5} fill={color} />
+                  <text x={RIGHT_X + 12} y={r.y} fontSize={isActive ? 10.5 : 9} dominantBaseline="middle"
+                    fill={isActive ? color : 'var(--ink-2)'} fontWeight={isActive ? 700 : 400} className="mono">
+                    {i + 1} {r.emoji} {r.v > 0 ? '+' : ''}{r.v.toFixed(1)}%
                   </text>
                 </g>
               )

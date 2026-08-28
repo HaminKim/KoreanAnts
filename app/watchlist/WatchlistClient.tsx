@@ -1485,8 +1485,15 @@ export default function WatchlistClient() {
 
   return (
     <div className={captureMode ? 'capture-mode' : undefined} style={captureMode ? { background: 'var(--surface)', margin: '-1rem -1rem 0', padding: '1rem 1rem 2rem', minHeight: '100vh' } : undefined}>
-      {/* ── 캡처 모드 토글 (유튜브 자료용) ── */}
-      <div className="flex justify-end mb-2">
+      {/* ── 상단 유틸 버튼 ── */}
+      <div className="flex justify-end gap-1.5 mb-2">
+        <button
+          onClick={() => router.push('/sectors')}
+          className="text-[11px] font-semibold px-2.5 py-1 transition-colors"
+          style={{ border: '1px solid var(--hairline)', color: 'var(--ink-mute)' }}
+        >
+          섹터 RS 그래프 →
+        </button>
         <button
           onClick={toggleCapture}
           className="text-[11px] font-semibold px-2.5 py-1 transition-colors"
