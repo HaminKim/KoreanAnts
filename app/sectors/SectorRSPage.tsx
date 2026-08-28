@@ -32,8 +32,13 @@ const PERIODS = [20, 30, 60] as const
 export default function SectorRSPage() {
   const [data, setData] = useState<WatchlistData | null>(null)
   const [days, setDays] = useState<(typeof PERIODS)[number]>(30)
-  const [solo, setSolo] = useState<string | null>(null)   // etf — 클릭으로 고정 강조
-  const [hover, setHover] = useState<string | null>(null)  // etf — 마우스 오버
+  const [picked, setPicked] = useState<Set<string>>(new Set())  // etf들 — 클릭으로 다중 고정 강조
+  const [hover, setHover] = useState<string | null>(null)       // etf — 마우스 오버
+  const togglePick = (etf: string) => setPicked(prev => {
+    const n = new Set(prev)
+    if (n.has(etf)) n.delete(etf); else n.add(etf)
+    return n
+  })
   const [capture, setCapture] = useState(false)
   const chartRef = useRef<HTMLDivElement>(null)
   const [w, setW] = useState(1000)
@@ -131,7 +136,9 @@ export default function SectorRSPage() {
     y: PAD.t + rowH / 2 + i * rowH,
   }))
 
-  const active = solo ?? hover
+  // 강조 대상: 고른 것들 + 현재 호버. 하나라도 있으면 나머지는 흐리게.
+  const hasFocus = picked.size > 0 || hover !== null
+  const isOn = (etf: string) => picked.has(etf) || hover === etf
   const dateStep = D > 45 ? 5 : D > 24 ? 3 : 2
 
   return (
@@ -178,9 +185,9 @@ export default function SectorRSPage() {
             {d}일
           </button>
         ))}
-        {solo && (
-          <button onClick={() => setSolo(null)} className="ml-2 text-[11px] px-2 py-1" style={{ color: 'var(--ink-mute)', border: '1px solid var(--hairline)' }}>
-            강조 해제 ✕
+        {picked.size > 0 && (
+          <button onClick={() => setPicked(new Set())} className="ml-2 text-[11px] px-2 py-1" style={{ color: 'var(--ink-mute)', border: '1px solid var(--hairline)' }}>
+            강조 {picked.size}개 해제 ✕
           </button>
         )}
       </div>
@@ -215,18 +222,18 @@ export default function SectorRSPage() {
             {/* 라인들 */}
             {series.map(({ s, pts }) => {
               const color = colorOf.get(s.etf)!
-              const isActive = active === s.etf
-              const dim = active !== null && !isActive
+              const on = isOn(s.etf)
+              const dim = hasFocus && !on
               const path = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${xOf(i).toFixed(1)},${yOf(p.v).toFixed(1)}`).join(' ')
               return (
                 <path key={s.etf} d={path} fill="none" stroke={color}
-                  strokeWidth={isActive ? 3.2 : 1.6}
-                  opacity={dim ? 0.12 : isActive ? 1 : 0.82}
+                  strokeWidth={on ? 3.2 : 1.6}
+                  opacity={dim ? 0.1 : on ? 1 : 0.8}
                   strokeLinecap="round" strokeLinejoin="round"
                   style={{ cursor: 'pointer', transition: 'opacity .12s' }}
                   onMouseEnter={() => setHover(s.etf)}
                   onMouseLeave={() => setHover(null)}
-                  onClick={() => setSolo(v => v === s.etf ? null : s.etf)}
+                  onClick={() => togglePick(s.etf)}
                 />
               )
             })}
@@ -234,15 +241,16 @@ export default function SectorRSPage() {
             {/* 우측 순위 컬럼 (그래프와 잇지 않음) */}
             {rankRows.map((r, i) => {
               const color = colorOf.get(r.etf)!
-              const isActive = active === r.etf
-              const dim = active !== null && !isActive
+              const on = isOn(r.etf)
+              const dim = hasFocus && !on
               return (
                 <g key={r.etf} opacity={dim ? 0.28 : 1} style={{ cursor: 'pointer' }}
                   onMouseEnter={() => setHover(r.etf)} onMouseLeave={() => setHover(null)}
-                  onClick={() => setSolo(v => v === r.etf ? null : r.etf)}>
-                  <rect x={RIGHT_X} y={r.y - 4} width={7} height={7} rx={1.5} fill={color} />
-                  <text x={RIGHT_X + 12} y={r.y} fontSize={isActive ? 10.5 : 9} dominantBaseline="middle"
-                    fill={isActive ? color : 'var(--ink-2)'} fontWeight={isActive ? 700 : 400} className="mono">
+                  onClick={() => togglePick(r.etf)}>
+                  <rect x={RIGHT_X} y={r.y - 4} width={7} height={7} rx={1.5} fill={color}
+                    stroke={picked.has(r.etf) ? 'var(--ink)' : 'none'} strokeWidth={picked.has(r.etf) ? 1 : 0} />
+                  <text x={RIGHT_X + 12} y={r.y} fontSize={on ? 10.5 : 9} dominantBaseline="middle"
+                    fill={on ? color : 'var(--ink-2)'} fontWeight={on ? 700 : 400} className="mono">
                     {i + 1} {r.emoji} {r.v > 0 ? '+' : ''}{r.v.toFixed(1)}%
                   </text>
                 </g>
@@ -256,17 +264,19 @@ export default function SectorRSPage() {
       <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1">
         {ordered.map((s, i) => {
           const color = colorOf.get(s.etf)!
-          const isActive = active === s.etf
+          const on = isOn(s.etf)
+          const isPicked = picked.has(s.etf)
           const rs = s.sector_rs_excess ?? 0
           return (
             <button key={s.etf}
               onMouseEnter={() => setHover(s.etf)}
               onMouseLeave={() => setHover(null)}
-              onClick={() => setSolo(v => v === s.etf ? null : s.etf)}
+              onClick={() => togglePick(s.etf)}
               className="flex items-center gap-1.5 px-2 py-1.5 text-left"
               style={{
-                border: `1px solid ${isActive ? color : 'var(--hairline)'}`,
-                background: isActive ? 'var(--plane)' : 'transparent',
+                border: `1px solid ${on ? color : 'var(--hairline)'}`,
+                background: isPicked ? 'var(--plane)' : 'transparent',
+                opacity: hasFocus && !on ? 0.45 : 1,
               }}>
               <span className="mono text-[10px] w-4 shrink-0" style={{ color: 'var(--ink-mute)' }}>{i + 1}</span>
               <span style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0 }} />
@@ -282,7 +292,7 @@ export default function SectorRSPage() {
       </div>
 
       <p className="mt-3 text-[10px] leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
-        선을 클릭하면 해당 섹터만 강조됩니다. 다시 클릭하면 해제.
+        선·범례·우측 목록을 클릭하면 강조됩니다(여러 개 선택 가능). 다시 클릭하면 해제.
         RS는 각 섹터 대표 ETF의 SPY 대비 {days}일 초과수익률입니다.
       </p>
     </div>
