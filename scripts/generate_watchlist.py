@@ -192,6 +192,19 @@ SECTORS = [
         ]
     },
     {
+        "id": 27, "name": "AI 전력주", "etf": "GRID", "emoji": "🔌",
+        "tickers": [
+            # 전력 생산 (데이터센터 수요 수혜 IPP)
+            "VST","CEG","TLN","NRG","PEG",
+            # 원자력 / SMR
+            "SMR","OKLO","NNE","CCJ","BWXT",
+            # 전력 설비 / 그리드 / 냉각
+            "GEV","ETN","VRT","PWR","POWL","NVT","HUBB",
+            # 연료전지 / 분산전원
+            "BE","PLUG","FCEL",
+        ]
+    },
+    {
         "id": 26, "name": "시장(SPY)", "etf": "SPY", "emoji": "🇺🇸",
         "tickers": [
             "AAPL","MSFT","NVDA","AMZN","META",
