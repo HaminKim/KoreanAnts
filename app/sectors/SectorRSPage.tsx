@@ -223,7 +223,7 @@ export default function SectorRSPage() {
             {ticks.map(t => (
               <g key={t}>
                 <line x1={PAD.l} x2={PAD.l + iW} y1={yOf(t)} y2={yOf(t)} stroke="var(--hairline)" strokeWidth={1} strokeDasharray={t === 0 ? undefined : '2,4'} />
-                <text x={PAD.l - 8} y={yOf(t)} fontSize={10} textAnchor="end" dominantBaseline="middle" fill="var(--ink-mute)" className="mono">
+                <text x={PAD.l - 8} y={yOf(t)} fontSize={10} textAnchor="end" dominantBaseline="middle" fill="var(--ink-2)" className="mono">
                   {t > 0 ? '+' : ''}{t}%
                 </text>
               </g>
@@ -232,7 +232,7 @@ export default function SectorRSPage() {
             {sliced.map((d, i) => {
               if (i % dateStep !== 0 && i !== D - 1) return null
               return (
-                <text key={d} x={xOf(i)} y={H - 12} fontSize={10} textAnchor="middle" fill="var(--ink-mute)" className="mono">
+                <text key={d} x={xOf(i)} y={H - 12} fontSize={10} textAnchor="middle" fill="var(--ink-2)" className="mono">
                   {d.slice(5)}
                 </text>
               )
