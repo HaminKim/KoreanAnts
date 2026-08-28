@@ -214,12 +214,10 @@ export default function SectorRSPage() {
       <div>
         <div ref={chartRef}>
           <svg width="100%" viewBox={`0 0 ${w} ${H}`} style={{ display: 'block', maxWidth: '100%' }}>
-            {/* 0 기준선 (시장) */}
-            {yMin < 0 && yMax > 0 && (
+            {/* 0 기준선 (시장) — 비강조일 때만 여기서 얇게. 강조 시엔 라인들 위에 덧그림 */}
+            {yMin < 0 && yMax > 0 && !zeroEmph && (
               <line x1={PAD.l} x2={PAD.l + iW} y1={yOf(0)} y2={yOf(0)}
-                stroke={zeroEmph ? 'var(--accent)' : 'var(--hairline-2)'}
-                strokeWidth={zeroEmph ? 3 : 1.5}
-                opacity={1} />
+                stroke="var(--hairline-2)" strokeWidth={1.5} />
             )}
             {/* Y 그리드 */}
             {ticks.map(t => (
@@ -249,7 +247,7 @@ export default function SectorRSPage() {
               return (
                 <path key={s.etf} d={path} fill="none" stroke={color}
                   strokeWidth={on ? 3.2 : 1.6}
-                  opacity={dim ? 0.07 : on ? 1 : 0.8}
+                  opacity={dim ? 0.04 : on ? 1 : 0.82}
                   strokeLinecap="round" strokeLinejoin="round"
                   style={{ cursor: 'pointer', transition: 'opacity .12s' }}
                   onMouseEnter={() => setHover(s.etf)}
@@ -259,13 +257,23 @@ export default function SectorRSPage() {
               )
             })}
 
+            {/* 시장(0%) 강조선 — 라인들 위(맨 앞)에 덧그림 */}
+            {yMin < 0 && yMax > 0 && zeroEmph && (
+              <g>
+                <line x1={PAD.l} x2={PAD.l + iW} y1={yOf(0)} y2={yOf(0)}
+                  stroke="var(--accent)" strokeWidth={3} strokeLinecap="round" />
+                <text x={PAD.l + 4} y={yOf(0) - 5} fontSize={10} fontWeight={700}
+                  fill="var(--accent)" className="mono">시장 0%</text>
+              </g>
+            )}
+
             {/* 우측 순위 컬럼 (그래프와 잇지 않음) */}
             {rankRows.map((r, i) => {
               const color = colorOf.get(r.etf)!
               const on = isOn(r.etf)
               const dim = hasFocus && !on
               return (
-                <g key={r.etf} opacity={dim ? 0.18 : 1} style={{ cursor: 'pointer' }}
+                <g key={r.etf} opacity={dim ? 0.12 : 1} style={{ cursor: 'pointer' }}
                   onMouseEnter={() => setHover(r.etf)} onMouseLeave={() => setHover(null)}
                   onClick={() => togglePick(r.etf)}>
                   <rect x={RIGHT_X} y={r.y - 4} width={7} height={7} rx={1.5} fill={color}
@@ -297,7 +305,7 @@ export default function SectorRSPage() {
               style={{
                 border: `1px solid ${on ? color : 'var(--hairline)'}`,
                 background: isPicked ? 'var(--plane)' : 'transparent',
-                opacity: hasFocus && !on ? 0.3 : 1,
+                opacity: hasFocus && !on ? 0.24 : 1,
               }}>
               <span className="mono text-[10px] w-4 shrink-0" style={{ color: 'var(--ink-mute)' }}>{i + 1}</span>
               <span style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0 }} />
