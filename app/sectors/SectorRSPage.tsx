@@ -41,6 +41,7 @@ export default function SectorRSPage() {
   })
   const [capture, setCapture] = useState(false)
   const [zeroEmph, setZeroEmph] = useState(true)   // 시장(0%) 기준선 강조
+  const [soloOnly, setSoloOnly] = useState(false)  // 선택한 섹터만 (미선택은 완전 숨김 → 시장선만)
   const chartRef = useRef<HTMLDivElement>(null)
   const [w, setW] = useState(1000)
 
@@ -52,6 +53,7 @@ export default function SectorRSPage() {
     try {
       setCapture(localStorage.getItem('reant_wl_capture') === '1')
       setZeroEmph(localStorage.getItem('reant_sectors_zero') !== '0')
+      setSoloOnly(localStorage.getItem('reant_sectors_solo') === '1')
     } catch {}
   }, [])
 
@@ -80,6 +82,12 @@ export default function SectorRSPage() {
   const toggleZero = () => setZeroEmph(v => {
     const n = !v
     try { localStorage.setItem('reant_sectors_zero', n ? '1' : '0') } catch {}
+    return n
+  })
+
+  const toggleSolo = () => setSoloOnly(v => {
+    const n = !v
+    try { localStorage.setItem('reant_sectors_solo', n ? '1' : '0') } catch {}
     return n
   })
 
@@ -203,6 +211,14 @@ export default function SectorRSPage() {
           }}>
           시장(0%) {zeroEmph ? '강조 ●' : '강조 ○'}
         </button>
+        <button onClick={toggleSolo} className="px-2.5 py-1 text-xs font-semibold"
+          style={{
+            background: soloOnly ? 'var(--accent)' : 'transparent',
+            color: soloOnly ? '#fff' : 'var(--ink-mute)',
+            border: `1px solid ${soloOnly ? 'var(--accent)' : 'var(--hairline)'}`,
+          }}>
+          {soloOnly ? '선택만 보기 ●' : '선택만 보기 ○'}
+        </button>
         {picked.size > 0 && (
           <button onClick={() => setPicked(new Set())} className="ml-2 text-[11px] px-2 py-1" style={{ color: 'var(--ink-mute)', border: '1px solid var(--hairline)' }}>
             강조 {picked.size}개 해제 ✕
@@ -243,13 +259,14 @@ export default function SectorRSPage() {
               const color = colorOf.get(s.etf)!
               const on = isOn(s.etf)
               const dim = hasFocus && !on
+              const hidden = soloOnly && !on
               const path = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${xOf(i).toFixed(1)},${yOf(p.v).toFixed(1)}`).join(' ')
               return (
                 <path key={s.etf} d={path} fill="none" stroke={color}
                   strokeWidth={on ? 3.2 : 1.6}
-                  opacity={dim ? 0.04 : on ? 1 : 0.82}
+                  opacity={hidden ? 0 : dim ? 0.04 : on ? 1 : 0.82}
                   strokeLinecap="round" strokeLinejoin="round"
-                  style={{ cursor: 'pointer', transition: 'opacity .12s' }}
+                  style={{ cursor: 'pointer', transition: 'opacity .12s', pointerEvents: hidden ? 'none' : undefined }}
                   onMouseEnter={() => setHover(s.etf)}
                   onMouseLeave={() => setHover(null)}
                   onClick={() => togglePick(s.etf)}
@@ -271,7 +288,7 @@ export default function SectorRSPage() {
             {rankRows.map((r, i) => {
               const color = colorOf.get(r.etf)!
               const on = isOn(r.etf)
-              const dim = hasFocus && !on
+              const dim = (hasFocus || soloOnly) && !on
               return (
                 <g key={r.etf} opacity={dim ? 0.12 : 1} style={{ cursor: 'pointer' }}
                   onMouseEnter={() => setHover(r.etf)} onMouseLeave={() => setHover(null)}
@@ -305,7 +322,7 @@ export default function SectorRSPage() {
               style={{
                 border: `1px solid ${on ? color : 'var(--hairline)'}`,
                 background: isPicked ? 'var(--plane)' : 'transparent',
-                opacity: hasFocus && !on ? 0.24 : 1,
+                opacity: (hasFocus || soloOnly) && !on ? 0.24 : 1,
               }}>
               <span className="mono text-[10px] w-4 shrink-0" style={{ color: 'var(--ink-mute)' }}>{i + 1}</span>
               <span style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0 }} />
