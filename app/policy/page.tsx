@@ -35,7 +35,7 @@ export default function PolicyPage() {
       </section>
 
       <div className="mt-20 pt-10 border-t text-center text-xs text-gray-400">
-        <p>리앤트 | 대표: 김하민</p>
+        <p>리앤트 (REANT)</p>
         <p>문의: reant.thanks@gmail.com</p>
       </div>
     </div>

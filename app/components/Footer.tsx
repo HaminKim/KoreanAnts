@@ -57,17 +57,6 @@ export default function Footer() {
             </ul>
         </div>
 
-        {/* 4. 하단: 사업자 정보 (대표님이 작성해주신 실전 데이터 반영 완료) */}
-        <div className="text-[10px] leading-relaxed text-gray-400 font-light mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-1 gap-x-4">
-                <p>상호명 : 리앤트 <span className="mx-1">|</span> 대표 : 김하민</p>
-                <p>사업자등록번호 : 707-72-00694</p> 
-                <p>주소 : 경기도 파주시 가재울로 99-10</p>
-                <p>통신판매업신고 : 간이과세자 면제 대상</p>
-                <p>유사투자자문업신고 : 해당 없음 / 단순 정보제공업</p>
-            </div>
-        </div>
-
         {/* 5. 최하단: 투자 면책 조항 (법적 방어막) */}
         <div className="text-[10px] leading-relaxed text-gray-300">
           <p className="mb-2">
