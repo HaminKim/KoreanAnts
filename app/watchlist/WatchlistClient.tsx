@@ -1709,10 +1709,19 @@ export default function WatchlistClient() {
           )
           return (
             <div className="mt-2">
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-2 mb-2">
                 <div className="flex-1"><SectorPicker value={left} onChange={setCompareLeft} exclude={right?.etf} /></div>
                 <span className="text-xs font-black shrink-0" style={{ color: 'var(--ink-mute)' }}>VS</span>
                 <div className="flex-1"><SectorPicker value={right} onChange={setCompareRight} exclude={left?.etf} /></div>
+              </div>
+              <div className="mb-3 text-right">
+                <button
+                  onClick={() => router.push('/sectors')}
+                  className="text-[11px] font-semibold"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  전체 섹터 RS 그래프 크게 보기 →
+                </button>
               </div>
 
               {left && right ? (
