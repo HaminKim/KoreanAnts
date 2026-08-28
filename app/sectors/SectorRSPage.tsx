@@ -40,6 +40,7 @@ export default function SectorRSPage() {
     return n
   })
   const [capture, setCapture] = useState(false)
+  const [zeroEmph, setZeroEmph] = useState(true)   // 시장(0%) 기준선 강조
   const chartRef = useRef<HTMLDivElement>(null)
   const [w, setW] = useState(1000)
 
@@ -48,7 +49,10 @@ export default function SectorRSPage() {
       .then(r => r.json())
       .then(setData)
       .catch(() => setData(null))
-    try { setCapture(localStorage.getItem('reant_wl_capture') === '1') } catch {}
+    try {
+      setCapture(localStorage.getItem('reant_wl_capture') === '1')
+      setZeroEmph(localStorage.getItem('reant_sectors_zero') !== '0')
+    } catch {}
   }, [])
 
   useEffect(() => {
@@ -70,6 +74,12 @@ export default function SectorRSPage() {
   const toggleCapture = () => setCapture(v => {
     const n = !v
     try { localStorage.setItem('reant_wl_capture', n ? '1' : '0') } catch {}
+    return n
+  })
+
+  const toggleZero = () => setZeroEmph(v => {
+    const n = !v
+    try { localStorage.setItem('reant_sectors_zero', n ? '1' : '0') } catch {}
     return n
   })
 
@@ -172,7 +182,7 @@ export default function SectorRSPage() {
       </div>
 
       {/* 기간 */}
-      <div className="flex items-center gap-1.5 mb-3">
+      <div className="flex items-center gap-1.5 mb-3 flex-wrap">
         <span className="text-[11px] font-semibold mr-1" style={{ color: 'var(--ink-mute)' }}>기간</span>
         {PERIODS.map(d => (
           <button key={d} onClick={() => setDays(d)}
@@ -185,6 +195,14 @@ export default function SectorRSPage() {
             {d}일
           </button>
         ))}
+        <button onClick={toggleZero} className="ml-2 px-2.5 py-1 text-xs font-semibold"
+          style={{
+            background: zeroEmph ? 'var(--accent)' : 'transparent',
+            color: zeroEmph ? '#fff' : 'var(--ink-mute)',
+            border: `1px solid ${zeroEmph ? 'var(--accent)' : 'var(--hairline)'}`,
+          }}>
+          시장(0%) {zeroEmph ? '강조 ●' : '강조 ○'}
+        </button>
         {picked.size > 0 && (
           <button onClick={() => setPicked(new Set())} className="ml-2 text-[11px] px-2 py-1" style={{ color: 'var(--ink-mute)', border: '1px solid var(--hairline)' }}>
             강조 {picked.size}개 해제 ✕
@@ -196,9 +214,12 @@ export default function SectorRSPage() {
       <div>
         <div ref={chartRef}>
           <svg width="100%" viewBox={`0 0 ${w} ${H}`} style={{ display: 'block', maxWidth: '100%' }}>
-            {/* 0 기준선 */}
+            {/* 0 기준선 (시장) */}
             {yMin < 0 && yMax > 0 && (
-              <line x1={PAD.l} x2={PAD.l + iW} y1={yOf(0)} y2={yOf(0)} stroke="var(--hairline-2)" strokeWidth={1.5} />
+              <line x1={PAD.l} x2={PAD.l + iW} y1={yOf(0)} y2={yOf(0)}
+                stroke={zeroEmph ? 'var(--accent)' : 'var(--hairline-2)'}
+                strokeWidth={zeroEmph ? 2.4 : 1.5}
+                opacity={zeroEmph ? 0.85 : 1} />
             )}
             {/* Y 그리드 */}
             {ticks.map(t => (
@@ -228,7 +249,7 @@ export default function SectorRSPage() {
               return (
                 <path key={s.etf} d={path} fill="none" stroke={color}
                   strokeWidth={on ? 3.2 : 1.6}
-                  opacity={dim ? 0.1 : on ? 1 : 0.8}
+                  opacity={dim ? 0.22 : on ? 1 : 0.8}
                   strokeLinecap="round" strokeLinejoin="round"
                   style={{ cursor: 'pointer', transition: 'opacity .12s' }}
                   onMouseEnter={() => setHover(s.etf)}
