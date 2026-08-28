@@ -9,10 +9,13 @@ const NEUTRAL = '#f0efec'
 const GREEN_TEXT = ['#0b0b0b', '#0b0b0b', '#0b0b0b', '#fff', '#fff'] as const
 const RED_TEXT   = ['#0b0b0b', '#0b0b0b', '#fff', '#fff', '#fff'] as const
 
-// ── 캡처 모드 팔레트 (유튜브 자료용): 강세=빨강 / 약세=파랑 (국내 캔들 관례) ──
-const GREEN_CAP = ['#3a1512', '#7a271f', '#c62828', '#e53935', '#ff5b6b'] as const
-const RED_CAP   = ['#0d1f3d', '#12386b', '#1e5bd6', '#2962ff', '#5b8bff'] as const
-const NEUTRAL_CAP = '#141414'
+// ── 캡처 모드 팔레트 (유튜브 자료용, 흑배경) ──
+// 전통적 히트맵 관례: 강세=초록 / 약세=빨강. Finviz 계열 다크 팔레트.
+// 기준점: -3% #F63538 · -2% #BF4045 · -1% #8B444E · 0% #414554 · +1% #35764E · +2% #2F9E4F · +3% #30CC5A
+// 우리 5단계 버킷(약→강)에 맞춰 보간.
+const GREEN_CAP = ['#35764E', '#2E8B4C', '#2F9E4F', '#2FB855', '#30CC5A'] as const
+const RED_CAP   = ['#8B444E', '#A5424A', '#BF4045', '#DB3B3F', '#F63538'] as const
+const NEUTRAL_CAP = '#414554'
 
 let CAPTURE = false
 /** WatchlistClient 렌더 시 captureMode 값으로 호출 — 히트맵 셀 색을 흑배경/빨강·파랑으로 전환 */
@@ -40,7 +43,9 @@ export function getCellBg(net: number): string {
 export function getCellTextColor(net: number): { ticker: string; sub: string } {
   const idx = bucket(Math.abs(net))
   if (CAPTURE) {
-    if (idx < 0) return { ticker: '#dcdcdc', sub: 'rgba(255,255,255,0.45)' }
+    if (idx < 0) return { ticker: '#e6e6e6', sub: 'rgba(255,255,255,0.45)' }
+    // 밝은 상단 버킷(+2/+3, -3)은 검은 글씨가 더 선명
+    if (idx >= 3) return { ticker: '#0d1512', sub: 'rgba(0,0,0,0.62)' }
     return { ticker: '#fff', sub: 'rgba(255,255,255,0.72)' }
   }
   if (idx < 0) return { ticker: '#0b0b0b', sub: '#8c887f' }
