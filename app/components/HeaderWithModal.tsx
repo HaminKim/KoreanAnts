@@ -13,6 +13,9 @@ const INTRO_IMAGES = [
   { id: 'tsla', src: '/intro-tsla.png?v=12', alt: '테슬라 지하실' },
 ];
 
+// ⚠️ 첫 진입 강제 모달 임시 OFF — 다시 켜려면 true 로 변경
+const INTRO_GATE_ENABLED = false;
+
 export default function HeaderWithModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [step, setStep] = useState(0);
@@ -22,6 +25,8 @@ export default function HeaderWithModal() {
   const isPricing = pathname?.startsWith('/pricing');
 
   useEffect(() => {
+    if (!INTRO_GATE_ENABLED) return;
+
     const todayStr = new Date().toISOString().split('T')[0];
     const lastSeenDate = localStorage.getItem('reant_intro_date');
 

@@ -2,14 +2,19 @@
 
 import { useState, useEffect } from 'react';
 
+// ⚠️ 첫 진입 인트로 모달 임시 OFF — 다시 켜려면 true 로 변경
+const INTRO_MODAL_ENABLED = false;
+
 export default function IntroModal() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    if (!INTRO_MODAL_ENABLED) return;
+
     // 1. 세션 스토리지 확인 (브라우저 껐다 켜기 전까진 '이미 봄' 상태 유지)
     // 개발 중에는 매번 보고 싶으시면 이 if문을 잠시 주석 처리하세요!
     const hasVisited = sessionStorage.getItem('reant_visited');
-    
+
     if (!hasVisited) {
       setShow(true);
     }
