@@ -218,8 +218,8 @@ export default function SectorRSPage() {
             {yMin < 0 && yMax > 0 && (
               <line x1={PAD.l} x2={PAD.l + iW} y1={yOf(0)} y2={yOf(0)}
                 stroke={zeroEmph ? 'var(--accent)' : 'var(--hairline-2)'}
-                strokeWidth={zeroEmph ? 2.4 : 1.5}
-                opacity={zeroEmph ? 0.85 : 1} />
+                strokeWidth={zeroEmph ? 3 : 1.5}
+                opacity={1} />
             )}
             {/* Y 그리드 */}
             {ticks.map(t => (
@@ -249,7 +249,7 @@ export default function SectorRSPage() {
               return (
                 <path key={s.etf} d={path} fill="none" stroke={color}
                   strokeWidth={on ? 3.2 : 1.6}
-                  opacity={dim ? 0.22 : on ? 1 : 0.8}
+                  opacity={dim ? 0.07 : on ? 1 : 0.8}
                   strokeLinecap="round" strokeLinejoin="round"
                   style={{ cursor: 'pointer', transition: 'opacity .12s' }}
                   onMouseEnter={() => setHover(s.etf)}
@@ -265,7 +265,7 @@ export default function SectorRSPage() {
               const on = isOn(r.etf)
               const dim = hasFocus && !on
               return (
-                <g key={r.etf} opacity={dim ? 0.28 : 1} style={{ cursor: 'pointer' }}
+                <g key={r.etf} opacity={dim ? 0.18 : 1} style={{ cursor: 'pointer' }}
                   onMouseEnter={() => setHover(r.etf)} onMouseLeave={() => setHover(null)}
                   onClick={() => togglePick(r.etf)}>
                   <rect x={RIGHT_X} y={r.y - 4} width={7} height={7} rx={1.5} fill={color}
@@ -297,7 +297,7 @@ export default function SectorRSPage() {
               style={{
                 border: `1px solid ${on ? color : 'var(--hairline)'}`,
                 background: isPicked ? 'var(--plane)' : 'transparent',
-                opacity: hasFocus && !on ? 0.45 : 1,
+                opacity: hasFocus && !on ? 0.3 : 1,
               }}>
               <span className="mono text-[10px] w-4 shrink-0" style={{ color: 'var(--ink-mute)' }}>{i + 1}</span>
               <span style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0 }} />
