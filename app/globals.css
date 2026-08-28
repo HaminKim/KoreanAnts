@@ -62,6 +62,38 @@
   }
 }
 
+/* ── 캡처 모드 (유튜브 자료용): 순검정 배경 · 흰 글씨 · 트레이딩뷰 빨강/파랑 ── */
+/* OS 다크모드와 무관하게 항상 이 팔레트로 고정. 강세=빨강, 약세=파랑 (국내 캔들 관례) */
+.capture-mode {
+  --background: #000000;
+  --foreground: #ffffff;
+
+  --surface:      #000000;
+  --plane:        #0b0b0b;
+  --ink:          #ffffff;
+  --ink-2:        #d1d4dc;
+  --ink-mute:     #787b86;
+  --hairline:     #262a33;
+  --hairline-2:   #363a45;
+  --accent:       #2962ff;
+
+  /* 강세 = 빨강 계열 */
+  --g1: #331210; --g2: #7a241d; --g3: #f23645; --g4: #ff5865; --g5: #ff8a94;
+  /* 약세 = 파랑 계열 */
+  --r1: #0d1f3d; --r2: #1b3a6e; --r3: #2962ff; --r4: #5b8bff; --r5: #93b4ff;
+  --neu: #131313;
+
+  --gt1: #fff; --gt2: #fff; --gt3: #fff; --gt4: #fff; --gt5: #0d0d0d;
+  --rt1: #fff; --rt2: #fff; --rt3: #fff; --rt4: #fff; --rt5: #0d0d0d;
+  --neut: var(--ink);
+
+  --up-text:   #ff4b5c;
+  --down-text: #4d84ff;
+
+  background: var(--surface);
+  color: var(--ink);
+}
+
 body {
   background: var(--surface);
   color: var(--ink);

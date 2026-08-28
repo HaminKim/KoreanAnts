@@ -9,6 +9,15 @@ const NEUTRAL = '#f0efec'
 const GREEN_TEXT = ['#0b0b0b', '#0b0b0b', '#0b0b0b', '#fff', '#fff'] as const
 const RED_TEXT   = ['#0b0b0b', '#0b0b0b', '#fff', '#fff', '#fff'] as const
 
+// ── 캡처 모드 팔레트 (유튜브 자료용): 강세=빨강 / 약세=파랑 (국내 캔들 관례) ──
+const GREEN_CAP = ['#3a1512', '#7a271f', '#c62828', '#e53935', '#ff5b6b'] as const
+const RED_CAP   = ['#0d1f3d', '#12386b', '#1e5bd6', '#2962ff', '#5b8bff'] as const
+const NEUTRAL_CAP = '#141414'
+
+let CAPTURE = false
+/** WatchlistClient 렌더 시 captureMode 값으로 호출 — 히트맵 셀 색을 흑배경/빨강·파랑으로 전환 */
+export function setCapturePalette(on: boolean) { CAPTURE = on }
+
 // net_direction 절대값 구간 경계 — 기존 코드가 /72를 최대치로 정규화해서 쓰던 것과
 // 동일한 스케일(0~72선)에 맞춘 5단계 경계. 2 미만은 등락 없음으로 취급.
 const THRESHOLDS = [2, 12, 24, 38, 54]
@@ -22,12 +31,18 @@ function bucket(absNet: number): number {
 
 export function getCellBg(net: number): string {
   const idx = bucket(Math.abs(net))
-  if (idx < 0) return NEUTRAL
-  return net > 0 ? GREEN[idx] : RED[idx]
+  const G = CAPTURE ? GREEN_CAP : GREEN
+  const R = CAPTURE ? RED_CAP : RED
+  if (idx < 0) return CAPTURE ? NEUTRAL_CAP : NEUTRAL
+  return net > 0 ? G[idx] : R[idx]
 }
 
 export function getCellTextColor(net: number): { ticker: string; sub: string } {
   const idx = bucket(Math.abs(net))
+  if (CAPTURE) {
+    if (idx < 0) return { ticker: '#dcdcdc', sub: 'rgba(255,255,255,0.45)' }
+    return { ticker: '#fff', sub: 'rgba(255,255,255,0.72)' }
+  }
   if (idx < 0) return { ticker: '#0b0b0b', sub: '#8c887f' }
   const color = net > 0 ? GREEN_TEXT[idx] : RED_TEXT[idx]
   const sub = color === '#fff' ? 'rgba(255,255,255,0.68)' : '#8c887f'
