@@ -1,55 +1,55 @@
 {
-  "date": "2026-08-30",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-08-31",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "",
-      "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 311210856.0,
+      "ticker": "MERCK N CO INC",
+      "name": "MERCK N CO INC",
+      "raw_name": "MERCK N CO INC",
+      "value": 99750557.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "MSTR",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 282887671.0,
+      "raw_name": "MICROSTRATEGY INC CL A",
+      "value": 83276970.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "VOO",
+      "ticker": "SCHD",
       "name": "",
-      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 205871110.0,
+      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
+      "value": 64998393.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "QQQM",
+      "ticker": "",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 193475749.0,
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 64319684.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "AMZN",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": 190611182.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 54892087.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
