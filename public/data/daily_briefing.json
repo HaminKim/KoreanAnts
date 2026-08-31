@@ -1,7 +1,7 @@
 {
-  "date": "2026-08-31",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-09-01",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "MERCK N CO INC",
-      "name": "MERCK N CO INC",
-      "raw_name": "MERCK N CO INC",
-      "value": 99750557.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -351384978.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "MSTR",
+      "ticker": "AMAT",
       "name": "",
-      "raw_name": "MICROSTRATEGY INC CL A",
-      "value": 83276970.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "APPLIED MATERIALS INC",
+      "value": -114306008.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "SCHD",
-      "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 64998393.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "SKHY",
+      "name": "SKHY",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": -66394613.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "",
-      "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 64319684.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "SIMO",
+      "name": "SIMO",
+      "raw_name": "SILICON MOTION TECHNOLOGY CORP ADR",
+      "value": -61564975.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "GOOGL",
+      "ticker": "SNDK",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 54892087.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -54108913.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
