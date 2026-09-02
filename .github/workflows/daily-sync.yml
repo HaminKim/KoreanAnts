@@ -72,7 +72,24 @@ jobs:
       # 6. 라이브러리 설치
       - name: Install deps
         run: |
-          pip install pandas numpy yfinance
+          pip install pandas numpy yfinance requests
+
+      # ----------------------------------------------------------------
+      # 🤖 새 종목 자동 감지 & 로고 자동화
+      #    데이터 '보강' 단계이므로 실패해도 파이프라인을 막지 않는다
+      #    (continue-on-error). 결과물(ticker_map.json, logos)은 아래
+      #    "Commit and push JSONs" 스텝에서 함께 커밋된다.
+      # ----------------------------------------------------------------
+
+      # 6-A. CSV의 새 raw name → 티커 자동 매핑 (ticker_map.json 업데이트)
+      - name: A. Auto-map new tickers
+        continue-on-error: true
+        run: python scripts/auto_new_tickers.py
+
+      # 6-B. 로고 없는 종목 자동 다운로드 (public/logos/)
+      - name: B. Fetch missing logos
+        continue-on-error: true
+        run: python scripts/fetch_logos.py
 
       # ----------------------------------------------------------------
       # 🍳 데이터 요리 시작
@@ -124,8 +141,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # ✨ public/data 폴더 전체를 add (섹터 데이터도 포함됨)
-          git add public/data/
+          # public/data (JSON 전체) + 자동 다운로드된 로고
+          git add public/data/ public/logos/
 
           # 변경사항 확인
           if git diff --cached --quiet; then
