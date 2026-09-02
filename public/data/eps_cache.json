@@ -15750,13 +15750,6 @@
   ],
   "PANW": [
     {
-      "d": "2023-08-18",
-      "actual": 0.72,
-      "estimate": 0.64,
-      "surp": 12.0,
-      "revenue": null
-    },
-    {
       "d": "2023-11-15",
       "actual": 0.69,
       "estimate": 0.58,
@@ -15832,6 +15825,13 @@
       "estimate": 0.8,
       "surp": 6.62,
       "revenue": 3.002
+    },
+    {
+      "d": "2026-09-01",
+      "actual": 1.02,
+      "estimate": 0.98,
+      "surp": 4.35,
+      "revenue": null
     }
   ],
   "LDOS": [
@@ -20166,13 +20166,6 @@
   ],
   "MDB": [
     {
-      "d": "2023-08-31",
-      "actual": 0.93,
-      "estimate": 0.45,
-      "surp": 105.68,
-      "revenue": null
-    },
-    {
       "d": "2023-12-05",
       "actual": 0.96,
       "estimate": 0.5,
@@ -20248,6 +20241,13 @@
       "estimate": 1.18,
       "surp": 11.54,
       "revenue": 0.688
+    },
+    {
+      "d": "2026-09-01",
+      "actual": 1.9,
+      "estimate": 1.61,
+      "surp": 18.09,
+      "revenue": null
     }
   ],
   "MAXN": [
@@ -34997,13 +34997,6 @@
   ],
   "GTLB": [
     {
-      "d": "2023-09-05",
-      "actual": 0.01,
-      "estimate": -0.03,
-      "surp": 139.56,
-      "revenue": null
-    },
-    {
       "d": "2023-12-04",
       "actual": 0.09,
       "estimate": -0.01,
@@ -35079,6 +35072,13 @@
       "estimate": 0.2,
       "surp": 12.32,
       "revenue": 0.264
+    },
+    {
+      "d": "2026-09-01",
+      "actual": 0.24,
+      "estimate": 0.18,
+      "surp": 33.6,
+      "revenue": null
     }
   ],
   "GNRC": [
