@@ -73,6 +73,13 @@ export default function SectorRSPage() {
     return () => document.body.classList.remove('capture-mode')
   }, [capture])
 
+  // PPT 이식용 팔레트: 이 페이지에 있는 동안 body 전체(+바깥 여백)를 #F6F6F9 톤으로
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    document.body.classList.add('sectors-ppt')
+    return () => document.body.classList.remove('sectors-ppt')
+  }, [])
+
   const toggleCapture = () => setCapture(v => {
     const n = !v
     try { localStorage.setItem('reant_wl_capture', n ? '1' : '0') } catch {}
@@ -179,11 +186,11 @@ export default function SectorRSPage() {
         </div>
         <div className="flex items-center gap-1.5">
           <Link href="/watchlist" className="text-[11px] font-semibold px-2.5 py-1"
-            style={{ border: '1px solid var(--hairline)', color: 'var(--ink-mute)' }}>
+            style={{ border: '1px solid var(--btn-border)', color: 'var(--ink-mute)' }}>
             ← 히트맵
           </Link>
           <button onClick={toggleCapture} className="text-[11px] font-semibold px-2.5 py-1"
-            style={{ border: '1px solid var(--hairline)', background: capture ? 'var(--accent)' : 'transparent', color: capture ? '#fff' : 'var(--ink-mute)' }}>
+            style={{ border: '1px solid var(--btn-border)', background: capture ? 'var(--accent)' : 'transparent', color: capture ? '#fff' : 'var(--ink-mute)' }}>
             {capture ? '● 캡처 모드' : '○ 캡처 모드'}
           </button>
         </div>
@@ -198,7 +205,7 @@ export default function SectorRSPage() {
             style={{
               background: days === d ? 'var(--accent)' : 'transparent',
               color: days === d ? '#fff' : 'var(--ink-mute)',
-              border: `1px solid ${days === d ? 'var(--accent)' : 'var(--hairline)'}`,
+              border: `1px solid ${days === d ? 'var(--accent)' : 'var(--btn-border)'}`,
             }}>
             {d}일
           </button>
@@ -207,7 +214,7 @@ export default function SectorRSPage() {
           style={{
             background: zeroEmph ? 'var(--accent)' : 'transparent',
             color: zeroEmph ? '#fff' : 'var(--ink-mute)',
-            border: `1px solid ${zeroEmph ? 'var(--accent)' : 'var(--hairline)'}`,
+            border: `1px solid ${zeroEmph ? 'var(--accent)' : 'var(--btn-border)'}`,
           }}>
           시장(0%) {zeroEmph ? '강조 ●' : '강조 ○'}
         </button>
@@ -215,12 +222,12 @@ export default function SectorRSPage() {
           style={{
             background: soloOnly ? 'var(--accent)' : 'transparent',
             color: soloOnly ? '#fff' : 'var(--ink-mute)',
-            border: `1px solid ${soloOnly ? 'var(--accent)' : 'var(--hairline)'}`,
+            border: `1px solid ${soloOnly ? 'var(--accent)' : 'var(--btn-border)'}`,
           }}>
           {soloOnly ? '선택만 보기 ●' : '선택만 보기 ○'}
         </button>
         {picked.size > 0 && (
-          <button onClick={() => setPicked(new Set())} className="ml-2 text-[11px] px-2 py-1" style={{ color: 'var(--ink-mute)', border: '1px solid var(--hairline)' }}>
+          <button onClick={() => setPicked(new Set())} className="ml-2 text-[11px] px-2 py-1" style={{ color: 'var(--ink-mute)', border: '1px solid var(--btn-border)' }}>
             강조 {picked.size}개 해제 ✕
           </button>
         )}
@@ -278,9 +285,9 @@ export default function SectorRSPage() {
             {yMin < 0 && yMax > 0 && zeroEmph && (
               <g>
                 <line x1={PAD.l} x2={PAD.l + iW} y1={yOf(0)} y2={yOf(0)}
-                  stroke="var(--accent)" strokeWidth={3} strokeLinecap="round" />
+                  stroke="var(--zero-line)" strokeWidth={3} strokeLinecap="round" />
                 <text x={PAD.l + 4} y={yOf(0) - 5} fontSize={10} fontWeight={700}
-                  fill="var(--accent)" className="mono">시장 0%</text>
+                  fill="var(--zero-line)" className="mono">시장 0%</text>
               </g>
             )}
 
@@ -290,13 +297,14 @@ export default function SectorRSPage() {
               const on = isOn(r.etf)
               const dim = (hasFocus || soloOnly) && !on
               return (
-                <g key={r.etf} opacity={dim ? 0.12 : 1} style={{ cursor: 'pointer' }}
+                <g key={r.etf} style={{ cursor: 'pointer' }}
                   onMouseEnter={() => setHover(r.etf)} onMouseLeave={() => setHover(null)}
                   onClick={() => togglePick(r.etf)}>
                   <rect x={RIGHT_X} y={r.y - 4} width={7} height={7} rx={1.5} fill={color}
+                    opacity={dim ? 0.4 : 1}
                     stroke={picked.has(r.etf) ? 'var(--ink)' : 'none'} strokeWidth={picked.has(r.etf) ? 1 : 0} />
                   <text x={RIGHT_X + 12} y={r.y} fontSize={on ? 10.5 : 9} dominantBaseline="middle"
-                    fill={on ? color : 'var(--ink-2)'} fontWeight={on ? 700 : 400} className="mono">
+                    fill={on ? color : dim ? 'var(--rank-dim)' : 'var(--ink-2)'} fontWeight={on ? 700 : 400} className="mono">
                     {i + 1} {r.emoji} {r.v > 0 ? '+' : ''}{r.v.toFixed(1)}%
                   </text>
                 </g>
@@ -320,7 +328,7 @@ export default function SectorRSPage() {
               onClick={() => togglePick(s.etf)}
               className="flex items-center gap-1.5 px-2 py-1.5 text-left"
               style={{
-                border: `1px solid ${on ? color : 'var(--hairline)'}`,
+                border: `1px solid ${on ? color : 'var(--btn-border)'}`,
                 background: isPicked ? 'var(--plane)' : 'transparent',
                 opacity: (hasFocus || soloOnly) && !on ? 0.24 : 1,
               }}>

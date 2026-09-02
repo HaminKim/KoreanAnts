@@ -13,6 +13,9 @@
   --hairline:     #ddd9d0;
   --hairline-2:   #cfcbc0;
   --accent:       #1f3547;
+  --zero-line:    #1f3547;   /* 0% 시장 기준선 */
+  --btn-border:   #ddd9d0;   /* 툴바 버튼 테두리 */
+  --rank-dim:     #9a978d;   /* 비활성 순위 텍스트 */
 
   /* 5단계 diverging (강세=g / 약세=r), neu = 등락 거의 없음 */
   --g1: #dcece2; --g2: #8ec2a1; --g3: #2f8a5b; --g4: #1c6b45; --g5: #0f4d30;
@@ -48,6 +51,9 @@
     --hairline:     #2c2a24;
     --hairline-2:   #3a372f;
     --accent:       #7fa8c4;
+    --zero-line:    #7fa8c4;
+    --btn-border:   #2c2a24;
+    --rank-dim:     #6f6c62;
 
     --g1: #16241c; --g2: #234a33; --g3: #3f9463; --g4: #5cb583; --g5: #8ddba8;
     --r1: #2a1a15; --r2: #5c2c1d; --r3: #b8542f; --r4: #d97847; --r5: #f0a878;
@@ -60,6 +66,24 @@
     --up-text:   #7fd6a5;
     --down-text: #e8a487;
   }
+}
+
+/* ── PPT 이식용 팔레트 (/sectors) — 하민님 PPT #F6F6F9 톤에 맞춤 ── */
+/* 캡처 모드가 켜지면(순검정) 이 블록은 비활성 */
+.sectors-ppt:not(.capture-mode) {
+  --surface:    #f6f6f9;   /* 페이지 + 바깥 여백 */
+  --plane:      #eceef2;
+  --ink:        #1f2328;   /* 기본 글씨 */
+  --ink-2:      #5f6772;   /* 날짜·축 텍스트 */
+  --ink-mute:   #636b74;   /* 보조 설명 */
+  --hairline:   #e6e8ec;   /* 그리드 */
+  --hairline-2: #d9dde3;
+  --accent:     #2f4356;   /* 버튼 배경 */
+  --zero-line:  #3a4654;   /* 0% 기준선 */
+  --btn-border: #d9dde3;   /* 버튼 테두리 */
+  --rank-dim:   #b8bec7;   /* 비활성 순위 글씨 (영상 압축 대비 하한) */
+
+  background: var(--surface);
 }
 
 /* ── 캡처 모드 (유튜브 자료용): 순검정 배경 · 흰 글씨 ── */
@@ -76,6 +100,9 @@
   --hairline:     #262a33;
   --hairline-2:   #363a45;
   --accent:       #2962ff;
+  --zero-line:    #2962ff;
+  --btn-border:   #262a33;
+  --rank-dim:     #6c7280;
 
   /* 강세 = 초록 계열 (+1 #35764E → +3 #30CC5A) */
   --g1: #1c3a2c; --g2: #35764e; --g3: #2f9e4f; --g4: #2fb855; --g5: #30cc5a;
