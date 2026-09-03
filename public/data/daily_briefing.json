@@ -10,19 +10,19 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "PLTR",
+      "ticker": "AMAT",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -178447351.0,
+      "raw_name": "APPLIED MATERIALS INC",
+      "value": -148035929.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "AMAT",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "APPLIED MATERIALS INC",
-      "value": -154121680.0,
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -109418299.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
@@ -31,25 +31,25 @@
       "ticker": "NVDA",
       "name": "",
       "raw_name": "NVIDIA CORP",
-      "value": -115819271.0,
+      "value": -103068469.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "MSFT",
+      "ticker": "PLTR",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -95666494.0,
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -93655194.0,
       "type": "NET_SELL",
       "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "AMD",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "ADVANCED MICRO DEVICES INC",
-      "value": -72152838.0,
+      "raw_name": "MICROSOFT CORP",
+      "value": -80793395.0,
       "type": "NET_SELL",
       "desc_key": "매도 5위"
     }
