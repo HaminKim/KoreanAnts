@@ -1,19 +1,19 @@
 {
-  "date": "2026-09-02",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-09-04",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
-    "total_count": 6,
-    "source_desc": "최근 10일간 데이터"
+    "period_days": 5,
+    "total_count": 5,
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 539764820.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 67794093.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -21,46 +21,37 @@
       "rank": 2,
       "ticker": "",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 118539518.0,
+      "raw_name": "MERCK N CO INC",
+      "value": 58361443.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "GOOGL",
+      "ticker": "META",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 115367093.0,
+      "raw_name": "META PLATFORMS INC CL A",
+      "value": 56247225.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
-      "rank": 1,
-      "ticker": "PLTR",
+      "rank": 4,
+      "ticker": "SCHD",
       "name": "",
-      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -172410721.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
+      "value": 54309262.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
-      "rank": 2,
-      "ticker": "AMAT",
+      "rank": 5,
+      "ticker": "VOO",
       "name": "",
-      "raw_name": "APPLIED MATERIALS INC",
-      "value": -146473073.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "NVDA",
-      "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -119996209.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 50191497.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
