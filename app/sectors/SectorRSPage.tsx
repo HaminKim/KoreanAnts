@@ -335,7 +335,7 @@ export default function SectorRSPage() {
               <span className="mono text-[10px] w-4 shrink-0" style={{ color: 'var(--ink-mute)' }}>{i + 1}</span>
               <span style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0 }} />
               <span className="text-[11px] font-semibold truncate flex-1 min-w-0" style={{ color: 'var(--ink)' }}>
-                {s.emoji} {s.name}
+                {s.name}({s.etf})
               </span>
               <span className="mono text-[10px] shrink-0" style={{ color: rs >= 0 ? 'var(--up-text)' : 'var(--down-text)' }}>
                 {rs >= 0 ? '+' : ''}{rs.toFixed(1)}
