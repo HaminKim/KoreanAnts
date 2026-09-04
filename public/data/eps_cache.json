@@ -20940,13 +20940,6 @@
   ],
   "PL": [
     {
-      "d": "2022-12-14",
-      "actual": -0.08,
-      "estimate": -0.11,
-      "surp": 24.96,
-      "revenue": null
-    },
-    {
       "d": "2023-03-29",
       "actual": -0.08,
       "estimate": -0.09,
@@ -21022,6 +21015,13 @@
       "estimate": -0.04,
       "surp": 28.57,
       "revenue": 0.094
+    },
+    {
+      "d": "2026-09-03",
+      "actual": 0.02,
+      "estimate": -0.02,
+      "surp": 193.76,
+      "revenue": null
     }
   ],
   "ISRG": [

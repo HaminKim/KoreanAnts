@@ -10,19 +10,19 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "GOOGL",
+      "ticker": "SGOV",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 67794093.0,
+      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
+      "value": 92963715.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "MERCK N CO INC",
-      "value": 58361443.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 55730887.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
@@ -31,25 +31,25 @@
       "ticker": "META",
       "name": "",
       "raw_name": "META PLATFORMS INC CL A",
-      "value": 56247225.0,
+      "value": 54973436.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "SCHD",
+      "ticker": "VOO",
       "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 54309262.0,
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 52245985.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "VOO",
+      "ticker": "IREN",
       "name": "",
-      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 50191497.0,
+      "raw_name": "IRIS ENERGY LTD",
+      "value": 51452937.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
