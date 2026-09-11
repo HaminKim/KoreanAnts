@@ -418,7 +418,7 @@
       "d": "2026-04-29",
       "actual": 1.5,
       "estimate": 1.39,
-      "surp": 7.95,
+      "surp": 7.98,
       "revenue": 2.059
     },
     {
@@ -7599,13 +7599,6 @@
   ],
   "ORCL": [
     {
-      "d": "2023-09-11",
-      "actual": 1.19,
-      "estimate": 1.15,
-      "surp": 3.46,
-      "revenue": null
-    },
-    {
       "d": "2023-12-11",
       "actual": 1.34,
       "estimate": 1.33,
@@ -7681,6 +7674,13 @@
       "estimate": 1.96,
       "surp": 7.52,
       "revenue": 19.184
+    },
+    {
+      "d": "2026-09-10",
+      "actual": 1.92,
+      "estimate": 1.74,
+      "surp": 10.45,
+      "revenue": null
     }
   ],
   "KMI": [
@@ -17814,13 +17814,6 @@
   ],
   "IREN": [
     {
-      "d": "2022-09-13",
-      "actual": -0.21,
-      "estimate": -0.13,
-      "surp": -58.13,
-      "revenue": null
-    },
-    {
       "d": "2023-02-14",
       "actual": -0.39,
       "estimate": -0.13,
@@ -17896,6 +17889,13 @@
       "estimate": -0.26,
       "surp": 38.42,
       "revenue": 0.145
+    },
+    {
+      "d": "2026-08-27",
+      "actual": -0.25,
+      "estimate": -0.45,
+      "surp": 44.09,
+      "revenue": 0.137
     }
   ],
   "CVX": [
@@ -26606,14 +26606,14 @@
       "actual": 3.32,
       "estimate": 2.58,
       "surp": 28.93,
-      "revenue": 7.754
+      "revenue": null
     },
     {
       "d": "2025-05-22",
       "actual": 11.65,
       "estimate": 10.91,
       "surp": 6.77,
-      "revenue": 7.754
+      "revenue": 3.831
     },
     {
       "d": "2025-08-21",
@@ -26648,7 +26648,7 @@
       "actual": 4.03,
       "estimate": 3.59,
       "surp": 12.34,
-      "revenue": null
+      "revenue": 4.354
     }
   ],
   "SPGI": [
