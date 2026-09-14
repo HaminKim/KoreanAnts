@@ -1,7 +1,7 @@
 {
-  "date": "2026-09-14",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-09-15",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "GOOGL",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 91112538.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -621472730.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "",
+      "ticker": "CAT",
       "name": "",
-      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
-      "value": 72971009.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "CATERPILLAR INC",
+      "value": -70344324.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "IONQ",
-      "name": "",
-      "raw_name": "IONQ INC",
-      "value": 70957425.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "SKHY",
+      "name": "SKHY",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": -55711738.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "SCHD",
+      "ticker": "KORU",
       "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 70670245.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": -48109699.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "AVGO",
+      "ticker": "IREN",
       "name": "",
-      "raw_name": "BROADCOM INC EXOF 005644980 SG9999014823",
-      "value": 63911296.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "IRIS ENERGY LTD",
+      "value": -44812862.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
