@@ -13,25 +13,25 @@
       "ticker": "SGOV",
       "name": "",
       "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 168017989.0,
+      "value": 157757938.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 143910265.0,
+      "raw_name": "IONQ INC",
+      "value": 132312423.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "IONQ",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "IONQ INC",
-      "value": 120372971.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 119178894.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
@@ -40,25 +40,25 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -701587645.0,
+      "value": -627880411.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "NVDA",
-      "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -134325107.0,
+      "ticker": "SKHY",
+      "name": "SKHY",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": -89493540.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "SKHY",
-      "name": "SKHY",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": -106341165.0,
+      "ticker": "KORU",
+      "name": "",
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": -83387950.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
     }

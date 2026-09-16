@@ -1,5 +1,5 @@
 {
-  "top": [
+  "fire": [
     {
       "name": "APPLE INC",
       "name_kr": "애플",
@@ -7,11 +7,24 @@
       "file_ticker": "APPLE INC",
       "close": 331.34,
       "price_change": 0.05073888501300184,
-      "net_buy_sum": 5623427,
+      "net_buy_sum": -2171166,
       "buy_score": 2,
-      "sell_score": 3,
+      "sell_score": 4,
       "last_date": "2026-09-15",
-      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+      "comment": "개미 털고 세력 떡상 중 🚀"
+    },
+    {
+      "name": "MODERNA INC",
+      "name_kr": "",
+      "ticker": "MRNA",
+      "file_ticker": "MODERNA INC",
+      "close": 143.77,
+      "price_change": 0.060172553646486215,
+      "net_buy_sum": -1788411,
+      "buy_score": 0,
+      "sell_score": 2,
+      "last_date": "2026-09-15",
+      "comment": "개미 털고 세력 떡상 중 🚀"
     }
   ],
   "bottom": [
@@ -22,9 +35,9 @@
       "file_ticker": "INTEL CORP",
       "close": 97.14,
       "price_change": -0.08565512048192767,
-      "net_buy_sum": -6594954,
+      "net_buy_sum": -8046273,
       "buy_score": 0,
-      "sell_score": 6,
+      "sell_score": 7,
       "last_date": "2026-09-15",
       "comment": "공포에 줍줍할 기회인가 💎"
     },
@@ -35,9 +48,9 @@
       "file_ticker": "GRANITESHARES 2X LONG MRVL DAILY ETF",
       "close": 221.7,
       "price_change": -0.05663588783456024,
-      "net_buy_sum": -5074212,
+      "net_buy_sum": -7077749,
       "buy_score": 0,
-      "sell_score": 6,
+      "sell_score": 7,
       "last_date": "2026-09-15",
       "comment": "공포에 줍줍할 기회인가 💎"
     }
@@ -50,8 +63,8 @@
       "file_ticker": "IONQ INC",
       "close": 37.05,
       "price_change": -0.028578919769271197,
-      "net_buy_sum": 28870001,
-      "buy_score": 6,
+      "net_buy_sum": 38453082,
+      "buy_score": 7,
       "sell_score": 0,
       "last_date": "2026-09-15",
       "comment": "물타기하다 익사한다... 도망쳐! 🩸"
@@ -63,8 +76,8 @@
       "file_ticker": "NVIDIA CORP",
       "close": 212.17,
       "price_change": -0.05035359412765196,
-      "net_buy_sum": 12391329,
-      "buy_score": 5,
+      "net_buy_sum": 21503083,
+      "buy_score": 6,
       "sell_score": 1,
       "last_date": "2026-09-15",
       "comment": "물타기하다 익사한다... 도망쳐! 🩸"
