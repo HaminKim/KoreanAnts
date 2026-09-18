@@ -7,8 +7,8 @@
       "file_ticker": "INTEL CORP",
       "close": 108.8,
       "price_change": 0.0569263648727414,
-      "net_buy_sum": -3383548,
-      "buy_score": 0,
+      "net_buy_sum": -2654191,
+      "buy_score": 1,
       "sell_score": 6,
       "last_date": "2026-09-17",
       "comment": "개미 털고 세력 떡상 중 🚀"
@@ -20,9 +20,9 @@
       "file_ticker": "ADVANCED MICRO DEVICES INC",
       "close": 545.09,
       "price_change": 0.05610989479394733,
-      "net_buy_sum": -1820298,
+      "net_buy_sum": -3284084,
       "buy_score": 1,
-      "sell_score": 5,
+      "sell_score": 6,
       "last_date": "2026-09-17",
       "comment": "개미 털고 세력 떡상 중 🚀"
     }
@@ -35,8 +35,8 @@
       "file_ticker": "IONQ INC",
       "close": 40.34,
       "price_change": 0.09768707482993207,
-      "net_buy_sum": 3081652,
-      "buy_score": 5,
+      "net_buy_sum": 7051444,
+      "buy_score": 6,
       "sell_score": 1,
       "last_date": "2026-09-17",
       "comment": "고점 판독기 삐빅... 조심해 ⚠️"
@@ -48,11 +48,26 @@
       "file_ticker": "DELL TECHNOLOGIES INC CL C MRGR 006138875 US24703L1035",
       "close": 588.4,
       "price_change": 0.037212007967706136,
-      "net_buy_sum": 12722719,
-      "buy_score": 3,
+      "net_buy_sum": 18550832,
+      "buy_score": 4,
       "sell_score": 1,
       "last_date": "2026-09-17",
       "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    }
+  ],
+  "bottom": [
+    {
+      "name": "Circle Internet",
+      "name_kr": "서클 인터넷",
+      "ticker": "CRCL",
+      "file_ticker": "Circle Internet",
+      "close": 85.09,
+      "price_change": -0.06081677704194251,
+      "net_buy_sum": -8036057,
+      "buy_score": 2,
+      "sell_score": 5,
+      "last_date": "2026-09-17",
+      "comment": "공포에 줍줍할 기회인가 💎"
     }
   ],
   "knife": [
@@ -63,20 +78,20 @@
       "file_ticker": "BROADCOM INC EXOF 005644980 SG9999014823",
       "close": 347.3,
       "price_change": -0.040581231525732744,
-      "net_buy_sum": 5432177,
-      "buy_score": 3,
+      "net_buy_sum": 12029755,
+      "buy_score": 4,
       "sell_score": 3,
       "last_date": "2026-09-17",
       "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     },
     {
-      "name": "BITMINE IMMERSION TECHNOLOGI",
-      "name_kr": "비트마인 이머션 테크놀러지",
-      "ticker": "BMNR",
-      "file_ticker": "BITMINE IMMERSION TECHNOLOGI",
-      "close": 23.89,
-      "price_change": -0.045545345585297665,
-      "net_buy_sum": 4216797,
+      "name": "UNITY SOFTWARE INC",
+      "name_kr": "",
+      "ticker": "U",
+      "file_ticker": "UNITY SOFTWARE INC",
+      "close": 41.84,
+      "price_change": -0.04822565969062778,
+      "net_buy_sum": 3749053,
       "buy_score": 2,
       "sell_score": 0,
       "last_date": "2026-09-17",
