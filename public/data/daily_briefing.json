@@ -1,55 +1,55 @@
 {
-  "date": "2026-09-20",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-09-21",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SGOV",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 228822967.0,
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 456769073.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "SCHD",
+      "ticker": "AMZN",
       "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 203244774.0,
+      "raw_name": "AMAZON.COM INC",
+      "value": 80336009.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "VOO",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 202535391.0,
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 51811693.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "GOOGL",
+      "ticker": "SGOV",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 171695390.0,
+      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
+      "value": 48100544.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "IONQ",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "IONQ INC",
-      "value": 158956413.0,
+      "raw_name": "NVIDIA CORP",
+      "value": 45546867.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
