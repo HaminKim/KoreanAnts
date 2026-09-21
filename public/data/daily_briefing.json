@@ -1,7 +1,7 @@
 {
-  "date": "2026-09-21",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-09-22",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -13,45 +13,45 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 456769073.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "value": -465465228.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "AMZN",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": 80336009.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "TESLA INC",
+      "value": -42871267.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
-      "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 51811693.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "AAOI",
+      "name": "AAOI",
+      "raw_name": "APPLIED OPTOELECTRONICS INC",
+      "value": -32788779.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "SGOV",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 48100544.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "ALPHABET INC CL A",
+      "value": -28495108.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "NVDA",
+      "ticker": "META",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": 45546867.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "META PLATFORMS INC CL A",
+      "value": -26696985.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
