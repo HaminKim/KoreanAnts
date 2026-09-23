@@ -1,40 +1,13 @@
 {
-  "date": "2026-09-23",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-09-24",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
-    {
-      "rank": 1,
-      "ticker": "SCHD",
-      "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 119726239.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "SGOV",
-      "name": "",
-      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 114989359.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "VOO",
-      "name": "",
-      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 97851174.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
     {
       "rank": 1,
       "ticker": "SOXL",
@@ -61,6 +34,24 @@
       "value": -45444969.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "SNDK",
+      "name": "",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -40666018.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "AKAM",
+      "name": "",
+      "raw_name": "AKAMAI TECHNOLOGIES INC",
+      "value": -38775141.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
