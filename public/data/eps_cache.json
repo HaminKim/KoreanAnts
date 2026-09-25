@@ -4129,13 +4129,6 @@
   ],
   "COST": [
     {
-      "d": "2023-09-26",
-      "actual": 4.86,
-      "estimate": 4.78,
-      "surp": 1.76,
-      "revenue": null
-    },
-    {
       "d": "2023-12-14",
       "actual": 3.58,
       "estimate": 3.42,
@@ -4211,6 +4204,13 @@
       "estimate": 4.92,
       "surp": 0.14,
       "revenue": 70.527
+    },
+    {
+      "d": "2026-09-24",
+      "actual": 6.75,
+      "estimate": 6.53,
+      "surp": 3.41,
+      "revenue": null
     }
   ],
   "XOM": [
