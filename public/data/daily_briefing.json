@@ -1,19 +1,19 @@
 {
-  "date": "2026-09-27",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-09-28",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SGOV",
+      "ticker": "",
       "name": "",
-      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 274932691.0,
+      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
+      "value": 137853257.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -22,34 +22,34 @@
       "ticker": "SCHD",
       "name": "",
       "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 226216439.0,
+      "value": 72636745.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "VOO",
+      "ticker": "SGOV",
       "name": "",
-      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 185836986.0,
+      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
+      "value": 68787781.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "GOOGL",
-      "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 154833486.0,
+      "ticker": "PANW",
+      "name": "PANW",
+      "raw_name": "PALO ALTO NETWORKS INC",
+      "value": 57868663.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "AMZN",
+      "ticker": "VOO",
       "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": 142763918.0,
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 39164076.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
