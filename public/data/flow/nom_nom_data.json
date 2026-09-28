@@ -1,1 +1,73 @@
-{}
+{
+  "fire": [
+    {
+      "name": "IONQ INC",
+      "name_kr": "아이온큐",
+      "ticker": "IONQ",
+      "file_ticker": "IONQ INC",
+      "close": 44.58,
+      "price_change": 0.09425625920471271,
+      "net_buy_sum": -12747930,
+      "buy_score": 3,
+      "sell_score": 3,
+      "last_date": "2026-09-28",
+      "comment": "개미 털고 세력 떡상 중 🚀"
+    }
+  ],
+  "bottom": [
+    {
+      "name": "MICRON TECHNOLOGY INC",
+      "name_kr": "마이크론 테크놀로지",
+      "ticker": "MU",
+      "file_ticker": "MICRON TECHNOLOGY INC",
+      "close": 1053.98,
+      "price_change": -0.03847978397314266,
+      "net_buy_sum": -4659090,
+      "buy_score": 1,
+      "sell_score": 5,
+      "last_date": "2026-09-28",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    },
+    {
+      "name": "TESLA INC",
+      "name_kr": "테슬라",
+      "ticker": "TSLA",
+      "file_ticker": "TESLA INC",
+      "close": 357.45,
+      "price_change": -0.05661124307205065,
+      "net_buy_sum": -3611933,
+      "buy_score": 1,
+      "sell_score": 5,
+      "last_date": "2026-09-28",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    }
+  ],
+  "knife": [
+    {
+      "name": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "name_kr": "브로드컴",
+      "ticker": "AVGO",
+      "file_ticker": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "close": 349.57,
+      "price_change": -0.04106545235090807,
+      "net_buy_sum": 5718288,
+      "buy_score": 6,
+      "sell_score": 0,
+      "last_date": "2026-09-28",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    },
+    {
+      "name": "AMAZON.COM INC",
+      "name_kr": "아마존",
+      "ticker": "AMZN",
+      "file_ticker": "AMAZON.COM INC",
+      "close": 246.15,
+      "price_change": -0.03463016707192715,
+      "net_buy_sum": 5152895,
+      "buy_score": 6,
+      "sell_score": 0,
+      "last_date": "2026-09-28",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    }
+  ]
+}
