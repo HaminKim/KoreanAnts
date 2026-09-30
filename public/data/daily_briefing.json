@@ -1,40 +1,13 @@
 {
-  "date": "2026-09-30",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-10-01",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
-    {
-      "rank": 1,
-      "ticker": "SGOV",
-      "name": "",
-      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 104351551.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "SCHD",
-      "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 103340006.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "AMZN",
-      "name": "",
-      "raw_name": "AMAZON.COM INC",
-      "value": 98549320.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
     {
       "rank": 1,
       "ticker": "SOXL",
@@ -61,6 +34,24 @@
       "value": -74162788.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "SKHY",
+      "name": "SKHY",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": -43994560.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "AAOI",
+      "name": "AAOI",
+      "raw_name": "APPLIED OPTOELECTRONICS INC",
+      "value": -32788779.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
