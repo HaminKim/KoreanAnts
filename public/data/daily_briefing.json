@@ -1,57 +1,57 @@
 {
-  "date": "2026-10-01",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-10-02",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -1253006271.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
+      "value": 64229624.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TQQQ",
+      "ticker": "SCHD",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -113433042.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
+      "value": 62095561.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MSFT",
+      "ticker": "",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -70861753.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 55033528.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "SKHY",
-      "name": "SKHY",
-      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": -45770419.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "ticker": "SNDK",
+      "name": "",
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": 51143539.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "TSLA",
-      "name": "",
-      "raw_name": "TESLA INC",
-      "value": -44080454.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "PANW",
+      "name": "PANW",
+      "raw_name": "PALO ALTO NETWORKS INC",
+      "value": 43188800.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
