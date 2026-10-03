@@ -7,8 +7,8 @@
       "file_ticker": "BLOOM ENERGY CORP CL A",
       "close": 289.15,
       "price_change": 0.09997337086772919,
-      "net_buy_sum": -8984714,
-      "buy_score": 1,
+      "net_buy_sum": -2845432,
+      "buy_score": 2,
       "sell_score": 4,
       "last_date": "2026-10-02",
       "comment": "개미 털고 세력 떡상 중 🚀"
@@ -35,8 +35,8 @@
       "file_ticker": "ADVANCED MICRO DEVICES INC",
       "close": 633.91,
       "price_change": 0.042838106832052844,
-      "net_buy_sum": 12304940,
-      "buy_score": 4,
+      "net_buy_sum": 17643890,
+      "buy_score": 5,
       "sell_score": 1,
       "last_date": "2026-10-02",
       "comment": "고점 판독기 삐빅... 조심해 ⚠️"
@@ -48,14 +48,27 @@
       "file_ticker": "TESLA INC",
       "close": 370.59,
       "price_change": 0.0367603860679815,
-      "net_buy_sum": 36183915,
-      "buy_score": 3,
+      "net_buy_sum": 52095467,
+      "buy_score": 4,
       "sell_score": 2,
       "last_date": "2026-10-02",
       "comment": "고점 판독기 삐빅... 조심해 ⚠️"
     }
   ],
-  "bottom": [
+  "knife": [
+    {
+      "name": "Circle Internet",
+      "name_kr": "서클 인터넷",
+      "ticker": "CRCL",
+      "file_ticker": "Circle Internet",
+      "close": 81.25,
+      "price_change": -0.053030303030303,
+      "net_buy_sum": 3736953,
+      "buy_score": 3,
+      "sell_score": 0,
+      "last_date": "2026-10-02",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    },
     {
       "name": "MODERNA INC",
       "name_kr": "",
@@ -63,11 +76,11 @@
       "file_ticker": "MODERNA INC",
       "close": 190.01,
       "price_change": -0.036851175993511814,
-      "net_buy_sum": -1991129,
-      "buy_score": 1,
+      "net_buy_sum": 1975647,
+      "buy_score": 2,
       "sell_score": 2,
       "last_date": "2026-10-02",
-      "comment": "공포에 줍줍할 기회인가 💎"
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     }
   ]
 }
