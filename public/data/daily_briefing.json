@@ -1,7 +1,7 @@
 {
-  "date": "2026-10-05",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-10-06",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": 59277018.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -205744369.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "SNDK",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "SNDSK CRP ORD WI",
-      "value": 54204759.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "IONQ INC",
+      "value": -34333633.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "KORU",
+      "ticker": "PLTR",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 47859703.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -29748286.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "META",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "META PLATFORMS INC CL A",
-      "value": 44733385.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "MICROSOFT CORP",
+      "value": -19933620.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "SCHD",
+      "ticker": "BE",
       "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 44570068.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "BLOOM ENERGY CORP CL A",
+      "value": -19752557.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
