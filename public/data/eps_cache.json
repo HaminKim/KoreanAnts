@@ -17126,13 +17126,6 @@
   ],
   "STZ": [
     {
-      "d": "2023-10-05",
-      "actual": 3.7,
-      "estimate": 3.37,
-      "surp": 9.63,
-      "revenue": null
-    },
-    {
       "d": "2024-01-05",
       "actual": 3.19,
       "estimate": 3.0,
@@ -17208,6 +17201,13 @@
       "estimate": 3.2,
       "surp": 7.13,
       "revenue": 2.433
+    },
+    {
+      "d": "2026-10-06",
+      "actual": 3.74,
+      "estimate": 3.55,
+      "surp": 5.47,
+      "revenue": null
     }
   ],
   "SQM": [
