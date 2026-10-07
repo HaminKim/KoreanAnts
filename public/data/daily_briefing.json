@@ -1,46 +1,19 @@
 {
-  "date": "2026-10-07",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-10-08",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "",
-      "name": "",
-      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
-      "value": 150659175.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "SCHD",
-      "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 123585181.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "SGOV",
-      "name": "",
-      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 85915599.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -1990158332.0,
+      "value": -1406540293.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -49,7 +22,7 @@
       "ticker": "TQQQ",
       "name": "",
       "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -160981498.0,
+      "value": -193310711.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
@@ -58,9 +31,27 @@
       "ticker": "SKHY",
       "name": "SKHY",
       "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": -75911948.0,
+      "value": -83676137.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "NVDA",
+      "name": "",
+      "raw_name": "NVIDIA CORP",
+      "value": -81447559.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "MSFT",
+      "name": "",
+      "raw_name": "MICROSOFT CORP",
+      "value": -69665528.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }

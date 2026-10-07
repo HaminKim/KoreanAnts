@@ -1,561 +1,561 @@
 {
-  "asOf": "2026-10-06",
+  "asOf": "2026-10-07",
   "days": 40,
   "range": {
-    "start": "2026-08-06",
-    "end": "2026-10-06",
+    "start": "2026-08-07",
+    "end": "2026-10-07",
     "count": 40
   },
   "items": [
     {
       "rank": 1,
       "ticker": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": 411710359.0
+      "value": 413125878.0
     },
     {
       "rank": 2,
       "ticker": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 398583089.0
+      "value": 395631101.0
     },
     {
       "rank": 3,
       "ticker": "ALPHABET INC CL A",
-      "value": 381055937.0
+      "value": 383768414.0
     },
     {
       "rank": 4,
       "ticker": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 376116265.0
+      "value": 373670151.0
     },
     {
       "rank": 5,
       "ticker": "SPACE EXPLORATION TECHN-CL A",
-      "value": 359441523.0
+      "value": 353811037.0
     },
     {
       "rank": 6,
       "ticker": "INVESCO NASDAQ 100 ETF",
-      "value": 299960179.0
+      "value": 285503577.0
     },
     {
       "rank": 7,
       "ticker": "PROSHARES ULTRA QQQ ETF",
-      "value": 241828018.0
+      "value": 227793720.0
     },
     {
       "rank": 8,
-      "ticker": "AMAZON.COM INC",
-      "value": 208720983.0
+      "ticker": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "value": 167512641.0
     },
     {
       "rank": 9,
-      "ticker": "INVESCO QQQ TRUST SRS 1 ETF",
-      "value": 172859251.0
+      "ticker": "J.P. MORGAN NASDAQ EQUITY PREMIUM INCOME ETF",
+      "value": 165213568.0
     },
     {
       "rank": 10,
-      "ticker": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
-      "value": 167464462.0
+      "ticker": "AMAZON.COM INC",
+      "value": 158589097.0
     },
     {
       "rank": 11,
-      "ticker": "J.P. MORGAN NASDAQ EQUITY PREMIUM INCOME ETF",
-      "value": 167175055.0
+      "ticker": "INVESCO QQQ TRUST SRS 1 ETF",
+      "value": 155732604.0
     },
     {
       "rank": 12,
-      "ticker": "BROADCOM INC EXOF 005644980 SG9999014823",
-      "value": 153192837.0
+      "ticker": "MICROSTRATEGY INC CL A",
+      "value": 146959583.0
     },
     {
       "rank": 13,
-      "ticker": "MICROSTRATEGY INC CL A",
-      "value": 149271478.0
-    },
-    {
-      "rank": 14,
       "ticker": "MERCK N CO INC",
       "value": 136291135.0
     },
     {
+      "rank": 14,
+      "ticker": "IRIS ENERGY LTD",
+      "value": 136230007.0
+    },
+    {
       "rank": 15,
       "ticker": "IONQ INC",
-      "value": 131267774.0
+      "value": 117908449.0
     },
     {
       "rank": 16,
-      "ticker": "IRIS ENERGY LTD",
-      "value": 127338027.0
+      "ticker": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
+      "value": 108893192.0
     },
     {
       "rank": 17,
-      "ticker": "YANDEX NV CL A",
-      "value": 113853787.0
-    },
-    {
-      "rank": 18,
-      "ticker": "META PLATFORMS INC CL A",
-      "value": 98036778.0
-    },
-    {
-      "rank": 19,
       "ticker": "PALO ALTO NETWORKS INC",
       "value": 95162093.0
     },
     {
+      "rank": 18,
+      "ticker": "YANDEX NV CL A",
+      "value": 92528361.0
+    },
+    {
+      "rank": 19,
+      "ticker": "META PLATFORMS INC CL A",
+      "value": 85768371.0
+    },
+    {
       "rank": 20,
       "ticker": "ISHARES SEMICONDUCTOR ETF",
-      "value": 88234997.0
+      "value": 75680259.0
     },
     {
       "rank": 21,
-      "ticker": "BLOOM ENERGY CORP CL A",
-      "value": 86399243.0
+      "ticker": "TAIWAN SEMICONDUCTOR MANUFACTURING CO LTD ADR",
+      "value": 73221080.0
     },
     {
       "rank": 22,
-      "ticker": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": 77988406.0
+      "ticker": "ORACLE CORP",
+      "value": 71496014.0
     },
     {
       "rank": 23,
-      "ticker": "ORACLE CORP",
-      "value": 71716344.0
+      "ticker": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
+      "value": 67155968.0
     },
     {
       "rank": 24,
       "ticker": "ALPHA ARCHITECT 1-3 MONTH BOX ETF",
-      "value": 69826539.0
+      "value": 66984611.0
     },
     {
       "rank": 25,
-      "ticker": "TESLA INC",
-      "value": 63555585.0
+      "ticker": "BITMINE IMMERSION TECHNOLOGI",
+      "value": 62592317.0
     },
     {
       "rank": 26,
-      "ticker": "BITMINE IMMERSION TECHNOLOGI",
-      "value": 62873850.0
-    },
-    {
-      "rank": 27,
       "ticker": "SPDR PORTFOLIO SP 500 ETF",
       "value": 58067542.0
     },
     {
+      "rank": 27,
+      "ticker": "ISHARES 20+ YEAR TREASURY BOND ETF",
+      "value": 51615398.0
+    },
+    {
       "rank": 28,
-      "ticker": "MARVELL TECHNOLOGY INC",
-      "value": 57751551.0
+      "ticker": "BLOOM ENERGY CORP CL A",
+      "value": 47452607.0
     },
     {
       "rank": 29,
-      "ticker": "TAIWAN SEMICONDUCTOR MANUFACTURING CO LTD ADR",
-      "value": 57709109.0
-    },
-    {
-      "rank": 30,
-      "ticker": "INTEL CORP",
-      "value": 48948318.0
-    },
-    {
-      "rank": 31,
-      "ticker": "DELL TECHNOLOGIES INC CL C MRGR 006138875 US24703L1035",
-      "value": 47640328.0
-    },
-    {
-      "rank": 32,
-      "ticker": "II-VI INCORPORATED Com CHAN 009623241 US9021041085",
-      "value": 47122530.0
-    },
-    {
-      "rank": 33,
       "ticker": "SPDR GOLD SHARES ETF",
       "value": 46497807.0
     },
     {
-      "rank": 34,
-      "ticker": "ISHARES 20+ YEAR TREASURY BOND ETF",
-      "value": 46398611.0
-    },
-    {
-      "rank": 35,
+      "rank": 30,
       "ticker": "ALLEGHENY TECHNOLOGIES INC",
       "value": 44864896.0
     },
     {
-      "rank": 36,
+      "rank": 31,
+      "ticker": "DELL TECHNOLOGIES INC CL C MRGR 006138875 US24703L1035",
+      "value": 43550620.0
+    },
+    {
+      "rank": 32,
       "ticker": "UNITY SOFTWARE INC",
       "value": 42544770.0
     },
     {
-      "rank": 37,
+      "rank": 33,
       "ticker": "ROUNDHILL T-REX 2X LONG DRAM DAILY TARGET ETF",
-      "value": 41773848.0
+      "value": 42038943.0
     },
     {
-      "rank": 38,
+      "rank": 34,
       "ticker": "WALMART INC",
       "value": 36916611.0
     },
     {
-      "rank": 39,
+      "rank": 35,
+      "ticker": "MARVELL TECHNOLOGY INC",
+      "value": 35647487.0
+    },
+    {
+      "rank": 36,
+      "ticker": "ALPHABET INC CL C CHAN 39527405649 US38259P7069",
+      "value": 32820174.0
+    },
+    {
+      "rank": 37,
       "ticker": "ATLASSIAN CORP",
       "value": 31526706.0
     },
     {
-      "rank": 40,
+      "rank": 38,
       "ticker": "STRIVE INC SPLR 2640969890002 US8629451027",
       "value": 30906269.0
     },
     {
-      "rank": 41,
-      "ticker": "ALPHABET INC CL C CHAN 39527405649 US38259P7069",
-      "value": 29386096.0
+      "rank": 39,
+      "ticker": "TESLA INC",
+      "value": 27460242.0
     },
     {
-      "rank": 42,
-      "ticker": "APPLIED OPTOELECTRONICS INC",
-      "value": 28668956.0
-    },
-    {
-      "rank": 43,
+      "rank": 40,
       "ticker": "SPDR SP 500 ETF TRUST",
       "value": 24636075.0
     },
     {
-      "rank": 44,
+      "rank": 41,
       "ticker": "GE Vernova",
       "value": 24334422.0
     },
     {
-      "rank": 45,
+      "rank": 42,
+      "ticker": "II-VI INCORPORATED Com CHAN 009623241 US9021041085",
+      "value": 21600547.0
+    },
+    {
+      "rank": 43,
       "ticker": "TWIST BIOSCIENCE CORP",
       "value": 19637079.0
     },
     {
-      "rank": 46,
+      "rank": 44,
       "ticker": "THERMO FISHER SCIENTIFIC INC",
       "value": 18665072.0
     },
     {
-      "rank": 47,
-      "ticker": "DATADOG INC CL A",
-      "value": 18038493.0
+      "rank": 45,
+      "ticker": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
+      "value": 18318995.0
     },
     {
-      "rank": 48,
+      "rank": 46,
       "ticker": "NIKE INC CL B",
       "value": 16427935.0
     },
     {
-      "rank": 49,
+      "rank": 47,
       "ticker": "COINBASE GLOBAL INC",
       "value": 16047308.0
     },
     {
-      "rank": 50,
+      "rank": 48,
       "ticker": "NEOS NASDAQ 100 HIGH INCOME ETF",
       "value": 15995156.0
     },
     {
-      "rank": 51,
+      "rank": 49,
       "ticker": "ROBINHOOD MARKETS INC",
       "value": 15185913.0
     },
     {
-      "rank": 52,
-      "ticker": "ROCKET LAB CORPORATION COM USD0.0001 MRGR 978814817 US7731221062",
-      "value": 14840133.0
-    },
-    {
-      "rank": 53,
+      "rank": 50,
       "ticker": "SERVICENOW INC",
       "value": 14799075.0
     },
     {
-      "rank": 54,
+      "rank": 51,
       "ticker": "CROWDSTRIKE HOLDINGS INC CL A",
       "value": 14591765.0
     },
     {
-      "rank": 55,
+      "rank": 52,
       "ticker": "DIREXION DAILY 20 YEAR PLUS DRX DLY 20+ YR TREAS BULL 3X SPLR 953438320 US25459W5408",
       "value": 14494544.0
     },
     {
-      "rank": 56,
+      "rank": 53,
       "ticker": "CLOUDFLARE INC",
       "value": 13488928.0
     },
     {
-      "rank": 57,
+      "rank": 54,
       "ticker": "RETO ECO-SOLUTIONS, INC. SPLR 2641242618002 VGG752711330",
       "value": 13163050.0
     },
     {
-      "rank": 58,
+      "rank": 55,
       "ticker": "ENERGY SELECT SECTOR SPDR ETF",
       "value": 12812345.0
     },
     {
-      "rank": 59,
-      "ticker": "MODERNA INC",
-      "value": 12809406.0
-    },
-    {
-      "rank": 60,
+      "rank": 56,
       "ticker": "FIGS INC CL A",
       "value": 11766324.0
     },
     {
-      "rank": 61,
+      "rank": 57,
+      "ticker": "NUSCALE POWER CORP CL A MRGR 009185329 KYG8377A1085",
+      "value": 11618283.0
+    },
+    {
+      "rank": 58,
       "ticker": "Circle Internet",
       "value": 11122210.0
     },
     {
-      "rank": 62,
-      "ticker": "DIGITALOCEAN HOLDINGS INC",
-      "value": 10116703.0
+      "rank": 59,
+      "ticker": "MODERNA INC",
+      "value": 10983951.0
     },
     {
-      "rank": 63,
+      "rank": 60,
       "ticker": "TEMA PHOTNCS ETF",
       "value": 9990769.0
     },
     {
-      "rank": 64,
+      "rank": 61,
       "ticker": "CEREBRAS SYSTEMS INC",
       "value": 9416491.0
     },
     {
-      "rank": 65,
+      "rank": 62,
       "ticker": "AKAMAI TECHNOLOGIES INC",
       "value": 9254887.0
     },
     {
-      "rank": 66,
+      "rank": 63,
       "ticker": "NETFLIX INC",
       "value": 9214830.0
     },
     {
-      "rank": 67,
+      "rank": 64,
       "ticker": "VOLATILITY SHARES TRUST 2X ETHER ETF NEW SPLR 974476707 US92864M4006",
-      "value": 8739533.0
+      "value": 8319929.0
     },
     {
-      "rank": 68,
+      "rank": 65,
       "ticker": "MATCH GROUP INC",
       "value": 8216155.0
     },
     {
-      "rank": 69,
+      "rank": 66,
       "ticker": "JABIL INC",
       "value": 8189115.0
     },
     {
-      "rank": 70,
-      "ticker": "WESTERN DIGITAL CORP",
-      "value": 7882356.0
-    },
-    {
-      "rank": 71,
+      "rank": 67,
       "ticker": "REALTY INCOME CORP",
       "value": 7408872.0
     },
     {
-      "rank": 72,
+      "rank": 68,
       "ticker": "ARISTA NETWORKS",
       "value": 7343257.0
     },
     {
-      "rank": 73,
+      "rank": 69,
       "ticker": "ISHARES MSCI USA QUALITY FACTOR ETF",
       "value": 7239701.0
     },
     {
-      "rank": 74,
+      "rank": 70,
+      "ticker": "CREDO TECHNOLOGY GROUP HOLDING LTD",
+      "value": 7194179.0
+    },
+    {
+      "rank": 71,
       "ticker": "MicroSectors Gold Miners 3X Leveraged ETN",
       "value": 7101600.0
     },
     {
-      "rank": 75,
+      "rank": 72,
       "ticker": "PROSHARES ULTRASHORT BLOOMBE SPLR 2641896468002 US74347Y7976",
       "value": 6359767.0
     },
     {
-      "rank": 76,
+      "rank": 73,
       "ticker": "VISTRA CORP",
       "value": 6178598.0
     },
     {
-      "rank": 77,
+      "rank": 74,
       "ticker": "COUPANG INC",
       "value": 6126356.0
     },
     {
-      "rank": 78,
+      "rank": 75,
       "ticker": "OKTA INC",
       "value": 6079023.0
     },
     {
-      "rank": 79,
+      "rank": 76,
       "ticker": "SCHRODINGER INC",
       "value": 5730393.0
     },
     {
-      "rank": 80,
+      "rank": 77,
       "ticker": "CISCO SYSTEMS INC",
       "value": 5690775.0
     },
     {
-      "rank": 81,
+      "rank": 78,
       "ticker": "FIRST SOLAR INC",
       "value": 5589771.0
     },
     {
-      "rank": 82,
+      "rank": 79,
       "ticker": "QUALCOMM INC",
       "value": 5564618.0
     },
     {
-      "rank": 83,
+      "rank": 80,
       "ticker": "STERLING INFRASTRUCTURE ORD",
       "value": 5175734.0
     },
     {
-      "rank": 84,
+      "rank": 81,
       "ticker": "PROSHARES ULTRA BITCOIN ETF",
       "value": 5120108.0
     },
     {
-      "rank": 85,
+      "rank": 82,
       "ticker": "US TREASRY 3 ETF",
       "value": 5045058.0
     },
     {
-      "rank": 86,
+      "rank": 83,
       "ticker": "RUBRIK INC",
       "value": 4992542.0
     },
     {
-      "rank": 87,
+      "rank": 84,
       "ticker": "SCORPIO GOLD CORPORATION",
       "value": 4929348.0
     },
     {
-      "rank": 88,
+      "rank": 85,
       "ticker": "ISHARES SHORT TREASURY BOND ETF",
       "value": 4903535.0
     },
     {
-      "rank": 89,
+      "rank": 86,
       "ticker": "PLANET LABS PBC",
       "value": 4644211.0
     },
     {
-      "rank": 90,
+      "rank": 87,
       "ticker": "NRG ENERGY INC",
       "value": 4631278.0
     },
     {
-      "rank": 91,
+      "rank": 88,
       "ticker": "PROSHARES SHORT QQQ PROSHARES SHORT QQQ SPLR 958153966 US74347B7148",
       "value": 4520378.0
     },
     {
-      "rank": 92,
+      "rank": 89,
       "ticker": "BERKSHIRE HATHAWAY INC CL B",
       "value": 4485176.0
     },
     {
-      "rank": 93,
+      "rank": 90,
       "ticker": "STERLING INFRASTRUCTURE INC",
       "value": 4482574.0
     },
     {
-      "rank": 94,
+      "rank": 91,
       "ticker": "GOPRO INC CL A",
       "value": 4462848.0
     },
     {
-      "rank": 95,
+      "rank": 92,
       "ticker": "HEWLETT PACKARD ENTERPRISE CO",
       "value": 4457049.0
     },
     {
-      "rank": 96,
+      "rank": 93,
       "ticker": "RAYTECH HLDG LTD COM USD0.0001 (POST SPLIT) SPLR 986927361 VGG7385S1011",
       "value": 4322266.0
     },
     {
-      "rank": 97,
+      "rank": 94,
+      "ticker": "PROSHARES ULTRAPRO SHORT QQ ULTRAPRO SHORT QQQ NEW SPLR 987751298 US74347G1922",
+      "value": 4029877.0
+    },
+    {
+      "rank": 95,
+      "ticker": "NOVABAY PHARMACEUTICALS INC",
+      "value": 3952810.0
+    },
+    {
+      "rank": 96,
       "ticker": "KLA CORP",
       "value": 3879235.0
     },
     {
-      "rank": 98,
+      "rank": 97,
       "ticker": "KRATOS DEFENSE AND SECURITY SOLUTIONS INC",
       "value": 3786780.0
     },
     {
-      "rank": 99,
+      "rank": 98,
       "ticker": "PROSHARES ULTRA GOLD ETF",
       "value": 3761204.0
     },
     {
-      "rank": 100,
+      "rank": 99,
       "ticker": "AXT INC",
       "value": 3711188.0
     },
     {
+      "rank": 100,
+      "ticker": "ALECTOR INC",
+      "value": 3671677.0
+    },
+    {
       "rank": 101,
+      "ticker": "STABLECOINX INC",
+      "value": 3460832.0
+    },
+    {
+      "rank": 102,
       "ticker": "INNODATA CORP",
       "value": 3019768.0
     },
     {
-      "rank": 102,
+      "rank": 103,
       "ticker": "ALTC ACQUISITION CORP",
       "value": 2510385.0
     },
     {
-      "rank": 103,
+      "rank": 104,
       "ticker": "KLOTHO NEUROSCIENCES, INC. SPLR 2641921890002 US49876K1034",
       "value": 2474633.0
     },
     {
-      "rank": 104,
+      "rank": 105,
       "ticker": "PLUG POWER INC",
       "value": 2411295.0
     },
     {
-      "rank": 105,
+      "rank": 106,
       "ticker": "ELI LILLY & CO",
       "value": 2390720.0
     },
     {
-      "rank": 106,
+      "rank": 107,
       "ticker": "VALERO ENERGY CORP",
       "value": 2218568.0
     },
     {
-      "rank": 107,
+      "rank": 108,
       "ticker": "SPDR BLOOMBERG 1-3 MONTH T-BILL ETF SPLR 005544852 US78464A6800",
       "value": 1979948.0
     },
     {
-      "rank": 108,
-      "ticker": "NUSCALE POWER CORP CL A MRGR 009185329 KYG8377A1085",
-      "value": 1653235.0
-    },
-    {
       "rank": 109,
-      "ticker": "DIREXION DAILY GOOGL BULL 1.5X SHARES",
-      "value": 1540098.0
+      "ticker": "APPLIED OPTOELECTRONICS INC",
+      "value": 1978342.0
     },
     {
       "rank": 110,
-      "ticker": "SEAGATE TECHNOLOGY HOLDINGS PLC",
-      "value": 1484630.0
+      "ticker": "DIREXION DAILY GOOGL BULL 1.5X SHARES",
+      "value": 1540098.0
     },
     {
       "rank": 111,
@@ -564,8 +564,8 @@
     },
     {
       "rank": 112,
-      "ticker": "CREDO TECHNOLOGY GROUP HOLDING LTD",
-      "value": 1220450.0
+      "ticker": "WESTERN DIGITAL CORP",
+      "value": 1389160.0
     },
     {
       "rank": 113,
@@ -629,158 +629,158 @@
     },
     {
       "rank": 125,
-      "ticker": "PROSHARES ULTRAPRO SHORT QQ ULTRAPRO SHORT QQQ NEW SPLR 987751298 US74347G1922",
-      "value": -1163849.0
-    },
-    {
-      "rank": 126,
       "ticker": "2X LONG VIX FUTURES ETF SPLR 2642159196002 US92891H6062",
       "value": -1173497.0
     },
     {
-      "rank": 127,
+      "rank": 126,
       "ticker": "VANECK SEMICONDUCTOR ETF CHAN 39610601171 US57060U2336",
       "value": -1262141.0
     },
     {
-      "rank": 128,
+      "rank": 127,
       "ticker": "TRADR 2X LONG BE DAILY ETF",
       "value": -1444840.0
     },
     {
-      "rank": 129,
+      "rank": 128,
       "ticker": "ISHARES SILVER TRUST ETF",
       "value": -1823346.0
     },
     {
-      "rank": 130,
+      "rank": 129,
       "ticker": "PROSHARES ULTRA BLOOMBERG NA SPLR 2641897474002 US74347Y7489",
       "value": -1918104.0
     },
     {
-      "rank": 131,
+      "rank": 130,
       "ticker": "GRANITESHARES 2X SHORT SK HYNIX DAILY ETF",
       "value": -1956597.0
     },
     {
-      "rank": 132,
+      "rank": 131,
       "ticker": "UNIQURE NV",
       "value": -2319278.0
     },
     {
-      "rank": 133,
+      "rank": 132,
       "ticker": "HYPERLIQUID STRATEGIES INC HYPERLIQUID STRATEGIES MRGR 987362934 US83548R4020",
       "value": -2336645.0
     },
     {
-      "rank": 134,
+      "rank": 133,
       "ticker": "SUPER MICRO COMPUTER INC",
       "value": -2446911.0
     },
     {
-      "rank": 135,
+      "rank": 134,
       "ticker": "VANECK GOLD MINERS ETF",
       "value": -2867794.0
     },
     {
-      "rank": 136,
+      "rank": 135,
       "ticker": "CoreWeave Inc",
       "value": -3435063.0
     },
     {
-      "rank": 137,
+      "rank": 136,
       "ticker": "GRNTSHR 2X ETF",
       "value": -3496720.0
     },
     {
-      "rank": 138,
+      "rank": 137,
       "ticker": "INVESTMENT MANAGERS SERIES TRADR 2X SRT TSLA DLY ETF OCT 25 (R SPLR 986291209 US46144X1239",
       "value": -3535049.0
     },
     {
-      "rank": 139,
+      "rank": 138,
       "ticker": "SALESFORCE INC",
       "value": -3616088.0
     },
     {
-      "rank": 140,
+      "rank": 139,
       "ticker": "T-REX 2X LONG MSTR DAILY TARGET ETF",
       "value": -4006534.0
     },
     {
-      "rank": 141,
+      "rank": 140,
       "ticker": "CENTRUS ENERGY CORP EXOF 39427300450 US90333E2072",
       "value": -4391613.0
     },
     {
-      "rank": 142,
+      "rank": 141,
       "ticker": "TERADYNE INC",
       "value": -4458589.0
     },
     {
-      "rank": 143,
+      "rank": 142,
       "ticker": "AIRBNB INC CL A",
       "value": -4705362.0
     },
     {
-      "rank": 144,
+      "rank": 143,
       "ticker": "ASE TECHNOLOGY HOLDING CO LTD ADR MRGR 005002721 US00756M4042",
       "value": -4802487.0
     },
     {
-      "rank": 145,
+      "rank": 144,
       "ticker": "AMERICAN EXPRESS CO",
       "value": -4807252.0
     },
     {
-      "rank": 146,
+      "rank": 145,
       "ticker": "KINETIK HOLDINGS INC CL A SPLR 007139859 US02215L1008",
       "value": -4834863.0
     },
     {
-      "rank": 147,
+      "rank": 146,
       "ticker": "ABCELLERA BIOLOGICS INC",
       "value": -4841926.0
     },
     {
-      "rank": 148,
+      "rank": 147,
       "ticker": "ISHARES CORE SP 500 ETF",
       "value": -5332812.0
     },
     {
-      "rank": 149,
+      "rank": 148,
       "ticker": "ALMONTY INDUSTRIES INC SPLR 974747780",
       "value": -5380649.0
     },
     {
-      "rank": 150,
+      "rank": 149,
       "ticker": "PFIZER INC",
       "value": -5408874.0
     },
     {
-      "rank": 151,
+      "rank": 150,
       "ticker": "UNUSUAL MACHINES INC /US UNUSUAL MACHINES INC /US EXOF 959249906 PRU9154A2086",
       "value": -5418487.0
     },
     {
-      "rank": 152,
+      "rank": 151,
       "ticker": "ICHOR HOLDINGS LTD",
       "value": -5453411.0
     },
     {
-      "rank": 153,
+      "rank": 152,
       "ticker": "JP MORGAN BETABUILDERS US EQUITY ETF",
       "value": -5518585.0
     },
     {
+      "rank": 153,
+      "ticker": "GNTSH 2XPLTR ETF",
+      "value": -5954503.0
+    },
+    {
       "rank": 154,
-      "ticker": "NOVABAY PHARMACEUTICALS INC",
-      "value": -6068643.0
+      "ticker": "PENGUIN SOLUTIONS INC",
+      "value": -6126823.0
     },
     {
       "rank": 155,
-      "ticker": "PENGUIN SOLUTIONS INC",
-      "value": -6126823.0
+      "ticker": "DATADOG INC CL A",
+      "value": -6144236.0
     },
     {
       "rank": 156,
@@ -794,8 +794,8 @@
     },
     {
       "rank": 158,
-      "ticker": "APPLE INC",
-      "value": -9071867.0
+      "ticker": "SEAGATE TECHNOLOGY HOLDINGS PLC",
+      "value": -7907459.0
     },
     {
       "rank": 159,
@@ -819,28 +819,28 @@
     },
     {
       "rank": 163,
-      "ticker": "GNTSH 2XPLTR ETF",
-      "value": -13688869.0
-    },
-    {
-      "rank": 164,
-      "ticker": "SNDSK CRP ORD WI",
-      "value": -14439006.0
-    },
-    {
-      "rank": 165,
       "ticker": "ARM HOLDINGS PLC SPON ADS EACH REP 1 ORD SHS",
       "value": -15046608.0
     },
     {
-      "rank": 166,
+      "rank": 164,
       "ticker": "LEVERAGE SHARES 2X LONG NBIS DAILY ETF",
       "value": -15237506.0
     },
     {
-      "rank": 167,
+      "rank": 165,
       "ticker": "ISHARES MSCI ACWI ETF",
       "value": -16190414.0
+    },
+    {
+      "rank": 166,
+      "ticker": "DXN MU BUL2X ETF",
+      "value": -18349882.0
+    },
+    {
+      "rank": 167,
+      "ticker": "INTEL CORP",
+      "value": -19593903.0
     },
     {
       "rank": 168,
@@ -849,133 +849,138 @@
     },
     {
       "rank": 169,
+      "ticker": "APPLE INC",
+      "value": -21603012.0
+    },
+    {
+      "rank": 170,
       "ticker": "TIDAL TRUST II YIELDMAX MRNA OPT INCOME ST SPLR 988041332 US88634T4691",
       "value": -21788104.0
     },
     {
-      "rank": 170,
+      "rank": 171,
       "ticker": "INVESCO PHLX SEMICONDUCTOR ETF",
       "value": -22451251.0
     },
     {
-      "rank": 171,
-      "ticker": "DXN MU BUL2X ETF",
-      "value": -23156649.0
-    },
-    {
       "rank": 172,
-      "ticker": "MONGODB INC",
-      "value": -25282506.0
-    },
-    {
-      "rank": 173,
       "ticker": "SPDR PORTFOLIO INTERMEDIATE TERM CORPORATE BOND ETF",
       "value": -29774440.0
     },
     {
+      "rank": 173,
+      "ticker": "MONGODB INC",
+      "value": -35468669.0
+    },
+    {
       "rank": 174,
-      "ticker": "ROUNDHILL MEMORY ETF",
-      "value": -34058975.0
+      "ticker": "TWILIO INC CL A",
+      "value": -36415460.0
     },
     {
       "rank": 175,
+      "ticker": "DIREXION DAILY MSFT BULL 1 5X ETF",
+      "value": -36956052.0
+    },
+    {
+      "rank": 176,
+      "ticker": "ROUNDHILL MEMORY ETF",
+      "value": -38206980.0
+    },
+    {
+      "rank": 177,
       "ticker": "REDDIT INC",
       "value": -39352328.0
     },
     {
-      "rank": 176,
-      "ticker": "DIREXION DAILY MSFT BULL 1 5X ETF",
-      "value": -48185874.0
-    },
-    {
-      "rank": 177,
-      "ticker": "TRADR 2X LONG SNDK DAILY ETF",
-      "value": -49221254.0
-    },
-    {
       "rank": 178,
-      "ticker": "TWILIO INC CL A",
-      "value": -49686485.0
+      "ticker": "TRADR 2X LONG SNDK DAILY ETF",
+      "value": -43288399.0
     },
     {
       "rank": 179,
-      "ticker": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
-      "value": -50638169.0
+      "ticker": "SNDSK CRP ORD WI",
+      "value": -44643721.0
     },
     {
       "rank": 180,
+      "ticker": "GRANITESHARES 2.0X LONG NVDA DAILY ETF",
+      "value": -57076009.0
+    },
+    {
+      "rank": 181,
       "ticker": "SILICON MOTION TECHNOLOGY CORP ADR",
       "value": -61564975.0
     },
     {
-      "rank": 181,
+      "rank": 182,
       "ticker": "AEGLEA BIOTHERAPEUTICS INC AEGLEA BIOTHERAPEUTICS INC SPLR 946418209 US00773J1034",
       "value": -65539384.0
     },
     {
-      "rank": 182,
-      "ticker": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": -74680657.0
-    },
-    {
       "rank": 183,
-      "ticker": "CATERPILLAR INC",
-      "value": -77094724.0
+      "ticker": "DIREXION DAILY PLTR BULL 2X SHARES",
+      "value": -76709410.0
     },
     {
       "rank": 184,
-      "ticker": "DIREXION DAILY PLTR BULL 2X SHARES",
-      "value": -102446104.0
+      "ticker": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": -79797697.0
     },
     {
       "rank": 185,
+      "ticker": "CATERPILLAR INC",
+      "value": -87397023.0
+    },
+    {
+      "rank": 186,
       "ticker": "APPLIED MATERIALS INC",
       "value": -108949557.0
     },
     {
-      "rank": 186,
-      "ticker": "MICRON TECHNOLOGY INC",
-      "value": -128757832.0
-    },
-    {
       "rank": 187,
       "ticker": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": -156836120.0
+      "value": -129176452.0
     },
     {
       "rank": 188,
-      "ticker": "ADVANCED MICRO DEVICES INC",
-      "value": -156936740.0
+      "ticker": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -142321305.0
     },
     {
       "rank": 189,
-      "ticker": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -165476275.0
+      "ticker": "MICRON TECHNOLOGY INC",
+      "value": -152232399.0
     },
     {
       "rank": 190,
-      "ticker": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
-      "value": -297012045.0
+      "ticker": "ADVANCED MICRO DEVICES INC",
+      "value": -186923111.0
     },
     {
       "rank": 191,
-      "ticker": "NVIDIA CORP",
-      "value": -366957123.0
+      "ticker": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": -302563901.0
     },
     {
       "rank": 192,
       "ticker": "MICROSOFT CORP",
-      "value": -367587229.0
+      "value": -341166256.0
     },
     {
       "rank": 193,
-      "ticker": "PALANTIR TECHNOLOGIES INC CL A",
-      "value": -628603049.0
+      "ticker": "NVIDIA CORP",
+      "value": -359549139.0
     },
     {
       "rank": 194,
+      "ticker": "PALANTIR TECHNOLOGIES INC CL A",
+      "value": -453366214.0
+    },
+    {
+      "rank": 195,
       "ticker": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": -2286682972.0
+      "value": -1208862350.0
     }
   ]
 }
