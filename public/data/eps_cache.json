@@ -29405,13 +29405,6 @@
   ],
   "APLD": [
     {
-      "d": "2023-04-06",
-      "actual": -0.01,
-      "estimate": -0.04,
-      "surp": 75.0,
-      "revenue": null
-    },
-    {
       "d": "2023-07-24",
       "actual": -0.01,
       "estimate": -0.07,
@@ -29487,6 +29480,13 @@
       "estimate": -0.19,
       "surp": 121.05,
       "revenue": 0.259
+    },
+    {
+      "d": "2026-10-07",
+      "actual": -0.82,
+      "estimate": -0.28,
+      "surp": -190.86,
+      "revenue": null
     }
   ],
   "ACAD": [
