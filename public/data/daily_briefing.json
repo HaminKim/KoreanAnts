@@ -1,55 +1,55 @@
 {
-  "date": "2026-10-09",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-10-10",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXX",
+      "ticker": "SCHD",
       "name": "",
-      "raw_name": "ISHARES SEMICONDUCTOR ETF",
-      "value": 63269010.0,
+      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
+      "value": 229327824.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "",
+      "ticker": "SGOV",
       "name": "",
-      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
-      "value": 60158688.0,
+      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
+      "value": 199181274.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "SCHD",
+      "ticker": "VOO",
       "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 46815057.0,
+      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
+      "value": 164415340.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "AMD",
+      "ticker": "",
       "name": "",
-      "raw_name": "ADVANCED MICRO DEVICES INC",
-      "value": 44164090.0,
+      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
+      "value": 158889176.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "LITE",
+      "ticker": "QQQM",
       "name": "",
-      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": 41623718.0,
+      "raw_name": "INVESCO NASDAQ 100 ETF",
+      "value": 128468109.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
