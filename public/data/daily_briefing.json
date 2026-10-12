@@ -1,7 +1,7 @@
 {
-  "date": "2026-10-12",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-10-13",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXX",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "ISHARES SEMICONDUCTOR ETF",
-      "value": 63269010.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": -60452014.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
-      "value": 60158688.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "TESLA INC",
+      "value": -59592008.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "SCHD",
-      "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 46815057.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "ticker": "DRAM",
+      "name": "DRAM",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": -50022317.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "AMD",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "ADVANCED MICRO DEVICES INC",
-      "value": 44164090.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -28477508.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "LITE",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": 41623718.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "NVIDIA CORP",
+      "value": -23465340.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
