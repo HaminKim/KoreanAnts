@@ -1,57 +1,66 @@
 {
-  "date": "2026-10-13",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-10-14",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
+    {
+      "rank": 1,
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 135551509.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "SCHD",
+      "name": "",
+      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
+      "value": 105234395.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "",
+      "name": "",
+      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
+      "value": 78581962.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
     {
       "rank": 1,
       "ticker": "TQQQ",
       "name": "",
       "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": -60452014.0,
+      "value": -158561746.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "TSLA",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -59592008.0,
+      "raw_name": "MICROSOFT CORP",
+      "value": -76287548.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "DRAM",
-      "name": "DRAM",
-      "raw_name": "ROUNDHILL MEMORY ETF",
-      "value": -50022317.0,
+      "ticker": "SKHY",
+      "name": "SKHY",
+      "raw_name": "SK HYNIX INC SPON ADS EACH REP 0.1 SHS WI",
+      "value": -57678279.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
-      "ticker": "MU",
-      "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -28477508.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "NVDA",
-      "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": -23465340.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
     }
   ]
 }
