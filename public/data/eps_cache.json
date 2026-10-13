@@ -1119,13 +1119,6 @@
   ],
   "WFC": [
     {
-      "d": "2023-10-13",
-      "actual": 1.48,
-      "estimate": 1.24,
-      "surp": 19.62,
-      "revenue": null
-    },
-    {
       "d": "2024-01-12",
       "actual": 1.29,
       "estimate": 1.08,
@@ -1201,6 +1194,13 @@
       "estimate": 1.72,
       "surp": 16.38,
       "revenue": 22.622
+    },
+    {
+      "d": "2026-10-13",
+      "actual": 1.87,
+      "estimate": 1.86,
+      "surp": 0.77,
+      "revenue": null
     }
   ],
   "CLX": [
@@ -1377,13 +1377,6 @@
   ],
   "JPM": [
     {
-      "d": "2023-10-13",
-      "actual": 4.33,
-      "estimate": 3.97,
-      "surp": 9.01,
-      "revenue": null
-    },
-    {
       "d": "2024-01-12",
       "actual": 3.04,
       "estimate": 3.6,
@@ -1459,6 +1452,13 @@
       "estimate": 5.8,
       "surp": 5.86,
       "revenue": 52.852
+    },
+    {
+      "d": "2026-10-13",
+      "actual": 5.75,
+      "estimate": 5.94,
+      "surp": -3.24,
+      "revenue": null
     }
   ],
   "CIFR": [
@@ -7169,13 +7169,6 @@
   ],
   "GS": [
     {
-      "d": "2023-10-17",
-      "actual": 5.47,
-      "estimate": 5.53,
-      "surp": -1.02,
-      "revenue": null
-    },
-    {
       "d": "2024-01-16",
       "actual": 5.48,
       "estimate": 4.27,
@@ -7250,6 +7243,13 @@
       "actual": 20.98,
       "estimate": 14.54,
       "surp": 44.27,
+      "revenue": null
+    },
+    {
+      "d": "2026-10-13",
+      "actual": 17.01,
+      "estimate": 13.09,
+      "surp": 29.98,
       "revenue": null
     }
   ],
@@ -12582,13 +12582,6 @@
   ],
   "UNH": [
     {
-      "d": "2023-10-13",
-      "actual": 6.56,
-      "estimate": 6.35,
-      "surp": 3.34,
-      "revenue": null
-    },
-    {
       "d": "2024-01-12",
       "actual": 6.16,
       "estimate": 5.99,
@@ -12664,6 +12657,13 @@
       "estimate": 4.92,
       "surp": 29.8,
       "revenue": 112.032
+    },
+    {
+      "d": "2026-10-13",
+      "actual": 4.69,
+      "estimate": 4.14,
+      "surp": 13.26,
+      "revenue": null
     }
   ],
   "HCA": [
@@ -28459,13 +28459,6 @@
   ],
   "JNJ": [
     {
-      "d": "2023-10-17",
-      "actual": 2.66,
-      "estimate": 2.52,
-      "surp": 5.54,
-      "revenue": null
-    },
-    {
       "d": "2024-01-23",
       "actual": 2.29,
       "estimate": 2.28,
@@ -28541,6 +28534,13 @@
       "estimate": 2.85,
       "surp": 1.58,
       "revenue": 25.31
+    },
+    {
+      "d": "2026-10-13",
+      "actual": 2.59,
+      "estimate": 2.53,
+      "surp": 2.46,
+      "revenue": null
     }
   ],
   "FANG": [
