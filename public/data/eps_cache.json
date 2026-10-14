@@ -5505,13 +5505,6 @@
   ],
   "BLK": [
     {
-      "d": "2023-10-13",
-      "actual": 10.91,
-      "estimate": 8.34,
-      "surp": 30.76,
-      "revenue": null
-    },
-    {
       "d": "2024-01-12",
       "actual": 9.66,
       "estimate": 8.88,
@@ -5587,6 +5580,13 @@
       "estimate": 12.69,
       "surp": 9.62,
       "revenue": 7.084
+    },
+    {
+      "d": "2026-10-14",
+      "actual": 15.93,
+      "estimate": 14.3,
+      "surp": 11.39,
+      "revenue": null
     }
   ],
   "MRK": [
@@ -8359,13 +8359,6 @@
   ],
   "PGR": [
     {
-      "d": "2023-10-31",
-      "actual": 2.11,
-      "estimate": 1.71,
-      "surp": 23.44,
-      "revenue": null
-    },
-    {
       "d": "2024-01-24",
       "actual": 2.97,
       "estimate": 2.43,
@@ -8441,6 +8434,13 @@
       "estimate": 4.84,
       "surp": 0.33,
       "revenue": 23.599
+    },
+    {
+      "d": "2026-10-13",
+      "actual": 4.6,
+      "estimate": 4.41,
+      "surp": 4.18,
+      "revenue": null
     }
   ],
   "CGNX": [
@@ -25284,13 +25284,6 @@
   ],
   "MS": [
     {
-      "d": "2023-10-18",
-      "actual": 1.38,
-      "estimate": 1.29,
-      "surp": 6.75,
-      "revenue": null
-    },
-    {
       "d": "2024-01-16",
       "actual": 0.85,
       "estimate": 1.03,
@@ -25366,6 +25359,13 @@
       "estimate": 2.93,
       "surp": 17.94,
       "revenue": 19.884
+    },
+    {
+      "d": "2026-10-14",
+      "actual": 3.03,
+      "estimate": 2.92,
+      "surp": 3.91,
+      "revenue": null
     }
   ],
   "AAPL": [
@@ -25972,13 +25972,6 @@
   ],
   "BAC": [
     {
-      "d": "2023-10-17",
-      "actual": 0.9,
-      "estimate": 0.82,
-      "surp": 10.05,
-      "revenue": null
-    },
-    {
       "d": "2024-01-12",
       "actual": 0.35,
       "estimate": 0.64,
@@ -26053,6 +26046,13 @@
       "actual": 1.21,
       "estimate": 1.12,
       "surp": 7.74,
+      "revenue": null
+    },
+    {
+      "d": "2026-10-14",
+      "actual": 0.91,
+      "estimate": 1.11,
+      "surp": -17.93,
       "revenue": null
     }
   ],

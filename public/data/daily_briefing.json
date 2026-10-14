@@ -1,40 +1,13 @@
 {
-  "date": "2026-10-14",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-10-15",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
-    {
-      "rank": 1,
-      "ticker": "SOXL",
-      "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 135551509.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "SCHD",
-      "name": "",
-      "raw_name": "SCHWAB US DIVIDEND EQUITY ETF",
-      "value": 105234395.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "",
-      "name": "",
-      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
-      "value": 78581962.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
     {
       "rank": 1,
       "ticker": "TQQQ",
@@ -61,6 +34,24 @@
       "value": -57678279.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "NVDA",
+      "name": "",
+      "raw_name": "NVIDIA CORP",
+      "value": -56991026.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "DRAM",
+      "name": "DRAM",
+      "raw_name": "ROUNDHILL MEMORY ETF",
+      "value": -54807193.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
