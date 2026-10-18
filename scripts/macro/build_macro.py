@@ -27,6 +27,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from registry import CATEGORIES, EVENTS, INDICATORS, RELATIONS, S as SERIES  # noqa: E402
+from explain import EXPLAIN  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "processed" / "macro" / "raw"
@@ -335,6 +336,7 @@ def build_catalog():
             "no": ind["no"], "id": ind["id"], "cat": ind["cat"], "name": ind["name"], "ko": ind["ko"],
             "pri": ind["pri"], "status": status, "main": ind["main"], "subs": ind["subs"],
             "what": ind["what"], "read": ind["read"], "caution": ind.get("caution"),
+            "easy": EXPLAIN.get(ind["id"]),
             "relations": rel,
         })
 

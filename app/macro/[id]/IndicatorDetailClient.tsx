@@ -165,7 +165,20 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
         {/* DATA / KNOWLEDGE */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-[5fr_2fr] gap-6">
           <section>
-            <H2>해석</H2>
+            {ind.easy && (
+              <div className="mb-7">
+                <H2>쉽게 이해하기</H2>
+                <dl className="space-y-3">
+                  {([['무엇인가요?', ind.easy.what], ['왜 중요한가요?', ind.easy.why], ['어떻게 읽나요?', ind.easy.read]] as const).map(([q, a]) => (
+                    <div key={q}>
+                      <dt className="text-xs font-bold" style={{ color: 'var(--accent)' }}>{q}</dt>
+                      <dd className="mt-0.5 text-sm leading-relaxed" style={{ color: 'var(--ink)' }}>{a}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
+            <H2>핵심 포인트</H2>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--ink)' }}>{ind.read}</p>
             {ind.caution && <p className="mt-2 text-xs leading-relaxed" style={{ color: 'var(--down-text)' }}>주의 · {ind.caution}</p>}
 

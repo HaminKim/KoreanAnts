@@ -39,6 +39,7 @@ export interface Indicator {
   what: string
   read: string
   caution: string | null
+  easy?: { what: string; why: string; read: string } | null   // 쉽게 이해하기 (scripts/macro/explain.py)
   relations: Relation[]
 }
 

@@ -234,11 +234,13 @@ function Workspace({ cat }: { cat: Catalog }) {
                   {ind && (
                     <>
                       <p className={`mt-1 text-[11px] leading-relaxed ${detail === 'short' ? 'line-clamp-2' : ''}`} style={{ color: 'var(--ink-2)' }}>
-                        {ind.what}{detail === 'mid' ? ` — ${ind.read}` : ''}
+                        {detail === 'short' ? ind.what : ind.easy?.what ?? ind.what}
                       </p>
+                      {detail === 'mid' && <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink)' }}>{ind.read}</p>}
                       {detail === 'long' && (
                         <>
-                          <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink)' }}>{ind.read}</p>
+                          {ind.easy && <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink-2)' }}><b>왜 중요한가요?</b> {ind.easy.why}</p>}
+                          <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink)' }}><b>어떻게 읽나요?</b> {ind.easy?.read ?? ind.read}</p>
                           {ind.caution && <p className="mt-1 text-[10px] leading-relaxed" style={{ color: 'var(--down-text)' }}>{ind.caution}</p>}
                           <p className="mt-1 text-[10px]" style={{ color: 'var(--ink-mute)' }}>{s.units} · {freqNote(s)} · {s.first?.slice(0, 4)}~</p>
                         </>
