@@ -92,7 +92,7 @@ export class BandsPrimitive implements IPanePrimitive<Time> {
           }
           if (row < 0) continue
           placed.push({ x1: lx, x2: lx + w, row })
-          ctx.fillStyle = b.kind === 'rec' ? this.style.recLabel : this.style.evLabel
+          ctx.fillStyle = this.style.evLabel
           ctx.textBaseline = 'bottom'
           ctx.fillText(b.label, lx, mediaSize.height - 3 - row * 12)
         }
