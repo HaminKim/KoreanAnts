@@ -2,7 +2,7 @@
 
 // 06. MACRO WORKSPACE — Stack Mode
 //  좌 5/7: 지표마다 자기 차트를 세로로 나열 (겹치지 않음). 모든 차트는 하나의 공통 X축, 눈금은 맨 아래.
-//  우 2/7: 불러온 지표 '모두'의 설명 (지표 수와 관계없이 전체 설명 — 차트가 세로로 길어지므로 공간 충분)
+//  우 2/7: 불러온 지표 '모두'의 설명 — 각 차트 옆에 같은 높이로 정렬, 높이(S/M/L)에 맞춰 내용 양 조절
 //  분석 구성은 이름을 붙여 브라우저에 저장/불러오기.
 
 import Link from 'next/link'
@@ -213,35 +213,39 @@ function Workspace({ cat }: { cat: Catalog }) {
           <DataNotes cat={cat} keys={keys} />
         </div>
 
-        {/* 우: 지표 설명 (모두 표시, N 에 따라 길이 조절) */}
-        <aside className="min-w-0">
-          <div className="text-xs font-bold pb-1 mb-2" style={{ color: 'var(--ink)', borderBottom: '1px solid var(--ink)' }}>
-            불러온 지표 {n}개
-          </div>
-          <div className="space-y-3">
-            {layers.map((l, i) => {
-              const s = cat.series[l.key]
-              const ind = indicatorOfSeries(cat, l.key)
-              if (!s) return null
-              return (
-                <div key={`${l.key}-${i}`} className="pb-2" style={{ borderBottom: '1px solid var(--hairline)' }}>
-                  <div className="flex items-center gap-1.5">
-                    <span className="inline-block w-3 h-[3px] shrink-0" style={{ background: layerColor(i, dark) }} />
-                    {ind ? (
-                      <Link href={`/macro/${ind.id}`} className="text-xs font-bold hover:underline" style={{ color: 'var(--ink)' }}>{s.label}</Link>
-                    ) : <span className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{s.label}</span>}
-                  </div>
-                  {(() => {
-                    const easy = easyOf(cat, l.key)
-                    if (!easy) return ind ? <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink-2)' }}>{ind.what}</p> : null
-                    return <div className="mt-1"><EasyBlock easy={easy} size="sm" /></div>
-                  })()}
-                  <p className="mt-1 text-[10px]" style={{ color: 'var(--ink-mute)' }}>{s.units} · {freqNote(s)} · {s.first?.slice(0, 4)}~</p>
+        {/* 우: 지표 설명 — PC 에서는 각 차트(pane) 옆에 같은 높이로 정렬. 높이(S/M/L)에 맞춰 내용 양 조절 */}
+        <aside className="min-w-0 pt-1" style={{ borderTop: '1px solid var(--ink)' }}>
+          {n === 0 && <p className="text-[11px] pt-2" style={{ color: 'var(--ink-mute)' }}>지표를 불러오면 여기에 정의와 해석이 표시됩니다.</p>}
+          {layers.map((l, i) => {
+            const s = cat.series[l.key]
+            const ind = indicatorOfSeries(cat, l.key)
+            if (!s) return null
+            const easy = easyOf(cat, l.key)
+            // 모바일(차트 아래로 내려감)은 높이 제한 없이 전체, PC 는 S=의미 / M=+▲▼ / L=전체(+참고·단위)
+            const tier: 'S' | 'M' | 'L' = mobile ? 'L' : paneH <= 120 ? 'S' : paneH <= 160 ? 'M' : 'L'
+            return (
+              <div key={`${l.key}-${i}`}
+                className="px-1 py-1.5 overflow-y-auto"
+                style={{
+                  height: mobile ? undefined : paneH + 1,          // pane 높이 + 구분선 1px → 차트와 같은 줄
+                  borderBottom: '1px solid var(--hairline)',
+                  scrollbarWidth: 'thin',
+                }}>
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-block w-3 h-[3px] shrink-0" style={{ background: layerColor(i, dark) }} />
+                  {ind ? (
+                    <Link href={`/macro/${ind.id}`} className="text-xs font-bold hover:underline truncate" style={{ color: 'var(--ink)' }}>{s.label}</Link>
+                  ) : <span className="text-xs font-bold truncate" style={{ color: 'var(--ink)' }}>{s.label}</span>}
                 </div>
-              )
-            })}
-            {n === 0 && <p className="text-[11px]" style={{ color: 'var(--ink-mute)' }}>지표를 불러오면 여기에 정의와 해석이 표시됩니다.</p>}
-          </div>
+                {easy ? (
+                  <div className="mt-1">
+                    <EasyBlock easy={easy} size="sm" showUpDown={tier !== 'S'} showNote={tier === 'L'} />
+                  </div>
+                ) : ind ? <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink-2)' }}>{ind.what}</p> : null}
+                {tier === 'L' && <p className="mt-1 text-[10px]" style={{ color: 'var(--ink-mute)' }}>{s.units} · {freqNote(s)} · {s.first?.slice(0, 4)}~</p>}
+              </div>
+            )
+          })}
         </aside>
       </div>
 

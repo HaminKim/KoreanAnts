@@ -289,19 +289,25 @@ export function ShadeToggles({ shade, onChange }: { shade: Shade; onChange: (s: 
 }
 
 // ── 쉽게 이해하기: 의미 → ▲ 올라가면 → ▼ 떨어지면 (+참고) ──
-export function EasyBlock({ easy, size = 'md', showNote = true }: { easy: Easy; size?: 'md' | 'sm'; showNote?: boolean }) {
+export function EasyBlock({ easy, size = 'md', showNote = true, showUpDown = true }: {
+  easy: Easy; size?: 'md' | 'sm'; showNote?: boolean; showUpDown?: boolean
+}) {
   const t = size === 'md' ? 'text-sm' : 'text-[11px]'
   return (
     <div className={`${t} leading-relaxed`}>
       <p style={{ color: 'var(--ink)' }}>{easy.means}</p>
-      <p className="mt-1.5 flex gap-1.5">
-        <span className="shrink-0 font-bold" style={{ color: 'var(--up-text)' }}>▲ 올라가면</span>
-        <span style={{ color: 'var(--ink-2)' }}>{easy.up}</span>
-      </p>
-      <p className="mt-1 flex gap-1.5">
-        <span className="shrink-0 font-bold" style={{ color: 'var(--down-text)' }}>▼ 떨어지면</span>
-        <span style={{ color: 'var(--ink-2)' }}>{easy.down}</span>
-      </p>
+      {showUpDown && (
+        <>
+          <p className="mt-1.5 flex gap-1.5">
+            <span className="shrink-0 font-bold" style={{ color: 'var(--up-text)' }}>▲ 올라가면</span>
+            <span style={{ color: 'var(--ink-2)' }}>{easy.up}</span>
+          </p>
+          <p className="mt-1 flex gap-1.5">
+            <span className="shrink-0 font-bold" style={{ color: 'var(--down-text)' }}>▼ 떨어지면</span>
+            <span style={{ color: 'var(--ink-2)' }}>{easy.down}</span>
+          </p>
+        </>
+      )}
       {showNote && easy.note && <p className="mt-1.5" style={{ color: 'var(--ink-mute)' }}>참고 · {easy.note}</p>}
     </div>
   )
