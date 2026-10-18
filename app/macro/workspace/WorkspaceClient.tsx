@@ -2,7 +2,7 @@
 
 // 06. MACRO WORKSPACE — Stack Mode
 //  좌 5/7: 지표마다 자기 차트를 세로로 나열 (겹치지 않음). 모든 차트는 하나의 공통 X축, 눈금은 맨 아래.
-//  우 2/7: 불러온 지표 '모두'의 설명. N 이 적으면 길게, 많으면 자동으로 짧게.
+//  우 2/7: 불러온 지표 '모두'의 설명 (지표 수와 관계없이 전체 설명 — 차트가 세로로 길어지므로 공간 충분)
 //  분석 구성은 이름을 붙여 브라우저에 저장/불러오기.
 
 import Link from 'next/link'
@@ -122,7 +122,6 @@ function Workspace({ cat }: { cat: Catalog }) {
   const doLoad = (p: Preset) => { apply(p.state); setLoadOpen(false); flash(`'${p.name}' 불러옴`) }
 
   const n = layers.length
-  const detail: 'long' | 'mid' | 'short' = n <= 2 ? 'long' : n <= 5 ? 'mid' : 'short'
 
   return (
     <div className="macro-bleed pb-16">
@@ -235,10 +234,9 @@ function Workspace({ cat }: { cat: Catalog }) {
                   {(() => {
                     const easy = easyOf(cat, l.key)
                     if (!easy) return ind ? <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink-2)' }}>{ind.what}</p> : null
-                    if (detail === 'short') return <p className="mt-1 text-[11px] leading-relaxed line-clamp-2" style={{ color: 'var(--ink-2)' }}>{easy.means}</p>
-                    return <div className="mt-1"><EasyBlock easy={easy} size="sm" showNote={detail === 'long'} /></div>
+                    return <div className="mt-1"><EasyBlock easy={easy} size="sm" /></div>
                   })()}
-                  {detail === 'long' && <p className="mt-1 text-[10px]" style={{ color: 'var(--ink-mute)' }}>{s.units} · {freqNote(s)} · {s.first?.slice(0, 4)}~</p>}
+                  <p className="mt-1 text-[10px]" style={{ color: 'var(--ink-mute)' }}>{s.units} · {freqNote(s)} · {s.first?.slice(0, 4)}~</p>
                 </div>
               )
             })}
