@@ -8,6 +8,12 @@ on:
     - cron: "10 22 * * *"
     - cron: "40 14 * * *"
   workflow_dispatch: {}
+  # renewal 브랜치에서는 데이터 커밋 없이 API 키 동작만 확인
+  push:
+    branches: [renewal]
+    paths:
+      - '.github/workflows/macro-sync.yml'
+      - 'scripts/macro/**'
 
 permissions:
   contents: write
@@ -33,10 +39,15 @@ jobs:
       - name: Install deps
         run: pip install pandas requests yfinance xlrd
 
+      - name: Check FRED API key
+        run: python scripts/macro/check_fred_key.py
+
       - name: Build macro data
+        if: github.event_name != 'push'
         run: python scripts/macro/build_macro.py
 
       - name: Commit and push
+        if: github.event_name != 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
