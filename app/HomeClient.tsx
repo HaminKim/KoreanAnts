@@ -65,7 +65,7 @@ export default function HomeClient() {
         supabase.auth.signInWithOAuth({
             provider: 'kakao',
             options: {
-                redirectTo: `${location.origin}/auth/callback`,
+                redirectTo: `${location.origin}/auth/callback?next=/ants`,
                 queryParams: { scope: 'profile_nickname,profile_image' },
             },
         });
@@ -89,7 +89,7 @@ export default function HomeClient() {
     params.set('side', side);
     params.set('days', String(days));
     params.set('top', String(topN));
-    router.replace(`/?${params.toString()}`, { scroll: false });
+    router.replace(`/ants?${params.toString()}`, { scroll: false });
   }, [side, days, topN, router]);
 
   // 5. 데이터 로드

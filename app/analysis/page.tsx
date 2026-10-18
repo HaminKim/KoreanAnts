@@ -158,9 +158,9 @@ function AnalysisContent() {
     <main className="min-h-screen bg-white flex flex-col relative overflow-hidden">
       
       <div className="p-4">
-        <Link href="/" className="inline-flex items-center text-gray-500 hover:text-black transition">
+        <Link href="/ants" className="inline-flex items-center text-gray-500 hover:text-black transition">
           <svg className="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-          메인으로
+          개미지수로
         </Link>
       </div>
 
