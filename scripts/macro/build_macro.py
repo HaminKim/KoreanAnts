@@ -172,7 +172,12 @@ def _monthly_fred(sid):
 
 
 def fetch_derived(sid):
-    """계산 시리즈. REAL10Y_EST = 월평균 10년물(GS10) − CPI YoY"""
+    """계산 시리즈. REAL10Y_EST = 월평균 10년물(GS10) − CPI YoY
+                   HHDEBT_DPI  = 가계부채(CMDEBT, 백만 $) ÷ 명목 가처분소득(DPI, 십억 $ 연율) × 100"""
+    if sid == "HHDEBT_DPI":
+        debt, _ = fetch_fred("CMDEBT")
+        dpi, _ = fetch_fred("DPI")
+        return (debt / 1000 / dpi * 100).dropna(), {"url": "https://fred.stlouisfed.org/series/CMDEBT"}
     if sid == "REAL10Y_EST":
         gs10 = _monthly_fred("GS10")
         cpi = _monthly_fred("CPIAUCSL")

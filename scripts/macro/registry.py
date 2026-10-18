@@ -108,6 +108,25 @@ series("DRCCLACBS", "Credit Card Delinquency Rate", "%", "Q", ["level", "chg"], 
        since="연준이 은행 신용카드 연체율을 1991년부터 집계해요")
 series("CORCCACBS", "Credit Card Charge-off Rate", "%", "Q", ["level", "chg"], dec=2,
        since="연준이 은행 신용카드 상각률을 1985년부터 집계해요")
+# 가계부채 (연준 Z.1 금융계정 · 가계부채 상환부담 · 은행 연체율)
+series("HHDEBT_DPI", "가처분소득 대비 가계부채", "% (부채 ÷ 연간 가처분소득)", "Q", ["level", "chg"], src="derived", dec=1,
+       note="가계·비영리단체 부채 잔액(CMDEBT)을 같은 분기의 명목 가처분소득(DPI, 연율)으로 나눈 값. 모기지·카드·학자금·자동차 대출을 모두 포함해요")
+series("CMDEBT", "Household Debt (총액)", "백만 달러", "Q", ["yoy", "level", "qoq"], dec=0,
+       note="가계·비영리단체의 부채증권·대출 잔액 (연준 Z.1 금융계정). 모기지 포함")
+series("HHMSDODNS", "Household Mortgage Debt", "백만 달러", "Q", ["yoy", "level", "qoq"], dec=0,
+       note="가계·비영리단체의 주택담보대출 잔액 (연준 Z.1). 가계부채의 약 3분의 2")
+TDSP_SINCE = "연준이 2023년에 산출 방식을 개편하면서 현행 시리즈가 2005년부터 제공돼요"
+series("TDSP", "Household Debt Service Ratio", "% (가처분소득 대비)", "Q", ["level", "chg"], dec=2,
+       note="가계가 한 해 갚아야 하는 원금+이자가 가처분소득에서 차지하는 비율", since=TDSP_SINCE)
+series("MDSP", "Mortgage Debt Service Ratio", "% (가처분소득 대비)", "Q", ["level", "chg"], dec=2, since=TDSP_SINCE)
+series("CDSP", "Consumer Debt Service Ratio", "% (가처분소득 대비)", "Q", ["level", "chg"], dec=2,
+       note="모기지를 뺀 소비자신용(카드·자동차·학자금 등)의 원리금 부담", since=TDSP_SINCE)
+series("DRSFRMACBS", "Mortgage Delinquency Rate", "%", "Q", ["level", "chg"], dec=2,
+       note="은행이 보유한 1~4가구 주택담보대출 중 30일 이상 연체 비율",
+       since="연준이 은행 주택담보대출 연체율을 1991년부터 집계해요")
+series("DRCLACBS", "Consumer Loan Delinquency Rate", "%", "Q", ["level", "chg"], dec=2,
+       note="은행 소비자대출(카드·자동차 등) 전체의 30일 이상 연체 비율",
+       since="연준이 은행 소비자대출 연체율을 1987년부터 집계해요")
 
 # 물가
 series("CPIAUCSL", "CPI", "지수 (1982-84=100)", "M", ["yoy", "mom", "level"], dec=2)
@@ -268,6 +287,22 @@ INDICATORS = [
          what="소비자 상환 스트레스",
          read="리볼빙 증가보다 실제 스트레스를 확인하는 데 유용한 후행 지표다.",
          caution="분기 데이터이며 월별로 보간하지 않는다."),
+    # #34~36 가계부채 (2026-10-18 추가 — 33개 원안 외)
+    dict(no=34, id="hh_debt", cat="consumer", name="Household Debt to Income", ko="가계부채 (가처분소득 대비)", pri="A",
+         main=["HHDEBT_DPI"], subs=["CMDEBT", "HHMSDODNS"],
+         what="가계가 소득에 비해 빚을 얼마나 지고 있는가 (모기지 포함 전체 가계부채)",
+         read="부채 총액은 거의 항상 늘어나므로 소득 대비 비율로 본다. 2000년대 중반 급등 → 2008년 이후 디레버리징이 대표적 사이클이다.",
+         caution="분기 데이터이며 월별로 보간하지 않는다. 비영리단체 부채가 함께 집계된다."),
+    dict(no=35, id="debt_service", cat="consumer", name="Household Debt Service Ratio", ko="가계 원리금 상환 부담", pri="A",
+         main=["TDSP"], subs=["MDSP", "CDSP"],
+         what="소득 중 빚 갚는 데 들어가는 몫 — 금리와 부채가 소비 여력을 얼마나 깎는가",
+         read="부채 규모가 같아도 금리가 오르면 부담이 커진다. 상승하면 소비 여력이 줄어드는 방향이다.",
+         caution="현행 시리즈는 2005년부터. 분기 데이터이며 발표가 한 분기 이상 늦다."),
+    dict(no=36, id="mort_delinq", cat="consumer", name="Mortgage & Consumer Loan Delinquency", ko="주담대·소비자대출 연체율", pri="B",
+         main=["DRSFRMACBS"], subs=["DRCLACBS"],
+         what="가계부채가 실제로 부실화되고 있는가",
+         read="원리금 부담 상승 → 연체율 상승 순서로 나타나는 경우가 많다. 2008년 금융위기는 주담대 연체 급등에서 시작됐다.",
+         caution="은행 보유 대출 기준이라 비은행·증권화 대출은 빠져 있다. 분기 데이터이며 월별로 보간하지 않는다."),
 
     # ── 물가 ──
     dict(no=4, id="cpi", cat="inflation", name="CPI", ko="소비자물가지수", pri="A",
@@ -399,6 +434,13 @@ RELATIONS = [
     ("food_pce", "decomposes", "real_pce"),
     ("revolving", "affects", "real_pce"),
     ("cc_delinq", "lags", "revolving"),
+    ("hh_debt", "affects", "real_pce"),
+    ("revolving", "decomposes", "hh_debt"),
+    ("fedfunds", "affects", "debt_service"),
+    ("hh_debt", "drives", "debt_service"),
+    ("debt_service", "leads", "mort_delinq"),
+    ("debt_service", "leads", "cc_delinq"),
+    ("mort_delinq", "confirms", "housing"),
     ("nfp", "confirms", "unrate"),
     ("core_capex", "leads", "gdp"),
     ("corp_profits", "affects", "sp500"),
