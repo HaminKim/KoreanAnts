@@ -31,10 +31,12 @@ function Msg({ children }: { children: React.ReactNode }) {
 
 function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
   const chartRef = useRef<MacroChartHandle>(null)
+  // 처음엔 대표 선 1개만. 두 번째 메인(예: 10Y-3M)과 보조 지표는 버튼으로 추가
   const defaults = useMemo<Layer[]>(
-    () => ind.main.filter(k => cat.series[k]).map(k => newLayer(k, cat.series[k])),
+    () => ind.main.filter(k => cat.series[k]).slice(0, 1).map(k => newLayer(k, cat.series[k])),
     [cat, ind],
   )
+  const extras = useMemo(() => ind.main.slice(1).concat(ind.subs).filter(k => cat.series[k]), [cat, ind])
   // URL ?l=… 로 상태 복원 (공유·뒤로가기 대비). Detail 은 catalog 로드 후 브라우저에서만 마운트되므로 window 사용 가능
   const [layers, setLayers] = useState<Layer[]>(() => {
     const ls = decodeLayers(new URLSearchParams(window.location.search).get('l')).filter(l => cat.series[l.key])
@@ -110,8 +112,8 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
           <Chip on={has('SPX')} onClick={() => toggle('SPX')}>S&amp;P500 비교</Chip>
           <Chip on={has('NDX')} onClick={() => toggle('NDX')}>Nasdaq-100 비교</Chip>
           <Chip onClick={() => setPicker(true)}>+ 지표 불러오기</Chip>
-          {ind.subs.filter(k => cat.series[k]).length > 0 && <span className="ml-2" />}
-          {ind.subs.filter(k => cat.series[k]).map(k => (
+          {extras.length > 0 && <span className="ml-2" />}
+          {extras.map(k => (
             <Chip key={k} on={has(k)} onClick={() => toggle(k)} title="보조/연결 지표">{has(k) ? '✓ ' : '+ '}{cat.series[k].label}</Chip>
           ))}
         </div>
@@ -172,11 +174,11 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
                 <EasyBlock easy={ind.easy} />
               </div>
             )}
-            {ind.subs.some(k => cat.seriesEasy?.[k]) && (
+            {extras.some(k => cat.seriesEasy?.[k]) && (
               <div className="mb-7">
                 <H2>함께 보는 지표</H2>
                 <div className="space-y-4">
-                  {ind.subs.filter(k => cat.seriesEasy?.[k] && cat.series[k]).map(k => (
+                  {extras.filter(k => cat.seriesEasy?.[k]).map(k => (
                     <div key={k}>
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{cat.series[k].label}</span>
