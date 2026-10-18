@@ -51,6 +51,7 @@ function Workspace({ cat }: { cat: Catalog }) {
   const [layers, setLayers] = useState<Layer[]>(init.layers)
   const [years, setYears] = useState<number | null>(init.years)
   const [paneH, setPaneH] = useState(init.paneH || 160)
+  const [logScale, setLogScale] = useState(!!init.log)
   const [chartKey, setChartKey] = useState(0)          // 프리셋 불러오기 시 차트 재생성 (저장된 구간 복원)
   const [initRange, setInitRange] = useState<{ from: string; to: string } | null>(init.range)
   const rangeRef = useRef<{ from: string; to: string } | null>(init.range)
@@ -65,6 +66,7 @@ function Workspace({ cat }: { cat: Catalog }) {
     setLayers(s.layers)
     setYears(s.years)
     setPaneH(s.paneH || 160)
+    setLogScale(!!s.log)
     setInitRange(s.range)
     rangeRef.current = s.range
     setChartKey(k => k + 1)
@@ -76,14 +78,14 @@ function Workspace({ cat }: { cat: Catalog }) {
   }, [])
 
   const snapshot = useCallback((): WsState => ({
-    v: 1, mode: 'stack', layers, years, paneH, range: chartRef.current?.getRange() ?? rangeRef.current,
-  }), [layers, years, paneH])
+    v: 1, mode: 'stack', layers, years, paneH, log: logScale, range: chartRef.current?.getRange() ?? rangeRef.current,
+  }), [layers, years, paneH, logScale])
 
   // 자동 저장 (현재 작업 상태)
   useEffect(() => {
     const t = setTimeout(() => saveCurrent(snapshot()), 400)
     return () => clearTimeout(t)
-  }, [layers, years, paneH, snapshot])
+  }, [layers, years, paneH, logScale, snapshot])
   const onRange = useCallback((r: { from: string; to: string } | null) => {
     rangeRef.current = r
   }, [])
@@ -169,6 +171,8 @@ function Workspace({ cat }: { cat: Catalog }) {
         <span className="ml-2" />
         <Label>높이</Label>
         {HEIGHTS.map(h => <Chip key={h.label} on={paneH === h.h} onClick={() => setPaneH(h.h)}>{h.label}</Chip>)}
+        <Chip className="ml-2" on={logScale} onClick={() => setLogScale(v => !v)}
+          title="로그 축: 같은 거리 = 같은 % 변화. 값이 모두 양수인 차트에만 적용 (YoY·스프레드 등은 일반 축 유지)">로그</Chip>
         <span className="ml-2" />
         <ShadeToggles shade={shade} onChange={setShade} />
         {anyShift && <Chip className="ml-2" onClick={() => setLayers(ls => ls.map(l => ({ ...l, shift: 0 })))}>시간 이동 초기화</Chip>}
@@ -192,7 +196,7 @@ function Workspace({ cat }: { cat: Catalog }) {
             <MacroChart
               key={chartKey} ref={chartRef} mode="stack" layers={chartLayers}
               paneHeight={mobile ? Math.min(paneH, 150) : paneH}
-              initialRange={initRange} initialYears={years} onRangeChange={onRange} bands={bands}
+              initialRange={initRange} initialYears={years} onRangeChange={onRange} bands={bands} logScale={logScale}
               renderLegend={(l, i, color, hover) => (
                 <LayerLegend layer={l} color={color} hover={hover} compact
                   onTf={tf => update(i, { tf })}

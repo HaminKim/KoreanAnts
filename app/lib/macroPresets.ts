@@ -8,6 +8,7 @@ export interface WsState {
   years: number | null                  // 기간 버튼 (null = 전체)
   range: { from: string; to: string } | null   // 실제 보고 있던 구간 (확대/이동 결과)
   paneH: number                         // 차트 하나 높이(px)
+  log?: boolean                         // 로그 축
 }
 
 export interface Preset { name: string; savedAt: string; state: WsState; builtin?: boolean }

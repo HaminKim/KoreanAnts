@@ -45,6 +45,7 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
   )
   const [years, setYears] = useState<number | null>(null)
   const [picker, setPicker] = useState(false)
+  const [logScale, setLogScale] = useState(() => new URLSearchParams(window.location.search).get('log') === '1')
   const mobile = useIsMobile()
   const [shade, setShade] = useShade()
   const bands = useMemo(() => shadeBands(cat, shade), [cat, shade])
@@ -54,9 +55,10 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
     const same = encodeLayers(layers) === encodeLayers(defaults)
     if (!same) sp.set('l', encodeLayers(layers))
     if (yMode === 'normalized') sp.set('y', 'n')
+    if (logScale) sp.set('log', '1')
     const qs = sp.toString()
     window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname)
-  }, [layers, yMode, defaults])
+  }, [layers, yMode, logScale, defaults])
 
   const keys = layers.map(l => l.key)
   const { map, errors } = useSeriesMap(keys, loadSeries)
@@ -120,6 +122,8 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
           <Label>Y축</Label>
           <Chip on={yMode === 'independent'} onClick={() => setYMode('independent')} title="선마다 자기 축 (첫 번째=오른쪽, 두 번째=왼쪽, 나머지는 범례 값)">독립 축</Chip>
           <Chip on={yMode === 'normalized'} onClick={() => setYMode('normalized')} title="겹치는 기간의 평균·표준편차로 표준화(z-score)">정규화</Chip>
+          <Chip on={logScale} disabled={yMode === 'normalized'} onClick={() => setLogScale(v => !v)}
+            title="로그 축: 같은 거리 = 같은 % 변화. 값이 모두 양수인 축에만 적용 (YoY·스프레드 등은 일반 축 유지)">로그</Chip>
           <span className="ml-3" />
           <ShadeToggles shade={shade} onChange={setShade} />
           {anyShift && (
@@ -135,7 +139,7 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
         <div className="mt-3 pt-1" style={{ borderTop: '1px solid var(--ink)' }}>
           {chartLayers.length ? (
             <MacroChart
-              ref={chartRef} mode="overlay" layers={chartLayers} yMode={yMode} initialYears={years} bands={bands}
+              ref={chartRef} mode="overlay" layers={chartLayers} yMode={yMode} initialYears={years} bands={bands} logScale={logScale}
               height={mobile ? 360 : 480}
               renderLegend={(l, i, color, hover) => (
                 <LayerLegend layer={l} color={color} hover={hover}

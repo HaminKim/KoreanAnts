@@ -10,7 +10,7 @@
 
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import {
-  createChart, LineSeries, ColorType, CrosshairMode, LineStyle,
+  createChart, LineSeries, ColorType, CrosshairMode, LineStyle, PriceScaleMode,
   type IChartApi, type ISeriesApi, type Time, type MouseEventParams,
 } from 'lightweight-charts'
 import {
@@ -48,6 +48,7 @@ interface Props {
   onRangeChange?: (r: { from: string; to: string } | null) => void
   renderLegend: (layer: ChartLayer, index: number, color: string, hover: HoverInfo) => React.ReactNode
   bands?: ShadeBand[]        // 경기침체/이벤트 음영 (표시할 것만 넘김)
+  logScale?: boolean         // 로그 축 (해당 축의 값이 모두 양수일 때만 적용, 정규화 모드에선 무시)
 }
 
 function bandStyle(): BandStyle {
@@ -98,7 +99,7 @@ const TIME_AXIS_H = 28
 const SEP = 1
 
 const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
-  { mode, layers, yMode = 'independent', height = 420, paneHeight = 170, initialRange, initialYears = null, onRangeChange, renderLegend, bands = [] },
+  { mode, layers, yMode = 'independent', height = 420, paneHeight = 170, initialRange, initialYears = null, onRangeChange, renderLegend, bands = [], logScale = false },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null)
@@ -211,8 +212,8 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
 
   // 레이어 구성이 바뀔 때만 다시 그림 (hover 등은 무시)
   const sig = useMemo(
-    () => layers.map(l => `${l.id}|${l.key}|${l.tf}|${l.shift}`).join(';') + `#${mode}#${yMode}#${paneHeight}#${dark}`,
-    [layers, mode, yMode, paneHeight, dark],
+    () => layers.map(l => `${l.id}|${l.key}|${l.tf}|${l.shift}`).join(';') + `#${mode}#${yMode}#${paneHeight}#${dark}#${logScale}`,
+    [layers, mode, yMode, paneHeight, dark, logScale],
   )
 
   // ── 시리즈 (재)구성 ──
@@ -252,6 +253,9 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
       return gi === 0 ? 'right' : gi === 1 ? 'left' : `ov${gi}`
     }
 
+    // 축별 최솟값 (로그 축 적용 가능 여부 판단)
+    const scaleMin = new Map<string, { pane: number; id: string; min: number }>()
+
     let first: string | null = null, last: string | null = null
     layers.forEach((l, i) => {
       const color = layerColor(i, dark)
@@ -278,6 +282,10 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
           : { type: 'custom', formatter: (v: number) => fmtNum(v, l.series, l.tf as Tf), minMove: 0.0001 },
       }, pane)
       s.setData(data.map(p => ({ time: p.time as Time, value: p.value })))
+      const sk = `${pane}|${scaleId}`
+      const mn = data.reduce((m, p) => Math.min(m, p.value), Infinity)
+      const prevMin = scaleMin.get(sk)
+      scaleMin.set(sk, { pane, id: scaleId, min: Math.min(prevMin?.min ?? Infinity, mn) })
       seriesRef.current.push(s)
       if (data.length) {
         if (!first || data[0].time < first) first = data[0].time
@@ -301,6 +309,13 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
       const panes = ch.panes()
       panes.forEach(p => p.setStretchFactor(1))   // 모든 pane 동일 높이 (차트 전체 높이 = n × paneHeight)
       panes.forEach((_, i) => ch.priceScale('right', i).applyOptions({ scaleMargins: { top: 0.22, bottom: 0.08 } }))
+    }
+
+    // 로그 축: 요청 + 정규화 아님 + 그 축의 값이 모두 양수일 때만
+    const normalizedNow = mode === 'overlay' && yMode === 'normalized'
+    for (const { pane, id, min } of scaleMin.values()) {
+      const useLog = logScale && !normalizedNow && min > 0
+      ch.priceScale(id, pane).applyOptions({ mode: useLog ? PriceScaleMode.Logarithmic : PriceScaleMode.Normal })
     }
 
     // 음영 primitive: pane 마다 붙이고, 라벨은 맨 아래 pane 에만

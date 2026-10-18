@@ -61,6 +61,22 @@ series("NEWORDER", "Core Capital Goods Orders", "백만 달러", "M", ["yoy", "m
 series("ANXAUO", "Core Capital Goods Unfilled Orders", "백만 달러", "M", ["yoy", "mom", "level"], dec=0,
        note="비국방 자본재 (항공기 제외) 미충족 주문")
 
+# 지역 연준 서베이 (ISM 대체 — 공개 데이터). 확산지수 = 증가 응답 % − 감소 응답 %, 0 이 기준선
+DIFF = "확산지수 (증가−감소 응답 %, 0=기준)"
+series("GACDFSA066MSFRBPHI", "필라델피아 연준 제조업 (현재 경기)", DIFF, "M", ["level", "avg_3m", "chg"],
+       note="Philadelphia Fed Manufacturing Business Outlook Survey, General Activity (계절조정). 매월 셋째 목요일 발표")
+series("NOCDFSA066MSFRBPHI", "필라델피아 연준 제조업 (신규주문)", DIFF, "M", ["level", "avg_3m", "chg"])
+series("GACDINA066MNFRBNY", "뉴욕 연준 엠파이어 제조업 (현재 경기)", DIFF, "M", ["level", "avg_3m", "chg"],
+       note="NY Fed Empire State Manufacturing Survey, General Business Conditions (계절조정). 매월 중순 발표")
+series("NOCDINA066MNFRBNY", "뉴욕 연준 엠파이어 제조업 (신규주문)", DIFF, "M", ["level", "avg_3m", "chg"])
+series("BACTSAMFRBDAL", "댈러스 연준 제조업 (생산활동)", DIFF, "M", ["level", "avg_3m", "chg"],
+       note="Dallas Fed Texas Manufacturing Outlook Survey, Business Activity (계절조정)")
+series("TSSOSBACTSAMFRBDAL", "댈러스 연준 서비스업 (경기활동)", DIFF, "M", ["level", "avg_3m", "chg"],
+       note="Dallas Fed Texas Service Sector Outlook Survey, General Business Activity (계절조정)")
+series("TSSOSREVSAMFRBDAL", "댈러스 연준 서비스업 (매출)", DIFF, "M", ["level", "avg_3m", "chg"])
+series("GABNDIF066MSFRBPHI", "필라델피아 연준 비제조업 (지역 경기)", DIFF, "M", ["level", "avg_3m", "chg"],
+       note="Philadelphia Fed Nonmanufacturing Business Outlook Survey, General Activity—Region (계절조정)")
+
 # 고용
 series("UNRATE", "Unemployment Rate", "%", "M", ["level", "chg"])
 series("SAHMREALTIME", "Sahm Rule (실시간)", "%p", "M", ["level"], dec=2,
@@ -156,16 +172,20 @@ INDICATORS = [
          what="경제 전체 성장률과 경기 결과 확인",
          read="GDP는 '확인' 성격이 강한 지표다. 주식은 GDP보다 먼저 움직이는 경우가 많다.",
          caution="분기 데이터이며 월별로 보간하지 않는다. 발표 후에도 여러 차례 수정된다."),
-    dict(no=2, id="ism_mfg", cat="growth", name="ISM Manufacturing PMI", ko="ISM 제조업 PMI", pri="A",
-         main=[], subs=[], status="pending",
-         what="제조업 확장/수축과 경기 전환",
-         read="50 상회=확장, 하회=수축. 수준보다 방향과 New Orders가 중요하다.",
-         caution="ISM 민간 데이터로 공개 재배포 라이선스 확인 전까지 준비 중."),
-    dict(no=3, id="ism_svc", cat="growth", name="ISM Services PMI", ko="ISM 서비스업 PMI", pri="A",
-         main=[], subs=[], status="pending",
-         what="미국 서비스업 경기",
-         read="미국 경제에서 서비스 비중이 커 제조업 PMI와 보완적으로 본다.",
-         caution="ISM 민간 데이터로 공개 재배포 라이선스 확인 전까지 준비 중."),
+    # #2·#3 ISM PMI 는 라이선스 문제로 지역 연준 서베이로 대체 (2026-10-18 결정)
+    dict(no=2, id="regional_mfg", cat="growth", name="Regional Fed Manufacturing Surveys", ko="지역 연준 제조업 서베이", pri="A",
+         main=["GACDFSA066MSFRBPHI", "GACDINA066MNFRBNY"],
+         subs=["NOCDFSA066MSFRBPHI", "NOCDINA066MNFRBNY", "BACTSAMFRBDAL"],
+         what="제조업 확장/수축과 경기 전환 (ISM 제조업 PMI 대체)",
+         read="0 상회=확장, 하회=수축. ISM보다 2주가량 먼저 발표돼 ISM의 방향을 미리 보여준다. "
+              "수준보다 방향, 그리고 신규주문이 중요하다. 지역 서베이라 변동성이 커 3개월 평균을 함께 본다.",
+         caution="ISM PMI(50 기준)와 달리 0이 기준선인 확산지수다. 필라델피아 1968년~, 엠파이어 2001년~, 댈러스 2004년~."),
+    dict(no=3, id="regional_svc", cat="growth", name="Regional Fed Services Surveys", ko="지역 연준 서비스업 서베이", pri="A",
+         main=["TSSOSBACTSAMFRBDAL", "GABNDIF066MSFRBPHI"],
+         subs=["TSSOSREVSAMFRBDAL"],
+         what="미국 서비스업 경기 (ISM 서비스업 PMI 대체)",
+         read="미국 경제에서 서비스 비중이 커 제조업 서베이와 보완적으로 본다. 0 상회=확장, 하회=수축.",
+         caution="0이 기준선인 확산지수. 역사가 짧다 (댈러스 2007년~, 필라델피아 2011년~). 지역 표본이라 전국 대표성은 ISM보다 낮다."),
     dict(no=17, id="corp_profits", cat="growth", name="Corporate Profits", ko="기업이익", pri="A",
          main=["CP"], subs=[],
          what="기업이익 사이클",
@@ -295,11 +315,7 @@ INDICATORS = [
          main=["NFCIRISK"], subs=["VIXCLS"],
          what="실제 금융시장 위험·스트레스",
          read="0보다 높을수록 평소보다 위험이 높은 방향이다."),
-    dict(no=23, id="aaii", cat="sentiment", name="AAII Bull-Bear Spread", ko="AAII 강세-약세 스프레드", pri="B",
-         main=[], subs=[], status="pending",
-         what="개인투자자 낙관/비관",
-         read="극단값은 역발상 정보가 될 수 있으나 단독 신호로 쓰지 않는다.",
-         caution="AAII 민간 데이터로 재배포 조건 확인 전까지 준비 중."),
+    # #23 AAII Bull-Bear Spread 는 제외 (2026-10-18 결정 — 라이선스)
     dict(no=25, id="hh_equity", cat="sentiment", name="Household Equity Exposure", ko="가계 주식 노출도", pri="B",
          main=["BOGZ1FL153064486Q"], subs=[],
          what="가계 금융자산 중 주식 비중",
@@ -364,6 +380,9 @@ RELATIONS = [
     ("hh_equity", "confirms", "cape"),
     ("tga", "affects", "nfci_risk"),
     ("housing", "leads", "gdp"),
+    ("regional_mfg", "leads", "mt_sales"),
+    ("regional_mfg", "leads", "core_capex"),
+    ("regional_svc", "confirms", "real_pce"),
 ]
 
 
