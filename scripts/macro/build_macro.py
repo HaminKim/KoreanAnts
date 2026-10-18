@@ -26,7 +26,7 @@ import pandas as pd
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from registry import CATEGORIES, INDICATORS, RELATIONS, S as SERIES  # noqa: E402
+from registry import CATEGORIES, EVENTS, INDICATORS, RELATIONS, S as SERIES  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "processed" / "macro" / "raw"
@@ -103,29 +103,48 @@ SHILLER_PAGE = "https://shillerdata.com/"
 SHILLER_FALLBACK = "http://www.econ.yale.edu/~shiller/data/ie_data.xls"
 
 
-def fetch_shiller(_sid):
+_SHILLER_BOOK = None
+
+
+def _shiller_sheet():
+    """ie_data.xls 를 한 번만 받아 재사용 (CAPE·P/E 공용)"""
+    global _SHILLER_BOOK
     import re
     import xlrd  # requirements: xlrd
 
-    url = SHILLER_FALLBACK
-    try:
-        html = get(SHILLER_PAGE).text
-        m = re.search(r'//img1\.wsimg\.com/blobby/go/[^"\']+/ie_data\.xls[^"\']*', html)
-        if m:
-            url = "https:" + m.group(0)
-    except Exception as e:  # noqa: BLE001
-        log(f"  ⚠️ shillerdata.com 페이지 실패 → Yale 구버전 사용 ({e})")
-    book = xlrd.open_workbook(file_contents=get(url).content)
-    sh = book.sheet_by_name("Data")
+    if _SHILLER_BOOK is None:
+        url = SHILLER_FALLBACK
+        try:
+            html = get(SHILLER_PAGE).text
+            m = re.search(r"//img1\.wsimg\.com/blobby/go/[^\"']+/ie_data\.xls[^\"']*", html)
+            if m:
+                url = "https:" + m.group(0)
+        except Exception as e:  # noqa: BLE001
+            log(f"  ⚠️ shillerdata.com 페이지 실패 → Yale 구버전 사용 ({e})")
+        book = xlrd.open_workbook(file_contents=get(url).content)
+        _SHILLER_BOOK = (book.sheet_by_name("Data"), url)
+    return _SHILLER_BOOK
+
+
+def fetch_shiller(sid):
+    """sid: CAPE (P/E10, 12열) | PE_TTM (가격 P 1열 ÷ 최근 12개월 이익 E 3열)"""
+    sh, url = _shiller_sheet()
     out = {}
     for i in range(8, sh.nrows):
-        d, cape = sh.cell_value(i, 0), sh.cell_value(i, 12)
-        if not isinstance(d, float) or not isinstance(cape, float):
+        d = sh.cell_value(i, 0)
+        if not isinstance(d, float):
+            continue
+        if sid == "CAPE":
+            v = sh.cell_value(i, 12)
+        else:
+            p, e = sh.cell_value(i, 1), sh.cell_value(i, 3)
+            v = p / e if isinstance(p, float) and isinstance(e, float) and e > 0 else None
+        if not isinstance(v, float):
             continue
         y = int(d)
-        m = int(round((d - y) * 100))
+        m = int(round((d - y) * 100))   # 2026.1 = 10월, 2026.01 = 1월
         if 1 <= m <= 12:
-            out[pd.Timestamp(year=y, month=m, day=1)] = cape
+            out[pd.Timestamp(year=y, month=m, day=1)] = v
     return pd.Series(out).sort_index(), {"url": url}
 
 
@@ -274,6 +293,26 @@ def series_summary(key):
     }
 
 
+def build_recessions(prev):
+    """FRED USREC(NBER 경기침체 월=1) → [{from, to}] (월 단위, to 포함). 실패 시 이전 값 유지"""
+    try:
+        s, _ = fetch_fred("USREC")
+    except Exception as e:  # noqa: BLE001
+        log(f"  ⚠️ USREC 실패 → 이전 경기침체 구간 유지 ({type(e).__name__})")
+        return prev
+    s = s[s.index >= pd.Timestamp(START) - pd.DateOffset(years=5)]
+    out, cur = [], None
+    for d, v in s.items():
+        if v >= 1 and cur is None:
+            cur = d
+        elif v < 1 and cur is not None:
+            out.append({"from": cur.strftime("%Y-%m"), "to": (d - pd.DateOffset(months=1)).strftime("%Y-%m")})
+            cur = None
+    if cur is not None:
+        out.append({"from": cur.strftime("%Y-%m"), "to": s.index[-1].strftime("%Y-%m"), "ongoing": True})
+    return out
+
+
 def build_catalog():
     by_id = {i["id"]: i for i in INDICATORS}
     used = []
@@ -299,8 +338,17 @@ def build_catalog():
             "relations": rel,
         })
 
+    prev_rec = []
+    if (OUT_DIR / "catalog.json").exists():
+        try:
+            prev_rec = json.loads((OUT_DIR / "catalog.json").read_text(encoding="utf-8")).get("recessions", [])
+        except Exception:  # noqa: BLE001
+            pass
+
     catalog = {
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "recessions": build_recessions(prev_rec),
+        "events": [{"id": e["id"], "name": e["name"], "from": e["frm"], "to": e["to"], "note": e["note"]} for e in EVENTS],
         "start": START,
         "tfLabel": TF_LABEL,
         "categories": CATEGORIES,

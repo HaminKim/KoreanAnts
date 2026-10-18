@@ -11,7 +11,7 @@ import {
   loadCatalog, loadSeries, encodeLayers, decodeLayers, fmtNum, fmtPeriod, freqNote, tfLabel, REL_LABEL,
 } from '@/app/lib/macro'
 import MacroChart, { type ChartLayer, type MacroChartHandle } from '@/app/components/macro/MacroChart'
-import { Chip, Label, LayerLegend, PERIODS, Picker, newLayer, useIsMobile, useSeriesMap } from '@/app/components/macro/ui'
+import { Chip, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
 
 export default function IndicatorDetailClient({ id }: { id: string }) {
   const [cat, setCat] = useState<Catalog | null>(null)
@@ -46,6 +46,8 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
   const [years, setYears] = useState<number | null>(null)
   const [picker, setPicker] = useState(false)
   const mobile = useIsMobile()
+  const [shade, setShade] = useShade()
+  const bands = useMemo(() => shadeBands(cat, shade), [cat, shade])
 
   useEffect(() => {
     const sp = new URLSearchParams()
@@ -118,6 +120,8 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
           <Label>Y축</Label>
           <Chip on={yMode === 'independent'} onClick={() => setYMode('independent')} title="선마다 자기 축 (첫 번째=오른쪽, 두 번째=왼쪽, 나머지는 범례 값)">독립 축</Chip>
           <Chip on={yMode === 'normalized'} onClick={() => setYMode('normalized')} title="겹치는 기간의 평균·표준편차로 표준화(z-score)">정규화</Chip>
+          <span className="ml-3" />
+          <ShadeToggles shade={shade} onChange={setShade} />
           {anyShift && (
             <Chip onClick={() => setLayers(ls => ls.map(l => ({ ...l, shift: 0 })))} className="ml-2">시간 이동 초기화</Chip>
           )}
@@ -131,7 +135,7 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
         <div className="mt-3 pt-1" style={{ borderTop: '1px solid var(--ink)' }}>
           {chartLayers.length ? (
             <MacroChart
-              ref={chartRef} mode="overlay" layers={chartLayers} yMode={yMode} initialYears={years}
+              ref={chartRef} mode="overlay" layers={chartLayers} yMode={yMode} initialYears={years} bands={bands}
               height={mobile ? 360 : 480}
               renderLegend={(l, i, color, hover) => (
                 <LayerLegend layer={l} color={color} hover={hover}

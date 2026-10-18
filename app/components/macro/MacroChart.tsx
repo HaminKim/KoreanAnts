@@ -17,6 +17,9 @@ import {
   type Layer, type Point, type SeriesData, type Tf,
   points, zscore, fmtNum, shiftDate, LINE_COLORS_DARK, LINE_COLORS_LIGHT,
 } from '@/app/lib/macro'
+import { type Band, type BandStyle, BandsPrimitive, bandsAt, hexToRgba } from './bands'
+
+export type ShadeBand = Band & { note?: string }
 
 export interface ChartLayer extends Layer {
   id: string
@@ -44,6 +47,17 @@ interface Props {
   initialYears?: number | null
   onRangeChange?: (r: { from: string; to: string } | null) => void
   renderLegend: (layer: ChartLayer, index: number, color: string, hover: HoverInfo) => React.ReactNode
+  bands?: ShadeBand[]        // 경기침체/이벤트 음영 (표시할 것만 넘김)
+}
+
+function bandStyle(): BandStyle {
+  return {
+    recFill: hexToRgba(cssVar('--ink-mute', '#8c887f'), 0.14),
+    evFill: hexToRgba(cssVar('--down-text', '#8a2c1c'), 0.11),
+    recLabel: cssVar('--ink-mute', '#8c887f'),
+    evLabel: cssVar('--down-text', '#8a2c1c'),
+    font: '600 10px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  }
 }
 
 function cssVar(name: string, fallback: string) {
@@ -84,7 +98,7 @@ const TIME_AXIS_H = 28
 const SEP = 1
 
 const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
-  { mode, layers, yMode = 'independent', height = 420, paneHeight = 170, initialRange, initialYears = null, onRangeChange, renderLegend },
+  { mode, layers, yMode = 'independent', height = 420, paneHeight = 170, initialRange, initialYears = null, onRangeChange, renderLegend, bands = [] },
   ref,
 ) {
   const boxRef = useRef<HTMLDivElement>(null)
@@ -100,6 +114,10 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
   onRangeRef.current = onRangeChange
   const dark = useDark()
   const [hover, setHover] = useState<HoverInfo[] | null>(null)
+  const [hoverBands, setHoverBands] = useState<ShadeBand[]>([])
+  const bandsRef = useRef<ShadeBand[]>(bands)
+  bandsRef.current = bands
+  const primsRef = useRef<{ pane: ReturnType<IChartApi['panes']>[number]; prim: BandsPrimitive }[]>([])
 
   const totalHeight = mode === 'stack'
     ? Math.max(1, layers.length) * (paneHeight + SEP) + TIME_AXIS_H
@@ -157,8 +175,9 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
     ch.timeScale().subscribeVisibleTimeRangeChange(onRange)
 
     const onMove = (p: MouseEventParams<Time>) => {
-      if (!p.time) { setHover(null); return }
+      if (!p.time) { setHover(null); setHoverBands([]); return }
       const t = String(p.time)
+      setHoverBands(bandsAt(bandsRef.current, t) as ShadeBand[])
       setHover(rawPtsRef.current.map(pts => {
         const hit = valueAtOrBefore(pts, t)
         return hit ? { value: hit.value, date: hit.time } : { value: null, date: null }
@@ -172,6 +191,7 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
       ch.remove()
       chartRef.current = null
       seriesRef.current = []
+      primsRef.current = []
     }
   }, [])
 
@@ -283,6 +303,18 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
       panes.forEach((_, i) => ch.priceScale('right', i).applyOptions({ scaleMargins: { top: 0.22, bottom: 0.08 } }))
     }
 
+    // 음영 primitive: pane 마다 붙이고, 라벨은 맨 아래 pane 에만
+    for (const { pane, prim } of primsRef.current) { try { pane.detachPrimitive(prim) } catch { /* 제거된 pane */ } }
+    primsRef.current = []
+    const panesNow = ch.panes()
+    const rng = first && last ? { first, last } : null
+    panesNow.forEach((pane, i) => {
+      const prim = new BandsPrimitive(bandStyle(), i === panesNow.length - 1)
+      pane.attachPrimitive(prim)
+      prim.setData(bandsRef.current, rng)
+      primsRef.current.push({ pane, prim })
+    })
+
     // 구간 복원 / 기본 기간
     requestAnimationFrame(() => {
       if (!chartRef.current) return
@@ -294,6 +326,13 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
     setHover(null)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sig])
+
+  // 음영 토글/테마 변경 → 다시 그리기만
+  const bandSig = bands.map(b => `${b.kind}${b.from}${b.to}`).join(',')
+  useEffect(() => {
+    const rng = firstTimeRef.current && lastTimeRef.current ? { first: firstTimeRef.current, last: lastTimeRef.current } : null
+    for (const { prim } of primsRef.current) prim.setData(bandsRef.current, rng, bandStyle())
+  }, [bandSig, dark])
 
   // 레전드 위치: stack 이면 각 pane 상단, overlay 면 좌상단에 세로 목록
   const latest: HoverInfo[] = useMemo(() => layers.map(l => {
@@ -310,6 +349,18 @@ const MacroChart = forwardRef<MacroChartHandle, Props>(function MacroChart(
   return (
     <div className="relative select-none" style={{ height: totalHeight }}>
       <div ref={boxRef} className="absolute inset-0" />
+      {hoverBands.length > 0 && (
+        <div className="absolute right-[72px] top-2 z-20 flex flex-col items-end gap-0.5 pointer-events-none">
+          {hoverBands.map(b => (
+            <div key={b.kind + b.from} className="text-[10px] px-1.5 py-0.5 max-w-[280px]"
+              style={{ background: 'var(--surface)', border: `1px solid ${b.kind === 'rec' ? 'var(--hairline-2)' : 'var(--down-text)'}` }}>
+              <span className="font-bold" style={{ color: b.kind === 'rec' ? 'var(--ink-2)' : 'var(--down-text)' }}>{b.label}</span>
+              <span className="mono ml-1" style={{ color: 'var(--ink-mute)' }}>{b.from.replace('-', '.')}{b.to !== b.from ? `–${b.to.replace('-', '.')}` : ''}</span>
+              {b.note && <div style={{ color: 'var(--ink-2)' }}>{b.note}</div>}
+            </div>
+          ))}
+        </div>
+      )}
       {mode === 'overlay' ? (
         <div className="absolute left-2 top-2 z-10 flex flex-col gap-1 pointer-events-none max-w-[calc(100%-140px)]">
           {layers.map((l, i) => (

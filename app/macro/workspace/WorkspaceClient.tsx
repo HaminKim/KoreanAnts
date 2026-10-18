@@ -6,7 +6,7 @@
 //  분석 구성은 이름을 붙여 브라우저에 저장/불러오기.
 
 import Link from 'next/link'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   type Catalog, type Layer, loadCatalog, loadSeries, decodeLayers, freqNote, indicatorOfSeries,
 } from '@/app/lib/macro'
@@ -14,7 +14,7 @@ import {
   type Preset, type WsState, BUILTIN_PRESETS, deletePreset, listPresets, loadCurrent, saveCurrent, savePreset,
 } from '@/app/lib/macroPresets'
 import MacroChart, { type ChartLayer, type MacroChartHandle, layerColor, useDark } from '@/app/components/macro/MacroChart'
-import { Chip, Label, LayerLegend, PERIODS, Picker, newLayer, useIsMobile, useSeriesMap } from '@/app/components/macro/ui'
+import { Chip, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
 
 const HEIGHTS = [{ label: 'S', h: 120 }, { label: 'M', h: 160 }, { label: 'L', h: 220 }]
 
@@ -44,6 +44,8 @@ function Workspace({ cat }: { cat: Catalog }) {
   const chartRef = useRef<MacroChartHandle>(null)
   const dark = useDark()
   const mobile = useIsMobile(1024)
+  const [shade, setShade] = useShade()
+  const bands = useMemo(() => shadeBands(cat, shade), [cat, shade])
   // Workspace 는 catalog 로드 후 브라우저에서만 마운트됨 → 초기 상태를 바로 계산
   const [init] = useState(() => initialState(cat))
   const [layers, setLayers] = useState<Layer[]>(init.layers)
@@ -167,6 +169,8 @@ function Workspace({ cat }: { cat: Catalog }) {
         <span className="ml-2" />
         <Label>높이</Label>
         {HEIGHTS.map(h => <Chip key={h.label} on={paneH === h.h} onClick={() => setPaneH(h.h)}>{h.label}</Chip>)}
+        <span className="ml-2" />
+        <ShadeToggles shade={shade} onChange={setShade} />
         {anyShift && <Chip className="ml-2" onClick={() => setLayers(ls => ls.map(l => ({ ...l, shift: 0 })))}>시간 이동 초기화</Chip>}
         {n > 0 && <Chip className="ml-auto" onClick={() => setLayers([])}>모두 지우기</Chip>}
       </div>
@@ -188,7 +192,7 @@ function Workspace({ cat }: { cat: Catalog }) {
             <MacroChart
               key={chartKey} ref={chartRef} mode="stack" layers={chartLayers}
               paneHeight={mobile ? Math.min(paneH, 150) : paneH}
-              initialRange={initRange} initialYears={years} onRangeChange={onRange}
+              initialRange={initRange} initialYears={years} onRangeChange={onRange} bands={bands}
               renderLegend={(l, i, color, hover) => (
                 <LayerLegend layer={l} color={color} hover={hover} compact
                   onTf={tf => update(i, { tf })}

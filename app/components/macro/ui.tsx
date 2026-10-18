@@ -7,7 +7,7 @@ import {
   type Catalog, type Indicator, type Layer, type SeriesSummary, type Tf, type SeriesData,
   fmtNum, fmtPeriod, fmtShift, tfLabel,
 } from '@/app/lib/macro'
-import type { ChartLayer, HoverInfo } from './MacroChart'
+import type { ChartLayer, HoverInfo, ShadeBand } from './MacroChart'
 
 // ── 버튼 ──
 export function Chip({ on = false, onClick, children, title, className = '', disabled = false }: {
@@ -240,4 +240,50 @@ export function useIsMobile(bp = 640) {
     return () => mq.removeEventListener('change', on)
   }, [bp])
   return m
+}
+
+// ── 경기침체/위기 음영 토글 (뷰어별 선호, 브라우저 저장) ──
+const SHADE_KEY = 'reant_macro_shade'
+export interface Shade { rec: boolean; ev: boolean }
+
+export function useShade(): [Shade, (s: Shade) => void] {
+  const [shade, setShade] = useState<Shade>(() => {
+    try {
+      const v = JSON.parse(localStorage.getItem(SHADE_KEY) || 'null')
+      if (v && typeof v.rec === 'boolean' && typeof v.ev === 'boolean') return v
+    } catch { /* 저장소 접근 불가 */ }
+    return { rec: true, ev: true }
+  })
+  const set = (s: Shade) => {
+    setShade(s)
+    try { localStorage.setItem(SHADE_KEY, JSON.stringify(s)) } catch { /* 무시 */ }
+  }
+  return [shade, set]
+}
+
+export function shadeBands(cat: Catalog, shade: Shade): ShadeBand[] {
+  const out: ShadeBand[] = []
+  if (shade.rec) {
+    for (const r of cat.recessions ?? []) {
+      out.push({ kind: 'rec', from: r.from, to: r.to, label: '경기침체', note: r.ongoing ? 'NBER 경기침체 (진행 중)' : 'NBER 공식 경기침체 구간' })
+    }
+  }
+  if (shade.ev) {
+    for (const e of cat.events ?? []) out.push({ kind: 'ev', from: e.from, to: e.to, label: e.name, note: e.note })
+  }
+  return out
+}
+
+export function ShadeToggles({ shade, onChange }: { shade: Shade; onChange: (s: Shade) => void }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <Label>음영</Label>
+      <Chip on={shade.rec} onClick={() => onChange({ ...shade, rec: !shade.rec })} title="NBER 공식 경기침체 구간 (FRED USREC)">
+        <span className="inline-block w-2 h-2 mr-1 align-middle" style={{ background: 'var(--ink-mute)', opacity: 0.6 }} />경기침체
+      </Chip>
+      <Chip on={shade.ev} onClick={() => onChange({ ...shade, ev: !shade.ev })} title="닷컴·금융위기(리먼)·코로나·관세 쇼크 등 시장 위기 구간">
+        <span className="inline-block w-2 h-2 mr-1 align-middle" style={{ background: 'var(--down-text)', opacity: 0.6 }} />위기·이벤트
+      </Chip>
+    </span>
+  )
 }

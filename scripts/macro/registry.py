@@ -131,6 +131,9 @@ series("BOGZ1FL153064486Q", "Household Equity Exposure", "% (금융자산 대비
 # 밸류에이션
 series("CAPE", "Shiller CAPE", "배 (P/E10)", "M", ["level"], src="shiller", dec=1,
        note="Robert Shiller 공개 데이터 (월평균 가격 기준)")
+series("PE_TTM", "S&P 500 Trailing P/E", "배 (가격 / 최근 12개월 EPS)", "M", ["level"], src="shiller", dec=1,
+       note="Shiller 데이터의 S&P 종합지수 월평균 가격 ÷ 최근 12개월 보고 이익(E). "
+            "E 는 분기 실적을 Shiller 가 월별로 보간한 값이며, 최신 분기 실적이 반영되기까지 몇 달 늦다")
 
 # 주가지수 (비교 기준)
 series("SPX", "S&P 500", "지수 (월말 종가)", "D", ["level", "yoy"], src="yahoo", src_id="^GSPC", agg="last", dec=0)
@@ -309,10 +312,10 @@ INDICATORS = [
          what="장기 밸류에이션과 시장 낙관의 가격 반영 정도",
          read="높다고 곧 하락한다는 뜻이 아니다. 장기 기대수익률 관점에서 10Y 실질금리와 함께 본다."),
     dict(no=27, id="trailing_pe", cat="valuation", name="S&P 500 Trailing P/E", ko="S&P500 후행 PER", pri="C",
-         main=[], subs=[], status="pending",
+         main=["PE_TTM"], subs=["CAPE"],
          what="최근 12개월 이익 대비 가격",
-         read="CAPE와 중복도가 높아 삭제 후보.",
-         caution="공급처·라이선스 결정 전까지 준비 중."),
+         read="CAPE와 중복도가 높아 삭제 후보. 경기침체기에는 이익(E)이 급감해 PER이 일시적으로 치솟을 수 있다.",
+         caution="Shiller 공개 데이터로 계산. 이익은 분기 실적을 월별로 보간한 값이라 최신 실적 반영이 몇 달 늦다."),
 
     # ── 비교 기준 지수 (33개 외) ──
     dict(no=None, id="sp500", cat="market", name="S&P 500", ko="S&P 500", pri="-",
@@ -361,4 +364,29 @@ RELATIONS = [
     ("hh_equity", "confirms", "cape"),
     ("tga", "affects", "nfci_risk"),
     ("housing", "leads", "gdp"),
+]
+
+
+# ─────────────────────────────────────────────────────────────
+# 위기·시장 이벤트 (차트 음영) — 월 단위. from~to 는 해당 월 전체를 덮는다.
+#   경기침체(NBER) 음영은 FRED USREC 에서 자동 생성되므로 여기엔 '시장 사건'만 둔다.
+#   기간 기준: 주가 고점~저점 또는 사건 발생 월 (note 에 근거 표기)
+# ─────────────────────────────────────────────────────────────
+EVENTS = [
+    dict(id="oil1",    name="1차 오일쇼크",        frm="1973-10", to="1974-03", note="OPEC 석유 금수 (1973.10~1974.03)"),
+    dict(id="volcker", name="볼커 긴축",           frm="1979-10", to="1982-08", note="Fed 고금리 정책 시작(1979.10) ~ 주식 강세장 시작(1982.08). 2차 오일쇼크 겹침"),
+    dict(id="bm87",    name="블랙먼데이",          frm="1987-10", to="1987-10", note="1987.10.19 S&P500 하루 -20%"),
+    dict(id="asia97",  name="아시아 외환위기",     frm="1997-07", to="1998-01", note="태국 바트화 폭락(1997.07) ~ 한국 IMF 구제금융(1997.12)"),
+    dict(id="ltcm",    name="LTCM·러시아",         frm="1998-08", to="1998-10", note="러시아 디폴트(1998.08), LTCM 구제(1998.09)"),
+    dict(id="dotcom",  name="닷컴버블 붕괴",       frm="2000-03", to="2002-10", note="Nasdaq 고점(2000.03) ~ S&P500 저점(2002.10)"),
+    dict(id="sep11",   name="9·11",               frm="2001-09", to="2001-09", note="2001.09.11 테러, 미국 증시 4거래일 휴장"),
+    dict(id="gfc",     name="글로벌 금융위기",     frm="2007-10", to="2009-03", note="S&P500 고점(2007.10) ~ 저점(2009.03)"),
+    dict(id="lehman",  name="리먼 파산",           frm="2008-09", to="2008-09", note="2008.09.15 리먼브러더스 파산"),
+    dict(id="euro11",  name="유럽 재정위기·美 강등", frm="2011-07", to="2011-10", note="S&P의 미국 신용등급 강등(2011.08), 유럽 재정위기 확산"),
+    dict(id="cny15",   name="위안화 쇼크",         frm="2015-08", to="2016-02", note="중국 위안화 절하(2015.08), 유가 급락 동반"),
+    dict(id="q418",    name="2018 Q4 긴축 쇼크",   frm="2018-10", to="2018-12", note="Fed 금리 인상·양적긴축 우려로 S&P500 약 -20%"),
+    dict(id="covid",   name="코로나19",            frm="2020-02", to="2020-04", note="S&P500 고점(2020.02.19) ~ 저점(2020.03.23), 경기침체 2020.02~04"),
+    dict(id="bear22",  name="인플레·금리 급등",    frm="2022-01", to="2022-10", note="Fed 급격한 금리 인상기 약세장 (S&P500 저점 2022.10)"),
+    dict(id="svb",     name="SVB 은행위기",        frm="2023-03", to="2023-03", note="2023.03 실리콘밸리은행 파산"),
+    dict(id="tariff25", name="트럼프 관세 쇼크",   frm="2025-03", to="2025-04", note="상호관세 발표(2025.04.02) 전후 급락, S&P500 저점 2025.04.08"),
 ]

@@ -44,8 +44,12 @@ export interface Indicator {
 
 export interface Category { id: string; name: string; desc: string }
 
+export interface MarketEvent { id: string; name: string; from: string; to: string; note: string }
+
 export interface Catalog {
   generatedAt: string
+  recessions?: { from: string; to: string; ongoing?: boolean }[]   // NBER (FRED USREC), 'YYYY-MM'
+  events?: MarketEvent[]                                             // 위기·시장 이벤트 (registry.EVENTS)
   start: string
   tfLabel: Record<Tf, string>
   categories: Category[]
