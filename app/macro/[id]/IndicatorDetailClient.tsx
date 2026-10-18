@@ -11,7 +11,7 @@ import {
   loadCatalog, loadSeries, encodeLayers, decodeLayers, fmtNum, fmtPeriod, freqNote, tfLabel, REL_LABEL,
 } from '@/app/lib/macro'
 import MacroChart, { type ChartLayer, type MacroChartHandle } from '@/app/components/macro/MacroChart'
-import { Chip, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
+import { Chip, EasyBlock, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
 
 export default function IndicatorDetailClient({ id }: { id: string }) {
   const [cat, setCat] = useState<Catalog | null>(null)
@@ -168,14 +168,26 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
             {ind.easy && (
               <div className="mb-7">
                 <H2>쉽게 이해하기</H2>
-                <dl className="space-y-3">
-                  {([['무엇인가요?', ind.easy.what], ['왜 중요한가요?', ind.easy.why], ['어떻게 읽나요?', ind.easy.read]] as const).map(([q, a]) => (
-                    <div key={q}>
-                      <dt className="text-xs font-bold" style={{ color: 'var(--accent)' }}>{q}</dt>
-                      <dd className="mt-0.5 text-sm leading-relaxed" style={{ color: 'var(--ink)' }}>{a}</dd>
+                <EasyBlock easy={ind.easy} />
+              </div>
+            )}
+            {ind.subs.some(k => cat.seriesEasy?.[k]) && (
+              <div className="mb-7">
+                <H2>함께 보는 지표</H2>
+                <div className="space-y-4">
+                  {ind.subs.filter(k => cat.seriesEasy?.[k] && cat.series[k]).map(k => (
+                    <div key={k}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{cat.series[k].label}</span>
+                        <button type="button" onClick={() => toggle(k)} className="text-[10px] px-1.5 py-0.5"
+                          style={{ border: '1px solid var(--btn-border)', color: has(k) ? 'var(--accent)' : 'var(--ink-mute)' }}>
+                          {has(k) ? '✓ 차트에 표시 중' : '+ 차트에 추가'}
+                        </button>
+                      </div>
+                      <EasyBlock easy={cat.seriesEasy![k]} size="sm" />
                     </div>
                   ))}
-                </dl>
+                </div>
               </div>
             )}
             <H2>핵심 포인트</H2>

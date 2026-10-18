@@ -27,7 +27,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from registry import CATEGORIES, EVENTS, INDICATORS, RELATIONS, S as SERIES  # noqa: E402
-from explain import EXPLAIN  # noqa: E402
+from explain import EXPLAIN, SERIES_EXPLAIN  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "processed" / "macro" / "raw"
@@ -356,6 +356,7 @@ def build_catalog():
         "categories": CATEGORIES,
         "indicators": inds,
         "series": {k: v for k, v in summaries.items() if v},
+        "seriesEasy": {k: v for k, v in SERIES_EXPLAIN.items() if summaries.get(k)},
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / "catalog.json").write_text(json.dumps(catalog, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

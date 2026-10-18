@@ -4,7 +4,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import {
-  type Catalog, type Indicator, type Layer, type SeriesSummary, type Tf, type SeriesData,
+  type Catalog, type Easy, type Indicator, type Layer, type SeriesSummary, type Tf, type SeriesData,
   fmtNum, fmtPeriod, fmtShift, tfLabel,
 } from '@/app/lib/macro'
 import type { ChartLayer, HoverInfo, ShadeBand } from './MacroChart'
@@ -285,5 +285,24 @@ export function ShadeToggles({ shade, onChange }: { shade: Shade; onChange: (s: 
         <span className="inline-block w-2 h-2 mr-1 align-middle" style={{ background: 'var(--down-text)', opacity: 0.6 }} />위기·이벤트
       </Chip>
     </span>
+  )
+}
+
+// ── 쉽게 이해하기: 의미 → ▲ 올라가면 → ▼ 떨어지면 (+참고) ──
+export function EasyBlock({ easy, size = 'md', showNote = true }: { easy: Easy; size?: 'md' | 'sm'; showNote?: boolean }) {
+  const t = size === 'md' ? 'text-sm' : 'text-[11px]'
+  return (
+    <div className={`${t} leading-relaxed`}>
+      <p style={{ color: 'var(--ink)' }}>{easy.means}</p>
+      <p className="mt-1.5 flex gap-1.5">
+        <span className="shrink-0 font-bold" style={{ color: 'var(--up-text)' }}>▲ 올라가면</span>
+        <span style={{ color: 'var(--ink-2)' }}>{easy.up}</span>
+      </p>
+      <p className="mt-1 flex gap-1.5">
+        <span className="shrink-0 font-bold" style={{ color: 'var(--down-text)' }}>▼ 떨어지면</span>
+        <span style={{ color: 'var(--ink-2)' }}>{easy.down}</span>
+      </p>
+      {showNote && easy.note && <p className="mt-1.5" style={{ color: 'var(--ink-mute)' }}>참고 · {easy.note}</p>}
+    </div>
   )
 }

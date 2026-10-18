@@ -39,11 +39,14 @@ export interface Indicator {
   what: string
   read: string
   caution: string | null
-  easy?: { what: string; why: string; read: string } | null   // 쉽게 이해하기 (scripts/macro/explain.py)
+  easy?: Easy | null          // 쉽게 이해하기 (scripts/macro/explain.py)
   relations: Relation[]
 }
 
 export interface Category { id: string; name: string; desc: string }
+
+/** 쉽게 이해하기: 의미 → 올라가면 → 떨어지면 (+주의) */
+export interface Easy { means: string; up: string; down: string; note?: string | null }
 
 export interface MarketEvent { id: string; name: string; from: string; to: string; note: string }
 
@@ -56,6 +59,7 @@ export interface Catalog {
   categories: Category[]
   indicators: Indicator[]
   series: Record<string, SeriesSummary>
+  seriesEasy?: Record<string, Easy>   // 보조 시리즈 설명
 }
 
 export interface SeriesData extends Omit<SeriesSummary, 'latest' | 'spark' | 'first'> {
@@ -119,6 +123,13 @@ export function loadSeries(key: string): Promise<SeriesData> {
 // ─────────────────────────────────────────
 export function indicatorOfSeries(cat: Catalog, key: string): Indicator | undefined {
   return cat.indicators.find(i => i.main.includes(key)) ?? cat.indicators.find(i => i.subs.includes(key))
+}
+
+/** 레이어(시리즈)에 맞는 쉬운 설명: 지표의 메인 시리즈면 지표 설명, 보조면 시리즈 설명 */
+export function easyOf(cat: Catalog, key: string): Easy | null {
+  const main = cat.indicators.find(i => i.main.includes(key))
+  if (main?.easy) return main.easy
+  return cat.seriesEasy?.[key] ?? indicatorOfSeries(cat, key)?.easy ?? null
 }
 
 export const INDEX_KEYS = ['SPX', 'NDX'] as const

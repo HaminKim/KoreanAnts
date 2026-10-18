@@ -8,13 +8,13 @@
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  type Catalog, type Layer, loadCatalog, loadSeries, decodeLayers, freqNote, indicatorOfSeries,
+  type Catalog, type Layer, loadCatalog, loadSeries, decodeLayers, easyOf, freqNote, indicatorOfSeries,
 } from '@/app/lib/macro'
 import {
   type Preset, type WsState, BUILTIN_PRESETS, deletePreset, listPresets, loadCurrent, saveCurrent, savePreset,
 } from '@/app/lib/macroPresets'
 import MacroChart, { type ChartLayer, type MacroChartHandle, layerColor, useDark } from '@/app/components/macro/MacroChart'
-import { Chip, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
+import { Chip, EasyBlock, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
 
 const HEIGHTS = [{ label: 'S', h: 120 }, { label: 'M', h: 160 }, { label: 'L', h: 220 }]
 
@@ -231,22 +231,13 @@ function Workspace({ cat }: { cat: Catalog }) {
                       <Link href={`/macro/${ind.id}`} className="text-xs font-bold hover:underline" style={{ color: 'var(--ink)' }}>{s.label}</Link>
                     ) : <span className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{s.label}</span>}
                   </div>
-                  {ind && (
-                    <>
-                      <p className={`mt-1 text-[11px] leading-relaxed ${detail === 'short' ? 'line-clamp-2' : ''}`} style={{ color: 'var(--ink-2)' }}>
-                        {detail === 'short' ? ind.what : ind.easy?.what ?? ind.what}
-                      </p>
-                      {detail === 'mid' && <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink)' }}>{ind.read}</p>}
-                      {detail === 'long' && (
-                        <>
-                          {ind.easy && <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink-2)' }}><b>왜 중요한가요?</b> {ind.easy.why}</p>}
-                          <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink)' }}><b>어떻게 읽나요?</b> {ind.easy?.read ?? ind.read}</p>
-                          {ind.caution && <p className="mt-1 text-[10px] leading-relaxed" style={{ color: 'var(--down-text)' }}>{ind.caution}</p>}
-                          <p className="mt-1 text-[10px]" style={{ color: 'var(--ink-mute)' }}>{s.units} · {freqNote(s)} · {s.first?.slice(0, 4)}~</p>
-                        </>
-                      )}
-                    </>
-                  )}
+                  {(() => {
+                    const easy = easyOf(cat, l.key)
+                    if (!easy) return ind ? <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink-2)' }}>{ind.what}</p> : null
+                    if (detail === 'short') return <p className="mt-1 text-[11px] leading-relaxed line-clamp-2" style={{ color: 'var(--ink-2)' }}>{easy.means}</p>
+                    return <div className="mt-1"><EasyBlock easy={easy} size="sm" showNote={detail === 'long'} /></div>
+                  })()}
+                  {detail === 'long' && <p className="mt-1 text-[10px]" style={{ color: 'var(--ink-mute)' }}>{s.units} · {freqNote(s)} · {s.first?.slice(0, 4)}~</p>}
                 </div>
               )
             })}
