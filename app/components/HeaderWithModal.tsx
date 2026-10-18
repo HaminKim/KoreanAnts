@@ -23,6 +23,8 @@ export default function HeaderWithModal() {
   const pathname = usePathname();
   const isHeatmap = pathname?.startsWith('/watchlist');
   const isPricing = pathname?.startsWith('/pricing');
+  const isMacro = pathname?.startsWith('/macro');
+  const isAnts = pathname?.startsWith('/ants');
 
   useEffect(() => {
     if (!INTRO_GATE_ENABLED) return;
@@ -73,6 +75,28 @@ export default function HeaderWithModal() {
           >
             필독
           </button>
+          <Link
+            href="/macro"
+            className="text-xs font-medium whitespace-nowrap pb-1 border-b-2 transition-colors"
+            style={{
+              color: isMacro ? 'var(--ink)' : 'var(--ink-2)',
+              borderColor: isMacro ? 'var(--accent)' : 'transparent',
+              fontWeight: isMacro ? 600 : 500,
+            }}
+          >
+            매크로
+          </Link>
+          <Link
+            href="/ants"
+            className="hidden sm:inline text-xs font-medium whitespace-nowrap pb-1 border-b-2 transition-colors"
+            style={{
+              color: isAnts ? 'var(--ink)' : 'var(--ink-2)',
+              borderColor: isAnts ? 'var(--accent)' : 'transparent',
+              fontWeight: isAnts ? 600 : 500,
+            }}
+          >
+            개미지수
+          </Link>
           <Link
             href="/watchlist"
             className="hidden sm:inline text-xs font-medium whitespace-nowrap pb-1 border-b-2 transition-colors"

@@ -390,11 +390,11 @@ export default function ShortTrackerClient({ netBuy5, netBuy10, netBuy20, netBuy
     <div>
       {/* Back link */}
       <div className="mb-4">
-        <Link href="/" className="inline-flex items-center text-gray-400 hover:text-gray-700 text-sm transition">
+        <Link href="/ants" className="inline-flex items-center text-gray-400 hover:text-gray-700 text-sm transition">
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          메인으로
+          개미지수로
         </Link>
       </div>
 

@@ -129,3 +129,21 @@ body {
 
 .serif { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; }
 .mono  { font-family: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas, monospace; font-variant-numeric: tabular-nums; }
+
+/* ── 랜딩: 마지막 거래일 구간 발광 (실시간 표시 아님) ── */
+@keyframes landing-glow-pulse {
+  0%, 100% { opacity: 0.15; }
+  50%      { opacity: 0.75; }
+}
+.landing-glow { animation: landing-glow-pulse 2.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .landing-glow { animation: none; opacity: 0.4; }
+}
+
+/* ── 넓은 분석 화면: 루트 레이아웃(max-w-5xl) 밖으로 확장 ── */
+.macro-bleed {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100vw - 32px), 1320px);
+}
