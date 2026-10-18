@@ -158,7 +158,30 @@ def fetch_yahoo(sid):
     return s.sort_index(), {}
 
 
-FETCH = {"fred": fetch_fred, "shiller": fetch_shiller, "yahoo": fetch_yahoo}
+def _monthly_fred(sid):
+    """월별 FRED. 'ID:bey' 면 할인율 기준 T-bill 금리를 채권환산수익률(BEY)로 변환
+    (TB3MS 는 할인율 기준이라 현행 3개월 CMT 금리와 고금리기에 0.5%p 이상 차이남)"""
+    base, _, opt = sid.partition(":")
+    s, _ = fetch_fred(base)
+    s.index = s.index.to_period("M").to_timestamp()
+    s = s.groupby(level=0).mean()
+    if opt == "bey":
+        d = s / 100
+        s = 365 * d / (360 - 91 * d) * 100
+    return s
+
+
+def fetch_derived(sid):
+    """계산 시리즈. REAL10Y_EST = 월평균 10년물(GS10) − CPI YoY"""
+    if sid == "REAL10Y_EST":
+        gs10 = _monthly_fred("GS10")
+        cpi = _monthly_fred("CPIAUCSL")
+        yoy = (cpi / cpi.shift(12) - 1) * 100
+        return (gs10 - yoy).dropna(), {"url": "https://fred.stlouisfed.org/series/GS10"}
+    raise ValueError(sid)
+
+
+FETCH = {"fred": fetch_fred, "shiller": fetch_shiller, "yahoo": fetch_yahoo, "derived": fetch_derived}
 
 
 def source_url(sp):
@@ -230,6 +253,20 @@ def build_series(key):
     raw.rename("value").to_csv(RAW_DIR / f"{key}.csv", index_label="date")
 
     per, obs_freq, partial = to_period(raw, sp)
+
+    # 원 시리즈 시작 이전 구간을 월별 A − B 로 이어붙임 (예: 10Y-3M = GS10 − TB3MS)
+    spliced_before = None
+    if sp.get("backfill"):
+        a, b = sp["backfill"]
+        try:
+            bf = (_monthly_fred(a) - _monthly_fred(b)).dropna()
+            bf = bf[bf.index < per.index[0]]
+            if len(bf):
+                spliced_before = per.index[0].strftime("%Y-%m-%d")
+                per = pd.concat([bf, per])
+        except Exception as e:  # noqa: BLE001
+            log(f"  ⚠️ {key}: 이어붙이기 실패 → 원 시리즈만 사용 ({type(e).__name__})")
+
     frame = {tf: derive(per, obs_freq, tf) for tf in sp["tf"]}
     df = pd.DataFrame(frame)
     df = df[df.index >= START]
@@ -244,6 +281,9 @@ def build_series(key):
         "rawFirst": raw.index[0].strftime("%Y-%m-%d"),
         "rawLast": raw.index[-1].strftime("%Y-%m-%d"),
         "partialLast": partial,
+        "since": sp.get("since"),
+        "spliceNote": (f"{spliced_before[:4]}년 {int(spliced_before[5:7])}월 이전은 월별 {sp['backfill'][0]} − {sp['backfill'][1].split(':')[0]} 로 이어붙인 값이에요"
+                       if spliced_before else None),
         "updated": meta.get("updated"),
         "fetchedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "d": [d.strftime("%Y-%m-%d") for d in df.index],
@@ -289,6 +329,7 @@ def series_summary(key):
         "agg": js["agg"], "tf": js["tf"], "dec": js["dec"], "note": js["note"], "url": js["url"],
         "first": js["d"][0] if js["d"] else None, "rawLast": js["rawLast"], "partialLast": js["partialLast"],
         "updated": js["updated"], "fetchedAt": js["fetchedAt"],
+        "since": js.get("since"), "spliceNote": js.get("spliceNote"),
         "latest": {"tf": tf0, "date": date, "value": val, "prev": prev},
         "spark": spark,
     }

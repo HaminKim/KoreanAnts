@@ -14,7 +14,7 @@ import {
   type Preset, type WsState, BUILTIN_PRESETS, deletePreset, listPresets, loadCurrent, saveCurrent, savePreset,
 } from '@/app/lib/macroPresets'
 import MacroChart, { type ChartLayer, type MacroChartHandle, layerColor, useDark } from '@/app/components/macro/MacroChart'
-import { Chip, EasyBlock, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
+import { Chip, DataNotes, EasyBlock, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
 
 const HEIGHTS = [{ label: 'S', h: 120 }, { label: 'M', h: 160 }, { label: 'L', h: 220 }]
 
@@ -211,6 +211,7 @@ function Workspace({ cat }: { cat: Catalog }) {
           <p className="mt-2 text-[10px] leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
             ◀ ▶ 는 해당 차트의 선만 X축으로 평행이동합니다(표시용, 원본 날짜 불변). 선행·후행을 눈으로 탐색하는 기능이며 인과관계를 증명하지 않습니다.
           </p>
+          <DataNotes cat={cat} keys={keys} />
         </div>
 
         {/* 우: 지표 설명 (모두 표시, N 에 따라 길이 조절) */}

@@ -19,6 +19,8 @@ export interface SeriesSummary {
   partialLast: boolean
   updated: string | null
   fetchedAt: string
+  since?: string | null        // 늦게 시작하는 이유
+  spliceNote?: string | null   // 과거 구간 이어붙이기 설명
   latest: { tf: Tf; date: string | null; value: number | null; prev: number | null }
   spark: [string, number][]
 }

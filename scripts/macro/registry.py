@@ -44,10 +44,14 @@ CATEGORIES = [
 S = {}
 
 
-def series(key, label, units, freq, tf, src="fred", src_id=None, agg=None, dec=1, note=None):
+def series(key, label, units, freq, tf, src="fred", src_id=None, agg=None, dec=1, note=None,
+           since=None, backfill=None):
+    """since    : 데이터가 늦게 시작하는 '이유' (화면에 'YYYY년부터 — 이유' 로 표기)
+       backfill : (A, B) — 원 시리즈 시작 이전 구간을 FRED 월별 A − B 로 이어붙임 (화면에 표기)"""
     S[key] = {
         "key": key, "label": label, "units": units, "freq": freq, "tf": tf,
         "src": src, "srcId": src_id or key, "agg": agg, "dec": dec, "note": note,
+        "since": since, "backfill": backfill,
     }
 
 
@@ -57,9 +61,9 @@ series("CP", "Corporate Profits (세후)", "십억 달러 (SAAR)", "Q", ["yoy", 
 series("CMRMTSPL", "Real Manufacturing & Trade Sales", "백만 달러 (2017년 불변)", "M", ["yoy", "mom", "level"], dec=0)
 series("INDPRO", "Industrial Production", "지수 (2017=100)", "M", ["yoy", "mom", "level"])
 series("NEWORDER", "Core Capital Goods Orders", "백만 달러", "M", ["yoy", "mom", "level"], dec=0,
-       note="비국방 자본재 (항공기 제외)")
+       note="비국방 자본재 (항공기 제외)", since="현행 산업분류(NAICS) 기준 통계가 1992년부터 집계돼요")
 series("ANXAUO", "Core Capital Goods Unfilled Orders", "백만 달러", "M", ["yoy", "mom", "level"], dec=0,
-       note="비국방 자본재 (항공기 제외) 미충족 주문")
+       note="비국방 자본재 (항공기 제외) 미충족 주문", since="현행 산업분류(NAICS) 기준 통계가 1992년부터 집계돼요")
 
 # 지역 연준 서베이 (ISM 대체 — 공개 데이터). 확산지수 = 증가 응답 % − 감소 응답 %, 0 이 기준선
 DIFF = "확산지수 (증가−감소 응답 %, 0=기준)"
@@ -67,35 +71,43 @@ series("GACDFSA066MSFRBPHI", "필라델피아 연준 제조업 (현재 경기)",
        note="Philadelphia Fed Manufacturing Business Outlook Survey, General Activity (계절조정). 매월 셋째 목요일 발표")
 series("NOCDFSA066MSFRBPHI", "필라델피아 연준 제조업 (신규주문)", DIFF, "M", ["level", "avg_3m", "chg"])
 series("GACDINA066MNFRBNY", "뉴욕 연준 엠파이어 제조업 (현재 경기)", DIFF, "M", ["level", "avg_3m", "chg"],
-       note="NY Fed Empire State Manufacturing Survey, General Business Conditions (계절조정). 매월 중순 발표")
-series("NOCDINA066MNFRBNY", "뉴욕 연준 엠파이어 제조업 (신규주문)", DIFF, "M", ["level", "avg_3m", "chg"])
+       note="NY Fed Empire State Manufacturing Survey, General Business Conditions (계절조정). 매월 중순 발표",
+       since="뉴욕 연준이 이 설문을 2001년 7월에 시작했어요. 그 이전은 필라델피아 서베이(1968~)로 보세요")
+series("NOCDINA066MNFRBNY", "뉴욕 연준 엠파이어 제조업 (신규주문)", DIFF, "M", ["level", "avg_3m", "chg"],
+       since="뉴욕 연준이 이 설문을 2001년 7월에 시작했어요")
 series("BACTSAMFRBDAL", "댈러스 연준 제조업 (생산활동)", DIFF, "M", ["level", "avg_3m", "chg"],
-       note="Dallas Fed Texas Manufacturing Outlook Survey, Business Activity (계절조정)")
+       note="Dallas Fed Texas Manufacturing Outlook Survey, Business Activity (계절조정)",
+       since="댈러스 연준이 이 설문을 2004년에 시작했어요")
 series("TSSOSBACTSAMFRBDAL", "댈러스 연준 서비스업 (경기활동)", DIFF, "M", ["level", "avg_3m", "chg"],
-       note="Dallas Fed Texas Service Sector Outlook Survey, General Business Activity (계절조정)")
-series("TSSOSREVSAMFRBDAL", "댈러스 연준 서비스업 (매출)", DIFF, "M", ["level", "avg_3m", "chg"])
+       note="Dallas Fed Texas Service Sector Outlook Survey, General Business Activity (계절조정)",
+       since="댈러스 연준이 서비스업 설문을 2007년에 시작했어요. 지역 연준 서비스업 설문은 대부분 2000년대 이후에 생겼어요")
+series("TSSOSREVSAMFRBDAL", "댈러스 연준 서비스업 (매출)", DIFF, "M", ["level", "avg_3m", "chg"],
+       since="댈러스 연준이 서비스업 설문을 2007년에 시작했어요")
 series("GABNDIF066MSFRBPHI", "필라델피아 연준 비제조업 (지역 경기)", DIFF, "M", ["level", "avg_3m", "chg"],
-       note="Philadelphia Fed Nonmanufacturing Business Outlook Survey, General Activity—Region (계절조정)")
+       note="Philadelphia Fed Nonmanufacturing Business Outlook Survey, General Activity—Region (계절조정)",
+       since="필라델피아 연준이 비제조업 설문을 2011년에 시작했어요")
 
 # 고용
 series("UNRATE", "Unemployment Rate", "%", "M", ["level", "chg"])
 series("SAHMREALTIME", "Sahm Rule (실시간)", "%p", "M", ["level"], dec=2,
        note="실업률 3개월 평균이 직전 12개월 최저 대비 얼마나 올랐는지. 0.5 이상이면 경기침체 초기 신호로 쓰임")
 series("PAYEMS", "Nonfarm Payrolls", "천 명", "M", ["chg", "chg_3ma", "level", "yoy"], dec=0)
-series("CES0500000003", "Average Hourly Earnings", "달러/시간", "M", ["yoy", "mom", "level"], dec=2)
+series("AHETPI", "Average Hourly Earnings (생산·비관리직)", "달러/시간", "M", ["yoy", "mom", "level"], dec=2,
+       note="민간 생산·비관리직 근로자(전체의 약 80%) 시간당 임금. 전체 근로자 기준(CES0500000003)은 2006년부터만 있어 1964년부터 이어지는 이 시리즈를 사용")
 
 # 소비자
 series("DPCERA3M086SBEA", "Real PCE (지수)", "지수 (2017=100)", "M", ["yoy", "mom", "level"],
        note="FRED의 달러 표시 Real PCE(PCEC96)는 2007년부터만 있어서, 1959년부터 이어지는 실질 소비 지수를 메인으로 사용")
-series("PCEC96", "Real PCE (달러)", "십억 달러 (2017년 불변, SAAR)", "M", ["yoy", "mom", "level"], dec=0)
 series("PSAVERT", "Personal Saving Rate", "%", "M", ["level", "chg"])
 series("DSPIC96", "Real Disposable Personal Income", "십억 달러 (2017년 불변, SAAR)", "M", ["yoy", "mom", "level"], dec=0)
 series("DDURRA3M086SBEA", "Real Durable Goods PCE", "지수 (2017=100)", "M", ["yoy", "mom", "level"])
 series("DFXARA3M086SBEA", "Real Food PCE (가정 내 식품)", "지수 (2017=100)", "M", ["yoy", "mom", "level"])
 series("REVOLSL", "Revolving Consumer Credit", "백만 달러", "M", ["yoy", "chg", "level"], dec=0)
 series("TOTALSL", "Total Consumer Credit", "백만 달러", "M", ["yoy", "chg", "level"], dec=0)
-series("DRCCLACBS", "Credit Card Delinquency Rate", "%", "Q", ["level", "chg"], dec=2)
-series("CORCCACBS", "Credit Card Charge-off Rate", "%", "Q", ["level", "chg"], dec=2)
+series("DRCCLACBS", "Credit Card Delinquency Rate", "%", "Q", ["level", "chg"], dec=2,
+       since="연준이 은행 신용카드 연체율을 1991년부터 집계해요")
+series("CORCCACBS", "Credit Card Charge-off Rate", "%", "Q", ["level", "chg"], dec=2,
+       since="연준이 은행 신용카드 상각률을 1985년부터 집계해요")
 
 # 물가
 series("CPIAUCSL", "CPI", "지수 (1982-84=100)", "M", ["yoy", "mom", "level"], dec=2)
@@ -113,19 +125,28 @@ series("OPHNFB", "Labor Productivity (비농업)", "지수 (2017=100)", "Q", ["y
 # 금리
 series("FEDFUNDS", "Fed Funds Rate", "%", "M", ["level", "chg"], dec=2)
 series("GS10", "10Y Treasury Yield", "%", "M", ["level", "chg"], dec=2, note="FRED 월평균 값")
-series("T10Y2Y", "10Y-2Y Spread", "%p", "D", ["level"], agg="avg", dec=2)
-series("T10Y3M", "10Y-3M Spread", "%p", "D", ["level"], agg="avg", dec=2)
-series("DFII10", "10Y Real Yield (TIPS)", "%", "D", ["level", "chg"], agg="avg", dec=2)
-series("T10YIE", "10Y Breakeven Inflation", "%", "D", ["level", "chg"], agg="avg", dec=2)
+series("T10Y2Y", "10Y-2Y Spread", "%p", "D", ["level"], agg="avg", dec=2,
+       since="미국 2년물 국채금리가 1976년 6월부터 집계돼요")
+series("T10Y3M", "10Y-3M Spread", "%p", "D", ["level"], agg="avg", dec=2,
+       backfill=("GS10", "TB3MS:bey"))
+series("DFII10", "10Y Real Yield (TIPS)", "%", "D", ["level", "chg"], agg="avg", dec=2,
+       since="물가연동국채(TIPS)가 1997년에 처음 발행됐고, FRED 일별 데이터는 2003년부터예요. 그 이전은 '추정 실질금리'를 보세요")
+series("T10YIE", "10Y Breakeven Inflation", "%", "D", ["level", "chg"], agg="avg", dec=2,
+       since="TIPS 금리가 있어야 계산돼서 2003년부터예요")
+series("REAL10Y_EST", "추정 실질금리 (10년물 − CPI YoY)", "%", "M", ["level", "chg"], src="derived", dec=2,
+       note="월평균 10년물 국채금리(GS10)에서 지난 1년 물가상승률(CPI YoY)을 뺀 값. 시장이 '앞으로' 예상하는 물가가 아니라 '지난' 물가를 쓰는 근사치라 TIPS 실질금리와 차이가 있어요")
 
 # 신용
-series("BAMLH0A0HYM2", "High Yield OAS (ICE BofA)", "%p", "D", ["level", "chg"], agg="avg", dec=2,
-       note="ICE 라이선스 정책으로 FRED 에는 최근 약 3년치만 공개됨")
-series("BAA10Y", "Moody's BAA - 10Y Spread", "%p", "D", ["level", "chg"], agg="avg", dec=2,
-       note="장기(1986~) 신용 스프레드 대용. 투자등급 하단 기준이라 HY 보다 폭이 작음")
+series("BAMLH0A0HYM2", "하이일드 스프레드 (ICE BofA)", "%p", "D", ["level", "chg"], agg="avg", dec=2,
+       note="ICE 라이선스 정책으로 FRED 에는 최근 약 3년치만 공개됨",
+       since="ICE 데이터 라이선스 때문에 FRED에 최근 3년치만 공개돼요. 장기 흐름은 BAA 스프레드로 보세요")
+series("BAA10Y", "BAA 회사채 스프레드 (BAA − 10년물)", "%p", "D", ["level", "chg"], agg="avg", dec=2,
+       note="Moody's BAA 등급 회사채 금리 − 10년물 국채금리. 투자등급 하단 기준이라 하이일드보다 폭이 작지만 같은 방향으로 움직여요",
+       backfill=("BAA", "GS10"))
 series("DRTSCILM", "SLOOS: C&I 대출기준 강화 은행 비율", "% (순비율)", "Q", ["level", "chg"],
-       note="대·중견기업 대상 상업·산업(C&I) 대출")
-series("DRSDCILM", "SLOOS: C&I 대출수요 증가 은행 비율", "% (순비율)", "Q", ["level", "chg"])
+       note="대·중견기업 대상 상업·산업(C&I) 대출", since="현행 설문 형식이 1990년 2분기부터 시작됐어요")
+series("DRSDCILM", "SLOOS: C&I 대출수요 증가 은행 비율", "% (순비율)", "Q", ["level", "chg"],
+       since="대출 수요 문항이 1991년 4분기부터 조사됐어요")
 
 # 주택
 series("HOUST", "Housing Starts", "천 호 (SAAR)", "M", ["level", "avg_3m", "yoy", "mom"], dec=0)
@@ -135,13 +156,17 @@ series("HSN1F", "New Home Sales", "천 호 (SAAR)", "M", ["level", "avg_3m", "yo
 
 # 유동성
 series("WTREGEN", "Treasury General Account", "백만 달러", "W", ["level", "chg"], agg="last", dec=0,
-       note="주간(수요일) 잔액의 월말 값. 2002-12 이전 구 시리즈와는 잇지 않음")
-series("WALCL", "Fed Total Assets", "백만 달러", "W", ["level", "chg", "yoy"], agg="last", dec=0)
-series("RRPONTSYD", "Overnight Reverse Repo", "십억 달러", "D", ["level", "chg"], agg="avg", dec=1)
+       note="주간(수요일) 잔액의 월말 값. 2002-12 이전 구 시리즈와는 잇지 않음",
+       since="연준 대차대조표(H.4.1) 현행 주간 통계가 2002년 12월부터예요")
+series("WALCL", "Fed Total Assets", "백만 달러", "W", ["level", "chg", "yoy"], agg="last", dec=0,
+       since="연준 대차대조표(H.4.1) 현행 주간 통계가 2002년 12월부터예요")
+series("RRPONTSYD", "Overnight Reverse Repo", "십억 달러", "D", ["level", "chg"], agg="avg", dec=1,
+       since="FRED 역레포 일별 데이터가 2003년부터예요 (실제로 크게 쓰인 건 2013년 이후)")
 
 # 심리·자산배분
-series("NFCIRISK", "NFCI Risk Subindex", "표준편차 (0=평균)", "W", ["level", "chg"], agg="avg", dec=2)
-series("VIXCLS", "VIX", "지수", "D", ["level"], agg="avg", dec=1)
+series("NFCIRISK", "NFCI Risk Subindex", "표준편차 (0=평균)", "W", ["level", "chg"], agg="avg", dec=2,
+       since="시카고 연준이 1971년부터 산출해요")
+series("VIXCLS", "VIX", "지수", "D", ["level"], agg="avg", dec=1, since="VIX 지수가 1990년부터 산출됐어요")
 series("BOGZ1FL153064486Q", "Household Equity Exposure", "% (금융자산 대비 주식)", "Q", ["level", "chg"])
 
 # 밸류에이션
@@ -153,7 +178,8 @@ series("PE_TTM", "S&P 500 Trailing P/E", "배 (가격 / 최근 12개월 EPS)", "
 
 # 주가지수 (비교 기준)
 series("SPX", "S&P 500", "지수 (월말 종가)", "D", ["level", "yoy"], src="yahoo", src_id="^GSPC", agg="last", dec=0)
-series("NDX", "Nasdaq-100", "지수 (월말 종가)", "D", ["level", "yoy"], src="yahoo", src_id="^NDX", agg="last", dec=0)
+series("NDX", "Nasdaq-100", "지수 (월말 종가)", "D", ["level", "yoy"], src="yahoo", src_id="^NDX", agg="last", dec=0,
+       since="나스닥 100 지수가 1985년에 처음 만들어졌어요")
 
 
 # ─────────────────────────────────────────────────────────────
@@ -207,7 +233,7 @@ INDICATORS = [
          what="노동시장 악화/회복 확인",
          read="절대 수준뿐 아니라 최근 3개월 동안 오르고 있는지가 중요하다. Sahm Rule이 이를 수치화한다."),
     dict(no=6, id="nfp", cat="labor", name="Nonfarm Payrolls", ko="비농업 고용", pri="A",
-         main=["PAYEMS"], subs=["CES0500000003"],
+         main=["PAYEMS"], subs=["AHETPI"],
          what="고용 창출 속도",
          read="RAW 고용 수준보다 월간 증감(천 명)과 3개월 평균이 핵심이다.",
          caution="속보치는 이후 두 달에 걸쳐 수정된다."),
@@ -222,7 +248,7 @@ INDICATORS = [
          what="가처분소득 중 저축 비중",
          read="급등은 방어적 행동이나 정부 이전지출 영향일 수 있어 단독으로 해석하지 않는다."),
     dict(no=12, id="real_pce", cat="consumer", name="Real PCE", ko="실질 개인소비지출", pri="A",
-         main=["DPCERA3M086SBEA"], subs=["PCEC96"],
+         main=["DPCERA3M086SBEA"], subs=[],
          what="물가를 제거한 실제 소비",
          read="소비자 사이클의 중심 지표다."),
     dict(no=20, id="durable_pce", cat="consumer", name="Real Durable Goods PCE", ko="실질 내구재 소비", pri="B",
@@ -272,7 +298,7 @@ INDICATORS = [
          what="Fed 정책 방향",
          read="상승=긴축, 하락=완화. 하지만 주가 방향과 1:1로 대응하지 않는다."),
     dict(no=8, id="ust10y", cat="rates", name="10Y Treasury Yield", ko="미국 10년물 국채금리", pri="A",
-         main=["GS10"], subs=["DFII10", "T10YIE"],
+         main=["GS10"], subs=["DFII10", "T10YIE", "REAL10Y_EST"],
          what="장기 할인율과 성장·물가 기대",
          read="금리가 '왜' 오르는지를 실질금리와 기대인플레로 분해해서 본다. 금리 상승이 기계적으로 주식 악재는 아니다."),
     dict(no=9, id="yield_curve", cat="rates", name="Yield Curve: 10Y-2Y + 10Y-3M", ko="수익률곡선", pri="A",
@@ -280,17 +306,17 @@ INDICATORS = [
          what="수익률곡선과 경기침체 위험",
          read="역전 자체보다 역전 → 다시 가팔라짐(정상화)까지의 흐름을 확인한다."),
     dict(no=33, id="real_yield", cat="rates", name="10Y Real Yield + 10Y Breakeven", ko="실질금리 + 기대인플레", pri="A",
-         main=["DFII10", "T10YIE"], subs=["GS10"],
+         main=["DFII10", "T10YIE"], subs=["REAL10Y_EST", "GS10"],
          what="10년 명목금리를 실질금리와 기대인플레로 분해",
          read="Nasdaq·CAPE 해석에 특히 중요하다. Breakeven에는 위험 프리미엄 등도 섞여 있다.",
-         caution="TIPS 기반이라 2003년부터 사용 가능."),
+         caution="TIPS 기반이라 2003년부터 사용 가능. 1970년부터 보려면 '추정 실질금리'(10년물 − CPI YoY)를 함께 보세요."),
 
     # ── 신용 ──
-    dict(no=10, id="hy_spread", cat="credit", name="High Yield Spread", ko="하이일드 스프레드", pri="A",
-         main=["BAMLH0A0HYM2"], subs=["BAA10Y"],
+    dict(no=10, id="hy_spread", cat="credit", name="Credit Spreads (BAA · High Yield)", ko="회사채 신용 스프레드", pri="A",
+         main=["BAA10Y", "BAMLH0A0HYM2"], subs=[],
          what="회사채 시장이 가격으로 나타내는 신용위험·Risk-off",
          read="급격한 확대 = 스트레스. SLOOS와 세트로 해석한다.",
-         caution="ICE BofA 데이터는 FRED에 최근 약 3년만 공개된다. 장기 비교는 BAA-10Y 스프레드를 함께 본다."),
+         caution="하이일드(ICE BofA)는 라이선스 때문에 FRED에 최근 약 3년만 공개된다. 1970년부터의 흐름은 BAA 스프레드로 본다."),
     dict(no=11, id="sloos", cat="credit", name="SLOOS Lending Standards", ko="은행 대출태도 (SLOOS)", pri="A",
          main=["DRTSCILM"], subs=["DRSDCILM"],
          what="은행이 대출을 얼마나 조이거나 푸는가",

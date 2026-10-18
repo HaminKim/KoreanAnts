@@ -306,3 +306,24 @@ export function EasyBlock({ easy, size = 'md', showNote = true }: { easy: Easy; 
     </div>
   )
 }
+
+// ── 데이터 시작 시점 안내: 선이 중간부터 시작하는 이유 / 이어붙인 구간 ──
+export function DataNotes({ cat, keys }: { cat: Catalog; keys: string[] }) {
+  const startYear = Number(cat.start.slice(0, 4))
+  const notes: { key: string; text: string }[] = []
+  for (const k of Array.from(new Set(keys))) {
+    const s = cat.series[k]
+    if (!s) continue
+    const y = Number((s.first ?? cat.start).slice(0, 4))
+    if (y > startYear) notes.push({ key: k, text: `${s.label}: ${y}년부터 있어요${s.since ? ` — ${s.since}` : ''}` })
+    if (s.spliceNote) notes.push({ key: k + ':s', text: `${s.label}: ${s.spliceNote}` })
+  }
+  if (!notes.length) return null
+  return (
+    <ul className="mt-1.5 space-y-0.5">
+      {notes.map(n => (
+        <li key={n.key} className="text-[10px] leading-relaxed" style={{ color: 'var(--ink-2)' }}>ⓘ {n.text}</li>
+      ))}
+    </ul>
+  )
+}

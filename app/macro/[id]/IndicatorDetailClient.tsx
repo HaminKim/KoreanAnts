@@ -11,7 +11,7 @@ import {
   loadCatalog, loadSeries, encodeLayers, decodeLayers, fmtNum, fmtPeriod, freqNote, tfLabel, REL_LABEL,
 } from '@/app/lib/macro'
 import MacroChart, { type ChartLayer, type MacroChartHandle } from '@/app/components/macro/MacroChart'
-import { Chip, EasyBlock, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
+import { Chip, DataNotes, EasyBlock, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
 
 export default function IndicatorDetailClient({ id }: { id: string }) {
   const [cat, setCat] = useState<Catalog | null>(null)
@@ -161,6 +161,7 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
           선이 비슷해 보여도 인과·예측력을 증명하지 않습니다.
           {yMode === 'normalized' && ' 정규화: 불러온 지표들이 모두 존재하는 기간의 평균=0, 표준편차=1 (σ).'}
         </p>
+        <DataNotes cat={cat} keys={keys} />
 
         {/* DATA / KNOWLEDGE */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-[5fr_2fr] gap-6">
