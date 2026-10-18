@@ -2,7 +2,7 @@
 
 // 매크로 화면 공통 UI — 기존 /sectors · /watchlist 의 리포트 톤(각진 버튼, hairline, mono 숫자)을 그대로 따른다.
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   type Catalog, type Easy, type Indicator, type Layer, type SeriesSummary, type Tf, type SeriesData,
   fmtNum, fmtPeriod, fmtShift, tfLabel,
@@ -101,17 +101,13 @@ export function LayerLegend({
       )}
       <span className="mono font-semibold" style={{ color: 'var(--ink)' }}>{fmtNum(hover.value, s, layer.tf)}</span>
       <span className="mono" style={{ color: 'var(--ink-mute)' }}>{fmtPeriod(hover.date, s.obsFreq)}</span>
-      {layer.shift !== 0 && (
+      {layer.shift !== 0 && !(showControls && onShift) && (
         <span className="mono font-bold px-1" style={{ color: '#fff', background: color }} title="시간 이동은 표시용이며 원본 날짜는 바뀌지 않습니다">
           {fmtShift(layer.shift)}
         </span>
       )}
       {showControls && onShift && (
-        <span className="inline-flex items-center" title="이 선만 X축으로 평행이동 (선행/후행 비교용)">
-          <button type="button" onClick={() => onShift(layer.shift - step)} className="px-1 mono" style={{ color: 'var(--ink-2)', border: '1px solid var(--btn-border)' }}>◀</button>
-          {!compact && <span className="px-1 text-[10px]" style={{ color: 'var(--ink-mute)' }}>이동</span>}
-          <button type="button" onClick={() => onShift(layer.shift + step)} className="px-1 mono" style={{ color: 'var(--ink-2)', border: '1px solid var(--btn-border)' }}>▶</button>
-        </span>
+        <ShiftControl value={layer.shift} step={step} color={color} onChange={onShift} label={!compact} />
       )}
       {showControls && onUp && <button type="button" onClick={onUp} className="px-1" style={{ color: 'var(--ink-mute)' }} title="위로">↑</button>}
       {showControls && onDown && <button type="button" onClick={onDown} className="px-1" style={{ color: 'var(--ink-mute)' }} title="아래로">↓</button>}
@@ -331,5 +327,92 @@ export function DataNotes({ cat, keys }: { cat: Catalog; keys: string[] }) {
         <li key={n.key} className="text-[10px] leading-relaxed" style={{ color: 'var(--ink-2)' }}>ⓘ {n.text}</li>
       ))}
     </ul>
+  )
+}
+
+// ── 개별 선 시간 이동: ◀ [숫자 직접 입력] ▶ ↺ — 길게 누르면 연속 이동, ↺ 로 한 번에 0 ──
+const SHIFT_MAX = 240   // ±20년
+
+function ShiftControl({ value, step, color, onChange, label }: {
+  value: number; step: number; color: string; onChange: (n: number) => void; label: boolean
+}) {
+  const [text, setText] = useState(String(value))
+  // 편집을 시작한 시점의 값. 그 사이 ↺·◀▶ 로 값이 바뀌면 편집 상태를 자동으로 끝낸다
+  const [editBase, setEditBase] = useState<number | null>(null)
+  const editing = editBase !== null && editBase === value
+  const valRef = useRef(value)
+  useEffect(() => { valRef.current = value }, [value])   // 길게 누르기 중 최신 값 참조용
+  const timers = useRef<{ t?: ReturnType<typeof setTimeout>; i?: ReturnType<typeof setInterval> }>({})
+
+  const clamp = (n: number) => Math.max(-SHIFT_MAX, Math.min(SHIFT_MAX, n))
+  const shown = editing ? text : value > 0 ? `+${value}` : String(value)
+
+  const commit = () => {
+    if (!editing) { setEditBase(null); return }
+    setEditBase(null)
+    const n = parseInt(text.replace(/[^0-9+-]/g, ''), 10)
+    if (!Number.isNaN(n)) onChange(clamp(n))
+  }
+
+  const stop = () => {
+    clearTimeout(timers.current.t)
+    clearInterval(timers.current.i)
+    timers.current = {}
+  }
+  const start = (d: number) => {
+    stop()
+    onChange(clamp(valRef.current + d))
+    // 0.4초 이상 누르고 있으면 연속 이동
+    timers.current.t = setTimeout(() => {
+      timers.current.i = setInterval(() => onChange(clamp(valRef.current + d)), 80)
+    }, 400)
+  }
+  useEffect(() => stop, [])
+
+  const arrow = (d: number, ch: string) => (
+    <button type="button"
+      onPointerDown={e => { e.preventDefault(); start(d) }}
+      onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}
+      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChange(clamp(value + d)) } }}
+      className="px-1 mono select-none" style={{ color: 'var(--ink-2)', border: '1px solid var(--btn-border)' }}>{ch}</button>
+  )
+
+  return (
+    <span className="inline-flex items-center gap-0.5" title="이 선만 X축으로 평행이동 (개월). 숫자를 직접 입력하거나 ◀ ▶ 를 길게 누르세요. 표시용이며 원본 날짜는 바뀌지 않아요">
+      {label && <span className="text-[10px] mr-0.5" style={{ color: 'var(--ink-mute)' }}>이동</span>}
+      {arrow(-step, '◀')}
+      <input
+        value={shown}
+        inputMode="numeric"
+        aria-label="시간 이동 개월 수"
+        onFocus={e => {
+          const el = e.target
+          setEditBase(value)
+          setText(value === 0 ? '' : String(value))     // 0 이면 비워서 바로 입력
+          setTimeout(() => el.select(), 0)
+        }}
+        onChange={e => setText(e.target.value)}
+        onBlur={commit}
+        onKeyDown={e => {
+          if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
+          if (e.key === 'Escape') { setEditBase(null); (e.target as HTMLInputElement).blur() }
+          if (e.key === 'ArrowUp') { e.preventDefault(); onChange(clamp(value + step)) }
+          if (e.key === 'ArrowDown') { e.preventDefault(); onChange(clamp(value - step)) }
+        }}
+        className="mono text-[11px] text-center outline-none w-[3.2em] py-0"
+        style={{
+          border: `1px solid ${value !== 0 ? color : 'var(--btn-border)'}`,
+          background: value !== 0 && !editing ? color : 'transparent',
+          color: value !== 0 && !editing ? '#fff' : 'var(--ink)',
+          fontWeight: value !== 0 ? 700 : 400,
+        }}
+      />
+      <span className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>M</span>
+      {arrow(step, '▶')}
+      {value !== 0 && (
+        <button type="button" onClick={() => { setEditBase(null); onChange(0) }} className="px-1 text-[11px]"
+          style={{ color: 'var(--ink-2)', border: '1px solid var(--btn-border)' }} title="이 선의 시간 이동을 0으로">↺</button>
+      )}
+    </span>
   )
 }
