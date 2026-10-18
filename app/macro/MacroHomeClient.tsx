@@ -66,7 +66,7 @@ export default function MacroHomeClient() {
 
       {cat && (
         <p className="mt-10 text-[10px] leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
-          출처: FRED(BEA·BLS·Federal Reserve·Census·Treasury), Robert Shiller, Yahoo Finance. 1980년 이후(지표별 가용 시작일이 늦으면 그 이후).
+          출처: FRED(BEA·BLS·Federal Reserve·Census·Treasury), Robert Shiller, Yahoo Finance. 1970년 이후(지표별 가용 시작일이 늦으면 그 이후).
           일·주별 원본은 월평균 또는 월말 값으로 변환해 표시합니다. 갱신 {cat.generatedAt.slice(0, 10)}
         </p>
       )}

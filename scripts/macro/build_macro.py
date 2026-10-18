@@ -6,7 +6,7 @@
 
 산출물
   processed/macro/raw/{KEY}.csv          원천 RAW (원본 주기 그대로, 덮어쓰기 = 최신 빈티지)
-  public/data/macro/series/{KEY}.json    1980~ 월/분기 단위 + 변환값 (화면용)
+  public/data/macro/series/{KEY}.json    1970~ 월/분기 단위 + 변환값 (화면용)
   public/data/macro/catalog.json         카테고리·지표·설명·최신값·미니차트
   public/data/market/landing.json        랜딩용 S&P500 / Nasdaq-100 일별 종가 (최근 5년)
 
@@ -34,7 +34,7 @@ OUT_DIR = ROOT / "public" / "data" / "macro"
 SERIES_DIR = OUT_DIR / "series"
 LANDING = ROOT / "public" / "data" / "market" / "landing.json"
 
-START = "1980-01-01"          # 화면용 출력 시작 (변환 계산은 그 이전 데이터까지 사용)
+START = "1970-01-01"          # 화면용 출력 시작 (변환 계산은 그 이전 데이터까지 사용)
 LANDING_YEARS = 5
 SPARK_YEARS = 10
 FRED_KEY = os.environ.get("FRED_API_KEY", "").strip()
@@ -66,20 +66,34 @@ def get(url, **kw):
 # ─────────────────────────────────────────────────────────────
 # 원천별 다운로드 → pd.Series(index=DatetimeIndex, float)
 # ─────────────────────────────────────────────────────────────
-def fetch_fred(sid):
+def _fred_api(sid):
+    base = "https://api.stlouisfed.org/fred"
+    obs = get(f"{base}/series/observations",
+              params={"series_id": sid, "api_key": FRED_KEY, "file_type": "json"}).json()["observations"]
+    s = pd.Series({o["date"]: o["value"] for o in obs})
     meta = {}
+    info = get(f"{base}/series", params={"series_id": sid, "api_key": FRED_KEY, "file_type": "json"}).json()
+    if info.get("seriess"):
+        meta["updated"] = info["seriess"][0].get("last_updated")
+    return s, meta
+
+
+def _fred_csv(sid):
+    txt = get("https://fred.stlouisfed.org/graph/fredgraph.csv", params={"id": sid}).text
+    df = pd.read_csv(io.StringIO(txt))
+    return pd.Series(df.iloc[:, 1].values, index=df.iloc[:, 0].values), {}
+
+
+def fetch_fred(sid):
+    # API 키가 있으면 공식 API(원천 갱신일 포함), 실패하면(키 오류·일시 장애) CSV 로 폴백
     if FRED_KEY:
-        base = "https://api.stlouisfed.org/fred"
-        obs = get(f"{base}/series/observations",
-                  params={"series_id": sid, "api_key": FRED_KEY, "file_type": "json"}).json()["observations"]
-        s = pd.Series({o["date"]: o["value"] for o in obs})
-        info = get(f"{base}/series", params={"series_id": sid, "api_key": FRED_KEY, "file_type": "json"}).json()
-        if info.get("seriess"):
-            meta["updated"] = info["seriess"][0].get("last_updated")
+        try:
+            s, meta = _fred_api(sid)
+        except Exception as e:  # noqa: BLE001
+            log(f"  ⚠️ {sid}: FRED API 실패 → CSV 폴백 ({type(e).__name__})")
+            s, meta = _fred_csv(sid)
     else:
-        txt = get("https://fred.stlouisfed.org/graph/fredgraph.csv", params={"id": sid}).text
-        df = pd.read_csv(io.StringIO(txt))
-        s = pd.Series(df.iloc[:, 1].values, index=df.iloc[:, 0].values)
+        s, meta = _fred_csv(sid)
     s.index = pd.to_datetime(s.index)
     s = pd.to_numeric(s.replace(".", None), errors="coerce").dropna()
     return s.sort_index(), meta
@@ -118,7 +132,7 @@ def fetch_shiller(_sid):
 def fetch_yahoo(sid):
     import yfinance as yf
 
-    h = yf.Ticker(sid).history(start="1978-01-01", auto_adjust=False)
+    h = yf.Ticker(sid).history(start="1968-01-01", auto_adjust=False)
     s = h["Close"].dropna()
     s.index = pd.to_datetime(s.index.date)
     return s.sort_index(), {}

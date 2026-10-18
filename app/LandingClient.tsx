@@ -27,7 +27,7 @@ export default function LandingClient() {
   const [data, setData] = useState<Landing | null>(null)
   const [err, setErr] = useState(false)
   const [idx, setIdx] = useState<IndexKey>('SPX')
-  const [range, setRange] = useState<RangeId>('1Y')
+  const [range, setRange] = useState<RangeId>('5Y')
 
   useEffect(() => {
     fetch('/data/market/landing.json', { cache: 'no-cache' })

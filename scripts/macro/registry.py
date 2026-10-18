@@ -319,7 +319,7 @@ INDICATORS = [
          main=["SPX"], subs=[],
          what="미국 대형주 500개 지수",
          read="모든 매크로 지표의 기본 비교 대상.",
-         caution="매크로 비교용은 월말 종가. 1980년부터."),
+         caution="매크로 비교용은 월말 종가. 1970년부터."),
     dict(no=None, id="ndx", cat="market", name="Nasdaq-100", ko="나스닥 100", pri="-",
          main=["NDX"], subs=[],
          what="나스닥 상장 비금융 대형주 100개 지수",
