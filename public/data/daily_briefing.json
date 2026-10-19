@@ -1,7 +1,7 @@
 {
-  "date": "2026-10-19",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-10-20",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 2747600931.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": -232605596.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "KORU",
+      "ticker": "SNDK",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 247553213.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "SNDSK CRP ORD WI",
+      "value": -173417106.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "IONQ",
+      "ticker": "",
       "name": "",
-      "raw_name": "IONQ INC",
-      "value": 141097365.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
+      "value": -153738851.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "",
+      "ticker": "MRVL",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 117073407.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "MARVELL TECHNOLOGY INC",
+      "value": -96109964.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "IREN",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "IRIS ENERGY LTD",
-      "value": 68458657.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "TESLA INC",
+      "value": -88021485.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
