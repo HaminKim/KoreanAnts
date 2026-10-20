@@ -21033,13 +21033,6 @@
   ],
   "ISRG": [
     {
-      "d": "2023-10-19",
-      "actual": 1.46,
-      "estimate": 1.42,
-      "surp": 3.17,
-      "revenue": null
-    },
-    {
       "d": "2024-01-23",
       "actual": 1.6,
       "estimate": 1.49,
@@ -21115,6 +21108,13 @@
       "estimate": 2.5,
       "surp": 11.86,
       "revenue": 2.892
+    },
+    {
+      "d": "2026-10-20",
+      "actual": 3.0,
+      "estimate": 2.64,
+      "surp": 13.61,
+      "revenue": null
     }
   ],
   "PLUG": [
@@ -35864,13 +35864,6 @@
   ],
   "COF": [
     {
-      "d": "2023-10-26",
-      "actual": 4.45,
-      "estimate": 3.24,
-      "surp": 37.56,
-      "revenue": null
-    },
-    {
       "d": "2024-01-25",
       "actual": 2.24,
       "estimate": 2.67,
@@ -35946,6 +35939,13 @@
       "estimate": 4.69,
       "surp": 23.79,
       "revenue": 15.85
+    },
+    {
+      "d": "2026-10-20",
+      "actual": 6.69,
+      "estimate": 5.5,
+      "surp": 21.58,
+      "revenue": null
     }
   ],
   "MRO": [

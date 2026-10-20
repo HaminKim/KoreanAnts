@@ -13,7 +13,7 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 3120209959.0,
+      "value": 3818154026.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -22,7 +22,7 @@
       "ticker": "KORU",
       "name": "",
       "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 291509628.0,
+      "value": 277259901.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
@@ -31,7 +31,7 @@
       "ticker": "IONQ",
       "name": "",
       "raw_name": "IONQ INC",
-      "value": 164226805.0,
+      "value": 168372407.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
@@ -40,7 +40,7 @@
       "ticker": "MU",
       "name": "",
       "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -240153999.0,
+      "value": -249618858.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -49,16 +49,16 @@
       "ticker": "SNDK",
       "name": "",
       "raw_name": "SNDSK CRP ORD WI",
-      "value": -166762188.0,
+      "value": -190759408.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "TSLA",
+      "ticker": "",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -112244620.0,
+      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
+      "value": -117221654.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
     }
