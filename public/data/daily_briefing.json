@@ -1,40 +1,13 @@
 {
-  "date": "2026-10-21",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-10-22",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
-    {
-      "rank": 1,
-      "ticker": "SOXL",
-      "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 3818154026.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "KORU",
-      "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 277259901.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "IONQ",
-      "name": "",
-      "raw_name": "IONQ INC",
-      "value": 168372407.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
     {
       "rank": 1,
       "ticker": "MU",
@@ -61,6 +34,24 @@
       "value": -117221654.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "TSLA",
+      "name": "",
+      "raw_name": "TESLA INC",
+      "value": -97984415.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
+      "ticker": "DOCN",
+      "name": "DOCN",
+      "raw_name": "DIGITALOCEAN HOLDINGS INC",
+      "value": -75405171.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
