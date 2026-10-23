@@ -25,6 +25,7 @@ export default function HeaderWithModal() {
   const isPricing = pathname?.startsWith('/pricing');
   const isMacro = pathname?.startsWith('/macro');
   const isAnts = pathname?.startsWith('/ants');
+  const isHouse = pathname?.startsWith('/house');
 
   useEffect(() => {
     if (!INTRO_GATE_ENABLED) return;
@@ -85,6 +86,17 @@ export default function HeaderWithModal() {
             }}
           >
             매크로
+          </Link>
+          <Link
+            href="/house"
+            className="text-xs font-medium whitespace-nowrap pb-1 border-b-2 transition-colors"
+            style={{
+              color: isHouse ? 'var(--ink)' : 'var(--ink-2)',
+              borderColor: isHouse ? 'var(--accent)' : 'transparent',
+              fontWeight: isHouse ? 600 : 500,
+            }}
+          >
+            부동산
           </Link>
           <Link
             href="/ants"
