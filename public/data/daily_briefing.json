@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-25",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-10-26",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,7 +13,7 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1886122791.0,
+      "value": 545062153.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -22,16 +22,16 @@
       "ticker": "",
       "name": "",
       "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 324606139.0,
+      "value": 172406228.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "KORU",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 318830298.0,
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 118247668.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
@@ -40,16 +40,16 @@
       "ticker": "QLD",
       "name": "",
       "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 162286211.0,
+      "value": 95913674.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "IONQ",
+      "ticker": "KORU",
       "name": "",
-      "raw_name": "IONQ INC",
-      "value": 154564836.0,
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": 90435378.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
