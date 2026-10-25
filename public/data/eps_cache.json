@@ -4037,7 +4037,7 @@
       "d": "2026-07-30",
       "actual": 0.87,
       "estimate": 0.87,
-      "surp": -0.33,
+      "surp": -0.53,
       "revenue": null
     }
   ],
@@ -9316,14 +9316,14 @@
       "actual": 2.12,
       "estimate": 2.05,
       "surp": 3.21,
-      "revenue": 933.792
+      "revenue": null
     },
     {
       "d": "2025-07-17",
       "actual": 2.47,
       "estimate": 2.31,
       "surp": 6.79,
-      "revenue": 933.792
+      "revenue": 989.918
     },
     {
       "d": "2025-10-15",
@@ -9358,7 +9358,7 @@
       "actual": 4.6,
       "estimate": 4.52,
       "surp": 1.67,
-      "revenue": null
+      "revenue": 1494.243
     }
   ],
   "SYY": [
@@ -10217,7 +10217,7 @@
       "d": "2026-10-21",
       "actual": 1.24,
       "estimate": 1.19,
-      "surp": 4.09,
+      "surp": 4.15,
       "revenue": null
     }
   ],
@@ -13223,14 +13223,14 @@
       "actual": 6.0,
       "estimate": 5.79,
       "surp": 3.71,
-      "revenue": 7.692
+      "revenue": null
     },
     {
       "d": "2025-07-16",
       "actual": 5.9,
       "estimate": 5.25,
       "surp": 12.36,
-      "revenue": 7.692
+      "revenue": 7.516
     },
     {
       "d": "2025-10-15",
@@ -13265,7 +13265,7 @@
       "actual": 11.82,
       "estimate": 10.76,
       "surp": 9.86,
-      "revenue": null
+      "revenue": 11.662
     }
   ],
   "MET": [
