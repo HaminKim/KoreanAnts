@@ -13825,14 +13825,14 @@
       "actual": 1.88,
       "estimate": 1.77,
       "surp": 6.42,
-      "revenue": 6.344
+      "revenue": null
     },
     {
       "d": "2025-07-18",
       "actual": 2.16,
       "estimate": 2.01,
       "surp": 7.37,
-      "revenue": 6.344
+      "revenue": 6.517
     },
     {
       "d": "2025-10-21",
@@ -13867,7 +13867,7 @@
       "actual": 2.46,
       "estimate": 2.38,
       "surp": 3.21,
-      "revenue": null
+      "revenue": 6.584
     }
   ],
   "GEV": [
@@ -23738,14 +23738,14 @@
       "actual": 1.47,
       "estimate": 1.37,
       "surp": 7.52,
-      "revenue": 21.581
+      "revenue": null
     },
     {
       "d": "2025-07-22",
       "actual": 1.56,
       "estimate": 1.43,
       "surp": 9.47,
-      "revenue": 21.581
+      "revenue": 22.478
     },
     {
       "d": "2025-10-21",
@@ -23780,7 +23780,7 @@
       "actual": 2.26,
       "estimate": 1.78,
       "surp": 27.03,
-      "revenue": null
+      "revenue": 24.965
     }
   ],
   "EOG": [
@@ -23910,14 +23910,14 @@
       "actual": 3.32,
       "estimate": 6.26,
       "surp": -46.99,
-      "revenue": 10.351
+      "revenue": null
     },
     {
       "d": "2025-07-22",
       "actual": 8.15,
       "estimate": 6.8,
       "surp": 19.93,
-      "revenue": 10.351
+      "revenue": 10.423
     },
     {
       "d": "2025-10-21",
@@ -23952,7 +23952,7 @@
       "actual": 7.89,
       "estimate": 7.18,
       "surp": 9.89,
-      "revenue": null
+      "revenue": 11.122
     }
   ],
   "FIS": [
@@ -32189,14 +32189,14 @@
       "actual": 1.88,
       "estimate": 1.64,
       "surp": 14.38,
-      "revenue": 5.936
+      "revenue": null
     },
     {
       "d": "2025-07-22",
       "actual": 1.8,
       "estimate": 1.64,
       "surp": 9.49,
-      "revenue": 5.936
+      "revenue": 6.053
     },
     {
       "d": "2025-10-21",
@@ -32231,7 +32231,7 @@
       "actual": 2.11,
       "estimate": 1.92,
       "surp": 10.02,
-      "revenue": null
+      "revenue": 6.554
     }
   ],
   "SMCI": [
@@ -32361,14 +32361,14 @@
       "actual": 2.78,
       "estimate": 2.67,
       "surp": 4.28,
-      "revenue": 47.122
+      "revenue": null
     },
     {
       "d": "2025-07-22",
       "actual": 2.53,
       "estimate": 2.48,
       "surp": 2.15,
-      "revenue": 47.122
+      "revenue": 48.591
     },
     {
       "d": "2025-10-21",
@@ -32403,7 +32403,7 @@
       "actual": 3.7,
       "estimate": 3.63,
       "surp": 1.89,
-      "revenue": null
+      "revenue": 50.015
     }
   ],
   "NXPI": [
@@ -34613,14 +34613,14 @@
       "actual": 1.75,
       "estimate": 1.68,
       "surp": 4.17,
-      "revenue": 6.164
+      "revenue": null
     },
     {
       "d": "2025-07-22",
       "actual": 2.1,
       "estimate": 2.07,
       "surp": 1.61,
-      "revenue": 6.164
+      "revenue": 6.26
     },
     {
       "d": "2025-10-21",
@@ -34655,7 +34655,7 @@
       "actual": 2.07,
       "estimate": 2.04,
       "surp": 1.63,
-      "revenue": null
+      "revenue": 6.521
     }
   ],
   "ESAB": [
