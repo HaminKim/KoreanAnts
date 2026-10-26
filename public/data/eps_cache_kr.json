@@ -16152,13 +16152,6 @@
   ],
   "088350.KS": [
     {
-      "d": "2022-08-12",
-      "actual": 46.0,
-      "estimate": 78.0,
-      "surp": -41.33,
-      "revenue": null
-    },
-    {
       "d": "2022-11-14",
       "actual": 456.0,
       "estimate": 158.0,
@@ -16283,6 +16276,13 @@
       "estimate": 167.0,
       "surp": 79.34,
       "revenue": null
+    },
+    {
+      "d": "2026-06-30",
+      "actual": 497.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": 74373.7
     },
     {
       "d": "2026-08-13",
