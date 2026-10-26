@@ -1,7 +1,7 @@
 {
-  "date": "2026-10-26",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-10-27",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "LITE",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 545062153.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
+      "value": -44555405.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "",
+      "ticker": "META",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 172406228.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "META PLATFORMS INC CL A",
+      "value": -38082686.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
+      "ticker": "TSM",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 118247668.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "TAIWAN SEMICONDUCTOR MANUFACTURING CO LTD ADR",
+      "value": -34557271.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "QLD",
-      "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 95913674.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "ticker": "ATI",
+      "name": "ATI",
+      "raw_name": "ALLEGHENY TECHNOLOGIES INC",
+      "value": -30963484.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "KORU",
+      "ticker": "TSLL",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 90435378.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": -29784981.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
