@@ -4,7 +4,7 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { type Catalog, type Indicator, loadCatalog, fmtNum, fmtPeriod, tfLabel } from '@/app/lib/macro'
+import { type Catalog, type Indicator, loadCatalog, fmtNum, fmtPeriod, tfLabel, updateInfo, fmtMD } from '@/app/lib/macro'
 import { Sparkline } from '@/app/components/macro/ui'
 
 const SHORTCUTS = [
@@ -80,8 +80,13 @@ function Card({ ind, cat }: { ind: Indicator; cat: Catalog }) {
   const body = (
     <div className="h-full flex flex-col p-3 transition-colors"
       style={{ border: '1px solid var(--hairline-2)', background: 'var(--surface)', opacity: live ? 1 : 0.55 }}>
-      <div className="text-[13px] font-bold leading-snug" style={{ color: 'var(--ink)' }}>{ind.ko}</div>
-      <div className="text-[10px] truncate" style={{ color: 'var(--ink-mute)' }}>{ind.name}</div>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="text-[13px] font-bold leading-snug" style={{ color: 'var(--ink)' }}>{ind.ko}</div>
+          <div className="text-[10px] truncate" style={{ color: 'var(--ink-mute)' }}>{ind.name}</div>
+        </div>
+        {live && <UpdateStamp ind={ind} cat={cat} />}
+      </div>
       {live ? (
         <>
           <div className="mt-2 flex items-baseline gap-1.5">
@@ -100,4 +105,18 @@ function Card({ ind, cat }: { ind: Indicator; cat: Catalog }) {
     </div>
   )
   return live ? <Link href={`/macro/${ind.id}`} className="block hover:opacity-90">{body}</Link> : <div>{body}</div>
+}
+
+// 카드 오른쪽 위: 최신 데이터 공개일 / 다음 발표 예정일. 주 시리즈가 여럿이면 가장 최근 공개 · 가장 빠른 다음 발표
+function UpdateStamp({ ind, cat }: { ind: Indicator; cat: Catalog }) {
+  const infos = ind.main.map(k => cat.series[k]).filter(Boolean).map(updateInfo)
+  const got = infos.map(i => i.got).filter(Boolean).sort().pop() ?? null
+  const nx = infos.filter(i => i.next).sort((a, b) => (a.next! < b.next! ? -1 : 1))[0]
+  return (
+    <div className="shrink-0 text-right text-[9px] leading-tight whitespace-nowrap" style={{ color: 'var(--ink-mute)' }}
+      title={`최신 데이터가 공개된 날 (미국 날짜)${nx ? ` · 다음 발표 ${nx.est ? '추정 (주기 기준)' : '예정 (FRED 일정)'}` : ''}`}>
+      <div>업데이트 <span className="mono" style={{ color: 'var(--ink-2)' }}>{fmtMD(got)}</span></div>
+      {nx && <div>다음 <span className="mono">{nx.est ? '~' : ''}{fmtMD(nx.next)}</span></div>}
+    </div>
+  )
 }

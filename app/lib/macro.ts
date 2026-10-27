@@ -19,6 +19,8 @@ export interface SeriesSummary {
   partialLast: boolean
   updated: string | null
   fetchedAt: string
+  pubDate?: string | null      // 마지막 관측이 원천에서 공개된 날 (미국 날짜)
+  next?: string[]              // FRED 발표 예정일 (미국 날짜)
   since?: string | null        // 늦게 시작하는 이유
   spliceNote?: string | null   // 과거 구간 이어붙이기 설명
   latest: { tf: Tf; date: string | null; value: number | null; prev: number | null }
@@ -235,6 +237,42 @@ export function freqNote(s: SeriesSummary | SeriesData): string {
   }
   return FREQ_LABEL[s.freq]
 }
+
+// ─────────────────────────────────────────
+// 갱신일 — got: 최신 데이터 공개일, next: 다음 발표 예정일 (일정 없으면 주기로 추정). 둘 다 미국 날짜
+// ─────────────────────────────────────────
+const usDate = (d: Date) => d.toLocaleDateString('en-CA', { timeZone: 'America/New_York' })
+
+function addDays(ymd: string, n: number): string {
+  const d = new Date(ymd + 'T00:00:00Z')
+  d.setUTCDate(d.getUTCDate() + n)
+  return d.toISOString().slice(0, 10)
+}
+
+function addMonths(ymd: string, n: number): string {
+  const d = new Date(ymd + 'T00:00:00Z')
+  d.setUTCMonth(d.getUTCMonth() + n)
+  return d.toISOString().slice(0, 10)
+}
+
+export function updateInfo(s: SeriesSummary | SeriesData): { got: string | null; next: string | null; est: boolean } {
+  const got = s.pubDate ?? null
+  const today = usDate(new Date())
+  const sched = (s.next ?? []).find(d => d >= today && (!got || d > got))
+  if (sched) return { got, next: sched, est: false }
+  if (!got) return { got, next: null, est: false }
+  const step = (d: string) =>
+    s.freq === 'D' ? addDays(d, 1) : s.freq === 'W' ? addDays(d, 7) : addMonths(d, s.freq === 'Q' ? 3 : 1)
+  let n = step(got)
+  while (n <= today && s.freq !== 'D') n = step(n)
+  if (s.freq === 'D') {
+    if (n <= today) n = addDays(today, 1)
+    while ([0, 6].includes(new Date(n + 'T00:00:00Z').getUTCDay())) n = addDays(n, 1)
+  }
+  return { got, next: n, est: true }
+}
+
+export const fmtMD = (ymd: string | null) => (ymd ? `${Number(ymd.slice(5, 7))}/${Number(ymd.slice(8, 10))}` : '–')
 
 export const REL_LABEL: Record<RelType, { out: string; in: string }> = {
   drives:     { out: '원인이 됨 →', in: '← 원인' },

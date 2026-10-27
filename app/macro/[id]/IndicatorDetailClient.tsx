@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   type Catalog, type Indicator, type Layer,
-  loadCatalog, loadSeries, encodeLayers, decodeLayers, fmtNum, fmtPeriod, freqNote, tfLabel, REL_LABEL,
+  loadCatalog, loadSeries, encodeLayers, decodeLayers, fmtNum, fmtPeriod, freqNote, tfLabel, REL_LABEL, updateInfo,
 } from '@/app/lib/macro'
 import MacroChart, { type ChartLayer, type MacroChartHandle } from '@/app/components/macro/MacroChart'
 import { Chip, DataNotes, EasyBlock, Label, LayerLegend, PERIODS, Picker, ShadeToggles, newLayer, shadeBands, useIsMobile, useSeriesMap, useShade } from '@/app/components/macro/ui'
@@ -231,6 +231,13 @@ function Detail({ cat, ind }: { cat: Catalog; ind: Indicator }) {
                   <Row k="주기" v={freqNote(s)} />
                   <Row k="기간" v={`${s.first?.slice(0, 7)} ~ ${s.rawLast}`} />
                   {s.updated && <Row k="원천 갱신" v={s.updated.slice(0, 16)} />}
+                  {(() => {
+                    const u = updateInfo(s)
+                    return <>
+                      {u.got && <Row k="최신 공개" v={`${u.got} (미국 날짜)`} />}
+                      {u.next && <Row k="다음 발표" v={u.est ? `${u.next} 전후 (추정)` : u.next} />}
+                    </>
+                  })()}
                   <Row k="수집" v={s.fetchedAt.slice(0, 10)} />
                   {s.partialLast && <Row k="" v="마지막 달은 진행 중(부분 집계)" />}
                   {s.note && <p className="mt-1 text-[11px] leading-relaxed" style={{ color: 'var(--ink-mute)' }}>{s.note}</p>}

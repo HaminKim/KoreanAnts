@@ -21,6 +21,7 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import requests
@@ -174,19 +175,61 @@ def _monthly_fred(sid):
 def fetch_derived(sid):
     """계산 시리즈. REAL10Y_EST = 월평균 10년물(GS10) − CPI YoY
                    HHDEBT_DPI  = 가계부채(CMDEBT, 백만 $) ÷ 명목 가처분소득(DPI, 십억 $ 연율) × 100"""
+    # 공개일(updated)은 새 값이 생기는 시점을 정하는 원천(DERIVED_RELEASE)을 따름
     if sid == "HHDEBT_DPI":
-        debt, _ = fetch_fred("CMDEBT")
+        debt, meta = fetch_fred("CMDEBT")
         dpi, _ = fetch_fred("DPI")
-        return (debt / 1000 / dpi * 100).dropna(), {"url": "https://fred.stlouisfed.org/series/CMDEBT"}
+        return (debt / 1000 / dpi * 100).dropna(), {"url": "https://fred.stlouisfed.org/series/CMDEBT", "updated": meta.get("updated")}
     if sid == "REAL10Y_EST":
         gs10 = _monthly_fred("GS10")
-        cpi = _monthly_fred("CPIAUCSL")
+        cpi, meta = fetch_fred("CPIAUCSL")   # 이미 월초 날짜의 월별 시리즈
         yoy = (cpi / cpi.shift(12) - 1) * 100
-        return (gs10 - yoy).dropna(), {"url": "https://fred.stlouisfed.org/series/GS10"}
+        return (gs10 - yoy).dropna(), {"url": "https://fred.stlouisfed.org/series/GS10", "updated": meta.get("updated")}
     raise ValueError(sid)
 
 
 FETCH = {"fred": fetch_fred, "shiller": fetch_shiller, "yahoo": fetch_yahoo, "derived": fetch_derived}
+
+# 계산 시리즈의 새 값이 생기는 시점을 정하는 FRED 원천 (발표 일정 조회용)
+DERIVED_RELEASE = {"HHDEBT_DPI": "CMDEBT", "REAL10Y_EST": "CPIAUCSL"}
+
+
+# ─────────────────────────────────────────────────────────────
+# 발표 일정 (FRED release calendar) — 키가 있을 때만. 없거나 실패하면 None
+# ─────────────────────────────────────────────────────────────
+_RELEASE_OF, _RELEASE_DATES = {}, {}
+
+
+def fred_next_releases(sid, n=6):
+    if not FRED_KEY:
+        return None
+    base = "https://api.stlouisfed.org/fred"
+    today = datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d")
+    try:
+        if sid not in _RELEASE_OF:
+            rel = get(f"{base}/series/release",
+                      params={"series_id": sid, "api_key": FRED_KEY, "file_type": "json"}).json()["releases"]
+            _RELEASE_OF[sid] = rel[0]["id"] if rel else None
+        rid = _RELEASE_OF[sid]
+        if rid is None:
+            return None
+        if rid not in _RELEASE_DATES:
+            # 미래 발표일은 'no data' 날짜로만 나옴. 내림차순으로 넉넉히 받아 오늘 이후만 남긴다
+            js = get(f"{base}/release/dates",
+                     params={"release_id": rid, "api_key": FRED_KEY, "file_type": "json",
+                             "realtime_start": today, "include_release_dates_with_no_data": "true",
+                             "sort_order": "desc", "limit": 1000}).json()
+            _RELEASE_DATES[rid] = sorted(d["date"] for d in js.get("release_dates", []) if d["date"] >= today)
+        return _RELEASE_DATES[rid][:n]
+    except Exception as e:  # noqa: BLE001
+        log(f"  ⚠️ {sid}: 발표 일정 조회 실패 ({type(e).__name__})")
+        return None
+
+
+def release_sid(key, sp):
+    if sp["src"] == "fred":
+        return sp["srcId"].split(":")[0]
+    return DERIVED_RELEASE.get(key)
 
 
 def source_url(sp):
@@ -278,19 +321,48 @@ def build_series(key):
     df = df.dropna(how="all")
 
     nd_level = max(sp["dec"] + 2, 2) if per.abs().max() < 1e5 else 1
+
+    # pubDate = 마지막 관측(rawLast)이 원천에서 공개된 날 (미국 날짜).
+    # 같은 관측의 수정 발표는 공개일로 치지 않으므로 rawLast 가 그대로면 이전 값을 유지
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    raw_last = raw.index[-1].strftime("%Y-%m-%d")
+    prev = {}
+    if (SERIES_DIR / f"{key}.json").exists():
+        try:
+            prev = json.loads((SERIES_DIR / f"{key}.json").read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001
+            pass
+    pub_date = prev.get("pubDate") if prev.get("rawLast") == raw_last else None
+    if not pub_date:
+        if meta.get("updated"):              # FRED last_updated (미국 중부시간)
+            pub_date = meta["updated"][:10]
+        elif sp["src"] == "yahoo":           # 종가는 거래일 당일 공개
+            pub_date = raw_last
+        else:                                # 공개일을 알 수 없으면 처음 받은 날
+            pub_date = datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d")
+
+    # 다음 발표일: FRED 일정 → 실패하면 이전에 받아둔 일정 중 아직 안 지난 것
+    rs = release_sid(key, sp)
+    nxt = fred_next_releases(rs) if rs else None
+    if nxt is None:
+        today = datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d")
+        nxt = [d for d in prev.get("next") or [] if d >= today]
+
     out = {
         "key": key, "label": sp["label"], "units": sp["units"],
         "freq": sp["freq"], "obsFreq": obs_freq, "agg": sp["agg"],
         "src": sp["src"], "srcId": sp["srcId"], "url": meta.get("url") or source_url(sp),
         "note": sp["note"], "dec": sp["dec"], "tf": sp["tf"],
         "rawFirst": raw.index[0].strftime("%Y-%m-%d"),
-        "rawLast": raw.index[-1].strftime("%Y-%m-%d"),
+        "rawLast": raw_last,
         "partialLast": partial,
         "since": sp.get("since"),
         "spliceNote": (f"{spliced_before[:4]}년 {int(spliced_before[5:7])}월 이전은 월별 {sp['backfill'][0]} − {sp['backfill'][1].split(':')[0]} 로 이어붙인 값이에요"
                        if spliced_before else None),
         "updated": meta.get("updated"),
-        "fetchedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "fetchedAt": now,
+        "pubDate": pub_date,
+        "next": nxt,
         "d": [d.strftime("%Y-%m-%d") for d in df.index],
     }
     for tf in sp["tf"]:
@@ -334,6 +406,7 @@ def series_summary(key):
         "agg": js["agg"], "tf": js["tf"], "dec": js["dec"], "note": js["note"], "url": js["url"],
         "first": js["d"][0] if js["d"] else None, "rawLast": js["rawLast"], "partialLast": js["partialLast"],
         "updated": js["updated"], "fetchedAt": js["fetchedAt"],
+        "pubDate": js.get("pubDate"), "next": js.get("next") or [],
         "since": js.get("since"), "spliceNote": js.get("spliceNote"),
         "latest": {"tf": tf0, "date": date, "value": val, "prev": prev},
         "spark": spark,
