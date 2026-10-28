@@ -100,6 +100,8 @@ export interface LocalGeoUnit {
   d: string
   label: [number, number]
   bbox: [number, number, number, number]   // x, y, w, h
+  kind?: 'area'           // 구가 없는 시를 나눈 생활권 (행정동을 합침)
+  emds?: string[]         // 생활권에 들어간 행정동
 }
 
 export interface LocalGeo { id: string; ko: string; source: string; viewBox: [number, number, number, number]; units: Record<string, LocalGeoUnit> }

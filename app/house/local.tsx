@@ -57,9 +57,11 @@ export function useLocalFile(fid: string | null) {
   return st && st.fid === fid ? st : { fid, geo: null, data: null, err: false }
 }
 
-/** 지도 단위 → 데이터. 세종처럼 단위가 하나뿐이면 시도 합계(root)를 씀 */
+/** 지도 단위 → 데이터. 세종처럼 시군구가 하나뿐이면 시도 합계(root)를 씀 */
 export function unitData(geo: LocalGeo, data: LocalData, uid: string): LocalUnit | undefined {
-  return data.units[uid] ?? (Object.keys(geo.units).length === 1 ? data.units.root : undefined)
+  if (data.units[uid]) return data.units[uid]
+  const l2 = Object.keys(geo.units).filter(k => geo.units[k].level === 2)
+  return l2.length === 1 && l2[0] === uid ? data.units.root : undefined
 }
 
 export function childrenOf(geo: LocalGeo, uid: string): string[] {
@@ -120,13 +122,14 @@ export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, on
         const v = localVal(unitData(geo, data, id)?.sum, metric.id)
         const fill = fillOf(metric, v, vals)
         const [, , w, h] = u.bbox
+        const name = u.name.replace(/\(.*\)$/, '')   // '신제주(노형·연동)' → '신제주'
         // 칸보다 긴 글자는 생략 (마우스를 올리면 툴팁으로 보임)
-        const showName = u.name.length * fs * 0.95 <= w * 1.15 && h >= fs * 1.2
+        const showName = name.length * fs * 0.95 <= w * 1.15 && h >= fs * 1.2
         const showVal = showName && v !== null && h >= fs * 2.6 && w >= fs * 3.2
         if (!showName) return null
         return (
           <g key={id} pointerEvents="none" transform={`translate(${u.label[0]},${u.label[1] - (showVal ? fs * 0.45 : 0)})`}>
-            <text textAnchor="middle" dominantBaseline="middle" fontSize={fs} fontWeight={700} fill={textOn(fill)}>{u.name}</text>
+            <text textAnchor="middle" dominantBaseline="middle" fontSize={fs} fontWeight={700} fill={textOn(fill)}>{name}</text>
             {showVal && (
               <text y={fs * 1.15} textAnchor="middle" dominantBaseline="middle" fontSize={fs * 0.9} className="mono" fill={textOn(fill)}>
                 {fmtRegion(metric, v)}
@@ -140,8 +143,8 @@ export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, on
 }
 
 /** 시군구 마우스오버 툴팁 */
-export function LocalTip({ name, unit, metrics, metric, style }: {
-  name: string; unit: LocalUnit | undefined; metrics: RegionMetric[]; metric: RegionMetric; style: React.CSSProperties
+export function LocalTip({ name, unit, metrics, metric, style, area = false }: {
+  name: string; unit: LocalUnit | undefined; metrics: RegionMetric[]; metric: RegionMetric; style: React.CSSProperties; area?: boolean
 }) {
   const st = unit ? priceStatus(unit.sum) : null
   return (
@@ -164,9 +167,9 @@ export function LocalTip({ name, unit, metrics, metric, style }: {
           })}
         </tbody>
       </table>
-      {unit && unit.sum.p84 === undefined && (
+      {(area || (unit && unit.sum.p84 === undefined)) && (
         <div className="mt-1.5 pt-1.5" style={{ borderTop: '1px solid var(--hairline)', color: 'var(--ink-mute)' }}>
-          부동산원 가격 표본이 없는 지역이라 집값은 없어요
+          {area ? '생활권 집값은 국토부 실거래가 연결 후 채워져요' : '부동산원 가격 표본이 없는 지역이라 집값은 없어요'}
         </div>
       )}
     </div>

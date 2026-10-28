@@ -7,7 +7,7 @@
 import Link from 'next/link'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  type ApiId, type HouseCatalog, type HouseIndicator, type LocalIndex, type LocalUnit, type MapGeo, type RegionMetric, type Regions,
+  type ApiId, type HouseCatalog, type HouseIndicator, type LocalGeo, type LocalGeoUnit, type LocalIndex, type LocalUnit, type MapGeo, type RegionMetric, type Regions,
   fillOf, fmtRegion, fmtWon, fmtYm, loadHouseCatalog, loadHouseSeries, loadLocalIndex, loadMap, loadRegions, priceStatus, textOn,
 } from '@/app/lib/house'
 import { type Layer, fmtNum, fmtPeriod, tfLabel } from '@/app/lib/macro'
@@ -166,6 +166,7 @@ function GuidePanel({ cat, api, onClose }: { cat: HouseCatalog; api: ApiId; onCl
 // 누르면 오른쪽에 상세, 더블클릭(또는 상세의 버튼)으로 확대
 // ─────────────────────────────────────────
 type View = { nid: string; fid: string; parent: string | null } | null   // null = 전국
+const SEJONG_UID = '36110'
 
 function MapSection({ cat, regions, geo, lidx, onGuide }: {
   cat: HouseCatalog; regions: Regions; geo: MapGeo; lidx: LocalIndex | null; onGuide: (a: ApiId) => void
@@ -191,14 +192,14 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
   const lms = useMemo(() => localMetrics(local.data?.asOf ?? null), [local.data])
   const lmetric = lms.find(m => m.id === lmid) ?? lms[0]
 
-  // 세종은 시군구가 따로 없어서 확대하지 않음
-  const zoomable = (nid: string) => !!lidx?.files[nid] && nid !== 'sejong'
+  const zoomable = (nid: string) => !!lidx?.files[nid]
   const go = (v: View) => { setView(v); setSelected(null); setHover(null); setPos(null) }
   const zoomNation = (nid: string) => {
     const f = lidx?.files[nid]
-    if (!f || nid === 'sejong') return
-    // 광주는 통합 파일(전남광주) 안의 광주 단위로 바로 들어감
-    go({ nid, fid: f.file, parent: f.unit === 'root' || f.unit === 'jeonnam' ? null : f.unit })
+    if (!f) return
+    // 광주는 통합 파일(전남광주) 안의 광주 단위로, 세종은 시군구가 하나뿐이라 바로 생활권으로
+    const parent = nid === 'sejong' ? SEJONG_UID : f.unit === 'root' || f.unit === 'jeonnam' ? null : f.unit
+    go({ nid, fid: f.file, parent })
   }
   const zoomLocal = (uid: string) => view && go({ ...view, parent: uid })
 
@@ -340,6 +341,7 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
             ? <RegionTip regions={regions} id={hover} metric={metric} cat={cat} style={{ left: pos.x, top: pos.y }} />
             : lgeo && ldata && lgeo.units[hover] && (
               <LocalTip name={unitName(hover)} unit={unitData(lgeo, ldata, hover)} metrics={lms} metric={lmetric}
+                area={lgeo.units[hover].kind === 'area' && !ldata.units[hover]}
                 style={{ left: pos.x, top: pos.y }} />
             ))}
         </div>
@@ -354,18 +356,24 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
           ) : !lgeo || !ldata ? (
             <div className="py-10 text-center text-[11px]" style={{ color: 'var(--ink-mute)' }}>{local.err ? '–' : '불러오는 중…'}</div>
           ) : selected && lgeo.units[selected] ? (
-            <UnitDetail name={unitName(selected)} sido={lgeo.ko} unit={unitData(lgeo, ldata, selected)} sqm={ldata.sqm}
+            <UnitDetail name={unitName(selected)} sido={lgeo.ko} geo={lgeo.units[selected]} unit={unitData(lgeo, ldata, selected)} sqm={ldata.sqm}
               onClose={() => setSelected(null)}
+              zoomLabel={childLabel(lgeo, selected)}
               onZoom={!view.parent && childrenOf(lgeo, selected).length ? () => zoomLocal(selected) : undefined} />
           ) : (
             <RankList title={`${areaName} ${lmetric.label} 순위`} sub={`기준 ${fmtYm(lmetric.id === 'vol' ? area?.sum.volDate ?? lmetric.asOf : lmetric.asOf)} · 지역을 누르면 집값 흐름이 보여요`}
               metric={lmetric} onPick={setSelected}
-              rows={lids.map(k => ({ id: k, name: lgeo.units[k].name, v: localVal(unitData(lgeo, ldata, k)?.sum, lmetric.id) }))} />
+              rows={lids.map(k => ({ id: k, name: lgeo.units[k].name, v: localVal(unitData(lgeo, ldata, k)?.sum, lmetric.id), emds: lgeo.units[k].emds }))} />
           )}
         </div>
       </div>
     </section>
   )
+}
+
+/** 하위 단위 이름: 일반구면 '구', 행정동을 묶은 단위면 '생활권' */
+function childLabel(geo: LocalGeo, uid: string) {
+  return childrenOf(geo, uid).some(k => geo.units[k].kind === 'area') ? '생활권' : '구'
 }
 
 function Crumb({ on, onClick, children }: { on: boolean; onClick?: () => void; children: React.ReactNode }) {
@@ -440,10 +448,29 @@ function Ranking({ regions, metric, ids, onPick, cat, onGuide }: {
 }
 
 function RankList({ title, sub, rows, metric, onPick }: {
-  title: string; sub: string; rows: { id: string; name: string; v: number | null }[]; metric: RegionMetric; onPick: (id: string) => void
+  title: string; sub: string; rows: { id: string; name: string; v: number | null; emds?: string[] }[]; metric: RegionMetric; onPick: (id: string) => void
 }) {
   const sorted = [...rows].sort((a, b) => (b.v ?? -Infinity) - (a.v ?? -Infinity))
   const vals = sorted.map(r => r.v).filter((v): v is number => v !== null)
+  // 생활권처럼 아직 값이 하나도 없으면 순위 대신 어떤 동이 묶였는지 보여 줌
+  if (!vals.length && rows.some(r => r.emds)) {
+    return (
+      <div>
+        <div className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{title.replace(/ 순위$/, '')} · 생활권</div>
+        <div className="text-[10px] leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
+          생활권 집값은 국토부 실거래가를 연결하면 채워져요. 지금은 어떤 동이 묶였는지만 보여요
+        </div>
+        <ul className="mt-2">
+          {rows.map(x => (
+            <li key={x.id} onClick={() => onPick(x.id)} className="py-1.5 cursor-pointer text-[11px]" style={{ borderBottom: '1px solid var(--hairline)' }}>
+              <span className="font-semibold" style={{ color: 'var(--ink)' }}>{x.name}</span>
+              {x.emds && <span className="block text-[10px]" style={{ color: 'var(--ink-mute)' }}>{x.emds.join(', ')}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
   const max = Math.max(...vals.map(Math.abs), 1e-9)
   const wide = Math.max(...rows.map(r => r.name.length)) > 3
   return (
@@ -545,27 +572,34 @@ function RegionDetail({ regions, id, metric, cat, lidx, onGuide, onClose, onZoom
 }
 
 /** 시군구·구 상세 */
-function UnitDetail({ name, sido, unit, sqm, onClose, onZoom }: {
-  name: string; sido: string; unit: LocalUnit | undefined; sqm: number; onClose: () => void; onZoom?: () => void
+function UnitDetail({ name, sido, geo, unit, sqm, zoomLabel, onClose, onZoom }: {
+  name: string; sido: string; geo: LocalGeoUnit; unit: LocalUnit | undefined; sqm: number; zoomLabel: string
+  onClose: () => void; onZoom?: () => void
 }) {
   return (
     <div>
       <div className="flex items-start justify-between">
         <div>
           <div className="text-sm font-bold" style={{ color: 'var(--ink)' }}>{name}</div>
-          <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>{sido}</div>
+          <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>
+            {sido}{geo.kind === 'area' && geo.emds && <> · 생활권: {geo.emds.join(', ')}</>}
+          </div>
         </div>
         <button type="button" onClick={onClose} className="text-[11px] px-1 shrink-0" style={{ color: 'var(--ink-mute)' }}>순위 보기 ✕</button>
       </div>
       <div className="mt-3">
         {unit
           ? <PriceBlock sum={undefined} unit={unit} sqm={sqm} />
-          : <div className="text-[11px]" style={{ color: 'var(--ink-mute)' }}>부동산원 통계에 따로 나오지 않는 지역이에요.</div>}
+          : <div className="text-[11px] leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
+              {geo.kind === 'area'
+                ? '생활권 집값은 국토부 실거래가를 연결하면 채워져요. 지금은 시 전체 집값을 위쪽에서 볼 수 있어요.'
+                : '부동산원 통계에 따로 나오지 않는 지역이에요.'}
+            </div>}
       </div>
       {onZoom && (
         <button type="button" onClick={onZoom} className="mt-3 w-full px-3 py-1.5 text-[11px] font-bold"
           style={{ background: 'var(--accent)', color: '#fff' }}>
-          {name} 구별로 보기 →
+          {name} {zoomLabel}별로 보기 →
         </button>
       )}
     </div>

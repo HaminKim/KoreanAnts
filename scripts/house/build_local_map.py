@@ -7,6 +7,7 @@
 단위
   level 2 : 시·군·자치구. 일반구가 있는 시(고양시 등)와 전남광주의 '광주'는 구 경계를 합쳐 만든다
   level 3 : 일반구(고양시 일산서구 등) · 광주의 자치구
+            · 구가 없는 시·광역시 군은 생활권(행정동을 합침, living_areas.py) — kind='area', emds=행정동 목록
 """
 import io
 import json
@@ -21,8 +22,12 @@ from pathlib import Path
 import pyarrow.parquet as pq
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from living_areas import areas_of  # noqa: E402
+
 VER = "20261001"
 SRC = f"https://raw.githubusercontent.com/vuski/admdongkor/master/parquet/sgg_{VER}.parquet"
+EMD_SRC = f"https://raw.githubusercontent.com/vuski/admdongkor/master/parquet/emd_{VER}.parquet"
 OUT_DIR = Path(__file__).resolve().parents[2] / "public" / "data" / "house" / "local"
 WIDTH = 520
 PAD = 10
@@ -41,6 +46,7 @@ SIDO = {
 BBOX_EXCLUDE = {"28720"}   # 인천 옹진군
 GWANGJU_UID = "12200"   # 전남광주 안의 옛 광주광역시 (자치구 5개를 합친 가상 단위)
 GWANGJU_GU = {"12210", "12240", "12270", "12300", "12330"}
+METRO_GUN = {"26", "27", "28", "31"}   # 군도 생활권으로 나누는 광역시 (부산·대구·인천·울산)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -213,15 +219,47 @@ def mainland(all_polys):
     return {rings[i][2] for i in range(n) if find(i) in keep_roots}
 
 
+def fetch(url, tmp):
+    path = tmp / url.rsplit("/", 1)[1]
+    if not path.exists():
+        r = requests.get(url, timeout=180)
+        r.raise_for_status()
+        path.write_bytes(r.content)
+    return pq.read_table(path).to_pandas()
+
+
+def add_areas(units, emd_rows):
+    """구 없는 시(·광역시 군)에 생활권 단위를 붙인다"""
+    by_sgg = defaultdict(list)
+    for r in emd_rows:
+        by_sgg[r.sggcd].append(r)
+    n = 0
+    for uid, u in list(units.items()):
+        if u["level"] != 2 or any(k["parent"] == uid for k in units.values()):
+            continue
+        if not (u["name"].endswith("시") or (u["name"].endswith("군") and uid[:2] in METRO_GUN)):
+            continue
+        rows = by_sgg.get(uid, [])
+        areas = areas_of(uid, u["name"], [r.emdnm for r in rows])
+        if not areas:
+            continue
+        geo = {r.emdnm: parse_wkb(r.geom) for r in rows}
+        for i, (name, emds) in enumerate(areas.items(), 1):
+            units[f"{uid}_{i:02d}"] = dict(
+                name=name, full=f"{u['name']} {name}", level=3, parent=uid, kind="area", emds=sorted(emds),
+                polys=dissolve([p for e in emds for p in geo[e]]),
+            )
+        n += 1
+    return n
+
+
 def main():
     tmp = Path(tempfile.gettempdir()) / "reant_house"
     tmp.mkdir(parents=True, exist_ok=True)
-    pq_path = tmp / f"sgg_{VER}.parquet"
-    if not pq_path.exists():
-        r = requests.get(SRC, timeout=120)
-        r.raise_for_status()
-        pq_path.write_bytes(r.content)
-    df = pq.read_table(pq_path).to_pandas()
+    df = fetch(SRC, tmp)
+    emd = defaultdict(list)
+    for row in fetch(EMD_SRC, tmp).itertuples():
+        emd[row.sidocd].append(row)
 
     by_sido = defaultdict(list)
     for row in df.itertuples():
@@ -249,6 +287,7 @@ def main():
             if u["polys"] is None:
                 kids = [k["polys"] for k in units.values() if k["parent"] == uid]
                 u["polys"] = dissolve([p for ps in kids for p in ps])
+        n_area = add_areas(units, emd[sd])
 
         # 지도 범위: 2단계 단위의 본토 묶음
         l2 = [p for uid, u in units.items() if u["level"] == 2 and uid not in BBOX_EXCLUDE for p in u["polys"]]
@@ -274,15 +313,18 @@ def main():
                 name=u["name"], full=u["full"], level=u["level"], parent=u["parent"], d=d or None,
                 label=label_of(polys, proj), bbox=[round(bx0, 1), round(by0, 1), round(bx1 - bx0, 1), round(by1 - by0, 1)],
             )
+            if u.get("kind"):
+                out_units[uid].update(kind=u["kind"], emds=u["emds"])
         out = {
-            "id": fid, "ko": ko, "source": f"vuski/admdongkor sgg_{VER} (MIT)",
+            "id": fid, "ko": ko, "source": f"vuski/admdongkor sgg·emd_{VER} (MIT)",
             "viewBox": [0, 0, WIDTH, height], "units": out_units,
         }
         p = OUT_DIR / f"geo_{fid}.json"
         p.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         n2 = sum(1 for u in out_units.values() if u["level"] == 2)
-        n3 = sum(1 for u in out_units.values() if u["level"] == 3)
-        print(f"  ✅ {ko}: 시군구 {n2} · 구 {n3} · {p.stat().st_size // 1024} KB")
+        n3 = sum(1 for u in out_units.values() if u["level"] == 3 and not u.get("kind"))
+        na = sum(1 for u in out_units.values() if u.get("kind") == "area")
+        print(f"  ✅ {ko}: 시군구 {n2} · 구 {n3} · 생활권 {na}({n_area}개 시군) · {p.stat().st_size // 1024} KB")
 
 
 if __name__ == "__main__":
