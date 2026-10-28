@@ -32,6 +32,7 @@ jobs:
       # 한국 부동산 (없으면 해당 지표는 화면에 '키 필요' 로 표시)
       ECOS_API_KEY: ${{ secrets.ECOS_API_KEY }}
       RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
+      MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -60,6 +61,12 @@ jobs:
         if: github.event_name != 'push'
         continue-on-error: true
         run: python scripts/house/build_local.py
+
+      # 생활권(구 없는 시) 집값 — 국토부 실거래가. 최근 3개월 + 빠진 달만 받음 (하루 2번 × 한도 3000)
+      - name: Build Korea living-area prices
+        if: github.event_name != 'push'
+        continue-on-error: true
+        run: python scripts/house/build_trades.py --max-calls 3000
 
       - name: Commit and push
         if: github.event_name != 'push'

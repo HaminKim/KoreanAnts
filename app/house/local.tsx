@@ -195,6 +195,12 @@ export function StatusBadge({ tone, label, small = false }: { tone: PriceTone; l
   )
 }
 
+const HOW_NOTE: Record<string, string> = {
+  avg: '평균가격 그대로 이어 그림 — 표본 개편 시점에 끊김이 있을 수 있어요',
+  trade_ratio: '흐름은 부동산원 시 전체 집값을 따르고, 시 안에서의 가격 차이와 금액 수준은 실거래(전용 75~95㎡)로 맞췄어요 · 2019년부터',
+  trade: '실거래 ㎡당 가격 중앙값(최근 6개월, 전용 75~95㎡) × 84㎡ · 2019년부터',
+}
+
 export function PriceBlock({ sum, unit, sqm, loading = false }: {
   sum: LocalSummary | undefined; unit: LocalUnit | undefined; sqm: number; loading?: boolean
 }) {
@@ -226,7 +232,7 @@ export function PriceBlock({ sum, unit, sqm, loading = false }: {
 
       {/* 2. 금액 흐름 */}
       {flow.length > 1 ? (
-        <PriceChart data={flow} fmt={fmtWon} peakLabel="최고" note={unit?.how === 'avg' ? '평균가격 그대로 이어 그림 — 표본 개편 시점에 끊김이 있을 수 있어요' : null} />
+        <PriceChart data={flow} fmt={fmtWon} peakLabel="최고" note={HOW_NOTE[unit?.how ?? ''] ?? null} />
       ) : idx.length > 1 ? (
         <PriceChart data={idx} fmt={v => v.toFixed(1)} peakLabel="최고" note="가격 표본이 없어 매매가격지수로 흐름만 보여 드려요" />
       ) : loading ? (
@@ -241,8 +247,13 @@ export function PriceBlock({ sum, unit, sqm, loading = false }: {
           tone={s.yoy} sub={s.p84y ? `1년 전 ${fmtWon(s.p84y)}` : null} />
         <Stat label="한 달 변화" value={s.mom !== undefined ? `${sign(s.mom)}${s.mom.toFixed(2)}%` : '–'} tone={s.mom}
           sub={s.trend === 'down' ? '3개월 연속 하락' : s.trend === 'up' ? '3개월 연속 상승' : null} />
-        <Stat label="전세가율" value={s.jr !== undefined ? `${s.jr.toFixed(1)}%` : '–'}
-          sub={s.jr !== undefined && s.p84 !== undefined ? `갭 약 ${fmtWon(s.p84 * (1 - s.jr / 100))}` : null} spark={jr} />
+        {unit?.tr ? (
+          <Stat label={`84형 실거래 · ${fmtYm(unit.tr.from)}~${fmtYm(unit.tr.to).slice(5)}`} value={unit.tr.med ? fmtWon(unit.tr.med) : '–'}
+            sub={`${unit.tr.n}건의 실제 거래금액 중앙값`} />
+        ) : (
+          <Stat label="전세가율" value={s.jr !== undefined ? `${s.jr.toFixed(1)}%` : '–'}
+            sub={s.jr !== undefined && s.p84 !== undefined ? `갭 약 ${fmtWon(s.p84 * (1 - s.jr / 100))}` : null} spark={jr} />
+        )}
         <Stat label={`거래량${s.volDate ? ` · ${fmtYm(s.volDate)}` : ''}`} value={s.vol !== undefined ? `${s.vol.toLocaleString('ko-KR')}호` : '–'}
           sub={s.volYoy !== undefined && s.volYoy !== null ? `1년 전보다 ${sign(s.volYoy)}${s.volYoy}%` : null} spark={vol} />
       </div>

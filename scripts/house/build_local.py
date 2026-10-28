@@ -260,6 +260,13 @@ def main():
             summaries[(fid, uid)] = u["sum"]
         g = geos[fid]
         out = {"id": fid, "ko": g["ko"], "generatedAt": now(), "asOf": asof, "sqm": SQM, "units": out_units}
+        # 생활권 단위(build_trades.py 가 덧붙임)는 그대로 둠 — 실거래 단계가 실패해도 값이 사라지지 않게
+        prev_path = OUT_DIR / f"{fid}.json"
+        if prev_path.exists():
+            prev = json.loads(prev_path.read_text(encoding="utf-8"))
+            out_units.update({k: v for k, v in prev["units"].items() if g["units"].get(k, {}).get("kind") == "area"})
+            if "tradeAt" in prev:
+                out["tradeAt"] = prev["tradeAt"]
         (OUT_DIR / f"{fid}.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         n_geo = sum(1 for x in g["units"].values() if x["d"])
         n_p = sum(1 for uid, x in out_units.items() if "p84" in x and uid in g["units"])

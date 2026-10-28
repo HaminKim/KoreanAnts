@@ -82,11 +82,14 @@ export interface LocalSummary {
 
 export interface LocalUnit {
   p84?: Packed
-  how?: 'index' | 'avg'   // index: 지수로 과거 환산 · avg: 평균가격 그대로 (표본 개편 영향)
+  // index: 지수로 과거 환산 · avg: 평균가격 그대로 (표본 개편 영향)
+  // trade_ratio: 생활권 — 부동산원 시 집값 × 실거래 가격 비율 · trade: 실거래 중앙값 그대로 (부동산원 값이 없는 군)
+  how?: 'index' | 'avg' | 'trade_ratio' | 'trade'
   idx?: Packed            // 집값을 못 만들 때만 매매가격지수
   jr?: Packed
   vol?: Packed
   med?: number            // 최근 중위 매매가격 (만원, 면적 무관)
+  tr?: { n: number; med: number | null; from: string; to: string }   // 최근 3개월 전용 75~95㎡ 실거래 (건수·실제 금액 중앙값)
   sum: LocalSummary
 }
 
