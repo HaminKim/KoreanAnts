@@ -8,7 +8,7 @@ REANT 한국 부동산·가계신용 레지스트리 (단일 원천)
 원천
   fred : FRED (BIS·OECD 한국 시계열) — 키 없이 fredgraph CSV 로 동작
   ecos : 한국은행 ECOS — ECOS_API_KEY 필요
-  rone : 한국부동산원 R-ONE — RONE_API_KEY 필요 (통계표 ID 는 키 발급 후 확정)
+  rone : 한국부동산원 R-ONE — RONE_API_KEY 필요
 
 원칙 (매크로와 동일)
   - RAW 는 processed/house/raw/ 에 원본 주기 그대로 저장, 가공값은 별도 배열
@@ -153,13 +153,13 @@ series("KR_UNSOLD", "미분양 주택 — 전국", "호", "M", ["level", "yoy"],
 series("KR_HH_MORT_LOAN", "주택관련대출 잔액 — 예금은행 전국", "십억 원", "M", ["yoy", "level"], "ecos", "151Y003/M/11110A0/X00",
        dec=0, need="ECOS", since="지역별 주택관련대출 통계가 2006년 12월부터 있어요")
 
-# R-ONE 키 필요 (통계표 ID 는 키 발급 후 확정 → 그 전까지 안내만 표시)
-series("KR_RONE_APT_IDX", "아파트 매매가격지수 (부동산원)", "지수", "M", ["yoy", "level"], "rone", None,
-       need="RONE", since="부동산원 월간 아파트 지수는 2003년 11월부터예요 (키 발급 후 확인)")
-series("KR_RONE_APT_VOL", "아파트 매매 거래량", "건", "M", ["level", "yoy"], "rone", None,
-       dec=0, need="RONE", since="실거래 신고제 이후인 2006년부터예요 (키 발급 후 확인)")
-series("KR_RONE_JEONSE_RATIO", "아파트 전세가율 (전세/매매)", "%", "M", ["level", "chg"], "rone", None,
-       need="RONE")
+# R-ONE 키 필요 — srcId = 통계표ID/분류ID/항목ID (500001 = 전국, 100001 = 첫 항목)
+series("KR_RONE_APT_IDX", "아파트 매매가격지수 (부동산원)", "지수", "M", ["yoy", "level"], "rone", "A_2024_00045/500001/100001",
+       need="RONE", since="부동산원 월간 아파트 지수는 2003년 11월부터예요")
+series("KR_RONE_APT_VOL", "아파트 매매 거래량", "호", "M", ["level", "yoy"], "rone", "A_2024_00554/500001/100001",
+       dec=0, need="RONE", since="실거래 신고제 이후인 2006년 1월부터예요")
+series("KR_RONE_JEONSE_RATIO", "아파트 전세가율 (평균 매매가 대비 전세가)", "%", "M", ["level", "chg"], "rone", "A_2024_00072/500001/100001",
+       dec=1, need="RONE", since="부동산원 평균 전세가율 통계가 2012년 1월부터 있어요")
 
 # ─────────────────────────────────────────────────────────────
 # 화면 카드 (그룹별) — main 의 첫 시리즈가 카드 값

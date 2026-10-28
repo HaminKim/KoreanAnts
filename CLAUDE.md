@@ -34,7 +34,7 @@ GitHub `HaminKim/KoreanAnts` (**공개 레포** — 비밀값·개인 정보는 
 - 기획 `house/리앤트_한국부동산_신용사이클_개발요구사항.txt`, 데이터 확보성 조사 `house/데이터_확보성_조사.md`
 - 레지스트리 `scripts/house/house_registry.py` (REGIONS 17개 시도·ECOS 코드, REGION_METRICS 지도 지표, 전국 SERIES, EVENTS) → `py scripts/house/build_house.py` → `public/data/house/{catalog,regions}.json`, `series/*.json` (macro 와 같은 형식이라 `MacroChart` 재사용)
 - 지도 경계 `py scripts/house/build_map.py` → `public/data/house/map.json` (KOSTAT 2013, 경계 바뀔 때만)
-- 키: `ECOS_API_KEY`, `RONE_API_KEY` (GitHub Secrets). 없으면 해당 지표는 화면에 '키 필요' + 발급 안내. R-ONE 통계표 ID 는 키 발급 후 registry 에 채워야 함
+- 키: `ECOS_API_KEY`, `RONE_API_KEY` (GitHub Secrets). 없으면 해당 지표는 화면에 '키 필요' + 발급 안내. R-ONE srcId 는 `통계표ID/분류ID/항목ID` (예: `A_2024_00045/500001/100001`, 500001 = 전국). 통계표 목록은 `SttsApiTbl.do`, 항목은 `SttsApiTblItm.do` 로 조회
 - 2026-07 광주+전남 → 전남광주통합특별시. 과거 시계열은 광주·전남 따로, 통합 코드(V00 등)와 이어붙이지 않음
 - 갱신은 `macro-sync.yml` 의 한 스텝 (continue-on-error)
 

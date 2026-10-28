@@ -76,6 +76,29 @@ def fetch_ecos(stat, cycle, items, start):
     return s
 
 
+# ─────────────────────────────────────────────────────────────
+# R-ONE (한국부동산원)
+# ─────────────────────────────────────────────────────────────
+def fetch_rone(statbl, cls, itm):
+    """R-ONE SttsApiTblData (월간) → pd.Series(월 첫날 index). 한 페이지 최대 1000행이라 넘기며 받는다"""
+    vals, page = {}, 1
+    while True:
+        url = ("https://www.reb.or.kr/r-one/openapi/SttsApiTblData.do"
+               f"?KEY={KEYS['RONE']}&Type=json&pIndex={page}&pSize=1000"
+               f"&STATBL_ID={statbl}&DTACYCLE_CD=MM&CLS_ID={cls}&ITM_ID={itm}")
+        js = get(url).json()
+        if "SttsApiTblData" not in js:
+            raise RuntimeError(js.get("RESULT", js))
+        head, body = js["SttsApiTblData"]
+        for r in body["row"]:
+            t = r["WRTTIME_IDTFR_ID"]
+            vals[pd.Timestamp(year=int(t[:4]), month=int(t[4:6]), day=1)] = r["DTA_VAL"]
+        if len(vals) >= head["head"][0]["list_total_count"] or not body["row"]:
+            break
+        page += 1
+    return pd.to_numeric(pd.Series(vals), errors="coerce").dropna().sort_index()
+
+
 def fetch_series_raw(sp):
     if sp["src"] == "fred":
         s, _ = fetch_fred(sp["srcId"])
@@ -84,7 +107,10 @@ def fetch_series_raw(sp):
         stat, cycle, items = sp["srcId"].split("/", 2)
         start = {"M": "197001", "Q": "1970Q1", "A": "1970"}[cycle]
         return fetch_ecos(stat, cycle, items, start), "https://ecos.bok.or.kr/"
-    raise RuntimeError("R-ONE 통계표 ID 미확정 (키 발급 후 추가)")
+    if sp["src"] == "rone":
+        statbl, cls, itm = sp["srcId"].split("/")
+        return fetch_rone(statbl, cls, itm), "https://www.reb.or.kr/r-one/"
+    raise RuntimeError(f"알 수 없는 원천: {sp['src']}")
 
 
 # ─────────────────────────────────────────────────────────────
