@@ -5419,13 +5419,6 @@
   ],
   "IP": [
     {
-      "d": "2023-10-26",
-      "actual": 0.64,
-      "estimate": 0.58,
-      "surp": 10.27,
-      "revenue": null
-    },
-    {
       "d": "2024-02-01",
       "actual": 0.41,
       "estimate": 0.35,
@@ -5501,6 +5494,13 @@
       "estimate": -0.04,
       "surp": 205.43,
       "revenue": 6.004
+    },
+    {
+      "d": "2026-10-28",
+      "actual": 0.37,
+      "estimate": 0.29,
+      "surp": 29.48,
+      "revenue": null
     }
   ],
   "BLK": [
@@ -14209,13 +14209,6 @@
   ],
   "PSX": [
     {
-      "d": "2023-10-27",
-      "actual": 4.63,
-      "estimate": 4.73,
-      "surp": -2.06,
-      "revenue": null
-    },
-    {
       "d": "2024-01-31",
       "actual": 3.09,
       "estimate": 2.38,
@@ -14291,6 +14284,13 @@
       "estimate": 7.5,
       "surp": 25.45,
       "revenue": 51.004
+    },
+    {
+      "d": "2026-10-28",
+      "actual": 14.08,
+      "estimate": 11.79,
+      "surp": 19.39,
+      "revenue": null
     }
   ],
   "ROK": [
@@ -20524,13 +20524,6 @@
   ],
   "AEP": [
     {
-      "d": "2023-11-02",
-      "actual": 1.77,
-      "estimate": 1.7,
-      "surp": 4.01,
-      "revenue": null
-    },
-    {
       "d": "2024-02-26",
       "actual": 1.23,
       "estimate": 1.26,
@@ -20606,6 +20599,13 @@
       "estimate": 1.48,
       "surp": -8.2,
       "revenue": 5.445
+    },
+    {
+      "d": "2026-10-28",
+      "actual": 2.23,
+      "estimate": 2.04,
+      "surp": 9.35,
+      "revenue": null
     }
   ],
   "GOLD": [
@@ -34065,13 +34065,6 @@
   ],
   "JLL": [
     {
-      "d": "2023-11-02",
-      "actual": 2.01,
-      "estimate": 2.01,
-      "surp": 0.07,
-      "revenue": null
-    },
-    {
       "d": "2024-02-27",
       "actual": 4.23,
       "estimate": 3.73,
@@ -34147,6 +34140,13 @@
       "estimate": 4.55,
       "surp": 15.61,
       "revenue": 6.928
+    },
+    {
+      "d": "2026-10-28",
+      "actual": 6.76,
+      "estimate": 6.18,
+      "surp": 9.35,
+      "revenue": null
     }
   ],
   "GEN": [
@@ -35785,13 +35785,6 @@
   ],
   "ETSY": [
     {
-      "d": "2023-11-01",
-      "actual": 0.64,
-      "estimate": 0.51,
-      "surp": 26.46,
-      "revenue": null
-    },
-    {
       "d": "2024-02-21",
       "actual": 1.21,
       "estimate": 1.33,
@@ -35867,6 +35860,13 @@
       "estimate": 0.73,
       "surp": -149.13,
       "revenue": 0.668
+    },
+    {
+      "d": "2026-10-28",
+      "actual": 7.31,
+      "estimate": 0.74,
+      "surp": 884.15,
+      "revenue": null
     }
   ],
   "COF": [
