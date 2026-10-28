@@ -276,7 +276,7 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
           </div>
 
           {!view ? (
-            <svg viewBox={geo.viewBox.join(' ')} className="block w-full h-auto" role="img" aria-label="대한민국 시도 지도">
+            <svg viewBox={geo.viewBox.join(' ')} className="block w-full h-auto select-none" role="img" aria-label="대한민국 시도 지도">
               {ids.map(id => {
                 const r = regions.regions[id]
                 const v = r?.values[metric.id]?.v

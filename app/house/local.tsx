@@ -95,7 +95,7 @@ export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, on
   const fs = 10 * k
 
   return (
-    <svg viewBox={vb.map(n => n.toFixed(1)).join(' ')} className="block w-full h-auto" style={{ maxHeight: 640 }}
+    <svg viewBox={vb.map(n => n.toFixed(1)).join(' ')} className="block w-full h-auto select-none" style={{ maxHeight: 640 }}
       role="img" aria-label={`${geo.ko} 시군구 지도`} onMouseLeave={() => onHover(null)}>
       {ctx.map(id => (
         <path key={id} d={units[id].d} fill="var(--neu)" opacity={0.45} stroke="var(--surface)" strokeWidth={0.6}
