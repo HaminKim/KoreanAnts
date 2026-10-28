@@ -31,12 +31,17 @@ export function localMetrics(asOf: string | null): RegionMetric[] {
       desc: '매매가격 대비 전세가격 비율이에요. 높으면 갭(매매가 − 전세가)이 작아요.' },
     { id: 'vol', label: '아파트 매매 거래량', short: '거래량', unit: '호', dec: 0, good: 'none', need: 'RONE', available: true, asOf,
       desc: '한 달 동안 신고된 아파트 매매 건수예요. 실거래 신고 기한(30일) 때문에 한 달 늦게 나와요.' },
+    { id: 'auc12', label: '임의경매 신청 (최근 1년)', short: '경매 신청', unit: '건', dec: 0, good: 'down', need: 'IROS', available: true, asOf,
+      desc: '최근 12개월 동안 임의경매가 신청된 아파트·빌라·오피스텔 수예요. 대출을 못 갚아 은행 등이 경매에 넘긴 집이에요 (대법원 등기정보광장).' },
+    { id: 'aucYoy', label: '임의경매 신청 1년 증가율', short: '경매 증가율', unit: '%', dec: 1, good: 'down', need: 'IROS', available: true, asOf,
+      desc: '최근 12개월 임의경매 신청을 그 전 12개월과 비교했어요. 빠르게 늘면 빚 부담이 터지기 시작했다는 신호예요.' },
   ]
 }
 
 export function localVal(s: LocalSummary | undefined, id: string): number | null {
   if (!s) return null
-  const v = id === 'p84' ? s.p84 : id === 'p84_dd' ? s.dd : id === 'p84_yoy' ? s.yoy : id === 'jr' ? s.jr : id === 'vol' ? s.vol : undefined
+  const v = id === 'p84' ? s.p84 : id === 'p84_dd' ? s.dd : id === 'p84_yoy' ? s.yoy : id === 'jr' ? s.jr : id === 'vol' ? s.vol
+    : id === 'auc12' ? s.auc12 : id === 'aucYoy' ? s.aucYoy : undefined
   return v ?? null
 }
 
@@ -262,6 +267,30 @@ export function PriceBlock({ sum, unit, sqm, loading = false }: {
           참고: 면적 상관없이 거래된 아파트 중위 매매가격 {fmtWon(unit.med)}
         </div>
       )}
+
+      {/* 4. 부실 신호 — 경매 신청 */}
+      {unit?.auc && <AuctionBlock auc={unit.auc} />}
+    </div>
+  )
+}
+
+function AuctionBlock({ auc }: { auc: NonNullable<LocalUnit['auc']> }) {
+  const m = useMemo(() => unpack(auc.m ?? undefined).slice(-120), [auc])
+  const f = useMemo(() => unpack(auc.f ?? undefined).slice(-120), [auc])
+  const a = auc.sum, b = auc.sumF
+  const pct = (v: number | null | undefined) => (v === null || v === undefined ? null : `1년 전보다 ${v > 0 ? '+' : ''}${v.toFixed(0)}%`)
+  return (
+    <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--hairline)' }}>
+      <div className="text-[11px] font-semibold" style={{ color: 'var(--ink-2)' }}>
+        경매 신청 · 아파트·빌라·오피스텔 · 최근 12개월{a.date && <span className="font-normal" style={{ color: 'var(--ink-mute)' }}> (~{fmtYm(a.date)})</span>}
+      </div>
+      <div className="mt-1.5 grid grid-cols-2 gap-1.5">
+        {/* 늘면 나쁜 지표라 증가 = 빨강 */}
+        <Stat label="임의경매 (대출 못 갚음)" value={a.n12 !== undefined ? `${a.n12.toLocaleString('ko-KR')}건` : '–'}
+          tone={a.yoy === null || a.yoy === undefined ? null : -a.yoy} sub={pct(a.yoy)} spark={m} />
+        <Stat label="강제경매 (판결 등)" value={b.n12 !== undefined ? `${b.n12.toLocaleString('ko-KR')}건` : '–'}
+          tone={b.yoy === null || b.yoy === undefined ? null : -b.yoy} sub={pct(b.yoy)} spark={f} />
+      </div>
     </div>
   )
 }

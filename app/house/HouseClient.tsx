@@ -505,7 +505,8 @@ function RegionDetail({ regions, id, metric, cat, lidx, onGuide, onClose, onZoom
   const f = lidx?.files[id]
   const local = useLocalFile(f?.file ?? null)
   if (!r) return null
-  const ecos = regions.metrics.filter(m => m.id !== 'p84')
+  // 경매 신청은 위 PriceBlock 의 경매 칸에서 보여 줌
+  const ecos = regions.metrics.filter(m => m.id !== 'p84' && !(f && m.id.startsWith('auction')))
   const showHist = metric.id !== 'p84'
   const hist = showHist ? (r.hist[metric.id] ?? []).filter((p): p is [string, number] => p[1] !== null) : []
   return (

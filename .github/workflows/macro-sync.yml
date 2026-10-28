@@ -33,6 +33,8 @@ jobs:
       ECOS_API_KEY: ${{ secrets.ECOS_API_KEY }}
       RONE_API_KEY: ${{ secrets.RONE_API_KEY }}
       MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+      IROS_AUCTION_KEY: ${{ secrets.IROS_AUCTION_KEY }}
+      IROS_FORCED_KEY: ${{ secrets.IROS_FORCED_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -49,6 +51,12 @@ jobs:
       - name: Build macro data
         if: github.event_name != 'push'
         run: python scripts/macro/build_macro.py
+
+      # 경매 신청 (등기정보광장) — 올해치만 다시 받음. build_house 가 이 RAW 로 전국 카드·시도 지도를 만듦
+      - name: Fetch Korea auction filings
+        if: github.event_name != 'push'
+        continue-on-error: true
+        run: python scripts/house/build_auction.py --fetch-only
 
       # 한국 부동산 — 실패해도 미국 매크로 커밋은 막지 않음
       - name: Build Korea housing data
@@ -67,6 +75,12 @@ jobs:
         if: github.event_name != 'push'
         continue-on-error: true
         run: python scripts/house/build_trades.py --max-calls 3000
+
+      # 경매 신청을 시군구·구에 붙임 (위 'Fetch' 단계에서 받은 RAW, build_local 이 단위를 새로 만든 뒤라 여기서)
+      - name: Attach Korea auction filings
+        if: github.event_name != 'push'
+        continue-on-error: true
+        run: python scripts/house/build_auction.py --no-fetch
 
       - name: Commit and push
         if: github.event_name != 'push'

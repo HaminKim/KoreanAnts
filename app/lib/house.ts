@@ -3,7 +3,7 @@
 
 import type { MarketEvent, SeriesData, SeriesSummary } from './macro'
 
-export type ApiId = 'ECOS' | 'RONE'
+export type ApiId = 'ECOS' | 'RONE' | 'IROS'
 
 export interface ApiInfo { name: string; env: string; url: string; steps: string[]; unlocks: string }
 
@@ -78,7 +78,12 @@ export interface LocalSummary {
   vol?: number          // 거래량 (호)
   volDate?: string
   volYoy?: number | null
+  auc12?: number | null   // 최근 12개월 임의경매 신청 (집합건물)
+  aucYoy?: number | null
+  aucF12?: number | null  // 최근 12개월 강제경매 신청
 }
+
+export interface AuctionSummary { date?: string; n12?: number; n12y?: number | null; yoy?: number | null; last?: number }
 
 export interface LocalUnit {
   p84?: Packed
@@ -89,7 +94,9 @@ export interface LocalUnit {
   jr?: Packed
   vol?: Packed
   med?: number            // 최근 중위 매매가격 (만원, 면적 무관)
-  tr?: { n: number; med: number | null; from: string; to: string }   // 최근 3개월 전용 75~95㎡ 실거래 (건수·실제 금액 중앙값)
+  tr?: { n: number; med: number | null; from: string; to: string }
+  // 등기정보광장 경매 신청 (월별, 집합건물) — m: 임의경매 · f: 강제경매
+  auc?: { m: Packed | null; f: Packed | null; sum: AuctionSummary; sumF: AuctionSummary }   // 최근 3개월 전용 75~95㎡ 실거래 (건수·실제 금액 중앙값)
   sum: LocalSummary
 }
 
@@ -211,6 +218,11 @@ export function fillOf(m: RegionMetric, v: number | null | undefined, vals: numb
     const max = Math.max(...vals.map(Math.abs), 0.1)
     return `var(${(v >= 0 ? G : R)[Math.max(0, step(Math.abs(v), max))]})`
   }
+  if (m.good === 'down' && m.unit === '%' && vals.some(x => x < 0)) {
+    // 증가율인데 늘면 나쁜 지표 (경매 신청 등): 늘면 빨강, 줄면 초록
+    const max = Math.max(...vals.map(Math.abs), 0.1)
+    return `var(${(v > 0 ? R : G)[Math.max(0, step(Math.abs(v), max))]})`
+  }
   // 순서 기준 (연체율·미분양·대출 증가율): 높을수록 진하게
   const sorted = [...vals].sort((a, b) => a - b)
   const rank = sorted.findIndex(x => x >= v)
@@ -229,7 +241,7 @@ export function fmtRegion(m: RegionMetric, v: number | null | undefined): string
   if (v === null || v === undefined || Number.isNaN(v)) return '–'
   if (m.unit === '만원') return fmtWon(v)
   if (m.unit === '%') {
-    const sign = (m.id === 'price_yoy' || m.id === 'loan_yoy' || m.id === 'p84_yoy') && v > 0 ? '+' : ''
+    const sign = (m.id === 'price_yoy' || m.id === 'loan_yoy' || m.id === 'p84_yoy' || m.id === 'auction_yoy' || m.id === 'aucYoy') && v > 0 ? '+' : ''
     return sign + v.toFixed(m.dec) + '%'
   }
   return v.toLocaleString('ko-KR', { maximumFractionDigits: m.dec }) + (m.unit === '호' ? '호' : m.unit)

@@ -50,7 +50,11 @@ GitHub `HaminKim/KoreanAnts` (**공개 레포** — 비밀값·개인 정보는 
       - 부동산원 값 없는 군(군위·강화)은 실거래 중앙값 그대로. 2019년부터, 이번 달(신고 미완)은 제외
     - 법정동→행정동 연결표 `processed/house/kikmix.csv` (행안부 jscode 의 KIKmix, 행정동 바뀌면 `--kikmix jscode.zip` 로 갱신). 여러 생활권에 걸친 법정동은 같은 이름 행정동 → `BJD_OVERRIDE` 순
     - 파주는 교하·운정이 법정동을 공유해서 '운정·교하' 하나로 묶음
-- 갱신은 `macro-sync.yml` 의 스텝 (`build_house.py`, `build_local.py`, 둘 다 continue-on-error)
+- 경매 신청 (대법원 등기정보광장 Open API, 2010~, 집합건물): `py scripts/house/build_auction.py [--fetch-only|--no-fetch]` → RAW `processed/house/raw/auction/{auction|forced}_{시도코드}.csv`
+  - 키: `IROS_AUCTION_KEY`(임의경매, 서비스 0000000083) · `IROS_FORCED_KEY`(강제경매, 0000000087). 키마다 하루 1,000번, 한 번에 12개월까지, **24개월마다 재발급**(2028-10 경), 3개월 미사용 시 삭제
+  - 시도 코드: 서울 900·부산 800·대구 600·인천 1100·전남광주 1200·대전 700·울산 1000·세종 1700·경기 200·강원 100·충북 1600·충남 1500·전북 1300·경북 400·경남 300·제주 1400 (동시 호출 많으면 연결 끊김 → 천천히)
+  - 전국 카드(KR_AUCTION·KR_AUCTION_FORCED)·시도 지도(auction_12m·auction_yoy)는 build_house 가 RAW 로(src=iros), 시군구·구는 build_auction 이 local/{시도}.json 에 `auc` 로 붙임
+- 갱신은 `macro-sync.yml`: 경매 받기 → `build_house.py` → `build_local.py` → `build_trades.py` → 경매 붙이기 (모두 continue-on-error)
 
 ## 매매 흐름 데이터 파이프라인
 - `scraper/` (구 reant_streamlit 레포를 subtree 로 통합) 가 Seibro(예탁결제원)를 Selenium 으로 스크랩

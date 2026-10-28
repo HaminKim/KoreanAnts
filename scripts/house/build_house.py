@@ -38,7 +38,16 @@ SERIES_DIR = OUT_DIR / "series"
 KEYS = {
     "ECOS": os.environ.get("ECOS_API_KEY", "").strip(),
     "RONE": os.environ.get("RONE_API_KEY", "").strip(),
+    "IROS": os.environ.get("IROS_AUCTION_KEY", "").strip(),
 }
+AUCTION_RAW = RAW_DIR / "auction"
+# 등기정보광장 시도 코드 → 지도 id (전남광주 1200 은 광주 자치구로 나눔)
+IROS_SIDO = {
+    "900": "seoul", "800": "busan", "600": "daegu", "1100": "incheon", "700": "daejeon", "1000": "ulsan",
+    "1700": "sejong", "200": "gyeonggi", "100": "gangwon", "1600": "chungbuk", "1500": "chungnam",
+    "1300": "jeonbuk", "400": "gyeongbuk", "300": "gyeongnam", "1400": "jeju",
+}
+GWANGJU_GU = {"동구", "서구", "남구", "북구", "광산구"}
 SPARK_YEARS = 10
 REGION_SPARK_YEARS = 20
 
@@ -99,6 +108,25 @@ def fetch_rone(statbl, cls, itm):
     return pd.to_numeric(pd.Series(vals), errors="coerce").dropna().sort_index()
 
 
+def iros_raw(kind):
+    """build_auction.py 가 받아 둔 RAW → (시도 지도 id, 월 첫날, 건수) DataFrame"""
+    out = []
+    for f in sorted(AUCTION_RAW.glob(f"{kind}_*.csv")):
+        df = pd.read_csv(f, dtype={"ym": str, "sgg": str}, keep_default_na=False)
+        sido = f.stem.split("_", 1)[1]
+        if sido == "1200":
+            df["region"] = df["sgg"].map(lambda x: "gwangju" if x in GWANGJU_GU else "jeonnam")
+        else:
+            df["region"] = IROS_SIDO.get(sido)
+        out.append(df)
+    if not out:
+        raise RuntimeError("경매 RAW 없음 — build_auction.py 먼저")
+    df = pd.concat(out, ignore_index=True)
+    df["date"] = pd.to_datetime(df["ym"].str[:4] + "-" + df["ym"].str[4:] + "-01")
+    this_month = pd.Timestamp.today().to_period("M").to_timestamp()
+    return df[df["date"] < this_month]   # 이번 달은 아직 덜 쌓임
+
+
 def fetch_series_raw(sp):
     if sp["src"] == "fred":
         s, _ = fetch_fred(sp["srcId"])
@@ -110,6 +138,9 @@ def fetch_series_raw(sp):
     if sp["src"] == "rone":
         statbl, cls, itm = sp["srcId"].split("/")
         return fetch_rone(statbl, cls, itm), "https://www.reb.or.kr/r-one/"
+    if sp["src"] == "iros":
+        s = iros_raw(sp["srcId"]).groupby("date")["tot"].sum().sort_index().astype(float)
+        return s.asfreq("MS", fill_value=0.0), "https://data.iros.go.kr/"
     raise RuntimeError(f"알 수 없는 원천: {sp['src']}")
 
 
@@ -170,6 +201,10 @@ def series_summary(key):
 # 시도별 지도 데이터
 # ─────────────────────────────────────────────────────────────
 def region_series(metric, reg):
+    if metric.get("src") == "iros":
+        df = iros_raw(metric["kind"])
+        s = df[df["region"] == reg["id"]].groupby("date")["tot"].sum().sort_index().astype(float)
+        return s.asfreq("MS", fill_value=0.0)
     total = None
     for stat, tmpl in metric["fetch"]:
         s = fetch_ecos(stat, metric["cycle"], tmpl.format(**reg), metric["start"])
@@ -184,6 +219,11 @@ def transform_region(s, tf):
         return derive(s, "M", "yoy")
     if tf == "dd":
         return (s / s.cummax() - 1) * 100
+    if tf == "sum12":   # 최근 12개월 합 (월별 건수가 들쭉날쭉해서)
+        return s.rolling(12).sum()
+    if tf == "yoy12":
+        r = s.rolling(12).sum()
+        return (r / r.shift(12) - 1) * 100
     raise ValueError(tf)
 
 

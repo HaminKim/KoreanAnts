@@ -45,6 +45,17 @@ APIS = {
         ],
         "unlocks": "2003년부터의 아파트 매매·전세가격지수, 아파트 거래량, 시군구 단위",
     },
+    "IROS": {
+        "name": "대법원 등기정보광장",
+        "env": "IROS_AUCTION_KEY",
+        "url": "https://data.iros.go.kr/rp/oa/openOapiAppl.do",
+        "steps": [
+            "data.iros.go.kr 접속 → 회원가입(무료) → 로그인",
+            "데이터 활용 → Open API → 신청목록에서 「임의경매개시결정등기 신청 부동산 현황」「강제경매개시결정등기 신청 부동산 현황」 각각 인증키 신청 (즉시 발급)",
+            "GitHub Secrets 에 IROS_AUCTION_KEY(임의경매)·IROS_FORCED_KEY(강제경매) 로 등록. 키는 24개월마다 다시 받아야 해요",
+        ],
+        "unlocks": "2010년부터의 임의·강제경매 신청 건수 (시도·시군구, 아파트 등 집합건물)",
+    },
 }
 
 # ─────────────────────────────────────────────────────────────
@@ -103,6 +114,13 @@ REGION_METRICS = [
          need="ECOS", start="200701", cycle="M",
          fetch=[("901Y074", "{uns}")],
          desc="분양하고도 팔리지 않은 주택 수예요. 늘어나면 공급 과잉이나 수요 위축 신호예요."),
+    # 등기정보광장 — build_auction.py 가 받아 둔 RAW 로 계산 (src=iros)
+    dict(id="auction_12m", label="임의경매 신청 (최근 1년)", short="경매 신청", unit="건", tf="sum12", good="down", dec=0,
+         need="IROS", src="iros", kind="auction",
+         desc="최근 12개월 동안 임의경매개시결정등기가 신청된 집합건물(아파트·빌라·오피스텔) 수예요. 대출을 못 갚아 은행 등이 경매에 넘긴 집이에요."),
+    dict(id="auction_yoy", label="임의경매 신청 1년 증가율", short="경매 증가율", unit="%", tf="yoy12", good="down", dec=1,
+         need="IROS", src="iros", kind="auction",
+         desc="최근 12개월 임의경매 신청 건수를 그 전 12개월과 비교했어요. 빠르게 늘면 빚 부담이 터지기 시작했다는 신호예요."),
 ]
 
 # ─────────────────────────────────────────────────────────────
@@ -161,6 +179,14 @@ series("KR_RONE_APT_VOL", "아파트 매매 거래량", "호", "M", ["level", "y
 series("KR_RONE_JEONSE_RATIO", "아파트 전세가율 (평균 매매가 대비 전세가)", "%", "M", ["level", "chg"], "rone", "A_2024_00072/500001/100001",
        dec=1, need="RONE", since="부동산원 평균 전세가율 통계가 2012년 1월부터 있어요")
 
+# 등기정보광장 — srcId = auction(임의경매) | forced(강제경매), build_auction.py 의 RAW 합계
+series("KR_AUCTION", "임의경매 신청 — 집합건물", "건", "M", ["level", "yoy"], "iros", "auction",
+       dec=0, need="IROS", note="임의경매개시결정등기가 신청된 집합건물(아파트·연립·다세대·오피스텔) 수. 대법원 등기정보광장",
+       since="등기정보광장 통계가 2010년 1월부터 있어요")
+series("KR_AUCTION_FORCED", "강제경매 신청 — 집합건물", "건", "M", ["level", "yoy"], "iros", "forced",
+       dec=0, need="IROS", note="강제경매개시결정등기가 신청된 집합건물 수. 판결 등으로 채권자가 넘긴 경매(전세보증금 반환 소송 포함)",
+       since="등기정보광장 통계가 2010년 1월부터 있어요")
+
 # ─────────────────────────────────────────────────────────────
 # 화면 카드 (그룹별) — main 의 첫 시리즈가 카드 값
 # ─────────────────────────────────────────────────────────────
@@ -205,6 +231,10 @@ INDICATORS = [
 
     dict(id="unsold", group="stress", ko="미분양", main=["KR_UNSOLD"],
          what="팔리지 않은 새 집이에요. 쌓이면 건설사·지방 시장 부담이 커지고, 줄어들기 시작하면 바닥 신호로 봐요."),
+    dict(id="auction", group="stress", ko="임의경매 신청", main=["KR_AUCTION"], subs=["KR_AUCTION_FORCED"],
+         what="대출을 못 갚아 은행 등이 경매에 넘긴 아파트·빌라·오피스텔 수예요. 연체 다음 단계라 빚 부담이 실제로 터지는지 보여줘요."),
+    dict(id="auction_forced", group="stress", ko="강제경매 신청", main=["KR_AUCTION_FORCED"],
+         what="판결 등으로 채권자가 경매에 넘긴 집이에요. 전세보증금을 못 돌려받은 세입자의 경매도 여기 들어가요."),
     dict(id="unemp", group="stress", ko="실업률", main=["KR_UNEMP"],
          what="일자리를 잃으면 대출을 못 갚아요. 연체·경매로 이어지는 첫 단계예요."),
 ]
