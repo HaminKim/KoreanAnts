@@ -1,17 +1,19 @@
 'use client'
 
-// 한국 부동산 — 17개 시도 지도(마우스 올리면 정보, 클릭하면 상세) + 전국 사이클 차트.
+// 한국 부동산 — 지역 지도(전국 → 시군구 → 구, 마우스 올리면 정보, 클릭하면 상세) + 전국 사이클 차트.
+// 지역 상세는 84㎡ 환산 집값(금액)과 그 흐름이 먼저, 변화율·대출 지표는 그 뒤.
 // API 키가 아직 없는 지표는 마우스를 올리거나 누르면 키 받는 방법을 안내한다.
 
 import Link from 'next/link'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  type ApiId, type HouseCatalog, type HouseIndicator, type MapGeo, type RegionMetric, type Regions,
-  fillOf, fmtRegion, fmtYm, loadHouseCatalog, loadHouseSeries, loadMap, loadRegions, textOn,
+  type ApiId, type HouseCatalog, type HouseIndicator, type LocalIndex, type LocalUnit, type MapGeo, type RegionMetric, type Regions,
+  fillOf, fmtRegion, fmtWon, fmtYm, loadHouseCatalog, loadHouseSeries, loadLocalIndex, loadMap, loadRegions, priceStatus, textOn,
 } from '@/app/lib/house'
 import { type Layer, fmtNum, fmtPeriod, tfLabel } from '@/app/lib/macro'
 import MacroChart, { type ChartLayer, type MacroChartHandle, type ShadeBand } from '@/app/components/macro/MacroChart'
 import { Chip, Label, LayerLegend, PERIODS, Sparkline, newLayer, useIsMobile, useSeriesMap } from '@/app/components/macro/ui'
+import { LocalMap, LocalTip, PriceBlock, StatusBadge, childrenOf, localMetrics, localVal, p84Metric, unitData, useLocalFile } from './local'
 
 const DEFAULT_LAYERS = ['KR_HPI_REAL', 'KR_HHCREDIT_GDP', 'KR_CALL']
 
@@ -21,12 +23,28 @@ export default function HouseClient() {
   const [geo, setGeo] = useState<MapGeo | null>(null)
   const [err, setErr] = useState(false)
   const [guide, setGuide] = useState<ApiId | null>(null)
+  // 시군구 집값 요약 — 없어도 기존 지도는 그대로 (undefined = 아직 받는 중)
+  const [lidx, setLidx] = useState<LocalIndex | null | undefined>(undefined)
 
   useEffect(() => {
     loadHouseCatalog().then(setCat).catch(() => setErr(true))
     loadRegions().then(setRegions).catch(() => setErr(true))
     loadMap().then(setGeo).catch(() => setErr(true))
+    loadLocalIndex().then(setLidx).catch(() => setLidx(null))
   }, [])
+
+  // 전국 지도 맨 앞에 '집값(84㎡)' 칩을 끼워 넣음
+  const merged = useMemo<Regions | null>(() => {
+    if (!regions || !lidx) return regions
+    const out: Regions['regions'] = {}
+    for (const [id, r] of Object.entries(regions.regions)) {
+      const s = lidx.regions[id]
+      out[id] = s?.p84 !== undefined
+        ? { ...r, values: { ...r.values, p84: { v: s.p84, date: s.date ?? lidx.asOf, prev12: s.p84y ?? null } } }
+        : r
+    }
+    return { ...regions, metrics: [p84Metric(lidx.asOf), ...regions.metrics], regions: out }
+  }, [regions, lidx])
 
   return (
     <div className="pt-2 pb-16">
@@ -42,12 +60,14 @@ export default function HouseClient() {
       {!cat && !err && <div className="mt-10 text-center text-sm py-20" style={{ color: 'var(--ink-mute)' }}>불러오는 중…</div>}
       {err && !cat && <div className="mt-10 text-center text-sm py-20" style={{ color: 'var(--ink-mute)' }}>데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</div>}
 
-      {cat && regions && geo && <MapSection cat={cat} regions={regions} geo={geo} onGuide={setGuide} />}
+      {cat && merged && geo && lidx !== undefined && <MapSection cat={cat} regions={merged} geo={geo} lidx={lidx} onGuide={setGuide} />}
       {cat && <NationalSection cat={cat} onGuide={setGuide} />}
 
       {cat && (
         <p className="mt-10 text-[10px] leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
-          출처: 한국은행 ECOS(한국부동산원·KB·국토교통부 원자료 포함), BIS·OECD(FRED), 지도 통계청 행정구역경계(2013).
+          출처: 한국은행 ECOS(한국부동산원·KB·국토교통부 원자료 포함), 한국부동산원 R-ONE(시군구 집값·전세가율·거래량), BIS·OECD(FRED),
+          지도 통계청 행정구역경계(2013) · 시군구 경계 vuski/admdongkor(MIT).
+          84㎡ 집값은 ㎡당 평균 매매가격 × 84로 환산한 값이라 실제 단지 시세와 다를 수 있어요.
           지역별 대출은 금융기관 소재지 기준이라 담보 주택 소재지와 다를 수 있어요. 데이터 갱신 {cat.generatedAt.slice(0, 10)}
         </p>
       )}
@@ -142,10 +162,17 @@ function GuidePanel({ cat, api, onClose }: { cat: HouseCatalog; api: ApiId; onCl
 }
 
 // ─────────────────────────────────────────
-// 지도
+// 지도 — 전국(17개 시도) → 시군구 → 구 드릴다운
+// 누르면 오른쪽에 상세, 더블클릭(또는 상세의 버튼)으로 확대
 // ─────────────────────────────────────────
-function MapSection({ cat, regions, geo, onGuide }: { cat: HouseCatalog; regions: Regions; geo: MapGeo; onGuide: (a: ApiId) => void }) {
+type View = { nid: string; fid: string; parent: string | null } | null   // null = 전국
+
+function MapSection({ cat, regions, geo, lidx, onGuide }: {
+  cat: HouseCatalog; regions: Regions; geo: MapGeo; lidx: LocalIndex | null; onGuide: (a: ApiId) => void
+}) {
+  const [view, setView] = useState<View>(null)
   const [mid, setMid] = useState(regions.metrics[0]?.id)
+  const [lmid, setLmid] = useState('p84')
   const [hover, setHover] = useState<string | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null)
@@ -160,17 +187,49 @@ function MapSection({ cat, regions, geo, onGuide }: { cat: HouseCatalog; regions
   )
   const focus = selected ?? hover
 
+  const local = useLocalFile(view?.fid ?? null)
+  const lms = useMemo(() => localMetrics(local.data?.asOf ?? null), [local.data])
+  const lmetric = lms.find(m => m.id === lmid) ?? lms[0]
+
+  // 세종은 시군구가 따로 없어서 확대하지 않음
+  const zoomable = (nid: string) => !!lidx?.files[nid] && nid !== 'sejong'
+  const go = (v: View) => { setView(v); setSelected(null); setHover(null); setPos(null) }
+  const zoomNation = (nid: string) => {
+    const f = lidx?.files[nid]
+    if (!f || nid === 'sejong') return
+    // 광주는 통합 파일(전남광주) 안의 광주 단위로 바로 들어감
+    go({ nid, fid: f.file, parent: f.unit === 'root' || f.unit === 'jeonnam' ? null : f.unit })
+  }
+  const zoomLocal = (uid: string) => view && go({ ...view, parent: uid })
+
   const onMove = (e: React.MouseEvent) => {
     const r = boxRef.current?.getBoundingClientRect()
     if (r) setPos({ x: Math.min(e.clientX - r.left + 14, r.width - 230), y: e.clientY - r.top + 14 })
   }
 
+  const lgeo = local.geo, ldata = local.data
+  const area = view && lgeo && ldata ? ldata.units[view.parent ?? 'root'] : undefined
+  const areaName = view ? (view.parent && lgeo ? lgeo.units[view.parent]?.name : lgeo?.ko ?? regions.regions[view.nid]?.ko) : null
+  const areaSt = area ? priceStatus(area.sum) : null
+  const lids = view && lgeo
+    ? Object.keys(lgeo.units).filter(k => (view.parent ? lgeo.units[k].parent === view.parent : lgeo.units[k].level === 2) && lgeo.units[k].d)
+    : []
+  const unitName = (uid: string) => {
+    const u = lgeo?.units[uid]
+    if (!u) return ''
+    return u.parent && lgeo?.units[u.parent] ? `${lgeo.units[u.parent].name} ${u.name}` : u.name
+  }
+
   return (
     <section className="mt-8">
-      <SectionHead title="시도별 지도" desc="마우스를 올리면 그 지역 숫자가, 누르면 최근 흐름이 보여요" />
+      <SectionHead title="지역별 지도"
+        desc={mobile ? '누르면 그 지역 집값 흐름이, 상세의 버튼으로 시군구·구까지 들어가요' : '누르면 그 지역 집값 흐름이, 더블클릭하면 시군구 → 구 지도로 들어가요'} />
 
+      {/* 지표 칩 */}
       <div className="mt-3 flex items-center gap-1.5 flex-wrap">
-        {regions.metrics.map(m => {
+        {view ? lms.map(m => (
+          <span key={m.id}><Chip on={m.id === lmetric.id} onClick={() => setLmid(m.id)} title={m.desc}>{m.short}</Chip></span>
+        )) : regions.metrics.map(m => {
           const chip = (
             <Chip on={m.id === metric.id} onClick={() => setMid(m.id)} title={m.available ? m.desc : undefined}>
               {m.short}{!m.available && <span className="ml-1 opacity-70">· 키 필요</span>}
@@ -184,52 +243,90 @@ function MapSection({ cat, regions, geo, onGuide }: { cat: HouseCatalog; regions
         })}
       </div>
       <p className="mt-2 text-[11px] leading-relaxed max-w-2xl" style={{ color: 'var(--ink-mute)' }}>
-        {metric.desc}{metric.asOf && <> · 기준 {fmtYm(metric.asOf)}</>}
+        {view
+          ? <>{lmetric.desc}{lmetric.asOf && <> · 기준 {fmtYm(lmetric.asOf)}</>}</>
+          : <>{metric.desc}{metric.asOf && <> · 기준 {fmtYm(metric.asOf)}</>}</>}
       </p>
 
       <div className="mt-3 grid grid-cols-1 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-4">
         {/* 지도 */}
-        <div ref={boxRef} className="relative" onMouseMove={onMove} onMouseLeave={() => { setHover(null); setPos(null) }}
+        <div ref={boxRef} className="relative self-start" onMouseMove={onMove} onMouseLeave={() => { setHover(null); setPos(null) }}
           style={{ border: '1px solid var(--hairline)', background: 'var(--surface)' }}>
-          <svg viewBox={geo.viewBox.join(' ')} className="block w-full h-auto" role="img" aria-label="대한민국 시도 지도">
-            {ids.map(id => {
-              const r = regions.regions[id]
-              const v = r?.values[metric.id]?.v
-              const fill = metric.available ? fillOf(metric, v, vals) : 'var(--neu)'
-              const on = focus === id
-              return (
-                <path key={id} d={geo.regions[id].d} fill={fill}
-                  stroke={on ? 'var(--ink)' : 'var(--surface)'} strokeWidth={on ? 1.6 : 0.7} strokeLinejoin="round"
-                  style={{ cursor: 'pointer', transition: 'fill .2s' }}
-                  onMouseEnter={() => setHover(id)}
-                  onClick={() => {
-                    setSelected(s => (s === id ? null : id))
-                    if (!metric.available) onGuide(metric.need)
-                  }} />
-              )
-            })}
-            {/* 선택 지역 테두리를 맨 위에 다시 그림 */}
-            {focus && geo.regions[focus] && (
-              <path d={geo.regions[focus].d} fill="none" stroke="var(--ink)" strokeWidth={1.8} pointerEvents="none" />
+          {/* 위치 (브레드크럼) + 지금 보고 있는 지역 요약 */}
+          <div className="flex items-center justify-between gap-2 flex-wrap px-3 py-2 text-[11px]" style={{ borderBottom: '1px solid var(--hairline)' }}>
+            <nav className="flex items-center gap-1 flex-wrap" aria-label="지역 위치">
+              <Crumb on={!view} onClick={() => go(null)}>전국</Crumb>
+              {view && <>
+                <span style={{ color: 'var(--ink-mute)' }}>›</span>
+                <Crumb on={!view.parent} onClick={() => go({ ...view, parent: null })}>{lgeo?.ko ?? regions.regions[view.nid]?.ko}</Crumb>
+              </>}
+              {view?.parent && lgeo?.units[view.parent] && <>
+                <span style={{ color: 'var(--ink-mute)' }}>›</span>
+                <Crumb on>{lgeo.units[view.parent].name}</Crumb>
+              </>}
+            </nav>
+            {view && area?.sum.p84 !== undefined && (
+              <span className="flex items-center gap-1.5">
+                <span style={{ color: 'var(--ink-mute)' }}>{areaName} 84㎡</span>
+                <b className="mono" style={{ color: 'var(--ink)' }}>{fmtWon(area.sum.p84)}</b>
+                {areaSt && <StatusBadge tone={areaSt.tone} label={areaSt.label} small />}
+              </span>
             )}
-            {ids.map(id => {
-              const r = regions.regions[id]
-              const [x, y] = geo.regions[id].label
-              const v = r?.values[metric.id]?.v
-              const fill = metric.available ? fillOf(metric, v, vals) : 'var(--neu)'
-              const small = id === 'sejong'
-              return (
-                <g key={id} pointerEvents="none" transform={`translate(${x},${y})`}>
-                  <text textAnchor="middle" fontSize={small ? 9 : 11} fontWeight={700} fill={textOn(fill)}>{r?.ko}</text>
-                  {metric.available && v !== undefined && v !== null && !small && (
-                    <text y={12} textAnchor="middle" fontSize={9.5} className="mono" fill={textOn(fill)}>{fmtRegion(metric, v)}</text>
-                  )}
-                </g>
-              )
-            })}
-          </svg>
+            {!view && <span style={{ color: 'var(--ink-mute)' }}>{mobile ? '지역을 누르세요' : '더블클릭 = 확대'}</span>}
+          </div>
 
-          {!metric.available && (
+          {!view ? (
+            <svg viewBox={geo.viewBox.join(' ')} className="block w-full h-auto" role="img" aria-label="대한민국 시도 지도">
+              {ids.map(id => {
+                const r = regions.regions[id]
+                const v = r?.values[metric.id]?.v
+                const fill = metric.available ? fillOf(metric, v, vals) : 'var(--neu)'
+                const on = focus === id
+                return (
+                  <path key={id} d={geo.regions[id].d} fill={fill}
+                    stroke={on ? 'var(--ink)' : 'var(--surface)'} strokeWidth={on ? 1.6 : 0.7} strokeLinejoin="round"
+                    style={{ cursor: 'pointer', transition: 'fill .2s' }}
+                    onMouseEnter={() => setHover(id)}
+                    onClick={() => {
+                      setSelected(id)
+                      if (!metric.available) onGuide(metric.need)
+                    }}
+                    onDoubleClick={() => zoomNation(id)} />
+                )
+              })}
+              {/* 선택 지역 테두리를 맨 위에 다시 그림 */}
+              {focus && geo.regions[focus] && (
+                <path d={geo.regions[focus].d} fill="none" stroke="var(--ink)" strokeWidth={1.8} pointerEvents="none" />
+              )}
+              {ids.map(id => {
+                const r = regions.regions[id]
+                const [x, y] = geo.regions[id].label
+                const v = r?.values[metric.id]?.v
+                const fill = metric.available ? fillOf(metric, v, vals) : 'var(--neu)'
+                const small = id === 'sejong'
+                return (
+                  <g key={id} pointerEvents="none" transform={`translate(${x},${y})`}>
+                    <text textAnchor="middle" fontSize={small ? 9 : 11} fontWeight={700} fill={textOn(fill)}>{r?.ko}</text>
+                    {metric.available && v !== undefined && v !== null && !small && (
+                      <text y={12} textAnchor="middle" fontSize={9.5} className="mono" fill={textOn(fill)}>{fmtRegion(metric, v)}</text>
+                    )}
+                  </g>
+                )
+              })}
+            </svg>
+          ) : lgeo && ldata ? (
+            <LocalMap geo={lgeo} data={ldata} parent={view.parent} metric={lmetric} focus={focus}
+              onHover={setHover} onPick={setSelected} onZoom={zoomLocal} />
+          ) : (
+            <div className="h-[360px] flex flex-col items-center justify-center gap-3 text-[11px]" style={{ color: 'var(--ink-mute)' }}>
+              {local.err ? <>
+                <span>시군구 지도를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.</span>
+                <button type="button" onClick={() => go(null)} className="underline">전국 지도로 돌아가기</button>
+              </> : '시군구 지도 불러오는 중…'}
+            </div>
+          )}
+
+          {!view && !metric.available && (
             <div className="absolute inset-x-0 bottom-3 flex justify-center">
               <button type="button" onClick={() => onGuide(metric.need)} className="px-3 py-1.5 text-[11px] font-bold"
                 style={{ background: 'var(--accent)', color: '#fff' }}>
@@ -239,21 +336,42 @@ function MapSection({ cat, regions, geo, onGuide }: { cat: HouseCatalog; regions
           )}
 
           {/* 마우스오버 툴팁 (데스크톱) */}
-          {!mobile && hover && pos && (
-            <RegionTip regions={regions} id={hover} metric={metric} cat={cat}
-              style={{ left: pos.x, top: pos.y }} />
-          )}
+          {!mobile && hover && pos && (!view
+            ? <RegionTip regions={regions} id={hover} metric={metric} cat={cat} style={{ left: pos.x, top: pos.y }} />
+            : lgeo && ldata && lgeo.units[hover] && (
+              <LocalTip name={unitName(hover)} unit={unitData(lgeo, ldata, hover)} metrics={lms} metric={lmetric}
+                style={{ left: pos.x, top: pos.y }} />
+            ))}
         </div>
 
         {/* 오른쪽: 선택 지역 상세 또는 순위 */}
-        <div style={{ border: '1px solid var(--hairline)', background: 'var(--surface)' }} className="p-3">
-          {selected
-            ? <RegionDetail regions={regions} id={selected} metric={metric} cat={cat} onGuide={onGuide} onClose={() => setSelected(null)} />
-            : <Ranking regions={regions} metric={metric} ids={ids} onPick={setSelected} cat={cat} onGuide={onGuide} />}
+        <div style={{ border: '1px solid var(--hairline)', background: 'var(--surface)' }} className="p-3 self-start">
+          {!view ? (
+            selected
+              ? <RegionDetail regions={regions} id={selected} metric={metric} cat={cat} lidx={lidx} onGuide={onGuide}
+                  onClose={() => setSelected(null)} onZoom={zoomable(selected) ? () => zoomNation(selected) : undefined} />
+              : <Ranking regions={regions} metric={metric} ids={ids} onPick={setSelected} cat={cat} onGuide={onGuide} />
+          ) : !lgeo || !ldata ? (
+            <div className="py-10 text-center text-[11px]" style={{ color: 'var(--ink-mute)' }}>{local.err ? '–' : '불러오는 중…'}</div>
+          ) : selected && lgeo.units[selected] ? (
+            <UnitDetail name={unitName(selected)} sido={lgeo.ko} unit={unitData(lgeo, ldata, selected)} sqm={ldata.sqm}
+              onClose={() => setSelected(null)}
+              onZoom={!view.parent && childrenOf(lgeo, selected).length ? () => zoomLocal(selected) : undefined} />
+          ) : (
+            <RankList title={`${areaName} ${lmetric.label} 순위`} sub={`기준 ${fmtYm(lmetric.id === 'vol' ? area?.sum.volDate ?? lmetric.asOf : lmetric.asOf)} · 지역을 누르면 집값 흐름이 보여요`}
+              metric={lmetric} onPick={setSelected}
+              rows={lids.map(k => ({ id: k, name: lgeo.units[k].name, v: localVal(unitData(lgeo, ldata, k)?.sum, lmetric.id) }))} />
+          )}
         </div>
       </div>
     </section>
   )
+}
+
+function Crumb({ on, onClick, children }: { on: boolean; onClick?: () => void; children: React.ReactNode }) {
+  return on
+    ? <span className="font-bold" style={{ color: 'var(--ink)' }}>{children}</span>
+    : <button type="button" onClick={onClick} className="font-semibold underline underline-offset-2" style={{ color: 'var(--accent)' }}>{children}</button>
 }
 
 function RegionTip({ regions, id, metric, cat, style }: {
@@ -315,24 +433,35 @@ function Ranking({ regions, metric, ids, onPick, cat, onGuide }: {
       </div>
     )
   }
-  const rows = ids
-    .map(id => ({ id, r: regions.regions[id], v: regions.regions[id]?.values[metric.id]?.v ?? null }))
-    .sort((a, b) => (b.v ?? -Infinity) - (a.v ?? -Infinity))
-  const max = Math.max(...rows.map(x => Math.abs(x.v ?? 0)), 1e-9)
+  return (
+    <RankList title={`${metric.label} 순위`} sub={`기준 ${fmtYm(metric.asOf)} · 지역을 누르면 흐름이 보여요`} metric={metric} onPick={onPick}
+      rows={ids.map(id => ({ id, name: regions.regions[id]?.ko ?? id, v: regions.regions[id]?.values[metric.id]?.v ?? null }))} />
+  )
+}
+
+function RankList({ title, sub, rows, metric, onPick }: {
+  title: string; sub: string; rows: { id: string; name: string; v: number | null }[]; metric: RegionMetric; onPick: (id: string) => void
+}) {
+  const sorted = [...rows].sort((a, b) => (b.v ?? -Infinity) - (a.v ?? -Infinity))
+  const vals = sorted.map(r => r.v).filter((v): v is number => v !== null)
+  const max = Math.max(...vals.map(Math.abs), 1e-9)
+  const wide = Math.max(...rows.map(r => r.name.length)) > 3
   return (
     <div>
-      <div className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{metric.label} 순위</div>
-      <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>기준 {fmtYm(metric.asOf)} · 지역을 누르면 흐름이 보여요</div>
-      <ul className="mt-2">
-        {rows.map((x, i) => (
+      <div className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{title}</div>
+      <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>{sub}</div>
+      <ul className="mt-2 max-h-[560px] overflow-y-auto">
+        {sorted.map((x, i) => (
           <li key={x.id} onClick={() => onPick(x.id)} className="flex items-center gap-2 py-[3px] cursor-pointer text-[11px]">
-            <span className="mono w-4 text-right" style={{ color: 'var(--ink-mute)' }}>{i + 1}</span>
-            <span className="w-8 font-semibold" style={{ color: 'var(--ink)' }}>{x.r?.ko}</span>
+            <span className="mono w-4 text-right shrink-0" style={{ color: 'var(--ink-mute)' }}>{i + 1}</span>
+            <span className={`${wide ? 'w-16' : 'w-8'} shrink-0 font-semibold truncate`} style={{ color: 'var(--ink)' }}>{x.name}</span>
             <span className="flex-1 h-2.5 relative" style={{ background: 'var(--plane)' }}>
-              <span className="absolute inset-y-0 left-0"
-                style={{ width: `${(Math.abs(x.v ?? 0) / max) * 100}%`, background: fillOf(metric, x.v, rows.map(r => r.v ?? 0)) }} />
+              {x.v !== null && (
+                <span className="absolute inset-y-0 left-0"
+                  style={{ width: `${(Math.abs(x.v) / max) * 100}%`, background: fillOf(metric, x.v, vals) }} />
+              )}
             </span>
-            <span className="mono w-16 text-right" style={{ color: 'var(--ink)' }}>{fmtRegion(metric, x.v)}</span>
+            <span className="mono w-16 text-right shrink-0" style={{ color: x.v === null ? 'var(--ink-mute)' : 'var(--ink)' }}>{fmtRegion(metric, x.v)}</span>
           </li>
         ))}
       </ul>
@@ -340,12 +469,18 @@ function Ranking({ regions, metric, ids, onPick, cat, onGuide }: {
   )
 }
 
-function RegionDetail({ regions, id, metric, cat, onGuide, onClose }: {
-  regions: Regions; id: string; metric: RegionMetric; cat: HouseCatalog; onGuide: (a: ApiId) => void; onClose: () => void
+/** 전국 지도에서 고른 시도: 집값(84㎡) → 흐름 → 변화율 … 그 아래 대출·부실 지표 */
+function RegionDetail({ regions, id, metric, cat, lidx, onGuide, onClose, onZoom }: {
+  regions: Regions; id: string; metric: RegionMetric; cat: HouseCatalog; lidx: LocalIndex | null
+  onGuide: (a: ApiId) => void; onClose: () => void; onZoom?: () => void
 }) {
   const r = regions.regions[id]
+  const f = lidx?.files[id]
+  const local = useLocalFile(f?.file ?? null)
   if (!r) return null
-  const hist = (r.hist[metric.id] ?? []).filter((p): p is [string, number] => p[1] !== null)
+  const ecos = regions.metrics.filter(m => m.id !== 'p84')
+  const showHist = metric.id !== 'p84'
+  const hist = showHist ? (r.hist[metric.id] ?? []).filter((p): p is [string, number] => p[1] !== null) : []
   return (
     <div>
       <div className="flex items-start justify-between">
@@ -353,41 +488,86 @@ function RegionDetail({ regions, id, metric, cat, onGuide, onClose }: {
           <div className="text-sm font-bold" style={{ color: 'var(--ink)' }}>{r.name}</div>
           {r.note && <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>{r.note}</div>}
         </div>
-        <button type="button" onClick={onClose} className="text-[11px] px-1" style={{ color: 'var(--ink-mute)' }}>순위 보기 ✕</button>
+        <button type="button" onClick={onClose} className="text-[11px] px-1 shrink-0" style={{ color: 'var(--ink-mute)' }}>순위 보기 ✕</button>
       </div>
 
-      <div className="mt-3 grid grid-cols-2 gap-1.5">
-        {regions.metrics.map(m => {
-          const v = r.values[m.id]
-          const box = (
-            <div className="p-2 h-full" style={{ border: `1px solid ${m.id === metric.id ? 'var(--ink)' : 'var(--hairline)'}`, opacity: v ? 1 : 0.55 }}>
-              <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>{m.short}</div>
-              <div className="mono text-sm font-bold" style={{ color: 'var(--ink)' }}>{v ? fmtRegion(m, v.v) : '–'}</div>
-              <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>
-                {v ? <>{fmtYm(v.date)}{v.prev12 !== null && <> · 1년 전 {fmtRegion(m, v.prev12)}</>}</> : (m.available ? '데이터 없음' : '키 필요')}
+      {f && (
+        <div className="mt-3">
+          <PriceBlock sum={lidx?.regions[id]} unit={local.data?.units[f.unit]} sqm={lidx?.sqm ?? 84} loading={!local.data && !local.err} />
+          {onZoom && (
+            <button type="button" onClick={onZoom} className="mt-3 w-full px-3 py-1.5 text-[11px] font-bold"
+              style={{ background: 'var(--accent)', color: '#fff' }}>
+              {r.ko} 시군구 지도로 보기 →
+            </button>
+          )}
+        </div>
+      )}
+
+      <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--hairline)' }}>
+        <div className="text-[11px] font-semibold" style={{ color: 'var(--ink-2)' }}>실거래·대출·부실 (한국은행)</div>
+        <div className="mt-1.5 grid grid-cols-2 gap-1.5">
+          {ecos.map(m => {
+            const v = r.values[m.id]
+            const box = (
+              <div className="p-2 h-full" style={{ border: `1px solid ${m.id === metric.id ? 'var(--ink)' : 'var(--hairline)'}`, opacity: v ? 1 : 0.55 }}>
+                <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>{m.short}</div>
+                <div className="mono text-sm font-bold" style={{ color: 'var(--ink)' }}>{v ? fmtRegion(m, v.v) : '–'}</div>
+                <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>
+                  {v ? <>{fmtYm(v.date)}{v.prev12 !== null && <> · 1년 전 {fmtRegion(m, v.prev12)}</>}</> : (m.available ? '데이터 없음' : '키 필요')}
+                </div>
               </div>
-            </div>
-          )
-          return v || m.available ? <div key={m.id}>{box}</div>
-            : <NeedKey key={m.id} cat={cat} api={m.need} onGuide={onGuide} block>{box}</NeedKey>
-        })}
-      </div>
+            )
+            return v || m.available ? <div key={m.id}>{box}</div>
+              : <NeedKey key={m.id} cat={cat} api={m.need} onGuide={onGuide} block>{box}</NeedKey>
+          })}
+        </div>
 
-      <div className="mt-4">
-        <div className="text-[11px] font-semibold" style={{ color: 'var(--ink-2)' }}>{metric.label} · 최근 흐름</div>
-        {hist.length > 1 ? (
-          <div className="mt-1">
-            <Sparkline data={hist} height={90} zeroLine={metric.unit === '%' && metric.id !== 'delinq'} />
-            <div className="flex justify-between text-[10px] mono" style={{ color: 'var(--ink-mute)' }}>
-              <span>{fmtYm(hist[0][0])}</span><span>{fmtYm(hist[hist.length - 1][0])}</span>
-            </div>
-          </div>
-        ) : (
-          <div className="mt-1 h-[90px] flex items-center justify-center text-[11px]" style={{ background: 'var(--plane)', color: 'var(--ink-mute)' }}>
-            {metric.available ? '데이터 없음' : <button type="button" onClick={() => onGuide(metric.need)} className="underline">{cat.apis[metric.need].name} API 키가 필요해요</button>}
+        {showHist && (
+          <div className="mt-3">
+            <div className="text-[11px] font-semibold" style={{ color: 'var(--ink-2)' }}>{metric.label} · 최근 흐름</div>
+            {hist.length > 1 ? (
+              <div className="mt-1">
+                <Sparkline data={hist} height={70} zeroLine={metric.unit === '%' && metric.id !== 'delinq'} />
+                <div className="flex justify-between text-[10px] mono" style={{ color: 'var(--ink-mute)' }}>
+                  <span>{fmtYm(hist[0][0])}</span><span>{fmtYm(hist[hist.length - 1][0])}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-1 h-[70px] flex items-center justify-center text-[11px]" style={{ background: 'var(--plane)', color: 'var(--ink-mute)' }}>
+                {metric.available ? '데이터 없음' : <button type="button" onClick={() => onGuide(metric.need)} className="underline">{cat.apis[metric.need].name} API 키가 필요해요</button>}
+              </div>
+            )}
           </div>
         )}
       </div>
+    </div>
+  )
+}
+
+/** 시군구·구 상세 */
+function UnitDetail({ name, sido, unit, sqm, onClose, onZoom }: {
+  name: string; sido: string; unit: LocalUnit | undefined; sqm: number; onClose: () => void; onZoom?: () => void
+}) {
+  return (
+    <div>
+      <div className="flex items-start justify-between">
+        <div>
+          <div className="text-sm font-bold" style={{ color: 'var(--ink)' }}>{name}</div>
+          <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>{sido}</div>
+        </div>
+        <button type="button" onClick={onClose} className="text-[11px] px-1 shrink-0" style={{ color: 'var(--ink-mute)' }}>순위 보기 ✕</button>
+      </div>
+      <div className="mt-3">
+        {unit
+          ? <PriceBlock sum={undefined} unit={unit} sqm={sqm} />
+          : <div className="text-[11px]" style={{ color: 'var(--ink-mute)' }}>부동산원 통계에 따로 나오지 않는 지역이에요.</div>}
+      </div>
+      {onZoom && (
+        <button type="button" onClick={onZoom} className="mt-3 w-full px-3 py-1.5 text-[11px] font-bold"
+          style={{ background: 'var(--accent)', color: '#fff' }}>
+          {name} 구별로 보기 →
+        </button>
+      )}
     </div>
   )
 }

@@ -36,7 +36,13 @@ GitHub `HaminKim/KoreanAnts` (**공개 레포** — 비밀값·개인 정보는 
 - 지도 경계 `py scripts/house/build_map.py` → `public/data/house/map.json` (KOSTAT 2013, 경계 바뀔 때만)
 - 키: `ECOS_API_KEY`, `RONE_API_KEY` (GitHub Secrets). 없으면 해당 지표는 화면에 '키 필요' + 발급 안내. R-ONE srcId 는 `통계표ID/분류ID/항목ID` (예: `A_2024_00045/500001/100001`, 500001 = 전국). 통계표 목록은 `SttsApiTbl.do`, 항목은 `SttsApiTblItm.do` 로 조회
 - 2026-07 광주+전남 → 전남광주통합특별시. 과거 시계열은 광주·전남 따로, 통합 코드(V00 등)와 이어붙이지 않음
-- 갱신은 `macro-sync.yml` 의 한 스텝 (continue-on-error)
+- 시군구·구 드릴다운 (전국 → 시군구 → 일반구, 예: 경기 → 고양시 → 일산서구)
+  - 경계 `py scripts/house/build_local_map.py` → `local/geo_{시도}.json` (vuski/admdongkor sgg, MIT. 경계 바뀔 때만)
+  - 데이터 `py scripts/house/build_local.py [--force]` → `local/{시도}.json`, `local/index.json`, RAW `processed/house/raw/local_*.csv`
+  - 84㎡ 집값 = 최근 ㎡당 평균가격 × 84, 과거는 매매가격지수 비율로 환산 (평균가격은 표본 개편 때 끊김). 군 지역은 표본이 없어 거래량만
+  - 상세 화면 순서(사용자 확정): 집값 + 상태(최고가 ±3% → '최고가', 3개월 연속 하락 → '하락 중', 그 외 '고점 대비 −N%') → 금액 흐름 차트(고점 표시) → YoY·MoM·전세가율·거래량
+  - 프론트 `app/house/local.tsx` (지도·상세·차트), 클릭 = 상세, 더블클릭/상세 버튼 = 확대
+- 갱신은 `macro-sync.yml` 의 스텝 (`build_house.py`, `build_local.py`, 둘 다 continue-on-error)
 
 ## 매매 흐름 데이터 파이프라인
 - `scraper/` (구 reant_streamlit 레포를 subtree 로 통합) 가 Seibro(예탁결제원)를 Selenium 으로 스크랩

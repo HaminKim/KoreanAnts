@@ -55,6 +55,12 @@ jobs:
         continue-on-error: true
         run: python scripts/house/build_house.py
 
+      # 시군구·구 집값(84㎡ 환산)·전세가율·거래량 — R-ONE 새 달이 없으면 저장된 RAW 로 다시 계산만
+      - name: Build Korea local housing data
+        if: github.event_name != 'push'
+        continue-on-error: true
+        run: python scripts/house/build_local.py
+
       - name: Commit and push
         if: github.event_name != 'push'
         run: |
