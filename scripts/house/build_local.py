@@ -141,6 +141,34 @@ def resolve(full, index):
     return fid, index[fid].get(tuple(rest))
 
 
+def fix_merged_vol(df):
+    """거래량 표만 옛 광주·전남 합계가 '(구)광주'·'(구)전남' 이름이고, 2026-07 통합 뒤로는 비어 있다.
+    다른 표처럼 '광주'·'전남' 으로 맞추고, 빈 달은 같은 구역 구·시군 거래량 합으로 채운다
+    (모든 구·시군 값이 있는 달만. 통합 코드 값은 쓰지 않음). RAW 파일은 그대로 둔다"""
+    df = df.copy()
+    df["full"] = df["full"].replace({"전남광주>(구)광주": "전남광주>광주", "전남광주>(구)전남": "전남광주>전남"})
+    segs = df["full"].fillna("").str.split(">")
+    kids = df[(segs.str.len() == 2) & (segs.str[0] == "전남광주") & segs.str[1].str.endswith(("시", "군", "구"))]
+    kids = kids.assign(part=kids["full"].str.split(">").str[1].map(lambda s: "광주" if s in GWANGJU_GU else "전남"),
+                       value=pd.to_numeric(kids["value"], errors="coerce"))
+    for part, g in kids.groupby("part"):
+        n = g["full"].nunique()
+        by = g.groupby("ym")["value"].agg(["sum", "count"])
+        full = by[by["count"] == n]["sum"]
+        name = f"전남광주>{part}"
+        tot = df[df["full"] == name]
+        if tot.empty:
+            continue
+        miss = full.index.difference(tot.dropna(subset=["value"])["ym"])
+        if miss.empty:
+            continue
+        df = df[~((df["full"] == name) & df["ym"].isin(miss))]
+        add = pd.DataFrame({"cls": tot["cls"].iloc[0], "full": name, "ym": miss, "value": full[miss].values})
+        df = pd.concat([df, add], ignore_index=True)
+        log(f"  · {name} 거래량 {len(miss)}달은 구·시군 합으로 채움 (~{miss.max()})")
+    return df.sort_values(["cls", "ym"])
+
+
 def unit_index(geos):
     idx = {}
     for fid, g in geos.items():
@@ -226,6 +254,7 @@ def main():
     index = unit_index(geos)
 
     raw = {k: fetch_table(k, t, force) for k, t in TABLES.items()}
+    raw["vol"] = fix_merged_vol(raw["vol"])
 
     # 지역 파일별 단위 → 표별 시계열
     data = {fid: {} for fid in geos}
