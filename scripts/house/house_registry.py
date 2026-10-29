@@ -166,6 +166,22 @@ series("KR_RTX_SEOUL", "아파트 실거래가격지수 — 서울", "지수", "
        need="ECOS", since="실거래 신고제가 2006년에 시작돼서 지수도 2006년 1월부터 있어요")
 series("KR_KB_SEOUL_APT", "KB 서울 아파트 매매가격지수", "지수", "M", ["yoy", "level"], "ecos", "901Y062/M/P63ACA",
        need="ECOS", since="KB 주택가격동향 조사가 1986년 1월부터 있어요")
+# KB 주택가격동향 — ECOS 에는 전국·서울만 있음 (시도별은 KB 데이터허브 엑셀). 모두 1986-01~
+KB_SINCE = "KB 주택가격동향 조사가 1986년 1월부터 있어요"
+for _key, _label, _code in [
+    ("KR_KB_NATION_APT", "KB 전국 아파트 매매가격지수", "901Y062/M/P63AC"),
+    ("KR_KB_NATION_ALL", "KB 전국 주택 매매가격지수 (종합)", "901Y062/M/P63A"),
+    ("KR_KB_NATION_DETACHED", "KB 전국 단독주택 매매가격지수", "901Y062/M/P63AA"),
+    ("KR_KB_NATION_ROW", "KB 전국 연립주택 매매가격지수", "901Y062/M/P63AB"),
+    ("KR_KB_SEOUL_ALL", "KB 서울 주택 매매가격지수 (종합)", "901Y062/M/P63AD"),
+    ("KR_KB_JS_NATION_APT", "KB 전국 아파트 전세가격지수", "901Y063/M/P64AC"),
+    ("KR_KB_JS_SEOUL_APT", "KB 서울 아파트 전세가격지수", "901Y063/M/P64ACA"),
+    ("KR_KB_JS_NATION_ALL", "KB 전국 주택 전세가격지수 (종합)", "901Y063/M/P64A"),
+    ("KR_KB_JS_NATION_DETACHED", "KB 전국 단독주택 전세가격지수", "901Y063/M/P64AA"),
+    ("KR_KB_JS_NATION_ROW", "KB 전국 연립주택 전세가격지수", "901Y063/M/P64AB"),
+    ("KR_KB_JS_SEOUL_ALL", "KB 서울 주택 전세가격지수 (종합)", "901Y063/M/P64AD"),
+]:
+    series(_key, _label, "지수", "M", ["yoy", "level"], "ecos", _code, need="ECOS", since=KB_SINCE)
 series("KR_UNSOLD", "미분양 주택 — 전국", "호", "M", ["level", "yoy"], "ecos", "901Y074/M/I410A",
        dec=0, need="ECOS", since="월간 미분양 통계가 2007년 1월부터 있어요")
 series("KR_HH_MORT_LOAN", "주택관련대출 잔액 — 예금은행 전국", "십억 원", "M", ["yoy", "level"], "ecos", "151Y003/M/11110A0/X00",
@@ -204,8 +220,14 @@ INDICATORS = [
          what="물가를 빼지 않은 전국 집값이에요. 뉴스에서 말하는 '집값'에 가까워요."),
     dict(id="rtx_seoul", group="price", ko="서울 아파트 실거래가", main=["KR_RTX_SEOUL"], subs=["KR_RTX_NATION"],
          what="실제로 신고된 아파트 거래로 만든 지수예요. 표본조사 지수보다 빠르고 크게 움직여요."),
-    dict(id="kb_seoul", group="price", ko="KB 서울 아파트", main=["KR_KB_SEOUL_APT"],
+    dict(id="kb_nation", group="price", ko="KB 전국 아파트", main=["KR_KB_NATION_APT"],
+         subs=["KR_KB_NATION_ALL", "KR_KB_NATION_DETACHED", "KR_KB_NATION_ROW"],
+         what="1986년부터 이어지는 KB 전국 아파트 지수예요. 1980년대 말 급등, 1991년 이후 장기 하락, 외환위기, 2000년대 급등까지 한 줄로 볼 수 있어요."),
+    dict(id="kb_seoul", group="price", ko="KB 서울 아파트", main=["KR_KB_SEOUL_APT"], subs=["KR_KB_SEOUL_ALL"],
          what="1986년부터 이어지는 KB 서울 아파트 지수예요. 1990년대 초 하락, 2008년 이후 조정까지 비교할 수 있어요."),
+    dict(id="kb_jeonse", group="price", ko="KB 아파트 전세가격", main=["KR_KB_JS_NATION_APT"],
+         subs=["KR_KB_JS_SEOUL_APT", "KR_KB_JS_NATION_ALL", "KR_KB_JS_NATION_DETACHED", "KR_KB_JS_NATION_ROW", "KR_KB_JS_SEOUL_ALL"],
+         what="1986년부터의 KB 전세가격 지수예요. 전세는 실거주 수요라 매매보다 덜 흔들리고, 전세가 먼저 오르면 매매가를 밀어 올리는 경우가 많아요."),
     dict(id="rone_idx", group="price", ko="아파트 매매가격지수", main=["KR_RONE_APT_IDX"],
          what="한국부동산원 표본조사 지수예요. 시도·시군구별로 2003년부터 볼 수 있어요."),
     dict(id="rone_vol", group="price", ko="아파트 거래량", main=["KR_RONE_APT_VOL"],
