@@ -16531,13 +16531,6 @@
   ],
   "FTNT": [
     {
-      "d": "2023-11-02",
-      "actual": 0.41,
-      "estimate": 0.36,
-      "surp": 12.58,
-      "revenue": null
-    },
-    {
       "d": "2024-02-06",
       "actual": 0.51,
       "estimate": 0.43,
@@ -16613,6 +16606,13 @@
       "estimate": 0.75,
       "surp": 20.53,
       "revenue": 2.048
+    },
+    {
+      "d": "2026-10-28",
+      "actual": 0.91,
+      "estimate": 0.86,
+      "surp": 6.0,
+      "revenue": null
     }
   ],
   "UPS": [
@@ -26151,13 +26151,6 @@
   ],
   "KLAC": [
     {
-      "d": "2023-10-25",
-      "actual": 0.57,
-      "estimate": 0.54,
-      "surp": 6.87,
-      "revenue": null
-    },
-    {
       "d": "2024-01-25",
       "actual": 0.62,
       "estimate": 0.59,
@@ -26233,6 +26226,13 @@
       "estimate": 1.0,
       "surp": 5.14,
       "revenue": 3.658
+    },
+    {
+      "d": "2026-10-28",
+      "actual": 1.22,
+      "estimate": 1.18,
+      "surp": 3.55,
+      "revenue": null
     }
   ],
   "QLYS": [
@@ -29586,15 +29586,15 @@
     {
       "d": "2023-11-02",
       "actual": 0.65,
-      "estimate": 0.52,
-      "surp": 24.7,
+      "estimate": 0.54,
+      "surp": 21.12,
       "revenue": null
     },
     {
       "d": "2024-01-31",
       "actual": 0.73,
       "estimate": 0.63,
-      "surp": 16.53,
+      "surp": 16.75,
       "revenue": null
     },
     {
@@ -29628,22 +29628,22 @@
     {
       "d": "2025-05-01",
       "actual": 0.97,
-      "estimate": 0.91,
-      "surp": 6.59,
+      "estimate": 0.93,
+      "surp": 4.85,
       "revenue": 1.384
     },
     {
       "d": "2025-08-07",
       "actual": 0.98,
-      "estimate": 0.85,
-      "surp": 14.62,
+      "estimate": 0.86,
+      "surp": 13.99,
       "revenue": 1.384
     },
     {
       "d": "2025-10-30",
       "actual": 1.04,
-      "estimate": 0.93,
-      "surp": 12.14,
+      "estimate": 0.84,
+      "surp": 24.14,
       "revenue": 1.433
     },
     {
@@ -35864,8 +35864,8 @@
     {
       "d": "2026-10-28",
       "actual": 7.31,
-      "estimate": 0.74,
-      "surp": 884.15,
+      "estimate": 1.02,
+      "surp": 617.03,
       "revenue": null
     }
   ],
