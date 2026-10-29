@@ -70,11 +70,12 @@ jobs:
         continue-on-error: true
         run: python scripts/house/build_local.py
 
-      # 생활권(구 없는 시) 집값 — 국토부 실거래가. 최근 3개월 + 빠진 달만 받음 (하루 2번 × 한도 3000)
+      # 생활권(구 없는 시) 집값 — 국토부 실거래가. 최근 3개월 + 빠진 달만 받음, 최근 달부터
+      # 하루 한도(개발계정 1만)를 최대한 씀: 07:10 실행이 9000 까지, 23:40 실행은 남은 만큼 (한도 걸리면 알아서 멈춤)
       - name: Build Korea living-area prices
         if: github.event_name != 'push'
         continue-on-error: true
-        run: python scripts/house/build_trades.py --max-calls 3000
+        run: python scripts/house/build_trades.py --max-calls 9000
 
       # 경매 신청을 시군구·구에 붙임 (위 'Fetch' 단계에서 받은 RAW, build_local 이 단위를 새로 만든 뒤라 여기서)
       - name: Attach Korea auction filings

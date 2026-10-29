@@ -45,7 +45,7 @@ URL = "https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptT
 OUT_DIR = ROOT / "public" / "data" / "house" / "local"
 RAW_DIR = ROOT / "processed" / "house" / "raw" / "trades"
 MIX = ROOT / "processed" / "house" / "kikmix.csv"
-SINCE = "201901"
+SINCE = "200601"   # 실거래 신고제 시작 (그 전 거래 자료는 없음)
 REFETCH = 3            # 늦은 신고·해지 반영: 최근 몇 달은 매번 다시 받음
 AREA_MIN, AREA_MAX = 75, 95
 WIN = 6                # 비율 계산 창 (개월)
@@ -349,7 +349,7 @@ def build_city(sgg, df, b2a, city_p84, area_ids):
     sel["ppm"] = sel["price_n"] / sel["area_m2"]
     if sel.empty:
         return {}, unmapped
-    # 첫 창이 다 찰 때부터 (2019-01 하나로 낸 값이 고점처럼 보이지 않게)
+    # 첫 창이 다 찰 때부터 (첫 달 하나로 낸 값이 고점처럼 보이지 않게)
     idx = pd.period_range(sel["p"].min() + WIN - 1, sel["p"].max(), freq="M")
     areas = area_prices(sel, idx)
     # 기준 = 생활권 값들의 가중 평균 (가중치 = 생활권별 전체 기간 84형대 거래 비중, 고정)
