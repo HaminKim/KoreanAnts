@@ -6395,13 +6395,6 @@
   ],
   "INTC": [
     {
-      "d": "2023-10-26",
-      "actual": 0.41,
-      "estimate": 0.22,
-      "surp": 87.04,
-      "revenue": null
-    },
-    {
       "d": "2024-01-25",
       "actual": 0.54,
       "estimate": 0.45,
@@ -6477,6 +6470,13 @@
       "estimate": 0.22,
       "surp": 94.59,
       "revenue": 16.128
+    },
+    {
+      "d": "2026-10-29",
+      "actual": 0.52,
+      "estimate": 0.4,
+      "surp": 30.47,
+      "revenue": null
     }
   ],
   "NKE": [
@@ -25721,13 +25721,6 @@
   ],
   "FSLR": [
     {
-      "d": "2023-10-31",
-      "actual": 2.5,
-      "estimate": 2.04,
-      "surp": 22.79,
-      "revenue": null
-    },
-    {
       "d": "2024-02-27",
       "actual": 3.25,
       "estimate": 3.13,
@@ -25803,6 +25796,13 @@
       "estimate": 2.88,
       "surp": 36.13,
       "revenue": 1.056
+    },
+    {
+      "d": "2026-10-29",
+      "actual": 5.3,
+      "estimate": 4.64,
+      "surp": 14.32,
+      "revenue": null
     }
   ],
   "VSAT": [
