@@ -6,8 +6,8 @@ import HeaderWithModal from './components/HeaderWithModal'; // ✨ 이것만 있
 
 // 🚀 [SEO & Google 인증]
 export const metadata: Metadata = {
-  title: '리앤트(REANT) | 주식 투자 심리 분석 & AI 리포트',
-  description: '개미들의 반란, 리앤트(ReAnt). 리버스 개미 전략, AI 주식 분석, 공포/탐욕 지수, 미국 주식 투자 정보를 제공합니다.',
+  title: 'REANT | My Economics Professor',
+  description: "You made it here, you're a lucky guy. Check the data, and get some ideas.",
   keywords: ['리앤트', 'ReAnt', '리버스개미', '주식분석', '미국주식', 'AI투자', '투자심리', '공포탐욕지수'],
   icons: {
     icon: '/icon.png',
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     'google-adsense-account': 'ca-pub-9107127166272654',
   },
   openGraph: {
-    title: '리앤트(REANT) - 개미와 반대로 투자하라',
-    description: '오늘 개미들은 뭘 샀을까? AI가 분석해주는 역발상 투자 전략.',
+    title: 'REANT | My Economics Professor',
+    description: "You made it here, you're a lucky guy. Check the data, and get some ideas.",
     url: 'https://www.reant.kr',
     siteName: 'REANT',
     images: [
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '리앤트(REANT) - 리버스 개미',
-    description: '스마트한 개미들을 위한 데이터 분석',
+    title: 'REANT | My Economics Professor',
+    description: "You made it here, you're a lucky guy. Check the data, and get some ideas.",
     images: ['/og-image.png'],
   },
 };

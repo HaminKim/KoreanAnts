@@ -1,6 +1,7 @@
 'use client'
 
-// 01. LANDING — '지금 미국 주식은 어떨까?'
+// 01. LANDING — 'You made it here. You're a lucky guy.'
+//  - 지수 차트는 잠시 숨김 (SHOW_INDEX = true 로 되살림)
 //  - 기본 S&P 500, Nasdaq-100 으로 전환 (동시 표시 아님)
 //  - 라인 차트. 마지막 거래일 구간에만 은은한 발광/펄스 (상승=초록, 하락=빨강)
 //  - 애니메이션은 '실시간'을 뜻하지 않음 → 기준일을 항상 표기
@@ -14,6 +15,7 @@ interface Landing {
   index: Record<IndexKey, { label: string; d: string[]; v: number[] }>
 }
 
+const SHOW_INDEX = false
 const CACHE_KEY = 'reant_landing_cache'
 const RANGES = [
   { id: '3M', months: 3 }, { id: '1Y', months: 12 }, { id: '5Y', months: 60 },
@@ -30,6 +32,7 @@ export default function LandingClient() {
   const [range, setRange] = useState<RangeId>('5Y')
 
   useEffect(() => {
+    if (!SHOW_INDEX) return
     fetch('/data/market/landing.json', { cache: 'no-cache' })
       .then(r => { if (!r.ok) throw new Error(); return r.json() })
       .then((js: Landing) => { setData(js); try { localStorage.setItem(CACHE_KEY, JSON.stringify(js)) } catch {} })
@@ -62,6 +65,22 @@ export default function LandingClient() {
   const chgPct = view ? (chg / view.prev) * 100 : 0
   const up = chg >= 0
   const periodPct = view ? (view.last / view.startVal - 1) * 100 : 0
+
+  if (!SHOW_INDEX) return (
+    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
+      <h1 className="text-[32px] sm:text-[48px] font-bold tracking-tight leading-tight" style={{ color: 'var(--ink)' }}>
+        You made it here.<br />You&apos;re a lucky guy.
+      </h1>
+      <p className="mt-4 text-base sm:text-lg" style={{ color: 'var(--ink-mute)' }}>
+        Check the data, and get some ideas.
+      </p>
+      <Link href="/explore"
+        className="mt-10 inline-flex items-center justify-center w-full max-w-[320px] h-14 text-base font-bold transition-transform active:scale-[0.98]"
+        style={{ background: 'var(--accent)', color: '#fff' }}>
+        확인하기
+      </Link>
+    </div>
+  )
 
   return (
     <div className="pt-6 sm:pt-10 pb-10">
