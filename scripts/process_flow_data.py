@@ -10,6 +10,7 @@ import time
 from datetime import datetime
 from pandas.tseries.offsets import BusinessDay 
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from price_utils import fix_last_close
 
 # =========================================================
 # ⚙️ 설정
@@ -85,7 +86,8 @@ def process_single_stock(data_pack):
                     if 'Date' in stock_data.columns and stock_data['Date'].dt.tz is not None:
                         stock_data['Date'] = stock_data['Date'].dt.tz_localize(None)
                     
-                    price_df = stock_data[['Date', 'Close']].rename(columns={'Date': 'date', 'Close': 'close'})
+                    closes = fix_last_close(stock_data.set_index('Date')['Close'], ticker_symbol)
+                    price_df = closes.dropna().reset_index().rename(columns={'Date': 'date', 'Close': 'close'})
                     valid_market_days = set(price_df['date'])
 
                     final_df = pd.merge(df_flow, price_df, on='date', how='outer')
@@ -101,19 +103,6 @@ def process_single_stock(data_pack):
                         if col in final_df.columns:
                             final_df[col] = final_df[col].ffill().fillna(0)
 
-                    # 장 마감 직후 야후 일봉은 마지막 날 Close 가 비어 있을 때가 있음
-                    # → 전일 값으로 채우면 하루 늦은 가격이 됨. 현재가로 채우고, 안 되면 그 날은 뺌
-                    final_df = final_df.sort_values('date').reset_index(drop=True)
-                    if pd.isna(final_df['close'].iloc[-1]):
-                        try:
-                            last_price = ticker_obj.fast_info['lastPrice']
-                            if last_price and last_price > 0:
-                                final_df.loc[final_df.index[-1], 'close'] = float(last_price)
-                        except Exception:
-                            pass
-                    last_valid = final_df['close'].last_valid_index()
-                    if last_valid is not None:
-                        final_df = final_df.loc[:last_valid]
                     final_df['close'] = final_df['close'].ffill()
                     has_price = True
             except Exception:
@@ -229,6 +218,16 @@ def main():
                         safe_filename = "".join([c if c.isalnum() else "_" for c in file_id])
                         
                         save_path = os.path.join(OUTPUT_DIR, f"{safe_filename}_all.json")
+
+                        # 야후 실패(429 등)로 가격을 못 받았으면 가격 있는 기존 파일을 덮어쓰지 않음
+                        if res_ticker and not result['meta']['hasPrice'] and os.path.exists(save_path):
+                            try:
+                                with open(save_path, 'r', encoding='utf-8') as f:
+                                    if json.load(f).get('meta', {}).get('hasPrice'):
+                                        print(f"\n⚠️ {res_ticker} 가격 받기 실패 → 기존 파일 유지")
+                                        continue
+                            except Exception:
+                                pass
                         with open(save_path, 'w', encoding='utf-8') as f:
                             json.dump(result, f, ensure_ascii=False)
                             

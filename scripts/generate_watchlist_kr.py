@@ -25,6 +25,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 from datetime import datetime
+from price_utils import fix_last_row
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
@@ -919,7 +920,7 @@ def _batch_download(tickers: list, period: str = "2y", chunk_size: int = 80) -> 
         time.sleep(random.uniform(0.5, 1.0))
     if not all_series:
         return pd.DataFrame()
-    return pd.DataFrame(all_series)
+    return fix_last_row(pd.DataFrame(all_series))
 
 
 # ─────────────────────────────────────────

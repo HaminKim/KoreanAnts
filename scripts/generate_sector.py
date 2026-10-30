@@ -2,6 +2,7 @@ import yfinance as yf
 import json
 import os
 import pandas as pd
+from price_utils import fix_last_close
 
 # 1. 감시할 섹터 목록 정의
 SECTORS = [
@@ -15,8 +16,15 @@ SECTORS = [
     {"id": 8, "name": "방산", "ticker": "ITA", "emoji": "🚀"},
 ]
 
+OUT_PATH = 'public/data/sector_performance.json'
+
 def generate_sector_data():
     results = []
+    try:
+        with open(OUT_PATH, encoding='utf-8') as f:
+            prev = {x['ticker']: x for x in json.load(f)}
+    except Exception:
+        prev = {}
     print("📊 섹터 데이터 분석 시작...")
 
     for s in SECTORS:
@@ -24,9 +32,12 @@ def generate_sector_data():
             # 2. 데이터 가져오기 (넉넉하게 2달치)
             ticker = yf.Ticker(s['ticker'])
             hist = ticker.history(period="3mo")
+            hist = fix_last_close(hist['Close'], s['ticker']).dropna().to_frame('Close')
             
             if len(hist) < 2:
                 print(f"❌ 데이터 부족: {s['name']}")
+                if s['ticker'] in prev:
+                    results.append(prev[s['ticker']])
                 continue
 
             # 최신 종가 (Close)
@@ -58,15 +69,17 @@ def generate_sector_data():
 
         except Exception as e:
             print(f"⚠️ 에러 발생 ({s['name']}): {e}")
-            # 에러나면 0.0으로 채워서라도 보냄
-            s['change1d'] = 0.0
-            s['change1w'] = 0.0
-            s['change1m'] = 0.0
-            results.append(s)
+            # 0% 로 채우면 '보합'처럼 보여서 틀린 정보가 됨 → 직전 값 유지
+            if s['ticker'] in prev:
+                results.append(prev[s['ticker']])
+
+    if not results:
+        print("❌ 받은 섹터가 없음 → 기존 파일 유지")
+        return
 
     # 4. JSON 저장
     os.makedirs('public/data', exist_ok=True)
-    with open('public/data/sector_performance.json', 'w', encoding='utf-8') as f:
+    with open(OUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
     
     print("💾 sector_performance.json 저장 완료!")

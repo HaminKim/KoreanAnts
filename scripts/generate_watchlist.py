@@ -37,6 +37,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 from datetime import datetime
+from price_utils import fix_last_row
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
@@ -666,6 +667,7 @@ def main():
     )
 
     prices = raw["Close"] if isinstance(raw.columns, pd.MultiIndex) else raw
+    prices = fix_last_row(prices)
 
     if BENCHMARK not in prices.columns:
         print(f"❌ {BENCHMARK} 데이터 없음. 종료.")
