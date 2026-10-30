@@ -68,15 +68,15 @@ export default function LandingClient() {
   const periodPct = view ? (view.last / view.startVal - 1) * 100 : 0
 
   if (!SHOW_INDEX) return (
-    <div className="min-h-[70vh] flex flex-col justify-center max-w-[560px] mx-auto w-full">
-      <h1 className="text-[34px] sm:text-[52px] font-bold tracking-tight leading-[1.1]" style={{ color: 'var(--ink)', fontFamily: SERIF }}>
+    <div className="min-h-[70vh] flex flex-col justify-center w-full">
+      <h1 className="text-[42px] sm:text-[64px] lg:text-[76px] font-bold tracking-tight leading-[1.3]" style={{ color: 'var(--ink)', fontFamily: SERIF }}>
         You made it here.<br />You&apos;re a lucky guy.
       </h1>
-      <p className="mt-4 text-lg sm:text-xl italic" style={{ color: 'var(--ink-mute)', fontFamily: SERIF }}>
+      <p className="mt-6 text-xl sm:text-2xl lg:text-[28px] italic leading-relaxed" style={{ color: 'var(--ink-mute)', fontFamily: SERIF }}>
         Check the data, and get some ideas.
       </p>
       <Link href="/explore"
-        className="mt-12 self-center inline-flex items-center justify-center w-full max-w-[320px] h-14 text-base font-bold transition-transform active:scale-[0.98]"
+        className="mt-16 self-center inline-flex items-center justify-center w-full max-w-[320px] h-14 text-base font-bold transition-transform active:scale-[0.98]"
         style={{ background: 'var(--accent)', color: '#fff' }}>
         확인하기
       </Link>
