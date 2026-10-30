@@ -101,6 +101,19 @@ def process_single_stock(data_pack):
                         if col in final_df.columns:
                             final_df[col] = final_df[col].ffill().fillna(0)
 
+                    # 장 마감 직후 야후 일봉은 마지막 날 Close 가 비어 있을 때가 있음
+                    # → 전일 값으로 채우면 하루 늦은 가격이 됨. 현재가로 채우고, 안 되면 그 날은 뺌
+                    final_df = final_df.sort_values('date').reset_index(drop=True)
+                    if pd.isna(final_df['close'].iloc[-1]):
+                        try:
+                            last_price = ticker_obj.fast_info['lastPrice']
+                            if last_price and last_price > 0:
+                                final_df.loc[final_df.index[-1], 'close'] = float(last_price)
+                        except Exception:
+                            pass
+                    last_valid = final_df['close'].last_valid_index()
+                    if last_valid is not None:
+                        final_df = final_df.loc[:last_valid]
                     final_df['close'] = final_df['close'].ffill()
                     has_price = True
             except Exception:
