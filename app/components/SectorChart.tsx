@@ -52,16 +52,20 @@ export default function SectorChart({ ticker, change }: { ticker: string, change
   useEffect(() => {
     if (!chartContainerRef.current || chartData.length === 0) return;
 
+    // 리포트 톤 토큰을 그대로 (다크모드 포함)
+    const css = getComputedStyle(chartContainerRef.current);
+    const token = (n: string, fb: string) => css.getPropertyValue(n).trim() || fb;
+
     const chart = createChart(chartContainerRef.current, {
       layout: {
         background: { type: ColorType.Solid, color: 'transparent' },
-        textColor: '#9ca3af',
+        textColor: token('--ink-mute', '#8c887f'),
       },
       width: chartContainerRef.current.clientWidth,
       height: 250,
       grid: {
         vertLines: { visible: false }, // 세로선 숨김
-        horzLines: { color: '#f3f4f6' }, // 가로선 연하게
+        horzLines: { color: token('--hairline', '#ddd9d0') }, // 가로선 연하게
       },
       rightPriceScale: { borderVisible: false },
       timeScale: { 
@@ -85,23 +89,22 @@ export default function SectorChart({ ticker, change }: { ticker: string, change
       },
     });
 
-    const isUp = change > 0;
-    const topColor = isUp ? 'rgba(239, 68, 68, 0.4)' : 'rgba(59, 130, 246, 0.4)';
-    const bottomColor = isUp ? 'rgba(239, 68, 68, 0)' : 'rgba(59, 130, 246, 0)';
-    const lineColor = isUp ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)';
+    const lineColor = token('--ink', '#0b0b0b');
+    const accent = token('--accent', '#1f3547');
 
     // 메인 차트 (Area)
     const mainSeries = chart.addSeries(AreaSeries, {
       lineColor: lineColor,
-      topColor: topColor,
-      bottomColor: bottomColor,
+      topColor: accent + '22',
+      bottomColor: accent + '00',
       lineWidth: 2,
     });
 
     // 이동평균선 (Line)
-    const sma5Series = chart.addSeries(LineSeries, { color: '#a855f7', lineWidth: 1, crosshairMarkerVisible: false, lastValueVisible: false, priceLineVisible: false });
-    const sma20Series = chart.addSeries(LineSeries, { color: '#f97316', lineWidth: 1, crosshairMarkerVisible: false, lastValueVisible: false, priceLineVisible: false });
-    const sma50Series = chart.addSeries(LineSeries, { color: '#10b981', lineWidth: 1, crosshairMarkerVisible: false, lastValueVisible: false, priceLineVisible: false });
+    // 이동평균선은 비강조 — 회색 계열 농도로만 구분
+    const sma5Series = chart.addSeries(LineSeries, { color: token('--ink-2', '#5c5952'), lineWidth: 1, crosshairMarkerVisible: false, lastValueVisible: false, priceLineVisible: false });
+    const sma20Series = chart.addSeries(LineSeries, { color: token('--ink-mute', '#8c887f'), lineWidth: 1, crosshairMarkerVisible: false, lastValueVisible: false, priceLineVisible: false });
+    const sma50Series = chart.addSeries(LineSeries, { color: token('--hairline-2', '#cfcbc0'), lineWidth: 1, crosshairMarkerVisible: false, lastValueVisible: false, priceLineVisible: false });
 
     // 데이터 주입
     mainSeries.setData(chartData);
@@ -127,8 +130,8 @@ export default function SectorChart({ ticker, change }: { ticker: string, change
   return (
     <div className="w-full h-[250px] relative">
         {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10 backdrop-blur-sm rounded-xl">
-                <span className="text-xs font-bold text-gray-400 animate-pulse">데이터를 불러오고 있습니다...</span>
+            <div className="absolute inset-0 flex items-center justify-center z-10" style={{ background: 'var(--surface)' }}>
+                <span className="text-xs" style={{ color: 'var(--ink-mute)' }}>불러오는 중…</span>
             </div>
         )}
         <div ref={chartContainerRef} className="w-full h-full cursor-crosshair" />

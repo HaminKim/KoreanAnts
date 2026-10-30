@@ -144,6 +144,11 @@ jobs:
       - name: 1. Process Flow Data (Base)
         run: python scripts/process_flow_data.py
 
+      # 7-1b. 개인투자자 누적 순매수 (개미지수 상단 그래프)
+      - name: 1b. Generate Ant Cumulative Net Buy
+        continue-on-error: true
+        run: python scripts/generate_ant_cumulative.py
+
       # 7-2. 놈놈놈 분석 & 타임머신 기록 저장 🕰️
       - name: 2. Generate NomNom & History
         run: python scripts/generate_nomnom.py

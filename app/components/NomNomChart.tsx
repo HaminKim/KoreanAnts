@@ -1,26 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+// 주가와 개인 수급 — 최근 5거래일 주가 방향 × 개인 순매수 방향 4개 조합. 해석 문구 없이 사실만 표시.
+//  분류 기준은 scripts/generate_nomnom.py (상승 +3% / 하락 −2%·−2.5%)
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Logo } from '../ants/ui';
+import { fmtUsd } from '../ants/CumulativeChart';
 
-// ---------------------------------------------------------
-// 1. 아이콘 컴포넌트
-// ---------------------------------------------------------
-const ChevronLeftIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-  </svg>
-);
-
-const ChevronRightIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-  </svg>
-);
-
-// ---------------------------------------------------------
-// 2. 타입 정의
-// ---------------------------------------------------------
 type StockData = {
   name: string;
   name_kr?: string;
@@ -29,352 +16,118 @@ type StockData = {
   close?: number;
   price_change: number;
   net_buy_sum: number;
-  comment?: string;
-  score?: number;
+  last_date?: string;
 };
 
-type Props = {
-  fire?: StockData | StockData[];
-  top?: StockData | StockData[];
-  bottom?: StockData | StockData[];
-  knife?: StockData | StockData[];
-  isPremium?: boolean; 
-};
+type GroupKey = 'fire' | 'top' | 'bottom' | 'knife';
+type Props = { fire?: StockData | StockData[]; top?: StockData | StockData[]; bottom?: StockData | StockData[]; knife?: StockData | StockData[] };
 
-// ---------------------------------------------------------
-// 3. 날짜 네비게이터
-// ---------------------------------------------------------
-function DateNavigator({ currentDate, onDateChange }: { currentDate: Date, onDateChange: (date: Date) => void }) {
-  const getAdjacentBusinessDay = (baseDate: Date, direction: 'prev' | 'next') => {
-    const newDate = new Date(baseDate);
-    const step = direction === 'next' ? 1 : -1;
-    newDate.setDate(newDate.getDate() + step);
-    while (newDate.getDay() === 0 || newDate.getDay() === 6) {
-        newDate.setDate(newDate.getDate() + step);
+const GROUPS: { key: GroupKey; price: '상승' | '하락'; flow: '순매수' | '순매도' }[] = [
+  { key: 'top', price: '상승', flow: '순매수' },
+  { key: 'fire', price: '상승', flow: '순매도' },
+  { key: 'knife', price: '하락', flow: '순매수' },
+  { key: 'bottom', price: '하락', flow: '순매도' },
+];
+
+const normalize = (d: StockData | StockData[] | undefined) => (!d ? [] : Array.isArray(d) ? d : [d]);
+const ymd = (d: Date) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+
+function shiftBusinessDay(base: Date, step: 1 | -1) {
+  const d = new Date(base);
+  do d.setDate(d.getDate() + step); while (d.getDay() === 0 || d.getDay() === 6);
+  return d;
+}
+
+export default function NomNomChart({ fire, top, bottom, knife }: Props) {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [data, setData] = useState<Record<GroupKey, StockData[]>>({ fire: [], top: [], bottom: [], knife: [] });
+  const [isLoading, setIsLoading] = useState(false);
+  const isToday = ymd(currentDate) === ymd(new Date());
+
+  useEffect(() => {
+    if (isToday) {
+      setData({ fire: normalize(fire), top: normalize(top), bottom: normalize(bottom), knife: normalize(knife) });
+      return;
     }
-    return newDate;
-  };
+    setIsLoading(true);
+    fetch(`/data/history/history_${ymd(currentDate)}.json`)
+      .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+      .then(js => setData({ fire: normalize(js.fire), top: normalize(js.top), bottom: normalize(js.bottom), knife: normalize(js.knife) }))
+      .catch(() => setData({ fire: [], top: [], bottom: [], knife: [] }))
+      .finally(() => setIsLoading(false));
+  }, [currentDate, isToday, fire, top, bottom, knife]);
 
-  const formatDateSimple = (date: Date) => {
-    const dayName = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
-    return `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}. ${String(date.getDate()).padStart(2, '0')} (${dayName})`;
-  };
-
-  const prevDate = getAdjacentBusinessDay(currentDate, 'prev');
-  const nextDate = getAdjacentBusinessDay(currentDate, 'next');
-  const isToday = currentDate.toDateString() === new Date().toDateString();
-  const isNextFuture = nextDate > new Date();
+  const asOf = Object.values(data).flat().map(s => s.last_date).filter(Boolean).sort().pop();
 
   return (
-    <div className="flex flex-col items-center justify-center mt-8 mb-4">
-      <div className="flex items-center justify-center gap-2 sm:gap-4 select-none">
-        <div className="hidden sm:flex w-24 justify-center">
-            <button onClick={() => onDateChange(prevDate)} className="text-xs font-medium text-gray-300 hover:text-gray-500 transition-colors transform scale-90">
-                {formatDateSimple(prevDate)}
-            </button>
-        </div>
-        <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
-            <button onClick={() => onDateChange(prevDate)} className="p-1 rounded-full hover:bg-gray-200 transition text-gray-400 hover:text-gray-900">
-                <ChevronLeftIcon />
-            </button>
-            <span className="text-sm sm:text-lg font-extrabold text-gray-900 dark:text-white font-mono tracking-tighter min-w-[130px] text-center">
-            {formatDateSimple(currentDate)}
-            </span>
-            <button onClick={() => !isToday && onDateChange(nextDate)} disabled={isToday} className={`p-1 rounded-full transition ${isToday ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 hover:text-gray-900 hover:bg-gray-200'}`}>
-                <ChevronRightIcon />
-            </button>
-        </div>
-        <div className="hidden sm:flex w-24 justify-center">
-            {!isNextFuture ? (
-                <button onClick={() => onDateChange(nextDate)} className="text-xs font-medium text-gray-300 hover:text-gray-500 transition-colors transform scale-90">
-                    {formatDateSimple(nextDate)}
-                </button>
-            ) : <span className="text-[10px] text-gray-200 font-light">내일</span>}
-        </div>
+    <div>
+      <div className="flex items-center justify-between gap-2 flex-wrap mb-2">
+        <DateNav date={currentDate} isToday={isToday} onChange={setCurrentDate} />
+        {asOf && <span className="text-[11px]" style={{ color: 'var(--ink-mute)' }}>주가 기준 <span className="mono">{asOf.replaceAll('-', '.')}</span></span>}
       </div>
-      {!isToday && (
-        <div className="mt-3 flex items-center gap-2 animate-pulse">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-600 border border-indigo-100">🕰️ 타임머신 ON</span>
-            <button onClick={() => onDateChange(new Date())} className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 transition shadow-sm">↺ 오늘로 복귀</button>
-        </div>
-      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        {GROUPS.map(g => (
+          <div key={g.key} style={{ border: '1px solid var(--hairline-2)', background: 'var(--surface)' }}>
+            <div className="px-3 py-2 flex items-baseline justify-between gap-2" style={{ borderBottom: '1px solid var(--hairline)' }}>
+              <span className="text-[13px] font-bold" style={{ color: 'var(--ink)' }}>
+                주가 <span style={{ color: g.price === '상승' ? 'var(--up-text)' : 'var(--down-text)' }}>{g.price} 중</span>
+                <span className="mx-1.5" style={{ color: 'var(--hairline-2)' }}>·</span>
+                개인 <span style={{ color: g.flow === '순매수' ? 'var(--up-text)' : 'var(--down-text)' }}>{g.flow} 중</span>
+              </span>
+              <span className="text-[10px] shrink-0" style={{ color: 'var(--ink-mute)' }}>5일 주가 · 순매수</span>
+            </div>
+            <div className="min-h-[96px]">
+              {isLoading ? (
+                <div className="m-2 h-[80px] animate-pulse" style={{ background: 'var(--plane)' }} />
+              ) : data[g.key].length === 0 ? (
+                <div className="py-9 text-center text-[11px]" style={{ color: 'var(--ink-mute)' }}>해당 종목 없음</div>
+              ) : (
+                data[g.key].map((s, i) => <Row key={`${s.ticker}-${i}`} s={s} first={i === 0} />)
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-// ---------------------------------------------------------
-// 3. 메인 컴포넌트: 놈놈놈 차트
-// ---------------------------------------------------------
-export default function NomNomChart({ fire: initialFire, top: initialTop, bottom: initialBottom, knife: initialKnife, isPremium = false }: Props) {
-  
-  const [currentDate, setCurrentDate] = useState(new Date());
-  
-  // 모바일 슬라이드용 인덱스
-  const [slideIndex, setSlideIndex] = useState(0);
-
-  // 스와이프를 위한 터치 상태값
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-
-  const nextSlide = () => setSlideIndex((prev) => Math.min(prev + 1, 3));
-  const prevSlide = () => setSlideIndex((prev) => Math.max(prev - 1, 0));
-
-  // 터치 이벤트 핸들러 (스와이프)
-  const handleTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
-  const handleTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
-  const handleTouchEnd = () => {
-      if (!touchStart || !touchEnd) return;
-      const distance = touchStart - touchEnd;
-      if (distance > 50) nextSlide();
-      else if (distance < -50) prevSlide();
-      setTouchStart(0);
-      setTouchEnd(0);
-  };
-
-  // PC화면(md 이상) 되면 슬라이드 초기화
-  useEffect(() => {
-    const handleResize = () => {
-        if (window.innerWidth >= 768) setSlideIndex(0);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const normalize = (d: StockData | StockData[] | undefined) => {
-      if (!d) return [];
-      return Array.isArray(d) ? d : [d];
-  };
-
-  const [data, setData] = useState({
-    fire: normalize(initialFire),
-    top: normalize(initialTop),
-    bottom: normalize(initialBottom),
-    knife: normalize(initialKnife),
-  });
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchPastData = async () => {
-      const today = new Date();
-      const dateStr = `${currentDate.getFullYear()}${String(currentDate.getMonth() + 1).padStart(2, '0')}${String(currentDate.getDate()).padStart(2, '0')}`;
-      const todayStr = `${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}`;
-
-      if (dateStr === todayStr) {
-         setData({ fire: normalize(initialFire), top: normalize(initialTop), bottom: normalize(initialBottom), knife: normalize(initialKnife) });
-         return;
-      }
-
-      setIsLoading(true);
-      try {
-        const res = await fetch(`/data/history/history_${dateStr}.json`);
-        if (!res.ok) throw new Error("데이터 없음");
-        const json = await res.json();
-        setData({ fire: normalize(json.fire), top: normalize(json.top), bottom: normalize(json.bottom), knife: normalize(json.knife) });
-      } catch (error) {
-        setData({ fire: [], top: [], bottom: [], knife: [] });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchPastData();
-  }, [currentDate, initialFire, initialTop, initialBottom, initialKnife]);
-
-  // ✨ 개별 카드 렌더링
-  const renderCards = (dataList: StockData[], type: 'fire'|'top'|'bottom'|'knife') => {
-    if (isLoading) {
-        return (
-            <>
-                <div className="h-14 bg-gray-50 rounded-xl animate-pulse mx-1 my-1"></div>
-                <div className="h-14 bg-gray-50 rounded-xl animate-pulse mx-1 my-1"></div>
-            </>
-        );
-    }
-
-    const emptyMessages = { fire: "데이터 없음", top: "데이터 없음", bottom: "데이터 없음", knife: "데이터 없음" };
-
-    if (!dataList || dataList.length === 0) {
-      return (
-        <div className="flex flex-col items-center justify-center py-8 text-gray-300">
-            <span className="text-2xl mb-1 grayscale opacity-30">🙅‍♂️</span>
-            <span className="text-xs font-medium">{emptyMessages[type]}</span>
-        </div>
-      );
-    }
-
-    return dataList.map((cardData, idx) => {
-        const pct = (cardData.price_change * 100).toFixed(1);
-        const linkTicker = cardData.file_ticker || cardData.ticker; 
-        const displayName = cardData.name_kr && cardData.name_kr.trim() !== "" ? cardData.name_kr : cardData.name;
-        const primarySrc = `/logos/${encodeURIComponent(cardData.name)}.png`;
-        const secondarySrc = `/logos/${encodeURIComponent(cardData.ticker)}.png`;
-
-        const RankBadge = () => {
-            if (idx === 0) return <span className="bg-yellow-400 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded shadow-sm mr-2">1위</span>;
-            return <span className="bg-gray-200 text-gray-500 text-[10px] font-extrabold px-1.5 py-0.5 rounded mr-2">2위</span>;
-        };
-
-        return (
-          <div key={`${cardData.ticker}-${idx}`}>
-             <Link href={`/flow?ticker=${cardData.ticker}&fileTicker=${encodeURIComponent(linkTicker)}&side=netBuy&days=5`} className="block group">
-                <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center gap-2 overflow-hidden flex-1">
-                        <RankBadge />
-                        <div className="w-9 h-9 flex-shrink-0 rounded-full bg-white border border-gray-100 p-0.5 shadow-sm group-hover:scale-105 transition-transform">
-                            <img src={primarySrc} alt={cardData.name} className="w-full h-full object-cover rounded-full" 
-                                onError={(e) => { 
-                                    const target = e.currentTarget;
-                                    if (!target.src.includes(encodeURIComponent(cardData.ticker)) && !target.src.includes('_us.png')) {
-                                        target.src = secondarySrc;
-                                    } else { target.src = '/logos/_us.png'; }
-                                }} 
-                            />
-                        </div>
-                        <div className="flex flex-col min-w-0">
-                            <h3 className="text-sm font-bold text-gray-900 truncate leading-tight group-hover:text-blue-600 transition-colors">{displayName}</h3>
-                            <span className="text-[10px] font-bold text-gray-400 font-mono">{cardData.ticker}</span>
-                        </div>
-                    </div>
-                    
-                    {/* 오른쪽: 등락률 & 가격 */}
-                    <div className="flex flex-col items-end justify-center pl-2">
-                        {/* ✨ [New] '5일 기준' 멘트 추가 */}
-                        <span className="text-[9px] text-gray-400 mb-0.5">5일 기준</span>
-                        
-                        <div className={`text-base font-extrabold leading-none ${Number(pct) > 0 ? 'text-red-500' : 'text-blue-500'}`}>
-                            {Number(pct) > 0 ? '+' : ''}{pct}%
-                        </div>
-                        {cardData.close && <div className="text-xs text-gray-500 font-medium mt-1">${cardData.close.toFixed(2)}</div>}
-                    </div>
-                </div>
-            </Link>
-            {idx < dataList.length - 1 && <div className="h-px bg-gray-50 mx-3"></div>}
-          </div>
-        );
-    });
-  };
-
-  // ✨ 테마 그룹 (1줄 슬림 헤더)
-  const renderThemeGroup = (title: string, desc: string, dataList: StockData[], type: 'fire'|'top'|'bottom'|'knife') => {
-      const themes = {
-        fire: { bg: "bg-red-50/80", border: "border-red-100", title: "text-red-600", desc: "text-red-500", icon: "🚀" },
-        top: { bg: "bg-orange-50/80", border: "border-orange-100", title: "text-orange-600", desc: "text-orange-500", icon: "🔥" },
-        bottom: { bg: "bg-blue-50/80", border: "border-blue-100", title: "text-blue-600", desc: "text-blue-500", icon: "💰" },
-        knife: { bg: "bg-gray-100/80", border: "border-gray-200", title: "text-gray-600", desc: "text-gray-500", icon: "📉" }
-      };
-      const t = themes[type];
-
-      return (
-        <div className={`w-full flex-shrink-0 md:w-auto snap-center bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex flex-col h-full overflow-hidden hover:border-gray-200 transition-colors`}>
-            {/* ✨ 헤더: 제목 + 구분선 + 설명 */}
-            <div className={`px-3 py-3 ${t.bg} border-b ${t.border} flex items-center gap-2`}>
-                <span className={`text-base font-black tracking-tight ${t.title}`}>{t.icon} {title}</span>
-                <span className="text-[10px] text-gray-400 opacity-50">|</span>
-                <span className={`text-xs font-bold opacity-90 ${t.desc}`}>{desc}</span>
-            </div>
-            {/* 본문 */}
-            <div className="p-2 flex flex-col gap-1 flex-1 bg-white min-h-[140px]">
-                {renderCards(dataList, type)}
-            </div>
-        </div>
-      );
-  };
-
-  // ✨ 탭 데이터 (수정된 네이밍 반영)
-  const tabs = [
-      { label: "나홀로 상승", idx: 0, activeClass: "text-red-600 border-red-600" },
-      { label: "과열 주의보", idx: 1, activeClass: "text-orange-600 border-orange-600" },
-      { label: "공포의 투매", idx: 2, activeClass: "text-blue-600 border-blue-600" },
-      { label: "뚝배기 주의", idx: 3, activeClass: "text-gray-600 border-gray-600" },
-  ];
-
+function Row({ s, first }: { s: StockData; first: boolean }) {
+  const pct = s.price_change * 100;
+  const name = s.name_kr?.trim() || s.name;
   return (
-    <section className="max-w-5xl mx-auto px-2 md:px-4 mb-12">
-      <div className="mb-1 flex flex-col md:flex-row md:items-end justify-between px-1 md:px-0">
-        <div>
-            <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">🤔 매수/매도가 고민될 때... 💭</h2>
-            <p className="text-sm text-gray-500 mt-1 md:mb-0">최근 <span className="font-bold text-gray-800">5일간</span> 주가 패턴을 AI로 분석합니다.</p>
+    <Link href={`/flow?ticker=${s.ticker}&fileTicker=${encodeURIComponent(s.file_ticker || s.ticker)}&side=netBuy&days=5`}
+      className="flex items-center gap-2.5 px-3 py-2 hover:opacity-80" style={first ? undefined : { borderTop: '1px solid var(--hairline)' }}>
+      <Logo fileTicker={s.name} ticker={s.ticker} size={26} />
+      <div className="min-w-0 flex-1">
+        <div className="text-[13px] font-semibold truncate leading-tight" style={{ color: 'var(--ink)' }}>{name}</div>
+        <div className="mono text-[10px]" style={{ color: 'var(--ink-mute)' }}>{s.ticker}{s.close ? ` · $${s.close.toFixed(2)}` : ''}</div>
+      </div>
+      <div className="text-right shrink-0 leading-tight">
+        <div className="mono text-[13px] font-bold" style={{ color: pct >= 0 ? 'var(--up-text)' : 'var(--down-text)' }}>
+          {pct >= 0 ? '+' : '−'}{Math.abs(pct).toFixed(1)}%
         </div>
-
-        {/* 탭 메뉴 */}
-        <div className="flex md:hidden items-center justify-between pt-4 pb-0 w-full select-none">
-            {tabs.map((tab, i) => {
-                const isActive = slideIndex === tab.idx;
-                return (
-                    <div key={tab.idx} className="flex items-center flex-1 justify-center">
-                        <button
-                            onClick={() => setSlideIndex(tab.idx)}
-                            className={`text-[12px] pb-2 transition-all w-full text-center tracking-tight border-b-2 ${
-                                isActive 
-                                ? `font-black ${tab.activeClass}` 
-                                : "font-medium text-gray-400 border-transparent hover:text-gray-600" 
-                            }`}
-                        >
-                            {tab.label}
-                        </button>
-                        {i < tabs.length - 1 && (
-                            <span className="text-gray-200 text-[10px] mb-2 font-light px-0.5">|</span>
-                        )}
-                    </div>
-                );
-            })}
-        </div>
-
-        <div className={`hidden md:flex items-center gap-1.5 px-2 py-1 rounded-full border ${currentDate.toDateString() === new Date().toDateString() ? 'bg-green-50 border-green-100' : 'bg-gray-100 border-gray-200'}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${currentDate.toDateString() === new Date().toDateString() ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></span>
-            <span className={`text-[10px] font-bold ${currentDate.toDateString() === new Date().toDateString() ? 'text-green-700' : 'text-gray-500'}`}>
-                {currentDate.toDateString() === new Date().toDateString() ? 'Live' : 'Record'}
-            </span>
+        <div className="mono text-[10px]" style={{ color: s.net_buy_sum >= 0 ? 'var(--up-text)' : 'var(--down-text)' }}>
+          {fmtUsd(s.net_buy_sum)}
         </div>
       </div>
+    </Link>
+  );
+}
 
-      <div 
-        className="relative overflow-hidden md:overflow-visible mt-2 md:mt-0"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-          {/* 모바일 전용 버튼 */}
-          {slideIndex > 0 && (
-            <button 
-                onClick={prevSlide} 
-                className="md:hidden absolute left-0 top-1/2 -translate-y-1/2 mt-4.5 z-20 w-8 h-8 bg-white/30 backdrop-blur-[2px] shadow-sm rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 active:scale-95 transition-all"
-            >
-                <ChevronLeftIcon />
-            </button>
-          )}
-          
-          {slideIndex < 3 && (
-            <button 
-                onClick={nextSlide} 
-                className="md:hidden absolute right-0 top-1/2 -translate-y-1/2 mt-4.5 z-20 w-8 h-8 bg-white/30 backdrop-blur-[2px] shadow-sm rounded-full flex items-center justify-center text-gray-400 hover:text-gray-600 active:scale-95 transition-all"
-            >
-                <ChevronRightIcon />
-            </button>
-          )}
-
-          {/* 트랙 */}
-          <div 
-            className="flex transition-transform duration-300 ease-out md:grid md:grid-cols-2 md:gap-6 md:transform-none"
-            style={{ transform: `translateX(-${slideIndex * 100}%)` }} 
-          >
-            {/* ✨ 수정된 멘트 반영 */}
-            {renderThemeGroup("나홀로 상승", "개미 털고 상승 중", data.fire, 'fire')}
-            {renderThemeGroup("과열 일까?", "개인투자자 서학개미 대거유입!", data.top, 'top')}
-            {renderThemeGroup("공포의 투매", "서학개미 줄지어 이탈 중...😱", data.bottom, 'bottom')}
-            {renderThemeGroup("하락 중", "떨어지는 주가, 개미들이 받아먹네?", data.knife, 'knife')}
-          </div>
-
-      </div>
-
-      <div className="flex md:hidden justify-center gap-1.5 mt-4">
-        {[0, 1, 2, 3].map((idx) => (
-            <div key={idx} className={`w-1.5 h-1.5 rounded-full transition-colors ${idx === slideIndex ? 'bg-gray-800' : 'bg-gray-300'}`}></div>
-        ))}
-      </div>
-
-      <DateNavigator currentDate={currentDate} onDateChange={setCurrentDate} />
-      
-    </section>
+function DateNav({ date, isToday, onChange }: { date: Date; isToday: boolean; onChange: (d: Date) => void }) {
+  const label = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} (${'일월화수목금토'[date.getDay()]})`;
+  const btn = { border: '1px solid var(--btn-border)', color: 'var(--ink-2)' };
+  return (
+    <div className="flex items-center gap-1">
+      <button type="button" onClick={() => onChange(shiftBusinessDay(date, -1))} className="px-2 py-1 text-xs" style={btn} aria-label="이전 날">‹</button>
+      <span className="mono text-xs font-semibold px-2" style={{ color: 'var(--ink)' }}>{label}</span>
+      <button type="button" onClick={() => !isToday && onChange(shiftBusinessDay(date, 1))} disabled={isToday}
+        className="px-2 py-1 text-xs disabled:opacity-30" style={btn} aria-label="다음 날">›</button>
+      {!isToday && (
+        <button type="button" onClick={() => onChange(new Date())} className="ml-1 px-2 py-1 text-[11px] font-semibold" style={btn}>오늘</button>
+      )}
+    </div>
   );
 }

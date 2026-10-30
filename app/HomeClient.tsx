@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
+import { Chip } from './components/macro/ui';
 import { createClient } from '@/utils/supabase/client';
 
 // ----------------------------------------------------------------------
@@ -143,76 +144,51 @@ export default function HomeClient() {
 
   const visibleItems = useMemo(() => items.slice(0, topN), [items, topN]);
 
-  // 6. 렌더링
+  // 6. 렌더링 — 매크로·부동산 리포트 톤 (각진 표, hairline, mono 숫자)
+  const tone = isBuy ? 'var(--up-text)' : 'var(--down-text)';
   return (
-    <>
-      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 mb-6 mt-2">
-          <h2 className="text-2xl font-bold flex items-center gap-2 text-gray-900 leading-none">
-            📊 실시간 수급 랭킹
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse mb-4"></span>
-          </h2>
-          <div className="flex bg-gray-100 p-1 rounded-lg">
-            {[10, 20, 30].map((n) => (
-                <button
-                    key={n}
-                    onClick={() => setTopN(n as any)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
-                        topN === n ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-400 hover:text-gray-600'
-                    }`}
-                >
-                    TOP{n}
-                </button>
-            ))}
-          </div>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-4 mb-4">
-        <div className="flex bg-gray-100 p-1 rounded-lg">
-            <button onClick={() => setSide('netBuy')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${isBuy ? 'bg-white text-red-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}>순매수</button>
-            <button onClick={() => setSide('netSell')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${!isBuy ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}>순매도</button>
-        </div>
-        <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide">
-            {[1, 5, 10, 20, 30, 40, 60].map((d) => (
-                <button key={d} onClick={() => setDays(d)} className={`px-3 py-1.5 rounded-full text-xs font-bold border whitespace-nowrap transition-colors ${days === d ? (isBuy ? 'bg-red-50 text-red-600 border-red-200' : 'bg-blue-50 text-blue-600 border-blue-200') : 'bg-white text-gray-400 border-gray-200 hover:border-gray-300'}`}>{d}일</button>
-            ))}
+    <section className="mt-9">
+      <div className="flex items-end justify-between gap-2 pb-2 flex-wrap" style={{ borderBottom: '1px solid var(--ink)' }}>
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <h2 className="text-sm font-bold" style={{ color: 'var(--ink)' }}>수급 랭킹</h2>
+          <span className="text-[11px]" style={{ color: 'var(--ink-mute)' }}>최근 {days}거래일 개인 {isBuy ? '순매수' : '순매도'} 합계</span>
         </div>
       </div>
 
-      {loading && <div className="h-[400px] flex flex-col items-center justify-center gap-2 text-gray-400"><div className="w-8 h-8 border-4 border-gray-200 border-t-gray-400 rounded-full animate-spin"></div><span>데이터 분석 중...</span></div>}
+      <div className="mt-3 flex items-center gap-x-3 gap-y-2 flex-wrap">
+        <div className="flex items-center gap-1">
+          <Chip on={isBuy} onClick={() => setSide('netBuy')}>순매수</Chip>
+          <Chip on={!isBuy} onClick={() => setSide('netSell')}>순매도</Chip>
+        </div>
+        <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
+          {[1, 5, 10, 20, 30, 40, 60].map(d => <Chip key={d} on={days === d} onClick={() => setDays(d)}>{d}일</Chip>)}
+        </div>
+        <div className="flex items-center gap-1 ml-auto">
+          {[10, 20, 30].map(n => <Chip key={n} on={topN === n} onClick={() => setTopN(n as 10 | 20 | 30)}>TOP {n}</Chip>)}
+        </div>
+      </div>
 
-      {!loading && (
-        <div className="h-[600px] overflow-y-auto pr-1 pb-10 scrollbar-hide md:scrollbar-default border-t border-gray-100 pt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
-                {visibleItems.map((item, index) => {
-                    const rank = index + 1;
-
-                    return (
-                        <div key={item.fileTicker + index} className="relative group">
-                            <div className={`
-                                flex items-center gap-3 md:gap-4 p-3 md:p-4 rounded-2xl border transition-all bg-white
-                                hover:shadow-lg hover:-translate-y-1 cursor-pointer
-                                ${isBuy ? 'hover:border-red-100 border-gray-100' : 'hover:border-blue-100 border-gray-100'}
-                            `}>
-                                <div className={`w-8 h-8 flex items-center justify-center rounded-lg font-black text-sm md:text-lg shadow-sm shrink-0 ${rank <= 5 ? (isBuy ? 'bg-red-500 text-white' : 'bg-blue-500 text-white') : 'bg-gray-100 text-gray-500'}`}>{rank}</div>
-                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-gray-100 p-0.5 shrink-0 overflow-hidden">
-                                    <img src={`/logos/${encodeURIComponent(item.fileTicker)}.png`} alt={item.name} className="w-full h-full object-cover rounded-full" onError={(e) => { const target = e.currentTarget; if (!target.src.includes('_us.png')) target.src = '/logos/_us.png'; }} />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <h3 className="font-bold text-gray-900 truncate text-sm md:text-base leading-tight">{item.name}</h3>
-                                    <div className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs mt-0.5">
-                                        <span className="text-gray-400 font-mono">{item.ticker}</span>
-                                        <span className={`font-bold ${isBuy ? 'text-red-500' : 'text-blue-500'}`}>{formatMoney(item.value)}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <Link href={`/flow?ticker=${item.ticker}&fileTicker=${encodeURIComponent(item.fileTicker)}&side=${side}&days=${days}`} className="absolute inset-0 z-0" />
-                        </div>
-                    );
-                })}
-            </div>
+      {loading ? (
+        <div className="mt-3 h-[400px] animate-pulse" style={{ background: 'var(--plane)' }} />
+      ) : (
+        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6" style={{ borderTop: '1px solid var(--hairline-2)' }}>
+          {visibleItems.map((item, index) => (
+            <Link key={item.fileTicker + index}
+              href={`/flow?ticker=${item.ticker}&fileTicker=${encodeURIComponent(item.fileTicker)}&side=${side}&days=${days}`}
+              className="flex items-center gap-3 py-2.5 hover:opacity-80" style={{ borderBottom: '1px solid var(--hairline)' }}>
+              <span className="mono w-6 text-right text-sm font-bold shrink-0" style={{ color: index < 5 ? 'var(--ink)' : 'var(--rank-dim)' }}>{index + 1}</span>
+              <img src={`/logos/${encodeURIComponent(item.fileTicker)}.png`} alt="" className="w-8 h-8 shrink-0 rounded-full object-cover"
+                style={{ border: '1px solid var(--hairline)', background: '#fff' }}
+                onError={(e) => { const t = e.currentTarget; if (!t.src.includes('_us.png')) t.src = '/logos/_us.png'; }} />
+              <div className="min-w-0 flex-1">
+                <div className="text-[13px] font-semibold truncate leading-tight" style={{ color: 'var(--ink)' }}>{item.name}</div>
+                <div className="mono text-[10px]" style={{ color: 'var(--ink-mute)' }}>{item.ticker}</div>
+              </div>
+              <span className="mono text-[13px] font-bold shrink-0" style={{ color: tone }}>{formatMoney(item.value)}</span>
+            </Link>
+          ))}
         </div>
       )}
-    </>
+    </section>
   );
 }
