@@ -2839,13 +2839,6 @@
   ],
   "REGN": [
     {
-      "d": "2023-11-02",
-      "actual": 11.59,
-      "estimate": 10.78,
-      "surp": 7.56,
-      "revenue": null
-    },
-    {
       "d": "2024-02-02",
       "actual": 11.86,
       "estimate": 10.75,
@@ -2921,6 +2914,13 @@
       "estimate": 10.21,
       "surp": 39.99,
       "revenue": 4.291
+    },
+    {
+      "d": "2026-10-30",
+      "actual": 20.07,
+      "estimate": 16.25,
+      "surp": 23.54,
+      "revenue": null
     }
   ],
   "SAIC": [
@@ -3308,14 +3308,14 @@
       "actual": 3.95,
       "estimate": 3.92,
       "surp": 0.67,
-      "revenue": 8.495
+      "revenue": null
     },
     {
       "d": "2025-08-01",
       "actual": 4.09,
       "estimate": 4.04,
       "surp": 1.36,
-      "revenue": 8.495
+      "revenue": 8.615
     },
     {
       "d": "2025-10-31",
@@ -3350,7 +3350,7 @@
       "actual": 3.66,
       "estimate": 4.17,
       "surp": -12.27,
-      "revenue": null
+      "revenue": 9.404
     }
   ],
   "HSY": [
@@ -3394,14 +3394,14 @@
       "actual": 2.09,
       "estimate": 1.93,
       "surp": 8.03,
-      "revenue": 2.615
+      "revenue": null
     },
     {
       "d": "2025-07-30",
       "actual": 1.21,
       "estimate": 1.0,
       "surp": 20.42,
-      "revenue": 2.615
+      "revenue": 3.181
     },
     {
       "d": "2025-10-30",
@@ -3436,7 +3436,7 @@
       "actual": 2.64,
       "estimate": 2.11,
       "surp": 25.08,
-      "revenue": null
+      "revenue": 3.276
     }
   ],
   "SBUX": [
@@ -4215,13 +4215,6 @@
   ],
   "XOM": [
     {
-      "d": "2023-10-27",
-      "actual": 2.27,
-      "estimate": 2.36,
-      "surp": -3.82,
-      "revenue": null
-    },
-    {
       "d": "2024-02-02",
       "actual": 2.48,
       "estimate": 2.19,
@@ -4297,6 +4290,13 @@
       "estimate": 3.63,
       "surp": -3.0,
       "revenue": 114.529
+    },
+    {
+      "d": "2026-10-30",
+      "actual": 4.23,
+      "estimate": 4.04,
+      "surp": 4.81,
+      "revenue": null
     }
   ],
   "AMZN": [
@@ -4426,14 +4426,14 @@
       "actual": 0.65,
       "estimate": 0.58,
       "surp": 11.28,
-      "revenue": 6.113
+      "revenue": null
     },
     {
       "d": "2025-07-29",
       "actual": 0.92,
       "estimate": 0.9,
       "surp": 1.94,
-      "revenue": 6.113
+      "revenue": 5.579
     },
     {
       "d": "2025-10-28",
@@ -4468,7 +4468,7 @@
       "actual": 0.87,
       "estimate": 0.77,
       "surp": 13.41,
-      "revenue": null
+      "revenue": 6.263
     }
   ],
   "T": [
@@ -4770,14 +4770,14 @@
       "actual": 0.84,
       "estimate": 0.92,
       "surp": -8.64,
-      "revenue": 3.287
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 0.75,
       "estimate": 0.64,
       "surp": 16.29,
-      "revenue": 3.287
+      "revenue": 3.915
     },
     {
       "d": "2025-10-30",
@@ -4812,7 +4812,7 @@
       "actual": 1.52,
       "estimate": 1.39,
       "surp": 9.14,
-      "revenue": null
+      "revenue": 4.172
     }
   ],
   "FCX": [
@@ -6060,14 +6060,14 @@
       "actual": 2.41,
       "estimate": 2.32,
       "surp": 4.0,
-      "revenue": 5.426
+      "revenue": null
     },
     {
       "d": "2025-07-24",
       "actual": 2.78,
       "estimate": 2.5,
       "surp": 11.34,
-      "revenue": 5.426
+      "revenue": 5.659
     },
     {
       "d": "2025-10-30",
@@ -6102,7 +6102,7 @@
       "actual": 3.28,
       "estimate": 2.95,
       "surp": 11.37,
-      "revenue": null
+      "revenue": 6.06
     }
   ],
   "BMNR": [
@@ -6223,13 +6223,6 @@
   ],
   "GD": [
     {
-      "d": "2023-10-25",
-      "actual": 3.04,
-      "estimate": 2.92,
-      "surp": 3.93,
-      "revenue": null
-    },
-    {
       "d": "2024-01-24",
       "actual": 3.64,
       "estimate": 3.62,
@@ -6305,6 +6298,13 @@
       "estimate": 3.97,
       "surp": 6.86,
       "revenue": 14.094
+    },
+    {
+      "d": "2026-10-30",
+      "actual": 4.49,
+      "estimate": 4.13,
+      "surp": 8.63,
+      "revenue": null
     }
   ],
   "EMR": [
@@ -7771,13 +7771,6 @@
   ],
   "CHD": [
     {
-      "d": "2023-11-03",
-      "actual": 0.74,
-      "estimate": 0.69,
-      "surp": 7.55,
-      "revenue": null
-    },
-    {
       "d": "2024-02-02",
       "actual": 0.65,
       "estimate": 0.65,
@@ -7852,6 +7845,13 @@
       "actual": 0.89,
       "estimate": 0.9,
       "surp": -0.95,
+      "revenue": null
+    },
+    {
+      "d": "2026-10-30",
+      "actual": 0.92,
+      "estimate": 0.9,
+      "surp": 2.21,
       "revenue": null
     }
   ],
@@ -8273,13 +8273,6 @@
   ],
   "CL": [
     {
-      "d": "2023-10-27",
-      "actual": 0.86,
-      "estimate": 0.8,
-      "surp": 7.3,
-      "revenue": null
-    },
-    {
       "d": "2024-01-26",
       "actual": 0.87,
       "estimate": 0.85,
@@ -8355,6 +8348,13 @@
       "estimate": 0.95,
       "surp": 4.53,
       "revenue": 5.361
+    },
+    {
+      "d": "2026-10-30",
+      "actual": 0.97,
+      "estimate": 0.93,
+      "surp": 4.83,
+      "revenue": null
     }
   ],
   "PGR": [
@@ -11094,14 +11094,14 @@
       "actual": 1.23,
       "estimate": 1.19,
       "surp": 3.52,
-      "revenue": 5.29
+      "revenue": null
     },
     {
       "d": "2025-07-30",
       "actual": 1.44,
       "estimate": 1.38,
       "surp": 3.99,
-      "revenue": 5.29
+      "revenue": 5.251
     },
     {
       "d": "2025-10-30",
@@ -11136,7 +11136,7 @@
       "actual": 1.52,
       "estimate": 1.51,
       "surp": 0.91,
-      "revenue": null
+      "revenue": 5.441
     }
   ],
   "MSFT": [
@@ -11180,14 +11180,14 @@
       "actual": 3.46,
       "estimate": 3.22,
       "surp": 7.4,
-      "revenue": 76.441
+      "revenue": null
     },
     {
       "d": "2025-07-30",
       "actual": 3.65,
       "estimate": 3.38,
       "surp": 8.09,
-      "revenue": 76.441
+      "revenue": 77.673
     },
     {
       "d": "2025-10-29",
@@ -11222,7 +11222,7 @@
       "actual": 4.89,
       "estimate": 4.72,
       "surp": 3.59,
-      "revenue": null
+      "revenue": 92.279
     }
   ],
   "COIN": [
@@ -11266,14 +11266,14 @@
       "actual": 0.24,
       "estimate": 1.9,
       "surp": -87.38,
-      "revenue": 1.497
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 5.14,
       "estimate": 1.49,
       "surp": 245.59,
-      "revenue": 1.497
+      "revenue": 1.869
     },
     {
       "d": "2025-10-30",
@@ -11308,7 +11308,7 @@
       "actual": 2.51,
       "estimate": 0.08,
       "surp": 2975.98,
-      "revenue": null
+      "revenue": 1.216
     }
   ],
   "ENPH": [
@@ -11782,14 +11782,14 @@
       "actual": 1.72,
       "estimate": 1.62,
       "surp": 6.05,
-      "revenue": 4.195
+      "revenue": null
     },
     {
       "d": "2025-07-29",
       "actual": 2.22,
       "estimate": 2.22,
       "surp": -0.01,
-      "revenue": 4.195
+      "revenue": 4.082
     },
     {
       "d": "2025-10-28",
@@ -11824,7 +11824,7 @@
       "actual": 2.25,
       "estimate": 2.12,
       "surp": 6.04,
-      "revenue": null
+      "revenue": 4.353
     }
   ],
   "ETR": [
@@ -12707,14 +12707,14 @@
       "actual": 6.45,
       "estimate": 5.75,
       "surp": 12.09,
-      "revenue": 18.605
+      "revenue": null
     },
     {
       "d": "2025-07-25",
       "actual": 6.84,
       "estimate": 6.32,
       "surp": 8.21,
-      "revenue": 18.605
+      "revenue": 19.161
     },
     {
       "d": "2025-10-24",
@@ -12749,7 +12749,7 @@
       "actual": 7.22,
       "estimate": 6.63,
       "surp": 8.95,
-      "revenue": null
+      "revenue": 19.849
     }
   ],
   "RGLD": [
@@ -13137,14 +13137,14 @@
       "actual": -0.01,
       "estimate": -0.37,
       "surp": 97.29,
-      "revenue": 0.774
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 0.32,
       "estimate": 0.15,
       "surp": 119.58,
-      "revenue": 0.774
+      "revenue": 1.249
     },
     {
       "d": "2025-10-30",
@@ -13179,7 +13179,7 @@
       "actual": 16.26,
       "estimate": 2.25,
       "surp": 623.0,
-      "revenue": null
+      "revenue": 1.458
     }
   ],
   "ASML": [
@@ -13395,14 +13395,14 @@
       "actual": -0.48,
       "estimate": -0.92,
       "surp": 47.98,
-      "revenue": 1.303
+      "revenue": null
     },
     {
       "d": "2025-08-05",
       "actual": -0.8,
       "estimate": -0.64,
       "surp": -25.41,
-      "revenue": 1.303
+      "revenue": 1.558
     },
     {
       "d": "2025-11-04",
@@ -13437,7 +13437,7 @@
       "actual": -0.63,
       "estimate": -0.73,
       "surp": 13.5,
-      "revenue": null
+      "revenue": 2.155
     }
   ],
   "V": [
@@ -14764,14 +14764,14 @@
       "actual": 1.5,
       "estimate": 1.5,
       "surp": 0.05,
-      "revenue": 4.025
+      "revenue": null
     },
     {
       "d": "2025-07-29",
       "actual": 1.89,
       "estimate": 1.9,
       "surp": -0.29,
-      "revenue": 4.025
+      "revenue": 4.165
     },
     {
       "d": "2025-10-28",
@@ -14806,7 +14806,7 @@
       "actual": 2.18,
       "estimate": 2.17,
       "surp": 0.3,
-      "revenue": null
+      "revenue": 4.695
     }
   ],
   "CF": [
@@ -15710,14 +15710,14 @@
       "actual": 0.2,
       "estimate": 0.17,
       "surp": 21.15,
-      "revenue": 0.829
+      "revenue": null
     },
     {
       "d": "2025-07-30",
       "actual": 0.23,
       "estimate": 0.21,
       "surp": 7.38,
-      "revenue": 0.829
+      "revenue": 0.96
     },
     {
       "d": "2025-10-29",
@@ -15752,7 +15752,7 @@
       "actual": 0.46,
       "estimate": 0.35,
       "surp": 30.93,
-      "revenue": null
+      "revenue": 1.066
     }
   ],
   "PANW": [
@@ -16054,14 +16054,14 @@
       "actual": 3.73,
       "estimate": 3.56,
       "surp": 4.8,
-      "revenue": 8.133
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 4.15,
       "estimate": 4.02,
       "surp": 3.12,
-      "revenue": 8.133
+      "revenue": 8.602
     },
     {
       "d": "2025-10-30",
@@ -16096,7 +16096,7 @@
       "actual": 5.31,
       "estimate": 5.16,
       "surp": 2.82,
-      "revenue": null
+      "revenue": 9.807
     }
   ],
   "AES": [
@@ -17623,21 +17623,21 @@
       "actual": 7.52,
       "estimate": 6.78,
       "surp": 10.98,
-      "revenue": 15.303
+      "revenue": 15.34
     },
     {
       "d": "2026-04-21",
       "actual": 6.82,
       "estimate": 6.61,
       "surp": 3.16,
-      "revenue": 14.815
+      "revenue": 14.801
     },
     {
       "d": "2026-07-21",
       "actual": 7.26,
       "estimate": 6.75,
       "surp": 7.63,
-      "revenue": 15.959
+      "revenue": 15.954
     },
     {
       "d": "2026-10-20",
@@ -17907,13 +17907,6 @@
   ],
   "CVX": [
     {
-      "d": "2023-10-27",
-      "actual": 3.05,
-      "estimate": 3.68,
-      "surp": -17.07,
-      "revenue": null
-    },
-    {
       "d": "2024-02-02",
       "actual": 3.45,
       "estimate": 3.22,
@@ -17989,6 +17982,13 @@
       "estimate": 5.57,
       "surp": 8.84,
       "revenue": 67.199
+    },
+    {
+      "d": "2026-10-30",
+      "actual": 5.28,
+      "estimate": 4.87,
+      "surp": 8.47,
+      "revenue": null
     }
   ],
   "BWXT": [
@@ -18936,14 +18936,14 @@
       "actual": 1.16,
       "estimate": 1.03,
       "surp": 12.32,
-      "revenue": 1.216
+      "revenue": null
     },
     {
       "d": "2025-07-29",
       "actual": 1.57,
       "estimate": 1.47,
       "surp": 6.59,
-      "revenue": 1.216
+      "revenue": 1.366
     },
     {
       "d": "2025-10-28",
@@ -18978,7 +18978,7 @@
       "actual": -3.6,
       "estimate": -3.87,
       "surp": 6.93,
-      "revenue": null
+      "revenue": 1.557
     }
   ],
   "SEDG": [
@@ -19069,13 +19069,6 @@
   ],
   "JKS": [
     {
-      "d": "2023-08-14",
-      "actual": 3.52,
-      "estimate": 1.26,
-      "surp": 179.99,
-      "revenue": null
-    },
-    {
       "d": "2023-10-30",
       "actual": 3.31,
       "estimate": 0.92,
@@ -19151,6 +19144,13 @@
       "estimate": -0.7,
       "surp": 29.92,
       "revenue": 12.357
+    },
+    {
+      "d": "2026-10-30",
+      "actual": -0.12,
+      "estimate": -0.77,
+      "surp": 84.45,
+      "revenue": null
     }
   ],
   "VTR": [
@@ -19452,14 +19452,14 @@
       "actual": 3.34,
       "estimate": 3.46,
       "surp": -3.39,
-      "revenue": 15.558
+      "revenue": null
     },
     {
       "d": "2025-08-07",
       "actual": 6.31,
       "estimate": 5.59,
       "surp": 12.89,
-      "revenue": 15.558
+      "revenue": 17.601
     },
     {
       "d": "2025-10-30",
@@ -19494,7 +19494,7 @@
       "actual": 7.48,
       "estimate": 6.35,
       "surp": 17.88,
-      "revenue": null
+      "revenue": 24.397
     }
   ],
   "EXAS": [
@@ -21681,14 +21681,14 @@
       "actual": 2.81,
       "estimate": 2.01,
       "surp": 39.84,
-      "revenue": 96.428
+      "revenue": null
     },
     {
       "d": "2025-07-23",
       "actual": 2.31,
       "estimate": 2.19,
       "surp": 5.67,
-      "revenue": 96.428
+      "revenue": 102.346
     },
     {
       "d": "2025-10-29",
@@ -21723,7 +21723,7 @@
       "actual": 2.12,
       "estimate": 3.01,
       "surp": -29.52,
-      "revenue": null
+      "revenue": 127.577
     }
   ],
   "AWK": [
@@ -22588,13 +22588,6 @@
   ],
   "EXC": [
     {
-      "d": "2023-11-02",
-      "actual": 0.67,
-      "estimate": 0.68,
-      "surp": -1.92,
-      "revenue": null
-    },
-    {
       "d": "2024-02-21",
       "actual": 0.6,
       "estimate": 0.58,
@@ -22670,6 +22663,13 @@
       "estimate": 0.45,
       "surp": -3.93,
       "revenue": 5.967
+    },
+    {
+      "d": "2026-10-30",
+      "actual": 0.87,
+      "estimate": 0.79,
+      "surp": 10.28,
+      "revenue": null
     }
   ],
   "FDX": [
@@ -24175,14 +24175,14 @@
       "actual": 1.19,
       "estimate": 1.15,
       "surp": 3.66,
-      "revenue": 34.504
+      "revenue": null
     },
     {
       "d": "2025-07-21",
       "actual": 1.22,
       "estimate": 1.19,
       "surp": 2.59,
-      "revenue": 34.504
+      "revenue": 33.821
     },
     {
       "d": "2025-10-29",
@@ -24217,7 +24217,7 @@
       "actual": 1.31,
       "estimate": 1.27,
       "surp": 2.8,
-      "revenue": null
+      "revenue": 34.313
     }
   ],
   "IRDM": [
@@ -25244,14 +25244,14 @@
       "actual": 0.29,
       "estimate": 0.28,
       "surp": 4.72,
-      "revenue": 3.063
+      "revenue": null
     },
     {
       "d": "2025-07-23",
       "actual": 0.33,
       "estimate": 0.33,
       "surp": 1.26,
-      "revenue": 3.063
+      "revenue": 3.003
     },
     {
       "d": "2025-10-29",
@@ -25286,7 +25286,7 @@
       "actual": 0.27,
       "estimate": 0.29,
       "surp": -7.15,
-      "revenue": null
+      "revenue": 3.293
     }
   ],
   "MS": [
@@ -25760,14 +25760,14 @@
       "actual": 1.95,
       "estimate": 2.47,
       "surp": -21.01,
-      "revenue": 1.097
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 3.18,
       "estimate": 2.68,
       "surp": 18.77,
-      "revenue": 1.097
+      "revenue": 1.595
     },
     {
       "d": "2025-10-30",
@@ -25802,7 +25802,7 @@
       "actual": 5.3,
       "estimate": 4.64,
       "surp": 14.32,
-      "revenue": null
+      "revenue": 1.231
     }
   ],
   "VSAT": [
@@ -26190,14 +26190,14 @@
       "actual": 0.84,
       "estimate": 0.81,
       "surp": 4.03,
-      "revenue": 3.175
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 0.94,
       "estimate": 0.86,
       "surp": 9.67,
-      "revenue": 3.175
+      "revenue": 3.21
     },
     {
       "d": "2025-10-29",
@@ -26232,7 +26232,7 @@
       "actual": 1.22,
       "estimate": 1.18,
       "surp": 3.55,
-      "revenue": null
+      "revenue": 4.136
     }
   ],
   "QLYS": [
@@ -27043,14 +27043,14 @@
       "actual": 0.23,
       "estimate": 0.26,
       "surp": -9.81,
-      "revenue": 0.998
+      "revenue": null
     },
     {
       "d": "2025-08-07",
       "actual": 0.33,
       "estimate": 0.35,
       "surp": -6.17,
-      "revenue": 0.998
+      "revenue": 1.049
     },
     {
       "d": "2025-11-04",
@@ -27085,7 +27085,7 @@
       "actual": 0.46,
       "estimate": 0.49,
       "surp": -5.22,
-      "revenue": null
+      "revenue": 1.174
     }
   ],
   "NTLA": [
@@ -28075,14 +28075,14 @@
       "actual": 1.0,
       "estimate": 0.76,
       "surp": 31.63,
-      "revenue": 2.102
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 2.45,
       "estimate": 2.52,
       "surp": -2.82,
-      "revenue": 2.102
+      "revenue": 2.292
     },
     {
       "d": "2025-10-30",
@@ -28117,7 +28117,7 @@
       "actual": 2.83,
       "estimate": 2.82,
       "surp": 0.42,
-      "revenue": null
+      "revenue": 2.185
     }
   ],
   "SGML": [
@@ -31550,7 +31550,7 @@
       "actual": 0.29,
       "estimate": 0.21,
       "surp": 39.27,
-      "revenue": null
+      "revenue": 0.546
     }
   ],
   "ITRI": [
@@ -31727,13 +31727,6 @@
   ],
   "ABBV": [
     {
-      "d": "2023-10-27",
-      "actual": 2.95,
-      "estimate": 2.87,
-      "surp": 2.8,
-      "revenue": null
-    },
-    {
       "d": "2024-02-02",
       "actual": 2.79,
       "estimate": 2.8,
@@ -31809,6 +31802,13 @@
       "estimate": 3.61,
       "surp": 1.15,
       "revenue": 16.99
+    },
+    {
+      "d": "2026-10-30",
+      "actual": 3.82,
+      "estimate": 3.77,
+      "surp": 1.32,
+      "revenue": null
     }
   ],
   "PEG": [
@@ -33674,14 +33674,14 @@
       "actual": 3.79,
       "estimate": 2.81,
       "surp": 34.99,
-      "revenue": 3.082
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 3.86,
       "estimate": 3.43,
       "surp": 12.53,
-      "revenue": 3.082
+      "revenue": 3.192
     },
     {
       "d": "2025-10-30",
@@ -33716,7 +33716,7 @@
       "actual": 5.48,
       "estimate": 4.43,
       "surp": 23.84,
-      "revenue": null
+      "revenue": 3.537
     }
   ],
   "EIX": [
@@ -33760,14 +33760,14 @@
       "actual": 1.37,
       "estimate": 1.21,
       "surp": 13.27,
-      "revenue": 4.543
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 0.97,
       "estimate": 0.88,
       "surp": 10.12,
-      "revenue": 4.543
+      "revenue": 5.75
     },
     {
       "d": "2025-10-28",
@@ -33802,7 +33802,7 @@
       "actual": 1.92,
       "estimate": 1.81,
       "surp": 6.12,
-      "revenue": null
+      "revenue": 4.886
     }
   ],
   "DD": [
@@ -34190,14 +34190,14 @@
       "actual": 0.59,
       "estimate": 0.58,
       "surp": 1.31,
-      "revenue": 1.257
+      "revenue": null
     },
     {
       "d": "2025-08-07",
       "actual": 0.64,
       "estimate": 0.6,
       "surp": 6.72,
-      "revenue": 1.257
+      "revenue": 1.22
     },
     {
       "d": "2025-11-06",
@@ -34232,7 +34232,7 @@
       "actual": 0.74,
       "estimate": 0.72,
       "surp": 2.95,
-      "revenue": null
+      "revenue": 1.369
     }
   ],
   "AEE": [
@@ -34448,14 +34448,14 @@
       "actual": 2.45,
       "estimate": 2.2,
       "surp": 11.33,
-      "revenue": 5.746
+      "revenue": null
     },
     {
       "d": "2025-07-30",
       "actual": 3.88,
       "estimate": 3.79,
       "surp": 2.29,
-      "revenue": 5.746
+      "revenue": 5.742
     },
     {
       "d": "2025-10-30",
@@ -34490,7 +34490,7 @@
       "actual": 4.86,
       "estimate": 4.74,
       "surp": 2.59,
-      "revenue": null
+      "revenue": 6.76
     }
   ],
   "ATRO": [
@@ -35738,14 +35738,14 @@
       "actual": 0.92,
       "estimate": 0.91,
       "surp": 1.1,
-      "revenue": 3.595
+      "revenue": null
     },
     {
       "d": "2025-07-23",
       "actual": 1.05,
       "estimate": 1.03,
       "surp": 2.15,
-      "revenue": 3.595
+      "revenue": 3.69
     },
     {
       "d": "2025-10-29",
@@ -35780,7 +35780,7 @@
       "actual": 1.05,
       "estimate": 1.01,
       "surp": 3.52,
-      "revenue": null
+      "revenue": 3.914
     }
   ],
   "ETSY": [
@@ -36512,14 +36512,14 @@
       "actual": 0.14,
       "estimate": 0.02,
       "surp": 556.97,
-      "revenue": 50.184
+      "revenue": null
     },
     {
       "d": "2025-07-30",
       "actual": 0.37,
       "estimate": 0.33,
       "surp": 11.11,
-      "revenue": 50.184
+      "revenue": 50.534
     },
     {
       "d": "2025-10-23",
@@ -36554,7 +36554,7 @@
       "actual": 0.49,
       "estimate": 0.4,
       "surp": 21.44,
-      "revenue": null
+      "revenue": 49.526
     }
   ],
   "EL": [
@@ -37505,13 +37505,6 @@
   ],
   "NVT": [
     {
-      "d": "2023-10-27",
-      "actual": 0.84,
-      "estimate": 0.73,
-      "surp": 14.54,
-      "revenue": null
-    },
-    {
       "d": "2024-02-06",
       "actual": 0.78,
       "estimate": 0.75,
@@ -37587,6 +37580,13 @@
       "estimate": 1.16,
       "surp": 24.52,
       "revenue": 1.471
+    },
+    {
+      "d": "2026-10-30",
+      "actual": 1.52,
+      "estimate": 1.4,
+      "surp": 8.94,
+      "revenue": null
     }
   ],
   "VRT": [
@@ -37888,14 +37888,14 @@
       "actual": 1.78,
       "estimate": 1.66,
       "surp": 6.92,
-      "revenue": 6.773
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 2.48,
       "estimate": 2.44,
       "surp": 1.43,
-      "revenue": 6.773
+      "revenue": 7.631
     },
     {
       "d": "2025-10-30",
@@ -37930,7 +37930,7 @@
       "actual": 6.06,
       "estimate": 5.03,
       "surp": 20.49,
-      "revenue": null
+      "revenue": 12.015
     }
   ]
 }
