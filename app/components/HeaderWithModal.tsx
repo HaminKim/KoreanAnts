@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import AuthButton from './AuthButton';
 
+// 필독·구독 메뉴 잠시 숨김 — 다시 보이려면 true
+const SHOW_EXTRA_NAV = false;
+
 // ✨ 캐시 방지 v=12 (사이즈 최적화)
 const INTRO_IMAGES = [
   { id: 'slv', src: '/intro-slv.png?v=12', alt: '은 ETF 폭락' },
@@ -69,13 +72,13 @@ export default function HeaderWithModal() {
           REANT
         </Link>
         <nav className="flex items-center gap-5 text-sm">
-          <button
+          {SHOW_EXTRA_NAV && <button
             onClick={handleOpenManually}
             className="text-xs font-medium whitespace-nowrap pb-1 border-b-2 border-transparent transition-colors"
             style={{ color: 'var(--down-text)' }}
           >
             필독
-          </button>
+          </button>}
           <Link
             href="/macro"
             className="text-xs font-medium whitespace-nowrap pb-1 border-b-2 transition-colors"
@@ -120,7 +123,7 @@ export default function HeaderWithModal() {
           >
             히트맵
           </Link>
-          <Link
+          {SHOW_EXTRA_NAV && <Link
             href="/pricing"
             className="text-xs font-medium whitespace-nowrap pb-1 border-b-2 transition-colors"
             style={{
@@ -130,7 +133,7 @@ export default function HeaderWithModal() {
             }}
           >
             구독
-          </Link>
+          </Link>}
           <AuthButton />
         </nav>
       </header>

@@ -16,6 +16,7 @@ interface Landing {
 }
 
 const SHOW_INDEX = false
+const SERIF = '"Times New Roman", Times, Georgia, serif'
 const CACHE_KEY = 'reant_landing_cache'
 const RANGES = [
   { id: '3M', months: 3 }, { id: '1Y', months: 12 }, { id: '5Y', months: 60 },
@@ -67,15 +68,15 @@ export default function LandingClient() {
   const periodPct = view ? (view.last / view.startVal - 1) * 100 : 0
 
   if (!SHOW_INDEX) return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
-      <h1 className="text-[32px] sm:text-[48px] font-bold tracking-tight leading-tight" style={{ color: 'var(--ink)' }}>
+    <div className="min-h-[70vh] flex flex-col justify-center max-w-[560px] mx-auto w-full">
+      <h1 className="text-[34px] sm:text-[52px] font-bold tracking-tight leading-[1.1]" style={{ color: 'var(--ink)', fontFamily: SERIF }}>
         You made it here.<br />You&apos;re a lucky guy.
       </h1>
-      <p className="mt-4 text-base sm:text-lg" style={{ color: 'var(--ink-mute)' }}>
+      <p className="mt-4 text-lg sm:text-xl italic" style={{ color: 'var(--ink-mute)', fontFamily: SERIF }}>
         Check the data, and get some ideas.
       </p>
       <Link href="/explore"
-        className="mt-10 inline-flex items-center justify-center w-full max-w-[320px] h-14 text-base font-bold transition-transform active:scale-[0.98]"
+        className="mt-12 self-center inline-flex items-center justify-center w-full max-w-[320px] h-14 text-base font-bold transition-transform active:scale-[0.98]"
         style={{ background: 'var(--accent)', color: '#fff' }}>
         확인하기
       </Link>
