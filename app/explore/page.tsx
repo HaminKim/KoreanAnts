@@ -3,10 +3,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: '무엇을 분석할까요? | ReAnt',
-  description: '매크로 시장 분석, 한국 부동산 분석, 개별종목 분석 중 하나를 선택하세요.',
+  description: '매크로 시장, 한국 부동산, 한국 투자자 심리 동향, 개별종목 분석 중 하나를 선택하세요.',
 }
 
-// 02. ANALYSIS HUB — 명료한 2분기 선택. 초기 진입에서 과도한 정보는 넣지 않는다.
+// 02. ANALYSIS HUB — 2×2 선택. 초기 진입에서 과도한 정보는 넣지 않는다.
 const CHOICES = [
   {
     href: '/macro',
@@ -19,6 +19,12 @@ const CHOICES = [
     eyebrow: 'KOREA HOUSING',
     title: '한국 부동산 분석하기',
     desc: '17개 시도 지도로 집값·가계 빚·대출 환경·미분양을 보고, 1975년부터의 주택가격 사이클을 비교합니다.',
+  },
+  {
+    href: '/ants',
+    eyebrow: 'KOREAN INVESTORS',
+    title: '한국 투자자 심리 동향',
+    desc: '한국 개인투자자가 미국주식을 얼마나 사고팔았는지, 누적 순매수 흐름과 종목별 수급 랭킹으로 봅니다.',
   },
   {
     href: '/watchlist',
@@ -35,10 +41,10 @@ export default function ExplorePage() {
       <h1 className="mt-4 text-[26px] sm:text-[34px] font-bold tracking-tight" style={{ color: 'var(--ink)' }}>
         무엇을 분석할까요?
       </h1>
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
         {CHOICES.map(c => (
           <Link key={c.href} href={c.href}
-            className="group flex flex-col justify-between min-h-[200px] sm:min-h-[260px] p-6 transition-colors"
+            className="group flex flex-col justify-between min-h-[180px] sm:min-h-[220px] p-6 transition-colors"
             style={{ border: '1px solid var(--ink)', background: 'var(--surface)' }}>
             <div>
               <div className="mono text-[11px] font-bold tracking-widest" style={{ color: 'var(--ink-mute)' }}>{c.eyebrow}</div>
