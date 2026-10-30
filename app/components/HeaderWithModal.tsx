@@ -110,7 +110,7 @@ export default function HeaderWithModal() {
               fontWeight: isAnts ? 600 : 500,
             }}
           >
-            개미지수
+            투자자 심리
           </Link>
           <Link
             href="/watchlist"

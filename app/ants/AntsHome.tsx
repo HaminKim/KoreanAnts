@@ -1,6 +1,6 @@
 'use client';
 
-// 개미지수 — 매크로·부동산과 같은 리포트 톤 (각진 카드, hairline, mono 숫자, 이모지 없음)
+// 한국 투자자 심리 동향(/ants, 구 개미지수) — 매크로·부동산과 같은 리포트 톤 (각진 카드, hairline, mono 숫자, 이모지 없음)
 //  1. 개인투자자 누적 순매수  2. 섹터 랭킹  3. 5일 순매수·순매도 1위  4. 주가 × 수급 조합  5. 수급 랭킹
 
 import Link from 'next/link';
@@ -61,7 +61,7 @@ export default function AntsHome() {
   return (
     <div className="pt-2 pb-4">
       <Link href="/explore" className="text-xs" style={{ color: 'var(--ink-mute)' }}>← 분석 선택</Link>
-      <h1 className="mt-2 text-2xl font-bold" style={{ color: 'var(--ink)' }}>개미지수</h1>
+      <h1 className="mt-2 text-2xl font-bold" style={{ color: 'var(--ink)' }}>한국 투자자 심리 동향</h1>
       <p className="mt-1 text-xs leading-relaxed max-w-2xl" style={{ color: 'var(--ink-mute)' }}>
         한국 개인투자자(서학개미)가 미국주식을 얼마나 사고팔았는지 봅니다. 매일 한국예탁결제원 결제 데이터를 받아 쌓아요.
       </p>

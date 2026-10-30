@@ -394,7 +394,7 @@ export default function ShortTrackerClient({ netBuy5, netBuy10, netBuy20, netBuy
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          개미지수로
+          투자자 심리로
         </Link>
       </div>
 

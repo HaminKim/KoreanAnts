@@ -8,7 +8,7 @@ import { type Catalog, type Indicator, loadCatalog, fmtNum, fmtPeriod, tfLabel, 
 import { Sparkline } from '@/app/components/macro/ui'
 
 const SHORTCUTS = [
-  { href: '/ants', label: '개미지수' },
+  { href: '/ants', label: '투자자 심리' },
   { href: '/flow', label: 'Korean Flow' },
   { href: '/sectors', label: '섹터 RS' },
   { href: '/watchlist', label: '종목 히트맵' },

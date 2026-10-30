@@ -160,7 +160,7 @@ function AnalysisContent() {
       <div className="p-4">
         <Link href="/ants" className="inline-flex items-center text-gray-500 hover:text-black transition">
           <svg className="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-          개미지수로
+          투자자 심리로
         </Link>
       </div>
 
