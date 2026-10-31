@@ -5,10 +5,11 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  type Apt, type AptFile, type AptHist, type AptSum, type PriceTone, type RegionMetric,
-  fillOf, fmtRegion, fmtWon, fmtYm, loadApt, loadAptHist, textOn,
+  type Apt, type AptFile, type AptHist, type AptSum, type PriceTone, type RegionMetric, type SubwayStation,
+  fillOf, fmtRegion, fmtWon, fmtYm, loadApt, loadAptHist, loadSubway,
 } from '@/app/lib/house'
 import { PriceChart, StatusBadge } from './local'
+import 'leaflet/dist/leaflet.css'
 
 const HOW = '직전 12개월 실거래 ㎡당 가격 중앙값 × 84㎡ (전용 30~200㎡, 3건 이상일 때)'
 
@@ -49,16 +50,26 @@ export function useAptFile(uid: string | null) {
 }
 
 // ─────────────────────────────────────────
-// 지도 (휠·드래그·핀치로 확대/이동)
+// 지도 — 브이월드 배경지도(회색) 위에 행정동 색 + 단지 점·라벨. 확대·이동은 Leaflet
+// 점·라벨은 지도 위에 React 로 겹쳐 그림 (CSS 변수 색을 그대로 쓰고, 겹침을 직접 피하려고)
 // ─────────────────────────────────────────
-type T = { k: number; x: number; y: number }
-const K_MAX = 40
-const Z_PRICE = 1.8   // 이보다 확대하면 단지에 시세 표시
-const Z_NAME = 4      // 이보다 확대하면 단지 이름까지
+const VKEY = process.env.NEXT_PUBLIC_VWORLD_KEY ?? ''
+const Z_PRICE = 1      // 처음 화면보다 이만큼 확대하면 단지 시세
+const Z_NAME = 2.5     // 이만큼 확대하면 단지 이름까지 (또는 16 이상)
 
-function clampT(t: T, W: number, H: number): T {
-  const k = Math.min(K_MAX, Math.max(1, t.k))
-  return { k, x: Math.min(0, Math.max(W * (1 - k), t.x)), y: Math.min(0, Math.max(H * (1 - k), t.y)) }
+type LMap = import('leaflet').Map
+type Pt = { x: number; y: number }
+
+// 점이 구 경계(여러 링, evenodd) 안에 있는지
+function inside(la: number, lo: number, rings: [number, number][][]) {
+  let c = false
+  for (const r of rings) {
+    for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+      const [ai, oi] = r[i], [aj, oj] = r[j]
+      if ((ai > la) !== (aj > la) && lo < ((oj - oi) * (la - ai)) / (aj - ai) + oi) c = !c
+    }
+  }
+  return c
 }
 
 export function AptMap({ file, metric, selected, focusReq, onPick }: {
@@ -66,210 +77,228 @@ export function AptMap({ file, metric, selected, focusReq, onPick }: {
   focusReq: { seq: string; n: number } | null   // 목록에서 고른 단지로 이동
   onPick: (seq: string | null) => void
 }) {
-  const [, , W, H] = file.viewBox
-  const [t, setT] = useState<T>({ k: 1, x: 0, y: 0 })
-  const [hover, setHover] = useState<{ a: Apt; x: number; y: number } | null>(null)
-  const svgRef = useRef<SVGSVGElement>(null)
   const boxRef = useRef<HTMLDivElement>(null)
-  const drag = useRef<{ pts: Map<number, { x: number; y: number }>; moved: boolean; start: T; d0: number; c0: { x: number; y: number } } | null>(null)
+  const mapEl = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<LMap | null>(null)
+  const polys = useRef<{ setStyle: (o: object) => void; getElement: () => Element | undefined }[]>([])
+  const [view, setView] = useState<{ z: number; fit: number; moving: boolean; n: number } | null>(null)
+  const [hover, setHover] = useState<{ a: Apt; x: number; y: number } | null>(null)
+  const [stations, setStations] = useState<SubwayStation[]>([])
+  const onPickRef = useRef(onPick)
+  useEffect(() => { onPickRef.current = onPick })
 
-  // 화면 좌표 → viewBox 좌표
-  const toVb = (cx: number, cy: number) => {
-    const m = svgRef.current?.getScreenCTM()
-    if (!m) return { x: 0, y: 0 }
-    const p = new DOMPoint(cx, cy).matrixTransform(m.inverse())
-    return { x: p.x, y: p.y }
-  }
-  const zoomAt = (p: { x: number; y: number }, f: number, base: T) => {
-    const k = Math.min(K_MAX, Math.max(1, base.k * f))
-    return clampT({ k, x: p.x - (p.x - base.x) * (k / base.k), y: p.y - (p.y - base.y) * (k / base.k) }, W, H)
-  }
-
+  // 지도 만들기 (단위가 바뀌면 key 로 새로 마운트됨)
   useEffect(() => {
-    const el = svgRef.current
-    if (!el) return
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault()
-      const p = toVb(e.clientX, e.clientY)
-      setT(cur => zoomAt(p, Math.exp(-e.deltaY * 0.0018), cur))
-    }
-    el.addEventListener('wheel', onWheel, { passive: false })
-    return () => el.removeEventListener('wheel', onWheel)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [W, H])
-
-  useEffect(() => {
-    if (!focusReq) return
-    const a = file.apts.find(x => x.i === focusReq.seq)
-    if (!a) return
-    setT(cur => {
-      const k = Math.max(cur.k, Z_NAME + 1)
-      return clampT({ k, x: W / 2 - a.x * k, y: H / 2 - a.y * k }, W, H)
-    })
-  }, [focusReq, file, W, H])
-
-  const onDown = (e: React.PointerEvent) => {
-    const d = drag.current ?? { pts: new Map(), moved: false, start: t, d0: 0, c0: { x: 0, y: 0 } }
-    d.pts.set(e.pointerId, toVb(e.clientX, e.clientY))
-    d.start = t
-    d.moved = d.pts.size > 1
-    if (d.pts.size === 2) {
-      const [a, b] = [...d.pts.values()]
-      d.d0 = Math.hypot(a.x - b.x, a.y - b.y)
-      d.c0 = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }
-    }
-    drag.current = d
-  }
-  const onMove = (e: React.PointerEvent) => {
-    const d = drag.current
-    if (!d || !d.pts.has(e.pointerId)) return
-    const p = toVb(e.clientX, e.clientY)
-    if (d.pts.size === 1) {
-      const p0 = d.pts.get(e.pointerId)!
-      const dx = p.x - p0.x, dy = p.y - p0.y
-      if (!d.moved && Math.hypot(dx, dy) > 3) {
-        d.moved = true
-        // 드래그가 시작된 뒤에만 잡음 (처음부터 잡으면 단지 점 클릭이 지도로 감)
-        svgRef.current?.setPointerCapture?.(e.pointerId)
+    let dead = false
+    let map: LMap | null = null
+    Promise.all([import('leaflet'), loadSubway().catch(() => null)]).then(([{ default: L }, subway]) => {
+      if (dead || !mapEl.current) return
+      map = L.map(mapEl.current, { zoomSnap: 0.5, zoomDelta: 1, wheelPxPerZoomLevel: 70, maxZoom: 19, minZoom: 9, attributionControl: true })
+      if (VKEY) {
+        L.tileLayer(`https://api.vworld.kr/req/wmts/1.0.0/${VKEY}/white/{z}/{y}/{x}.png`, {
+          maxNativeZoom: 18, maxZoom: 19, attribution: '배경지도 © VWorld (국토교통부)',
+        }).addTo(map)
       }
-      if (d.moved) setT(clampT({ ...d.start, x: d.start.x + dx, y: d.start.y + dy }, W, H))
-    } else if (d.pts.size === 2) {
-      const other = [...d.pts.entries()].find(([id]) => id !== e.pointerId)![1]
-      const dist = Math.hypot(p.x - other.x, p.y - other.y)
-      if (d.d0 > 0) setT(zoomAt(d.c0, dist / d.d0, d.start))
-    }
-  }
-  const onUp = (e: React.PointerEvent) => {
-    const d = drag.current
-    if (!d) return
-    d.pts.delete(e.pointerId)
-    if (!d.pts.size) setTimeout(() => { drag.current = null }, 0)
-  }
-  const clickable = () => !drag.current?.moved
+      map.attributionControl.setPrefix(false)
+      if (subway) map.attributionControl.addAttribution('전철 © OpenStreetMap')
+      const b = L.latLngBounds(file.bounds)
+      map.fitBounds(b, { padding: [16, 16] })
+      const fit = map.getZoom()
+      map.setMinZoom(fit - 0.5)
+      map.setMaxBounds(b.pad(0.2))
+      // 구 밖은 페이지 배경으로 덮어서 그 구만 보이게 (세계 사각형 − 구 경계)
+      const world: [number, number][] = [[-85, -180], [-85, 180], [85, 180], [85, -180]]
+      polys.current = file.dongs.map(d => L.polygon(d.r, { stroke: true, weight: 1, fillRule: 'evenodd', interactive: false }).addTo(map!))
+      // 전철 노선·역 — 흐린 배경지도와 달리 원래 색 그대로 (동 색 위, 구 밖 가림막 아래)
+      if (subway) {
+        const near = b.pad(0.3)
+        for (const ln of subway.lines) {
+          const paths = ln.p.filter(p => p.some(q => near.contains(q)))
+          if (paths.length) L.polyline(paths, { color: ln.c, weight: 3, opacity: 0.9, lineCap: 'round', lineJoin: 'round', interactive: false }).addTo(map)
+        }
+        const st = subway.stations.filter(s => inside(s.la, s.lo, file.outline))
+        for (const s of st) {
+          L.circleMarker([s.la, s.lo], { radius: s.c.length > 1 ? 4.5 : 3.5, color: s.c.length > 1 ? '#333' : s.c[0], weight: 2, fillColor: '#fff', fillOpacity: 1, interactive: false }).addTo(map)
+        }
+        setStations(st)
+      }
+      const mask = L.polygon([world, ...file.outline], { stroke: false, fillRule: 'evenodd', interactive: false }).addTo(map)
+      const outline = L.polygon(file.outline, { fill: false, weight: 1.6, interactive: false }).addTo(map)
+      // CSS 변수 색은 SVG 속성으로는 안 먹어서 style 로
+      const me = mask.getElement() as SVGElement | undefined
+      if (me) { me.style.fill = 'var(--surface)'; me.style.fillOpacity = '1' }
+      const oe = outline.getElement() as SVGElement | undefined
+      if (oe) oe.style.stroke = 'var(--ink)'
+      const sync = (moving: boolean) => setView(v => ({ z: map!.getZoom(), fit, moving, n: (v?.n ?? 0) + 1 }))
+      // 확대 애니메이션 중에는 점·라벨을 숨겼다가 끝나면 다시 계산
+      let zooming = false
+      map.on('zoomstart', () => { zooming = true; sync(true) })
+      map.on('zoomend', () => { zooming = false; sync(false) })
+      map.on('move', () => { if (!zooming) sync(false) })
+      map.on('click', () => onPickRef.current(null))
+      mapRef.current = map
+      sync(false)
+    })
+    return () => { dead = true; map?.remove(); mapRef.current = null }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const dongVals = useMemo(() => file.dongs.map(d => val(d, metric.id)).filter((v): v is number => v !== null), [file, metric])
   const aptVals = useMemo(() => file.apts.map(a => val(a, metric.id)).filter((v): v is number => v !== null), [file, metric])
+  const far = !view || view.z < view.fit + Z_PRICE
 
-  // 화면에 보이는 단지 + 겹치지 않는 라벨 (거래 많은 단지 먼저, 고른 단지는 항상)
-  const { dots, labels } = useMemo(() => {
-    const sx = (x: number) => x * t.k + t.x, sy = (y: number) => y * t.k + t.y
-    const vis = file.apts.filter(a => { const x = sx(a.x), y = sy(a.y); return x > -20 && x < W + 20 && y > -20 && y < H + 20 })
-    const out: { a: Apt; x: number; y: number; w: number; h: number; two: boolean }[] = []
-    if (t.k >= Z_PRICE) {
-      const boxes: [number, number, number, number][] = []
-      const order = [...vis].sort((a, b) => (b.i === selected ? 1 : 0) - (a.i === selected ? 1 : 0) || b.c - a.c)
-      const two = t.k >= Z_NAME
-      for (const a of order) {
+  // 동 색 (CSS 변수라 SVG 요소 style 로 직접 넣음). 확대하면 배경지도가 보이게 옅게
+  useEffect(() => {
+    polys.current.forEach((p, i) => {
+      const el = p.getElement() as SVGElement | undefined
+      if (!el) return
+      el.style.fill = fillOf(metric, val(file.dongs[i], metric.id), dongVals)
+      el.style.stroke = 'var(--surface)'
+      el.style.fillOpacity = far ? '0.42' : '0.12'
+    })
+  }, [metric, dongVals, file, far, view?.n])
+
+  useEffect(() => {
+    const map = mapRef.current
+    const a = focusReq && file.apts.find(x => x.i === focusReq.seq)
+    if (map && a) map.flyTo([a.la, a.lo], Math.max(map.getZoom(), 16.5), { duration: 0.6 })
+  }, [focusReq, file])
+
+  // 화면 좌표 계산 + 겹치지 않는 라벨 고르기 (거래 많은 단지 먼저, 고른 단지는 항상)
+  const layout = useMemo(() => {
+    const map = mapRef.current
+    if (!map || !view || view.moving) return null
+    const size = map.getSize()
+    const px = (la: number, lo: number): Pt => map.latLngToContainerPoint([la, lo])
+    const mpp = 40075016 * Math.cos((map.getCenter().lat * Math.PI) / 180) / (256 * 2 ** view.z)   // m/px
+    // 좌표를 못 찾은 단지(ap)는 지도에 안 그림 — 엉뚱한 자리에 찍히느니 목록에서만
+    const dots = file.apts.filter(a => !a.ap).map(a => ({ a, p: px(a.la, a.lo) })).filter(({ p }) => p.x > -10 && p.x < size.x + 10 && p.y > -10 && p.y < size.y + 10)
+    // 멀리선 동 라벨 → 역 이름, 가까이선 역 이름 → 단지 라벨 순으로 자리를 잡음 (뒤에 오는 것이 피함)
+    const boxes: [number, number, number, number][] = []
+    const hit = (x: number, y: number, w: number, h: number) => boxes.some(([bx, by, bw, bh]) => x < bx + bw + 2 && x + w + 2 > bx && y < by + bh + 2 && y + h + 2 > by)
+    const dongs = far ? file.dongs.map((d, i) => ({ d, i, p: px(d.l[0], d.l[1]), s: Math.sqrt(d.a) / mpp }))
+      .filter(({ d, s }) => s >= d.n.length * 12) : []
+    for (const { d, p, s } of dongs) {
+      const w = d.n.length * 12 + 4, h = s > 60 && val(d, metric.id) !== null ? 30 : 16
+      boxes.push([p.x - w / 2, p.y - h / 2, w, h])
+    }
+    const stns: { s: SubwayStation; p: Pt }[] = []
+    for (const s of stations) {
+      const p = px(s.la, s.lo)
+      const w = s.n.length * 11 + 4, h = 14, x = p.x + 6, y = p.y - h / 2
+      if (p.x < -40 || p.x > size.x || p.y < -10 || p.y > size.y + 10 || hit(x, y, w, h)) continue
+      boxes.push([x, y, w, h])
+      stns.push({ s, p })
+    }
+    const labels: { a: Apt; p: Pt; w: number; h: number; two: boolean }[] = []
+    if (!far) {
+      const two = view.z >= Math.min(view.fit + Z_NAME, 16)
+      const order = [...dots].sort((x, y) => (y.a.i === selected ? 1 : 0) - (x.a.i === selected ? 1 : 0) || y.a.c - x.a.c)
+      for (const { a, p } of order) {
+        if (labels.length > 180 && a.i !== selected) break
+        if (!two && a.p === undefined && a.i !== selected) continue   // 시세 단계에선 시세 있는 단지만
         const price = a.p !== undefined ? fmtWon(a.p) : `${fmtWon(a.t[2])}*`
-        const name = a.n.length > 9 ? a.n.slice(0, 8) + '…' : a.n
-        const w = Math.max(price.length * 6 + 8, two ? name.length * 9.2 + 8 : 0)
-        const h = two ? 26 : 14
-        const x = sx(a.x) + 5, y = sy(a.y) - h / 2
-        if (out.length > 160 && a.i !== selected) break
-        if (a.i !== selected && boxes.some(([bx, by, bw, bh]) => x < bx + bw && x + w > bx && y < by + bh && y + h > by)) continue
+        const name = short(a.n)
+        const w = Math.max(price.length * 7.2 + 14, two ? name.length * 12.5 + 14 : 0)
+        const h = two ? 30 : 17
+        const x = p.x + 6, y = p.y - h / 2
+        if (a.i !== selected && hit(x, y, w, h)) continue
         boxes.push([x, y, w, h])
-        out.push({ a, x, y, w, h, two })
+        labels.push({ a, p: { x, y }, w, h, two })
       }
     }
-    return { dots: vis, labels: out }
-  }, [file, t, W, H, selected])
+    return { dots, dongs, labels, stns }
+  }, [file, view, far, selected, stations, metric])
 
-  const r = t.k < Z_PRICE ? 2 : t.k < Z_NAME ? 3 : 4
-  const sel = selected ? file.apts.find(a => a.i === selected) : undefined
+  const r = far ? 3 : 4.5
 
   return (
-    <div ref={boxRef} className="relative">
-      <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="block w-full h-auto select-none touch-none"
-        style={{ maxHeight: 640, cursor: drag.current?.moved ? 'grabbing' : 'grab' }}
-        role="img" aria-label={`${file.full} 단지 지도`}
-        onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
-        onClick={() => { if (clickable()) onPick(null) }}
-        onDoubleClick={e => { const p = toVb(e.clientX, e.clientY); setT(cur => zoomAt(p, 2, cur)) }}>
-        <g transform={`translate(${t.x},${t.y}) scale(${t.k})`}>
-          {file.dongs.map((d, i) => {
-            const fill = fillOf(metric, val(d, metric.id), dongVals)
+    <div ref={boxRef} className="apt-map relative h-[460px] md:h-[600px] overflow-hidden" style={{ background: 'var(--surface)' }}>
+      <div ref={mapEl} className="absolute inset-0" />
+      {!VKEY && (
+        <div className="absolute left-2 top-2 z-[460] px-1.5 py-0.5 text-[10px]" style={{ background: 'var(--surface)', color: 'var(--ink-mute)' }}>
+          배경지도 키(NEXT_PUBLIC_VWORLD_KEY)가 없어 경계만 보여요
+        </div>
+      )}
+
+      {layout && (
+        <div className="absolute inset-0 z-[450] pointer-events-none">
+          {/* 동 이름·시세 (멀리서 볼 때) */}
+          {layout.dongs.map(({ d, i, p, s }) => {
+            const v = val(d, metric.id)
             return (
-              <path key={i} d={d.d} fill={fill} fillOpacity={t.k < Z_PRICE ? 1 : 0.35}
-                stroke="var(--surface)" strokeWidth={1.2} vectorEffect="non-scaling-stroke" />
+              <div key={i} className="absolute -translate-x-1/2 -translate-y-1/2 text-center leading-tight whitespace-nowrap"
+                style={{ left: p.x, top: p.y, textShadow: '0 0 3px var(--surface), 0 0 3px var(--surface), 0 0 2px var(--surface)' }}>
+                <div className="text-[12px] font-bold" style={{ color: 'var(--ink)' }}>{d.n}</div>
+                {v !== null && s > 60 && <div className="text-[11px] mono font-semibold" style={{ color: 'var(--ink)' }}>{fmtRegion(metric, v)}</div>}
+              </div>
             )
           })}
-          <path d={file.outline} fill="none" stroke="var(--ink)" strokeWidth={1.2} vectorEffect="non-scaling-stroke" pointerEvents="none" />
-        </g>
 
-        {/* 동 이름 (멀리서는 시세까지, 확대하면 흐리게 배경으로) */}
-        {file.dongs.map((d, i) => {
-          const x = d.l[0] * t.k + t.x, y = d.l[1] * t.k + t.y
-          if (x < -40 || x > W + 40 || y < -20 || y > H + 20) return null
-          const size = Math.sqrt(d.a) * t.k
-          const fs = 11
-          if (size < d.n.length * fs * 0.8) return null
-          const far = t.k < Z_PRICE
-          const fill = fillOf(metric, val(d, metric.id), dongVals)
-          const v = val(d, metric.id)
-          return (
-            <g key={i} pointerEvents="none" transform={`translate(${x},${y})`} opacity={far ? 1 : 0.45}>
-              <text textAnchor="middle" y={far && v !== null ? -5 : 0} dominantBaseline="middle" fontSize={fs} fontWeight={700}
-                fill={far ? textOn(fill) : 'var(--ink-2)'}>{d.n}</text>
-              {far && v !== null && size > 46 && (
-                <text textAnchor="middle" y={9} dominantBaseline="middle" fontSize={10} className="mono" fill={textOn(fill)}>{fmtRegion(metric, v)}</text>
-              )}
-            </g>
-          )
-        })}
+          {/* 역 이름 */}
+          {layout.stns.map(({ s, p }) => (
+            <div key={`${s.n}${s.la}`} className="absolute whitespace-nowrap text-[11px] font-semibold leading-[14px]"
+              style={{ left: p.x + 6, top: p.y - 7, color: 'var(--ink)',
+                textShadow: '0 0 2px var(--surface), 0 0 2px var(--surface), 0 0 3px var(--surface), 0 0 3px var(--surface)' }}>
+              {s.n}
+            </div>
+          ))}
 
-        {/* 단지 점 */}
-        {dots.map(a => {
-          const fill = fillOf(metric, val(a, metric.id), aptVals)
-          return (
-            <circle key={a.i} cx={a.x * t.k + t.x} cy={a.y * t.k + t.y} r={a.i === selected ? r + 2 : r}
-              fill={a.p === undefined ? 'var(--surface)' : fill} stroke={a.i === selected ? 'var(--ink)' : 'var(--ink-2)'}
-              strokeWidth={a.i === selected ? 2 : 0.8} strokeDasharray={a.ap ? '1.5 1' : undefined}
-              style={{ cursor: 'pointer' }}
-              onPointerEnter={e => { const b = boxRef.current?.getBoundingClientRect(); if (b) setHover({ a, x: e.clientX - b.left, y: e.clientY - b.top }) }}
-              onPointerLeave={() => setHover(null)}
-              onClick={e => { e.stopPropagation(); if (clickable()) onPick(a.i) }} />
-          )
-        })}
+          {/* 단지 점 */}
+          {layout.dots.map(({ a, p }) => {
+            const on = a.i === selected
+            const v = val(a, metric.id)
+            const rr = on ? r + 2.5 : r
+            return (
+              <button key={a.i} type="button" aria-label={a.n}
+                className="absolute pointer-events-auto rounded-full"
+                style={{
+                  left: p.x - rr, top: p.y - rr, width: rr * 2, height: rr * 2,
+                  background: v === null ? 'var(--surface)' : fillOf(metric, v, aptVals),
+                  border: `${on ? 2 : 1}px ${a.ap ? 'dashed' : 'solid'} ${on ? 'var(--ink)' : 'var(--ink-2)'}`,
+                }}
+                onPointerEnter={e => { const b = boxRef.current?.getBoundingClientRect(); if (b) setHover({ a, x: e.clientX - b.left, y: e.clientY - b.top }) }}
+                onPointerLeave={() => setHover(null)}
+                onClick={e => { e.stopPropagation(); onPick(a.i) }} />
+            )
+          })}
 
-        {/* 단지 라벨 */}
-        {labels.map(({ a, x, y, w, h, two }) => {
-          const v = val(a, metric.id)
-          const price = a.p !== undefined ? fmtWon(a.p) : `${fmtWon(a.t[2])}*`
-          const on = a.i === selected
-          return (
-            <g key={a.i} transform={`translate(${x},${y})`} style={{ cursor: 'pointer' }}
-              onClick={e => { e.stopPropagation(); if (clickable()) onPick(a.i) }}>
-              <rect width={w} height={h} fill="var(--surface)" stroke={on ? 'var(--ink)' : 'var(--hairline-2)'} strokeWidth={on ? 1.5 : 1} opacity={0.94} />
-              {two && <text x={4} y={9} dominantBaseline="middle" fontSize={10} fontWeight={700} fill="var(--ink)">{a.n.length > 9 ? a.n.slice(0, 8) + '…' : a.n}</text>}
-              <text x={4} y={two ? 20 : 7.5} dominantBaseline="middle" fontSize={9.5} className="mono" fill="var(--ink)">
-                <tspan fontWeight={700}>{price}</tspan>
-                {two && metric.id !== 'p84' && v !== null && (
-                  <tspan dx={4} fill={v >= 0 || (metric.id === 'p84_dd' && v > -3) ? 'var(--up-text)' : 'var(--down-text)'}>{fmtRegion(metric, v)}</tspan>
-                )}
-              </text>
-            </g>
-          )
-        })}
-        {sel && t.k < Z_PRICE && (
-          <circle cx={sel.x * t.k + t.x} cy={sel.y * t.k + t.y} r={9} fill="none" stroke="var(--ink)" strokeWidth={1.5} pointerEvents="none" />
-        )}
-      </svg>
+          {/* 단지 라벨 */}
+          {layout.labels.map(({ a, p, w, h, two }) => {
+            const v = val(a, metric.id)
+            const on = a.i === selected
+            return (
+              <button key={a.i} type="button" onClick={e => { e.stopPropagation(); onPick(a.i) }}
+                className="absolute pointer-events-auto text-left px-[5px] leading-[13px] mono whitespace-nowrap overflow-hidden"
+                style={{
+                  left: p.x, top: p.y, width: w, height: h, fontSize: 10.5, color: 'var(--ink)',
+                  background: 'var(--surface)', border: `${on ? 1.5 : 1}px solid ${on ? 'var(--ink)' : 'var(--hairline-2)'}`,
+                  boxShadow: '0 1px 2px rgba(0,0,0,.12)',
+                }}>
+                {two && <span className="block font-sans font-bold truncate pt-[1px]" style={{ fontSize: 11 }}>{short(a.n)}</span>}
+                <span className={two ? '' : 'block pt-[1px]'}>
+                  <b>{a.p !== undefined ? fmtWon(a.p) : `${fmtWon(a.t[2])}*`}</b>
+                  {two && metric.id !== 'p84' && v !== null && (
+                    <span className="ml-1" style={{ color: v >= 0 || (metric.id === 'p84_dd' && v > -3) ? 'var(--up-text)' : 'var(--down-text)' }}>{fmtRegion(metric, v)}</span>
+                  )}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      )}
 
-      {/* 확대·축소 버튼 */}
-      <div className="absolute right-2 top-2 flex flex-col" style={{ border: '1px solid var(--hairline-2)', background: 'var(--surface)' }}>
-        {([['+', 2], ['−', 0.5]] as const).map(([s, f]) => (
-          <button key={s} type="button" className="w-7 h-7 text-sm font-bold" style={{ color: 'var(--ink)' }} aria-label={f > 1 ? '확대' : '축소'}
-            onClick={() => setT(cur => zoomAt({ x: W / 2, y: H / 2 }, f, cur))}>{s}</button>
-        ))}
-        <button type="button" className="w-7 h-7 text-[10px]" style={{ color: 'var(--ink-mute)', borderTop: '1px solid var(--hairline)' }}
-          aria-label="처음 크기로" onClick={() => setT({ k: 1, x: 0, y: 0 })}>⤢</button>
-      </div>
-      <div className="absolute left-2 bottom-2 px-1.5 py-0.5 text-[10px]" style={{ background: 'var(--surface)', color: 'var(--ink-mute)' }}>
-        {t.k < Z_PRICE ? '확대하면 단지 시세가 보여요' : t.k < Z_NAME ? '더 확대하면 단지 이름까지' : '* 시세 없는 단지는 마지막 거래가'}
+      <button type="button" onClick={() => mapRef.current?.fitBounds(file.bounds, { padding: [12, 12] })}
+        className="absolute right-2 top-2 z-[460] px-2 py-1 text-[10px] font-semibold"
+        style={{ background: 'var(--surface)', color: 'var(--ink)', border: '1px solid var(--hairline-2)' }}>
+        {file.name} 전체
+      </button>
+      <div className="absolute left-2 bottom-5 z-[460] px-1.5 py-0.5 text-[10px]" style={{ background: 'var(--surface)', color: 'var(--ink-mute)' }}>
+        {far ? '확대하면 단지 시세가 보여요' : view && view.z < Math.min(view.fit + Z_NAME, 16) ? '더 확대하면 단지 이름까지' : '* 시세 없는 단지는 마지막 거래가'}
       </div>
 
-      {hover && !drag.current && (
-        <div className="pointer-events-none absolute z-20 w-[210px] p-2 text-[11px]"
+      {hover && (
+        <div className="pointer-events-none absolute z-[470] w-[210px] p-2 text-[11px]"
           style={{ left: Math.min(hover.x + 12, (boxRef.current?.clientWidth ?? 400) - 220), top: hover.y + 12,
             background: 'var(--surface)', border: '1px solid var(--ink)', boxShadow: '0 4px 14px rgba(0,0,0,.12)' }}>
           <AptLine a={hover.a} dong={file.dongs[hover.a.g]?.n} />
@@ -278,6 +307,8 @@ export function AptMap({ file, metric, selected, focusReq, onPick }: {
     </div>
   )
 }
+
+const short = (n: string) => (n.length > 10 ? n.slice(0, 9) + '…' : n)
 
 function AptLine({ a, dong }: { a: Apt; dong?: string }) {
   const st = aptStatus(a)
@@ -381,7 +412,7 @@ export function AptDetail({ file, seq, onClose }: { file: AptFile; seq: string; 
         <div>
           <div className="text-sm font-bold" style={{ color: 'var(--ink)' }}>{a.n}</div>
           <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>
-            {file.full} {file.dongs[a.g]?.n}{a.b ? ` · ${a.b}년 준공` : ''}{a.ap ? ' · 지도 위치는 대략' : ''}
+            {file.full} {file.dongs[a.g]?.n}{a.b ? ` · ${a.b}년 준공` : ''}{a.ap ? ' · 위치를 못 찾아 지도엔 안 보여요' : ''}
           </div>
         </div>
         <button type="button" onClick={onClose} className="text-[11px] px-1 shrink-0" style={{ color: 'var(--ink-mute)' }}>목록 ✕</button>

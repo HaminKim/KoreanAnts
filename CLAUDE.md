@@ -54,8 +54,10 @@ GitHub `HaminKim/KoreanAnts` (**공개 레포** — 비밀값·개인 정보는 
   - 동은 클릭 단위가 아니라 배경 (사용자 결정). 휠·드래그·핀치로 확대: 멀리선 동별 시세, 확대하면 단지 시세, 더 확대하면 단지 이름까지
   - `build_trades.py` 가 수도권은 모든 구·시·군 실거래를 받음 (apts.csv 에 umd·지번·도로명 추가) → `py scripts/house/build_apts.py [--geocode]` → `public/data/house/apt/{단위}.json`, `{단위}_h.json`, `index.json`
   - 단지 시세 = 직전 12개월 ㎡당 실거래 중앙값 × 84 (전용 30~200㎡, 3건 이상), 흐름은 분기 말마다. 최근 5년 거래 없는 단지 제외
-  - 좌표: 브이월드 지오코더(`VWORLD_API_KEY`, EPSG:5179) 캐시 `processed/house/apt_xy.csv`. 키 없거나 못 찾으면 법정동→행정동 연결표로 동 안에 대략 배치(점선 테두리)
+  - 좌표: 브이월드 지오코더(`VWORLD_API_KEY`, EPSG:5179) 캐시 `processed/house/apt_xy.csv`. 파일은 위경도(자체 TM 역변환). 못 찾은 단지(`ap`)는 지도에 안 찍고 목록에만 (어긋나 보인다는 사용자 피드백)
+  - 배경지도: 브이월드 white 타일(`NEXT_PUBLIC_VWORLD_KEY`, Vercel 환경변수) 을 흑백·반투명으로, 구 밖은 페이지 배경으로 가림 (사용자 결정: 그 구만, 사이트 톤 유지)
   - 프론트 `app/house/apts.tsx`
+  - 전철 노선·역 (사용자 요청: 흐린 배경지도와 달리 노선 색 그대로): `py scripts/house/build_subway.py` → `public/data/house/subway.json` (OpenStreetMap Overpass, ODbL — 지도에 '전철 © OpenStreetMap' 표시. 노선 바뀔 때만)
 - 경매 신청 (대법원 등기정보광장 Open API, 2010~, 집합건물): `py scripts/house/build_auction.py [--fetch-only|--no-fetch]` → RAW `processed/house/raw/auction/{auction|forced}_{시도코드}.csv`
   - 키: `IROS_AUCTION_KEY`(임의경매, 서비스 0000000083) · `IROS_FORCED_KEY`(강제경매, 0000000087). 키마다 하루 1,000번, 한 번에 12개월까지, **24개월마다 재발급**(2028-10 경), 3개월 미사용 시 삭제
   - 시도 코드: 서울 900·부산 800·대구 600·인천 1100·전남광주 1200·대전 700·울산 1000·세종 1700·경기 200·강원 100·충북 1600·충남 1500·전북 1300·경북 400·경남 300·제주 1400 (동시 호출 많으면 연결 끊김 → 천천히)

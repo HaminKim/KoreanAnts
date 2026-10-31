@@ -10,7 +10,7 @@ build_trades.py 다음에 실행. 결과
   public/data/house/apt/index.json     단지 지도가 있는 단위 목록
 단위 = 수도권 지도의 맨 아래 단위 (서울 구, 경기 일반구·시·군, 생활권)
 시세 = 직전 12개월 실거래 ㎡당 가격 중앙값 × 84 (전용 30~200㎡, 3건 이상). 흐름은 분기 말마다 같은 방식
-좌표는 EPSG:5179 (build_local_map.py 경계와 같은 평면좌표)
+계산은 EPSG:5179 (build_local_map.py 경계와 같은 미터 평면좌표), 파일에는 위경도 — 화면에서 브이월드 배경지도 위에 그림
 """
 import csv
 import json
@@ -20,6 +20,7 @@ import sys
 import tempfile
 import time
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from pathlib import Path
 
@@ -31,7 +32,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 from build_local import now  # noqa: E402
-from build_local_map import EMD_SRC, bbox, dissolve, fetch, label_of, parse_wkb, ring_area, to_path  # noqa: E402
+from build_local_map import EMD_SRC, bbox, dissolve, dp, fetch, label_of, parse_wkb, ring_area  # noqa: E402
 from build_trades import CAPITAL, MIX, RAW_DIR, load_raw, log  # noqa: E402
 
 GEO_DIR = ROOT / "public" / "data" / "house" / "local"
@@ -40,14 +41,64 @@ XY = ROOT / "processed" / "house" / "apt_xy.csv"
 VKEY = os.environ.get("VWORLD_API_KEY", "").strip()
 SIDO_FULL = {"seoul": "서울특별시", "incheon": "인천광역시", "gyeonggi": "경기도"}
 
-WIDTH, PAD = 640, 14
-TOL = 0.35                 # 경계 단순화 (px)
+TOL = 6                    # 경계 단순화 (m)
 AREA_MIN, AREA_MAX = 30, 200
 WIN = 12                   # 시세 창 (개월)
 MIN_N = 3                  # 창 안에 이만큼 거래가 있어야 시세를 냄
 ALIVE = 60                 # 최근 이만큼(개월) 거래가 없는 단지는 빼기 (재건축 등으로 사라진 단지)
 LAST_TRADES = 15           # 단지 상세에 넣을 최근 거래 수 (화면에 15건)
 SQM = 84
+
+
+# ─────────────────────────────────────────────────────────────
+# EPSG:5179 (GRS80 TM, 원점 38°N 127.5°E) → 위경도. 브이월드 epsg:4326 결과와 1cm 안으로 같음
+# ─────────────────────────────────────────────────────────────
+_A, _F = 6378137.0, 1 / 298.257222101
+_E2 = _F * (2 - _F)
+_EP2 = _E2 / (1 - _E2)
+_LAT0, _LON0, _K0, _FE, _FN = math.radians(38), math.radians(127.5), 0.9996, 1_000_000, 2_000_000
+
+
+def _meridian(p):
+    e2, e4, e6 = _E2, _E2 ** 2, _E2 ** 3
+    return _A * ((1 - e2 / 4 - 3 * e4 / 64 - 5 * e6 / 256) * p - (3 * e2 / 8 + 3 * e4 / 32 + 45 * e6 / 1024) * math.sin(2 * p)
+                 + (15 * e4 / 256 + 45 * e6 / 1024) * math.sin(4 * p) - (35 * e6 / 3072) * math.sin(6 * p))
+
+
+_M0 = _meridian(_LAT0)
+_E1 = (1 - math.sqrt(1 - _E2)) / (1 + math.sqrt(1 - _E2))
+
+
+def latlng(pt):
+    x, y = pt
+    mu = (_M0 + (y - _FN) / _K0) / (_A * (1 - _E2 / 4 - 3 * _E2 ** 2 / 64 - 5 * _E2 ** 3 / 256))
+    e1 = _E1
+    p1 = (mu + (3 * e1 / 2 - 27 * e1 ** 3 / 32) * math.sin(2 * mu) + (21 * e1 ** 2 / 16 - 55 * e1 ** 4 / 32) * math.sin(4 * mu)
+          + (151 * e1 ** 3 / 96) * math.sin(6 * mu) + (1097 * e1 ** 4 / 512) * math.sin(8 * mu))
+    s, c, t = math.sin(p1), math.cos(p1), math.tan(p1)
+    c1, t1 = _EP2 * c * c, t * t
+    n1 = _A / math.sqrt(1 - _E2 * s * s)
+    r1 = _A * (1 - _E2) / (1 - _E2 * s * s) ** 1.5
+    d = (x - _FE) / (n1 * _K0)
+    lat = p1 - (n1 * t / r1) * (d ** 2 / 2 - (5 + 3 * t1 + 10 * c1 - 4 * c1 ** 2 - 9 * _EP2) * d ** 4 / 24
+                                + (61 + 90 * t1 + 298 * c1 + 45 * t1 ** 2 - 252 * _EP2 - 3 * c1 ** 2) * d ** 6 / 720)
+    lon = _LON0 + (d - (1 + 2 * t1 + c1) * d ** 3 / 6 + (5 - 2 * c1 + 28 * t1 - 3 * c1 ** 2 + 8 * _EP2 + 24 * t1 ** 2) * d ** 5 / 120) / c
+    return [round(math.degrees(lat), 5), round(math.degrees(lon), 5)]
+
+
+def rings_ll(polys):
+    """폴리곤들 → 단순화한 위경도 링 목록 (구멍 포함, 화면에서 evenodd 로 채움)"""
+    out = []
+    for poly in polys:
+        for ring in poly:
+            pts = ring[:-1] if ring[0] == ring[-1] else ring
+            if len(pts) < 3 or ring_area(pts) < 400:
+                continue
+            far = max(range(len(pts)), key=lambda k: (pts[k][0] - pts[0][0]) ** 2 + (pts[k][1] - pts[0][1]) ** 2)
+            sp = dp(pts[:far + 1], TOL)[:-1] + dp(pts[far:] + [pts[0]], TOL)[:-1]
+            if len(sp) >= 3:
+                out.append([latlng(q) for q in sp])
+    return out
 
 
 # ─────────────────────────────────────────────────────────────
@@ -137,15 +188,21 @@ def sgg_full(fid, geo, sgg):
 def geocode(todo, xy):
     """todo: [(key, 지번 주소, 도로명 주소)]"""
     log(f"  · 좌표 찾을 단지 {len(todo):,}개")
-    for i, (key, parcel, road) in enumerate(todo, 1):
+
+    def one(job):
+        key, parcel, road = job
         p = vworld(parcel, "parcel") if parcel else None
         src = "parcel"
         if p is None and road:
             p, src = vworld(road, "road"), "road"
-        xy[key] = {"key": key, "x": f"{p[0]:.1f}", "y": f"{p[1]:.1f}", "src": src} if p else {"key": key, "src": "fail"}
-        if i % 200 == 0:
-            save_xy(xy)
-            log(f"    … {i:,}/{len(todo):,}")
+        return key, p, src
+
+    with ThreadPoolExecutor(4) as ex:
+        for i, (key, p, src) in enumerate(ex.map(one, todo), 1):
+            xy[key] = {"key": key, "x": f"{p[0]:.1f}", "y": f"{p[1]:.1f}", "src": src} if p else {"key": key, "src": "fail"}
+            if i % 200 == 0:
+                save_xy(xy)
+                log(f"    … {i:,}/{len(todo):,}")
     save_xy(xy)
 
 
@@ -307,19 +364,18 @@ def main():
 def build_leaf(fid, uid, u, geo, codes, emds, df, apt_rows, end, qends, qlabels, index):
     polys_all = [p for c in codes for p in emds[c]["polys"]]
     x0, y0, x1, y1 = bbox([pt for p in polys_all for pt in p[0]])
-    s = (WIDTH - 2 * PAD) / max(x1 - x0, (y1 - y0) * 0.8)
-    height = round((y1 - y0) * s + 2 * PAD)
-    proj = lambda p: ((p[0] - x0) * s + PAD, (y1 - p[1]) * s + PAD)  # noqa: E731
+    ident = lambda q: q  # noqa: E731
 
     sub = df[df["code"].isin(codes)]
-    dongs, dong_idx = [], {}
+    dongs, dong_idx, centers = [], {}, {}
     for c in sorted(codes, key=lambda c: emds[c]["name"]):
         e = emds[c]
         g = sub[sub["code"] == c]
         sm, _ = summary(g["m"].to_numpy(), g["pp"].to_numpy(), end, qends)
         dong_idx[c] = len(dongs)
-        dongs.append(dict(n=e["name"], d=to_path(e["polys"], proj, TOL), l=label_of(e["polys"], proj),
-                          a=round(sum(ring_area(p[0]) for p in e["polys"]) * s * s), **sm))
+        area = sum(ring_area(p[0]) for p in e["polys"])
+        centers[c] = (label_of(e["polys"], ident), area)
+        dongs.append(dict(n=e["name"], r=rings_ll(e["polys"]), l=latlng(centers[c][0]), a=round(area), **sm))
 
     # 좌표 없는 단지: 동 중심에서 해바라기 배치 (거래 많은 단지가 가운데)
     by_dong = defaultdict(list)
@@ -330,8 +386,8 @@ def build_leaf(fid, uid, u, geo, codes, emds, df, apt_rows, end, qends, qlabels,
     approx = {}
     for c, seqs in by_dong.items():
         seqs.sort(key=lambda q: -cnt.get(q, 0))
-        lx, ly = dongs[dong_idx[c]]["l"]
-        r0 = math.sqrt(dongs[dong_idx[c]]["a"] / math.pi) * 0.55
+        (lx, ly), area = centers[c]
+        r0 = math.sqrt(area / math.pi) * 0.55
         for i, q in enumerate(seqs):
             rr = r0 * math.sqrt((i + 0.5) / len(seqs))
             t = i * 2.39996
@@ -343,10 +399,10 @@ def build_leaf(fid, uid, u, geo, codes, emds, df, apt_rows, end, qends, qlabels,
         if a is None:
             continue
         sm, flow = summary(g["m"].to_numpy(), g["pp"].to_numpy(), end, qends)
-        x, y = proj(a["pt"]) if a["pt"] else approx[seq]
+        la, lo = latlng(a["pt"] or approx[seq])
         g = g.sort_values(["m", "day"])
         lt = g.iloc[-1]
-        rec = dict(i=seq, n=a["name"], x=round(x, 1), y=round(y, 1), g=dong_idx[a["code"]],
+        rec = dict(i=seq, n=a["name"], la=la, lo=lo, g=dong_idx[a["code"]],
                    b=int(lt["built"]) if str(lt["built"]).isdigit() else None,
                    t=[mstr(int(lt["m"])), float(lt["area"]), int(lt["price"]), str(lt["floor"])], **sm)
         if a["pt"] is None:
@@ -363,7 +419,7 @@ def build_leaf(fid, uid, u, geo, codes, emds, df, apt_rows, end, qends, qlabels,
     total, _ = summary(sub["m"].to_numpy(), sub["pp"].to_numpy(), end, qends)
     out = dict(
         id=uid, name=u["name"], full=u["full"], sido=geo["ko"], fid=fid, asOf=mstr(end), generatedAt=now(),
-        viewBox=[0, 0, WIDTH, height], outline=to_path(dissolve(polys_all), proj, TOL),
+        bounds=[latlng((x0, y0)), latlng((x1, y1))], outline=rings_ll(dissolve(polys_all)),
         sum=total, dongs=dongs, apts=apts,
     )
     (OUT_DIR / f"{uid}.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

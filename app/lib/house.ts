@@ -135,9 +135,9 @@ export interface AptSum {
   down?: 1                // 3개월 연속 하락
   c: number               // 최근 12개월 거래 수
 }
-export interface AptDong extends AptSum { n: string; d: string; l: [number, number]; a: number }
+export interface AptDong extends AptSum { n: string; r: [number, number][][]; l: [number, number]; a: number }   // r: 경계 링(위경도), l: 이름 위치, a: 넓이(㎡)
 export interface Apt extends AptSum {
-  i: string; n: string; x: number; y: number
+  i: string; n: string; la: number; lo: number
   g: number               // dongs 의 번호
   b: number | null        // 준공 연도
   t: [string, number, number, string]   // 마지막 거래: 달, 전용㎡, 금액(만원), 층
@@ -145,13 +145,16 @@ export interface Apt extends AptSum {
 }
 export interface AptFile {
   id: string; name: string; full: string; sido: string; fid: string; asOf: string; generatedAt: string
-  viewBox: [number, number, number, number]; outline: string; sum: AptSum; dongs: AptDong[]; apts: Apt[]
+  bounds: [[number, number], [number, number]]; outline: [number, number][][]; sum: AptSum; dongs: AptDong[]; apts: Apt[]
 }
 export interface AptHist {
   q: string[]             // 흐름의 달 (분기 말 + 마지막 달)
   apts: Record<string, { s: number; v: (number | null)[]; t: [string, number, number, string, number][] }>   // t: 달, 일, 전용㎡, 층, 금액
 }
 export interface AptIndex { generatedAt: string; asOf: string; units: Record<string, { fid: string; n: number }> }
+// 수도권 전철 노선·역 (scripts/house/build_subway.py, OpenStreetMap)
+export interface SubwayStation { n: string; la: number; lo: number; c: string[] }
+export interface Subway { lines: { n: string; c: string; p: [number, number][][] }[]; stations: SubwayStation[] }
 
 // ─────────────────────────────────────────
 // 로딩 — 실패 시 localStorage 캐시로 폴백 (빈 화면 금지)
@@ -196,6 +199,7 @@ export const loadLocalGeo = (fid: string) => once<LocalGeo>(`/data/house/local/g
 export const loadAptIndex = () => once<AptIndex>('/data/house/apt/index.json', true)
 export const loadApt = (uid: string) => once<AptFile>(`/data/house/apt/${uid}.json`, true)
 export const loadAptHist = (uid: string) => once<AptHist>(`/data/house/apt/${uid}_h.json`, false)
+export const loadSubway = () => once<Subway>('/data/house/subway.json', true)
 
 export function unpack(p: Packed | undefined): [string, number][] {
   if (!p) return []

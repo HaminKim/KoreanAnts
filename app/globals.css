@@ -147,3 +147,15 @@ body {
   transform: translateX(-50%);
   width: min(calc(100vw - 32px), 1320px);
 }
+
+/* ── 부동산 단지 지도 (app/house/apts.tsx): 배경지도는 무채색·옅게, Leaflet 기본 장식은 사이트 톤으로 ── */
+.apt-map .leaflet-container { background: var(--surface); font: inherit; }
+.apt-map .leaflet-tile-pane { filter: grayscale(1) contrast(1.05) brightness(1.03); opacity: .5; }
+@media (prefers-color-scheme: dark) {
+  .apt-map .leaflet-tile-pane { filter: grayscale(1) invert(1) brightness(.9) contrast(1.1); opacity: .45; }
+}
+.apt-map .leaflet-bar { border: 1px solid var(--hairline-2); border-radius: 0; box-shadow: none; }
+.apt-map .leaflet-bar a,
+.apt-map .leaflet-bar a:hover { background: var(--surface); color: var(--ink); border-bottom: 1px solid var(--hairline); border-radius: 0; width: 28px; height: 28px; line-height: 26px; }
+.apt-map .leaflet-control-attribution { background: transparent; color: var(--ink-mute); font-size: 9px; }
+.apt-map .leaflet-control-attribution a { color: var(--ink-mute); }
