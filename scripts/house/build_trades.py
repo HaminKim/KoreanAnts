@@ -14,7 +14,9 @@ build_local.py 다음에 실행 (local/{시도}.json 에 생활권 단위를 덧
     - 수준 보정: 최근 1년 [시 기준값 × 84 / 부동산원 시 집값] 중앙값 — 금액은 실거래 수준, 흐름은 부동산원
   → 생활권끼리의 차이·흐름이 시 전체와 따로 놀지 않음. 부동산원 값이 없는 군은 실거래 중앙값 그대로
 RAW: processed/house/raw/trades/{시군구}/{연도}.csv (해지된 거래 제외, 지난 해 파일은 안 바뀜)
-     umd = 법정동코드 뒤 5자리, seq = 단지번호(시군구 접두어 뺌), 단지 이름은 {시군구}/apts.csv
+     umd = 법정동코드 뒤 5자리, seq = 단지번호(시군구 접두어 뺌)
+     단지 정보는 {시군구}/apts.csv (seq, apt, umd, jibun, road — 지번·도로명은 좌표 찾기용)
+수도권(서울·인천·경기)은 생활권 시뿐 아니라 모든 구·시·군을 받음 → build_apts.py 가 단지별 지도에 씀
 """
 import csv
 import io
@@ -53,6 +55,8 @@ MIN_N = 5              # 창 안에 이만큼 거래가 있어야 값을 냄
 APT_CAP = 0.15         # 한 단지가 창 안 거래에서 차지할 수 있는 최대 비중
 SQM = 84
 COLS = ["ym", "day", "umd", "seq", "area", "price", "floor", "built"]
+APT_COLS = ["seq", "apt", "umd", "jibun", "road"]
+CAPITAL = ("seoul", "incheon", "gyeonggi")   # 단지별 지도를 그리는 시도 — 모든 구·시·군 실거래를 받음
 
 
 def log(msg):
@@ -188,14 +192,29 @@ def fetch_month(sgg, ym, budget):
             if g.get("cdealType"):          # 해지된 거래
                 continue
             seq = g.get("aptSeq", "").removeprefix(sgg + "-")
+            road = g.get("roadNm", "")
+            bon, bu = g.get("roadNmBonbun", "").lstrip("0"), g.get("roadNmBubun", "").lstrip("0")
+            if road and bon:
+                road += f" {bon}" + (f"-{bu}" if bu else "")
             rows.append([
                 ym, g.get("dealDay", ""), g.get("umdCd", ""), seq,
                 g.get("excluUseAr", ""), g.get("dealAmount", "").replace(",", ""), g.get("floor", ""), g.get("buildYear", ""),
-                g.get("aptNm", ""),
+                g.get("aptNm", ""), g.get("jibun", ""), road,
             ])
         if page * 1000 >= total or not items:
             return rows
         page += 1
+
+
+def capital_sggs(geos):
+    """수도권의 실거래 조회 단위: 구가 있는 시는 구, 생활권 시는 시, 나머지 시·군·구는 그대로"""
+    out = []
+    for fid in CAPITAL:
+        units = geos[fid]["units"]
+        parents = {u.get("parent") for u in units.values()}
+        out += [k for k, u in units.items() if u.get("kind") != "area" and (k not in parents or any(
+            v.get("kind") == "area" and v.get("parent") == k for v in units.values()))]
+    return out
 
 
 def months(a, b):
@@ -220,10 +239,14 @@ def load_raw(sgg):
 
 
 def save_apts(sgg, df):
-    """단지번호 → 단지 이름 (새로 본 단지만 추가, 이름이 바뀌면 최신으로)"""
+    """단지번호 → 단지 이름·주소 (새로 본 단지만 추가, 바뀌면 최신으로 — 비어 있는 칸은 이전 값 유지)"""
     path = RAW_DIR / sgg / "apts.csv"
-    old = pd.read_csv(path, dtype=str, keep_default_na=False) if path.exists() else pd.DataFrame(columns=["seq", "apt"])
-    out = pd.concat([old, df]).drop_duplicates("seq", keep="last").sort_values("seq")
+    old = pd.read_csv(path, dtype=str, keep_default_na=False) if path.exists() else pd.DataFrame(columns=APT_COLS)
+    old = old.reindex(columns=APT_COLS, fill_value="")
+    df = df.drop_duplicates("seq", keep="last").set_index("seq")
+    old = old.drop_duplicates("seq", keep="last").set_index("seq")
+    out = df.replace("", pd.NA).combine_first(old.replace("", pd.NA)).fillna("").reset_index()[APT_COLS]
+    out = out.sort_values("seq")
     path.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(path, index=False)
 
@@ -275,8 +298,9 @@ def update_raw(sggs, budget):
     for s, mm in got.items():
         old = load_raw(s)
         old = old[~old["ym"].isin(mm.keys())]
-        new = pd.DataFrame([r for rs in mm.values() for r in rs], columns=COLS + ["apt"])
-        save_apts(s, new[["seq", "apt"]])
+        new = pd.DataFrame([r for rs in mm.values() for r in rs], columns=COLS + ["apt", "jibun", "road"])
+        # 최근 거래의 이름·주소가 남게 달 순서로
+        save_apts(s, new.sort_values(["ym", "day"])[APT_COLS])
         save_raw(s, pd.concat([old, new[COLS]], ignore_index=True))
         man[s] = sorted(set(man.get(s, [])) | set(mm))
     RAW_DIR.mkdir(parents=True, exist_ok=True)
@@ -399,7 +423,8 @@ def main():
     budget = Budget(int(sys.argv[sys.argv.index("--max-calls") + 1]) if "--max-calls" in sys.argv else 9000)
     mix = load_mix()
     geos = {p.stem[4:]: json.loads(p.read_text(encoding="utf-8")) for p in sorted(OUT_DIR.glob("geo_*.json"))}
-    sggs = sorted({u["parent"] for g in geos.values() for u in g["units"].values() if u.get("kind") == "area"})
+    sggs = {u["parent"] for g in geos.values() for u in g["units"].values() if u.get("kind") == "area"}
+    sggs = sorted(sggs | set(capital_sggs(geos)))
     unknown = [s for s in AREAS if s not in sggs]
     if unknown:
         log(f"  ! 지도에 없는 생활권 시군구: {unknown} — build_local_map.py 먼저")

@@ -125,6 +125,34 @@ export interface LocalIndex {
   regions: Record<string, LocalSummary>
 }
 
+// 수도권 단지별 지도 (scripts/house/build_apts.py) — 시세 = 직전 12개월 실거래 ㎡당 가격 중앙값 × 84 (만원)
+export interface AptSum {
+  p?: number              // 시세 (84㎡ 환산)
+  pk?: number             // 고점 시세
+  pd?: string             // 고점 달 'YYYY-MM'
+  dd?: number             // 고점 대비 (%)
+  yoy?: number            // 1년 변화 (%)
+  down?: 1                // 3개월 연속 하락
+  c: number               // 최근 12개월 거래 수
+}
+export interface AptDong extends AptSum { n: string; d: string; l: [number, number]; a: number }
+export interface Apt extends AptSum {
+  i: string; n: string; x: number; y: number
+  g: number               // dongs 의 번호
+  b: number | null        // 준공 연도
+  t: [string, number, number, string]   // 마지막 거래: 달, 전용㎡, 금액(만원), 층
+  ap?: 1                  // 좌표를 못 찾아 동 안에 대략 놓음
+}
+export interface AptFile {
+  id: string; name: string; full: string; sido: string; fid: string; asOf: string; generatedAt: string
+  viewBox: [number, number, number, number]; outline: string; sum: AptSum; dongs: AptDong[]; apts: Apt[]
+}
+export interface AptHist {
+  q: string[]             // 흐름의 달 (분기 말 + 마지막 달)
+  apts: Record<string, { s: number; v: (number | null)[]; t: [string, number, number, string, number][] }>   // t: 달, 일, 전용㎡, 층, 금액
+}
+export interface AptIndex { generatedAt: string; asOf: string; units: Record<string, { fid: string; n: number }> }
+
 // ─────────────────────────────────────────
 // 로딩 — 실패 시 localStorage 캐시로 폴백 (빈 화면 금지)
 // ─────────────────────────────────────────
@@ -165,6 +193,9 @@ export const loadHouseSeries = (key: string) => once<SeriesData>(`/data/house/se
 export const loadLocalIndex = () => once<LocalIndex>('/data/house/local/index.json', true)
 export const loadLocal = (fid: string) => once<LocalData>(`/data/house/local/${fid}.json`, true)
 export const loadLocalGeo = (fid: string) => once<LocalGeo>(`/data/house/local/geo_${fid}.json`, true)
+export const loadAptIndex = () => once<AptIndex>('/data/house/apt/index.json', true)
+export const loadApt = (uid: string) => once<AptFile>(`/data/house/apt/${uid}.json`, true)
+export const loadAptHist = (uid: string) => once<AptHist>(`/data/house/apt/${uid}_h.json`, false)
 
 export function unpack(p: Packed | undefined): [string, number][] {
   if (!p) return []

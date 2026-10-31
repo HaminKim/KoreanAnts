@@ -76,9 +76,10 @@ export function childrenOf(geo: LocalGeo, uid: string): string[] {
 // ─────────────────────────────────────────
 // 시군구 지도
 // ─────────────────────────────────────────
-export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, onZoom }: {
+export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, onZoom, onApt }: {
   geo: LocalGeo; data: LocalData; parent: string | null; metric: RegionMetric; focus: string | null
   onHover: (uid: string | null) => void; onPick: (uid: string) => void; onZoom: (uid: string) => void
+  onApt?: (uid: string) => boolean   // 단지 지도가 있으면 들어가고 true
 }) {
   const units = geo.units
   const ids = useMemo(
@@ -116,7 +117,7 @@ export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, on
             style={{ cursor: 'pointer', transition: 'fill .2s' }}
             onMouseEnter={() => onHover(id)}
             onClick={() => onPick(id)}
-            onDoubleClick={() => { if (!parent && childrenOf(geo, id).length) onZoom(id) }} />
+            onDoubleClick={() => { if (!parent && childrenOf(geo, id).length) onZoom(id); else onApt?.(id) }} />
         )
       })}
       {focus && units[focus] && ids.includes(focus) && (
@@ -336,8 +337,8 @@ function niceStep(span: number, n: number) {
   return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p
 }
 
-export function PriceChart({ data, fmt, peakLabel, note, height = 180 }: {
-  data: [string, number][]; fmt: (v: number) => string; peakLabel: string; note: string | null; height?: number
+export function PriceChart({ data, fmt, peakLabel, note, height = 180, title = '집값 흐름' }: {
+  data: [string, number][]; fmt: (v: number) => string; peakLabel: string; note: string | null; height?: number; title?: string
 }) {
   const [years, setYears] = useState<number | null>(null)
   const [hover, setHover] = useState<number | null>(null)
@@ -364,7 +365,9 @@ export function PriceChart({ data, fmt, peakLabel, note, height = 180 }: {
 
   const yrs = [...new Set(pts.map(p => p[0].slice(0, 4)))]
   const ys = Math.max(1, Math.ceil(yrs.length / Math.max(2, Math.floor(iw / 56))))
-  const xticks = pts.map((p, i) => [p[0], i] as const).filter(([d]) => d.endsWith('-01') && Number(d.slice(0, 4)) % ys === 0)
+  // 해가 바뀌는 첫 점 (월별이면 1월, 분기별이면 3월)
+  const xticks = pts.map((p, i) => [p[0], i] as const)
+    .filter(([d], i) => i > 0 && pts[i - 1][0].slice(0, 4) !== d.slice(0, 4) && Number(d.slice(0, 4)) % ys === 0)
 
   const pk = vs.indexOf(hi0)
   const lastI = pts.length - 1
@@ -383,7 +386,7 @@ export function PriceChart({ data, fmt, peakLabel, note, height = 180 }: {
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[11px] font-semibold" style={{ color: 'var(--ink-2)' }}>집값 흐름</span>
+        <span className="text-[11px] font-semibold" style={{ color: 'var(--ink-2)' }}>{title}</span>
         <span className="flex gap-1">
           {RANGES.map(r => <Chip key={r.label} on={years === r.years} onClick={() => setYears(r.years)} className="!px-1.5 !py-0.5 !text-[10px]">{r.label}</Chip>)}
         </span>

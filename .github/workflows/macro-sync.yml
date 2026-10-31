@@ -35,6 +35,8 @@ jobs:
       MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
       IROS_AUCTION_KEY: ${{ secrets.IROS_AUCTION_KEY }}
       IROS_FORCED_KEY: ${{ secrets.IROS_FORCED_KEY }}
+      # 수도권 단지 좌표 (없으면 단지를 행정동 안에 대략 배치)
+      VWORLD_API_KEY: ${{ secrets.VWORLD_API_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -43,7 +45,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install deps
-        run: pip install pandas requests yfinance xlrd
+        run: pip install pandas requests yfinance xlrd pyarrow
 
       - name: Check FRED API key
         run: python scripts/macro/check_fred_key.py
@@ -76,6 +78,12 @@ jobs:
         if: github.event_name != 'push'
         continue-on-error: true
         run: python scripts/house/build_trades.py --max-calls 9000
+
+      # 수도권 단지별 지도 (구 안의 행정동·단지 시세) — 위 실거래 RAW 로 계산, 새 단지만 좌표 찾기
+      - name: Build capital-area apartment maps
+        if: github.event_name != 'push'
+        continue-on-error: true
+        run: python scripts/house/build_apts.py --geocode
 
       # 경매 신청을 시군구·구에 붙임 (위 'Fetch' 단계에서 받은 RAW, build_local 이 단위를 새로 만든 뒤라 여기서)
       - name: Attach Korea auction filings

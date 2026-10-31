@@ -7,13 +7,14 @@
 import Link from 'next/link'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  type ApiId, type HouseCatalog, type HouseIndicator, type LocalGeo, type LocalGeoUnit, type LocalIndex, type LocalUnit, type MapGeo, type RegionMetric, type Regions,
-  fillOf, fmtRegion, fmtWon, fmtYm, loadHouseCatalog, loadHouseSeries, loadLocalIndex, loadMap, loadRegions, priceStatus, textOn,
+  type ApiId, type AptIndex, type HouseCatalog, type HouseIndicator, type LocalGeo, type LocalGeoUnit, type LocalIndex, type LocalUnit, type MapGeo, type RegionMetric, type Regions,
+  fillOf, fmtRegion, fmtWon, fmtYm, loadAptIndex, loadHouseCatalog, loadHouseSeries, loadLocalIndex, loadMap, loadRegions, priceStatus, textOn,
 } from '@/app/lib/house'
 import { type Layer, fmtNum, fmtPeriod, tfLabel } from '@/app/lib/macro'
 import MacroChart, { type ChartLayer, type MacroChartHandle, type ShadeBand } from '@/app/components/macro/MacroChart'
 import { Chip, Label, LayerLegend, PERIODS, Sparkline, newLayer, useIsMobile, useSeriesMap } from '@/app/components/macro/ui'
 import { LocalMap, LocalTip, PriceBlock, StatusBadge, childrenOf, localMetrics, localVal, p84Metric, unitData, useLocalFile } from './local'
+import { AptDetail, AptList, AptMap, aptMetrics, aptStatus, useAptFile } from './apts'
 
 const DEFAULT_LAYERS = ['KR_HPI_REAL', 'KR_HHCREDIT_GDP', 'KR_CALL']
 
@@ -165,7 +166,7 @@ function GuidePanel({ cat, api, onClose }: { cat: HouseCatalog; api: ApiId; onCl
 // 지도 — 전국(17개 시도) → 시군구 → 구 드릴다운
 // 누르면 오른쪽에 상세, 더블클릭(또는 상세의 버튼)으로 확대
 // ─────────────────────────────────────────
-type View = { nid: string; fid: string; parent: string | null } | null   // null = 전국
+type View = { nid: string; fid: string; parent: string | null; apt?: string | null } | null   // null = 전국 · apt = 단지 지도로 들어간 맨 아래 단위
 const SEJONG_UID = '36110'
 
 function MapSection({ cat, regions, geo, lidx, onGuide }: {
@@ -177,8 +178,12 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
   const [hover, setHover] = useState<string | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null)
+  const [aidx, setAidx] = useState<AptIndex | null>(null)
+  const [aptSel, setAptSel] = useState<string | null>(null)
+  const [aptFocus, setAptFocus] = useState<{ seq: string; n: number } | null>(null)
   const boxRef = useRef<HTMLDivElement>(null)
   const mobile = useIsMobile()
+  useEffect(() => { loadAptIndex().then(setAidx).catch(() => setAidx(null)) }, [])
 
   const metric = regions.metrics.find(m => m.id === mid) ?? regions.metrics[0]
   const ids = Object.keys(regions.regions).filter(id => geo.regions[id])   // 레지스트리 순서 (서울 → 제주)
@@ -189,11 +194,21 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
   const focus = selected ?? hover
 
   const local = useLocalFile(view?.fid ?? null)
-  const lms = useMemo(() => localMetrics(local.data?.asOf ?? null), [local.data])
+  const apt = useAptFile(view?.apt ?? null)
+  const lms = useMemo(
+    () => (view?.apt ? aptMetrics(apt.file?.asOf ?? null) : localMetrics(local.data?.asOf ?? null)),
+    [view?.apt, apt.file, local.data],
+  )
   const lmetric = lms.find(m => m.id === lmid) ?? lms[0]
 
   const zoomable = (nid: string) => !!lidx?.files[nid]
-  const go = (v: View) => { setView(v); setSelected(null); setHover(null); setPos(null) }
+  const go = (v: View) => { setView(v); setSelected(null); setHover(null); setPos(null); setAptSel(null); setAptFocus(null) }
+  const hasApt = (uid: string) => !!aidx?.units[uid]
+  const enterApt = (uid: string) => {
+    if (!view || !hasApt(uid)) return false
+    go({ ...view, apt: uid })
+    return true
+  }
   const zoomNation = (nid: string) => {
     const f = lidx?.files[nid]
     if (!f) return
@@ -201,7 +216,7 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
     const parent = nid === 'sejong' ? SEJONG_UID : f.unit === 'root' || f.unit === 'jeonnam' ? null : f.unit
     go({ nid, fid: f.file, parent })
   }
-  const zoomLocal = (uid: string) => view && go({ ...view, parent: uid })
+  const zoomLocal = (uid: string) => view && go({ ...view, parent: uid, apt: null })
 
   const onMove = (e: React.MouseEvent) => {
     const r = boxRef.current?.getBoundingClientRect()
@@ -259,14 +274,25 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
               <Crumb on={!view} onClick={() => go(null)}>전국</Crumb>
               {view && <>
                 <span style={{ color: 'var(--ink-mute)' }}>›</span>
-                <Crumb on={!view.parent} onClick={() => go({ ...view, parent: null })}>{lgeo?.ko ?? regions.regions[view.nid]?.ko}</Crumb>
+                <Crumb on={!view.parent && !view.apt} onClick={() => go({ ...view, parent: null, apt: null })}>{lgeo?.ko ?? regions.regions[view.nid]?.ko}</Crumb>
               </>}
               {view?.parent && lgeo?.units[view.parent] && <>
                 <span style={{ color: 'var(--ink-mute)' }}>›</span>
-                <Crumb on>{lgeo.units[view.parent].name}</Crumb>
+                <Crumb on={!view.apt} onClick={() => go({ ...view, apt: null })}>{lgeo.units[view.parent].name}</Crumb>
+              </>}
+              {view?.apt && lgeo?.units[view.apt] && <>
+                <span style={{ color: 'var(--ink-mute)' }}>›</span>
+                <Crumb on>{lgeo.units[view.apt].name}</Crumb>
               </>}
             </nav>
-            {view && area?.sum.p84 !== undefined && (
+            {view?.apt && apt.file?.sum.p !== undefined && (
+              <span className="flex items-center gap-1.5">
+                <span style={{ color: 'var(--ink-mute)' }}>{apt.file.name} 84㎡ 실거래 시세</span>
+                <b className="mono" style={{ color: 'var(--ink)' }}>{fmtWon(apt.file.sum.p)}</b>
+                {aptStatus(apt.file.sum) && <StatusBadge tone={aptStatus(apt.file.sum)!.tone} label={aptStatus(apt.file.sum)!.label} small />}
+              </span>
+            )}
+            {view && !view.apt && area?.sum.p84 !== undefined && (
               <span className="flex items-center gap-1.5">
                 <span style={{ color: 'var(--ink-mute)' }}>{areaName} 84㎡</span>
                 <b className="mono" style={{ color: 'var(--ink)' }}>{fmtWon(area.sum.p84)}</b>
@@ -315,9 +341,20 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
                 )
               })}
             </svg>
+          ) : view.apt ? (
+            apt.file ? (
+              <AptMap key={apt.file.id} file={apt.file} metric={lmetric} selected={aptSel} focusReq={aptFocus} onPick={setAptSel} />
+            ) : (
+              <div className="h-[360px] flex flex-col items-center justify-center gap-3 text-[11px]" style={{ color: 'var(--ink-mute)' }}>
+                {apt.err ? <>
+                  <span>단지 지도를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.</span>
+                  <button type="button" onClick={() => go({ ...view, apt: null })} className="underline">구 지도로 돌아가기</button>
+                </> : '단지 지도 불러오는 중…'}
+              </div>
+            )
           ) : lgeo && ldata ? (
             <LocalMap geo={lgeo} data={ldata} parent={view.parent} metric={lmetric} focus={focus}
-              onHover={setHover} onPick={setSelected} onZoom={zoomLocal} />
+              onHover={setHover} onPick={setSelected} onZoom={zoomLocal} onApt={enterApt} />
           ) : (
             <div className="h-[360px] flex flex-col items-center justify-center gap-3 text-[11px]" style={{ color: 'var(--ink-mute)' }}>
               {local.err ? <>
@@ -337,7 +374,7 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
           )}
 
           {/* 마우스오버 툴팁 (데스크톱) */}
-          {!mobile && hover && pos && (!view
+          {!mobile && hover && pos && !view?.apt && (!view
             ? <RegionTip regions={regions} id={hover} metric={metric} cat={cat} style={{ left: pos.x, top: pos.y }} />
             : lgeo && ldata && lgeo.units[hover] && (
               <LocalTip name={unitName(hover)} unit={unitData(lgeo, ldata, hover)} metrics={lms} metric={lmetric}
@@ -353,13 +390,22 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
               ? <RegionDetail regions={regions} id={selected} metric={metric} cat={cat} lidx={lidx} onGuide={onGuide}
                   onClose={() => setSelected(null)} onZoom={zoomable(selected) ? () => zoomNation(selected) : undefined} />
               : <Ranking regions={regions} metric={metric} ids={ids} onPick={setSelected} cat={cat} onGuide={onGuide} />
+          ) : view.apt ? (
+            !apt.file ? (
+              <div className="py-10 text-center text-[11px]" style={{ color: 'var(--ink-mute)' }}>{apt.err ? '–' : '불러오는 중…'}</div>
+            ) : aptSel ? (
+              <AptDetail file={apt.file} seq={aptSel} onClose={() => setAptSel(null)} />
+            ) : (
+              <AptList key={apt.file.id} file={apt.file} metric={lmetric} onPick={seq => { setAptSel(seq); setAptFocus(f => ({ seq, n: (f?.n ?? 0) + 1 })) }} />
+            )
           ) : !lgeo || !ldata ? (
             <div className="py-10 text-center text-[11px]" style={{ color: 'var(--ink-mute)' }}>{local.err ? '–' : '불러오는 중…'}</div>
           ) : selected && lgeo.units[selected] ? (
             <UnitDetail name={unitName(selected)} sido={lgeo.ko} geo={lgeo.units[selected]} unit={unitData(lgeo, ldata, selected)} sqm={ldata.sqm}
               onClose={() => setSelected(null)}
               zoomLabel={childLabel(lgeo, selected)}
-              onZoom={!view.parent && childrenOf(lgeo, selected).length ? () => zoomLocal(selected) : undefined} />
+              onZoom={!view.parent && childrenOf(lgeo, selected).length ? () => zoomLocal(selected) : undefined}
+              onApt={!childrenOf(lgeo, selected).length && hasApt(selected) ? () => enterApt(selected) : undefined} />
           ) : (
             <RankList title={`${areaName} ${lmetric.label} 순위`} sub={`기준 ${fmtYm(lmetric.id === 'vol' ? area?.sum.volDate ?? lmetric.asOf : lmetric.asOf)} · 지역을 누르면 집값 흐름이 보여요`}
               metric={lmetric} onPick={setSelected}
@@ -573,9 +619,9 @@ function RegionDetail({ regions, id, metric, cat, lidx, onGuide, onClose, onZoom
 }
 
 /** 시군구·구 상세 */
-function UnitDetail({ name, sido, geo, unit, sqm, zoomLabel, onClose, onZoom }: {
+function UnitDetail({ name, sido, geo, unit, sqm, zoomLabel, onClose, onZoom, onApt }: {
   name: string; sido: string; geo: LocalGeoUnit; unit: LocalUnit | undefined; sqm: number; zoomLabel: string
-  onClose: () => void; onZoom?: () => void
+  onClose: () => void; onZoom?: () => void; onApt?: () => void
 }) {
   return (
     <div>
@@ -601,6 +647,12 @@ function UnitDetail({ name, sido, geo, unit, sqm, zoomLabel, onClose, onZoom }: 
         <button type="button" onClick={onZoom} className="mt-3 w-full px-3 py-1.5 text-[11px] font-bold"
           style={{ background: 'var(--accent)', color: '#fff' }}>
           {name} {zoomLabel}별로 보기 →
+        </button>
+      )}
+      {onApt && (
+        <button type="button" onClick={onApt} className="mt-3 w-full px-3 py-1.5 text-[11px] font-bold"
+          style={{ background: 'var(--accent)', color: '#fff' }}>
+          {name} 단지별 지도로 보기 →
         </button>
       )}
     </div>
