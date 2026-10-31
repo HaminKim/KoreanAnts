@@ -4,7 +4,7 @@
 GitHub `HaminKim/KoreanAnts` (**공개 레포** — 비밀값·개인 정보는 커밋하지 말 것). 사용자와는 한국어(해요체)로 대화.
 
 ## 브랜치·배포
-- `main` 에 푸시하면 Vercel 이 자동 배포. 매크로 리뉴얼은 `renewal` 브랜치로 시작했지만 지금은 `main` 과 같은 커밋으로 맞춰 운영 중 (main 푸시 후 `git push origin main:renewal` 로 동기화).
+- 배포는 하루 2번 예약 (2026-10-31, Vercel Deployment Storage 10GB 초과 대응): `main` 에 푸시해도 바로 배포 안 됨. `scripts/vercel-ignore.sh` 가 `chore(deploy)` 커밋과 메시지에 `[deploy]` 가 있는 커밋만 빌드하고, `.github/workflows/deploy-daily.yml` 이 10:30·00:30 KST 에 빈 `chore(deploy)` 커밋으로 쌓인 변경을 배포. 급하면 커밋 메시지에 `[deploy]` 또는 deploy-daily 수동 실행. 매크로 리뉴얼은 `renewal` 브랜치로 시작했지만 지금은 `main` 과 같은 커밋으로 맞춰 운영 중 (main 푸시 후 `git push origin main:renewal` 로 동기화).
 - 커밋 메시지 형식: `feat(macro): ...`, `chore(data): ...` 처럼 영역 접두어 + 한국어 설명.
 - 로컬(Windows)에서는 `python` 이 스토어 바로가기라 동작하지 않음 → `py` 사용.
 
