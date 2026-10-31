@@ -1,7 +1,7 @@
-name: Deploy Daily (데이터 몰아서 배포)
+name: Deploy Daily (데이터·코드 몰아서 배포)
 
-# 데이터 자동 커밋(chore(data))은 scripts/vercel-ignore.sh 로 배포를 건너뛰고,
-# 여기서 하루 2번 빈 커밋을 올려 그동안 쌓인 데이터를 한 번에 배포한다.
+# 데이터·코드 커밋은 scripts/vercel-ignore.sh 로 배포를 건너뛰고,
+# 여기서 하루 2번 빈 커밋을 올려 그동안 쌓인 변경을 한 번에 배포한다.
 on:
   schedule:
     # UTC 기준 (KST - 9시간)
@@ -26,14 +26,13 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Trigger deploy if data changed
+      - name: Trigger deploy if anything changed
         run: |
           MSG="$(git log -1 --format=%s)"
           echo "HEAD: $MSG"
-          # 마지막 커밋이 데이터 커밋일 때만 아직 배포 안 된 변경이 있음
+          # 마지막 커밋이 배포 커밋이면 그 뒤로 쌓인 변경이 없음
           case "$MSG" in
-            "chore(data)"*) ;;
-            *) echo "No pending data commits"; exit 0 ;;
+            "chore(deploy)"*|*"[deploy]"*) echo "No pending commits"; exit 0 ;;
           esac
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
