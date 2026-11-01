@@ -1,55 +1,55 @@
 {
-  "date": "2026-11-01",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-11-02",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 3244177103.0,
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 202238031.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 491451903.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 194623473.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "KORU",
+      "ticker": "MU",
       "name": "",
-      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
-      "value": 247959148.0,
+      "raw_name": "MICRON TECHNOLOGY INC",
+      "value": 168583412.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "QLD",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 230855173.0,
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 104961242.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "TQQQ",
+      "ticker": "QLD",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 227076773.0,
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 82407752.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
