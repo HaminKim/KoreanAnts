@@ -1,7 +1,7 @@
 {
-  "date": "2026-11-02",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-11-03",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 202238031.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": -486755319.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 194623473.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "TESLA INC",
+      "value": -146302674.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
+      "ticker": "TSLL",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": 168583412.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": -52618763.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "TQQQ",
+      "ticker": "KORU",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 104961242.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "DIREXION SHARES ETF TRUST DAILY MSCI SOUTH KOREA BULL SPLR 970211833 US25459Y5208",
+      "value": -52044131.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "QLD",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 82407752.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "raw_name": "MICROSOFT CORP",
+      "value": -36528303.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
