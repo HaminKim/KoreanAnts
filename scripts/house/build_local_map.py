@@ -44,6 +44,7 @@ SIDO = {
 }
 # 섬이 넓게 흩어져 본토가 작아지는 군은 지도 범위 계산에서 뺀다 (범위 안의 섬만 그려짐)
 BBOX_EXCLUDE = {"28720"}   # 인천 옹진군
+EXT = {"41": ["11"]}       # 경기 지도에 같이 그리는 시도 (서울이 경기 가운데에 있어서)
 GWANGJU_UID = "12200"   # 전남광주 안의 옛 광주광역시 (자치구 5개를 합친 가상 단위)
 GWANGJU_GU = {"12210", "12240", "12270", "12300", "12330"}
 METRO_GUN = {"26", "27", "28", "31"}   # 군도 생활권으로 나누는 광역시 (부산·대구·인천·울산)
@@ -224,6 +225,7 @@ def fetch(url, tmp):
     if not path.exists():
         r = requests.get(url, timeout=180)
         r.raise_for_status()
+        path.parent.mkdir(parents=True, exist_ok=True)   # 새 CI 러너엔 임시 폴더가 없음
         path.write_bytes(r.content)
     return pq.read_table(path).to_pandas()
 
@@ -319,6 +321,22 @@ def main():
             "id": fid, "ko": ko, "source": f"vuski/admdongkor sgg·emd_{VER} (MIT)",
             "viewBox": [0, 0, WIDTH, height], "units": out_units,
         }
+        # 둘러싼 시도 (경기 지도 가운데 서울) — 같은 좌표로 그려 두면 화면이 같이 보여 줌 (사용자 요청: 경기 = 서울 + 경기)
+        # units 와 따로 둬서 다른 빌드 스크립트(build_apts 등)는 경기 단위로 오해하지 않음
+        ext = {}
+        for esd in EXT.get(sd, []):
+            efid, eko = SIDO[esd]
+            eu = {}
+            for r in by_sido.get(esd, []):
+                polys = parse_wkb(r.geom)
+                bx0, by0, bx1, by1 = bbox([proj(pt) for p in polys for pt in p[0]])
+                eu[r.sggcd] = dict(
+                    name=r.sggnm, full=f"{eko} {r.sggnm}", level=2, parent=None, d=to_path(polys, proj, TOL[2]) or None,
+                    label=label_of(polys, proj), bbox=[round(bx0, 1), round(by0, 1), round(bx1 - bx0, 1), round(by1 - by0, 1)],
+                )
+            ext[efid] = eu
+        if ext:
+            out["ext"] = ext
         p = OUT_DIR / f"geo_{fid}.json"
         p.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         n2 = sum(1 for u in out_units.values() if u["level"] == 2)

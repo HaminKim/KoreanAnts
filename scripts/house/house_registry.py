@@ -94,7 +94,7 @@ MERGED_NOTE = "2026년 7월 광주·전남이 전남광주통합특별시로 합
 #   good  : up = 오르면 초록, down = 오르면 빨강 (연체율·미분양)
 # ─────────────────────────────────────────────────────────────
 REGION_METRICS = [
-    dict(id="price_yoy", label="아파트 실거래가 1년 변화", short="집값 YoY", unit="%", tf="yoy", good="up", dec=1,
+    dict(id="price_yoy", label="아파트 실거래가 1년 변화", short="1년 변화", unit="%", tf="yoy", good="up", dec=1,
          need="ECOS", start="200601", cycle="M",
          fetch=[("901Y089", "{rtx}")],
          desc="한국부동산원 아파트 매매 실거래가격지수의 1년 전 대비 변화예요. 실제 신고된 거래로 계산해서 표본 지수보다 움직임이 커요."),
@@ -102,7 +102,7 @@ REGION_METRICS = [
          need="ECOS", start="200601", cycle="M",
          fetch=[("901Y089", "{rtx}")],
          desc="2006년 이후 가장 높았던 달과 비교해 지금 몇 % 아래에 있는지예요. 0% 면 지금이 신고가예요."),
-    dict(id="loan_yoy", label="주택관련대출 1년 증가율", short="주택대출 YoY", unit="%", tf="yoy", good="none", dec=1,
+    dict(id="loan_yoy", label="주택관련대출 1년 변화", short="대출 1년 변화", unit="%", tf="yoy", good="none", dec=1,
          need="ECOS", start="200712", cycle="M",
          fetch=[("151Y003", "11110A0/{loan}"), ("151Y006", "11A00A0/{loan}")],
          desc="예금은행 + 비은행(저축은행·상호금융·새마을금고 등) 주택관련대출 잔액의 1년 증가율이에요. 지역은 금융기관 소재지 기준이라 담보 주택이 있는 곳과 다를 수 있어요."),
@@ -118,7 +118,7 @@ REGION_METRICS = [
     dict(id="auction_12m", label="임의경매 신청 (최근 1년)", short="경매 신청", unit="건", tf="sum12", good="down", dec=0,
          need="IROS", src="iros", kind="auction",
          desc="최근 12개월 동안 임의경매개시결정등기가 신청된 집합건물(아파트·빌라·오피스텔) 수예요. 대출을 못 갚아 은행 등이 경매에 넘긴 집이에요."),
-    dict(id="auction_yoy", label="임의경매 신청 1년 증가율", short="경매 증가율", unit="%", tf="yoy12", good="down", dec=1,
+    dict(id="auction_yoy", label="임의경매 신청 1년 변화", short="경매 1년 변화", unit="%", tf="yoy12", good="down", dec=1,
          need="IROS", src="iros", kind="auction",
          desc="최근 12개월 임의경매 신청 건수를 그 전 12개월과 비교했어요. 빠르게 늘면 빚 부담이 터지기 시작했다는 신호예요."),
 ]

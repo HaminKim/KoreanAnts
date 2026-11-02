@@ -17,7 +17,7 @@ const P84_DESC = '부동산원 아파트 ㎡당 평균 매매가격 × 84㎡(국
 
 /** 전국 지도에 끼워 넣는 '집값(84㎡)' 칩 */
 export function p84Metric(asOf: string | null): RegionMetric {
-  return { id: 'p84', label: '아파트 집값 (84㎡ 환산)', short: '집값(84㎡)', unit: '만원', dec: 0, good: 'none', need: 'RONE', desc: P84_DESC, available: true, asOf }
+  return { id: 'p84', label: '아파트 집값 (84㎡ 환산)', short: '집값', unit: '만원', dec: 0, good: 'none', need: 'RONE', desc: P84_DESC, available: true, asOf }
 }
 
 export function localMetrics(asOf: string | null): RegionMetric[] {
@@ -33,7 +33,7 @@ export function localMetrics(asOf: string | null): RegionMetric[] {
       desc: '한 달 동안 신고된 아파트 매매 건수예요. 실거래 신고 기한(30일) 때문에 한 달 늦게 나와요.' },
     { id: 'auc12', label: '임의경매 신청 (최근 1년)', short: '경매 신청', unit: '건', dec: 0, good: 'down', need: 'IROS', available: true, asOf,
       desc: '최근 12개월 동안 임의경매가 신청된 아파트·빌라·오피스텔 수예요. 대출을 못 갚아 은행 등이 경매에 넘긴 집이에요 (대법원 등기정보광장).' },
-    { id: 'aucYoy', label: '임의경매 신청 1년 증가율', short: '경매 증가율', unit: '%', dec: 1, good: 'down', need: 'IROS', available: true, asOf,
+    { id: 'aucYoy', label: '임의경매 신청 1년 변화', short: '경매 1년 변화', unit: '%', dec: 1, good: 'down', need: 'IROS', available: true, asOf,
       desc: '최근 12개월 임의경매 신청을 그 전 12개월과 비교했어요. 빠르게 늘면 빚 부담이 터지기 시작했다는 신호예요.' },
   ]
 }
@@ -54,8 +54,26 @@ export function useLocalFile(fid: string | null) {
     if (!fid) return
     let live = true
     // 다른 지역으로 바뀌면 아래 return 의 fid 비교로 이전 결과를 숨김
+    // 경기처럼 가운데에 다른 시도(서울)가 있으면 그 시도 데이터도 받아서 한 지도로 합침 (못 받으면 경기만)
     Promise.all([loadLocalGeo(fid), loadLocal(fid)])
-      .then(([geo, data]) => { if (live) setSt({ fid, geo, data, err: false }) })
+      .then(async ([geo, data]) => {
+        const ext = Object.entries(geo.ext ?? {})
+        if (ext.length) {
+          const extData = await Promise.all(ext.map(([efid]) => loadLocal(efid).catch(() => null)))
+          const units = { ...geo.units }, dunits = { ...data.units }
+          ext.forEach(([efid, eu], i) => {
+            const ed = extData[i]
+            if (!ed) return
+            for (const [uid, u] of Object.entries(eu)) {
+              units[uid] = { ...u, ext: efid }
+              if (ed.units[uid]) dunits[uid] = ed.units[uid]
+            }
+          })
+          geo = { ...geo, units }
+          data = { ...data, units: dunits }
+        }
+        if (live) setSt({ fid, geo, data, err: false })
+      })
       .catch(() => { if (live) setSt({ fid, geo: null, data: null, err: true }) })
     return () => { live = false }
   }, [fid])
@@ -75,7 +93,31 @@ export function childrenOf(geo: LocalGeo, uid: string): string[] {
 
 // ─────────────────────────────────────────
 // 시군구 지도
+// 다른 시도를 같이 그린 지도(경기 + 서울)는 넓어서 확대·이동이 됨: 처음엔 서울 주변을 크게, 축소하면 경기 전체
+//   휠 = 확대/축소 · 끌기 = 이동 (끈 건 클릭으로 안 침) · 모서리 버튼 + − 전체
 // ─────────────────────────────────────────
+type VB = [number, number, number, number]
+const ZOOM_MAX = 5          // 전체 대비 최대 확대
+const ZOOM_INIT = 2.6       // 처음: 서울 범위의 이 배수만큼 보여 줌
+
+function clampVB(v: VB, full: VB): VB {
+  const [fx, fy, fw, fh] = full
+  const w = Math.min(fw, Math.max(fw / ZOOM_MAX, v[2])), h = w * fh / fw
+  const cx = Math.min(fx + fw - w / 2, Math.max(fx + w / 2, v[0] + v[2] / 2))
+  const cy = Math.min(fy + fh - h / 2, Math.max(fy + h / 2, v[1] + v[3] / 2))
+  return [cx - w / 2, cy - h / 2, w, h]
+}
+
+function initialVB(geo: LocalGeo): VB {
+  const full = geo.viewBox as VB
+  const ext = Object.values(geo.units).filter(u => u.ext && u.bbox)
+  if (!ext.length) return full
+  const x0 = Math.min(...ext.map(u => u.bbox[0])), y0 = Math.min(...ext.map(u => u.bbox[1]))
+  const x1 = Math.max(...ext.map(u => u.bbox[0] + u.bbox[2])), y1 = Math.max(...ext.map(u => u.bbox[1] + u.bbox[3]))
+  const w = Math.max(x1 - x0, (y1 - y0) * full[2] / full[3]) * ZOOM_INIT
+  return clampVB([(x0 + x1) / 2 - w / 2, (y0 + y1) / 2 - w * full[3] / full[2] / 2, w, w * full[3] / full[2]], full)
+}
+
 export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, onZoom, onApt }: {
   geo: LocalGeo; data: LocalData; parent: string | null; metric: RegionMetric; focus: string | null
   onHover: (uid: string | null) => void; onPick: (uid: string) => void; onZoom: (uid: string) => void
@@ -99,12 +141,69 @@ export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, on
     else w = h * bw / bh
     vb = [x + w0 / 2 - w / 2, y + h0 / 2 - h / 2, w, h]
   }
+  // 확대 가능한 지도 (경기 + 서울 첫 화면)
+  const zoomable = !parent && Object.values(units).some(u => u.ext)
+  const full = geo.viewBox as VB
+  const [zv, setZv] = useState<VB>(() => initialVB(geo))
+  const svgRef = useRef<SVGSVGElement>(null)
+  const drag = useRef<{ x: number; y: number; vb: VB; moved: boolean } | null>(null)
+  const moved = useRef(false)
+  if (zoomable) vb = zv
+
+  // 화면 좌표 → 지도 좌표 (maxHeight 로 여백이 생겨도 맞게 CTM 으로)
+  const toSvg = (cx: number, cy: number) => {
+    const svg = svgRef.current, m = svg?.getScreenCTM()
+    if (!svg || !m) return null
+    const p = new DOMPoint(cx, cy).matrixTransform(m.inverse())
+    return { x: p.x, y: p.y, k: 1 / m.a }
+  }
+  const zoomAt = (f: number, cx?: number, cy?: number) => setZv(v => {
+    const c = cx !== undefined && cy !== undefined ? toSvg(cx, cy) : null
+    const mx = c ? c.x : v[0] + v[2] / 2, my = c ? c.y : v[1] + v[3] / 2
+    return clampVB([mx - (mx - v[0]) * f, my - (my - v[1]) * f, v[2] * f, v[3] * f], full)
+  })
+  // 휠은 페이지 스크롤을 막아야 해서 passive: false 로 직접 등록
+  useEffect(() => {
+    const svg = svgRef.current
+    if (!svg || !zoomable) return
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      zoomAt(e.deltaY > 0 ? 1.18 : 1 / 1.18, e.clientX, e.clientY)
+    }
+    svg.addEventListener('wheel', onWheel, { passive: false })
+    return () => svg.removeEventListener('wheel', onWheel)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zoomable])
+
   const k = vb[2] / bw   // 글자 크기 보정
   const fs = 10 * k
+  const atFull = zv[2] >= full[2] - 0.5
 
-  return (
-    <svg viewBox={vb.map(n => n.toFixed(1)).join(' ')} className="block w-full h-auto select-none" style={{ maxHeight: 640 }}
-      role="img" aria-label={`${geo.ko} 시군구 지도`} onMouseLeave={() => onHover(null)}>
+  const svgEl = (
+    <svg ref={svgRef} viewBox={vb.map(n => n.toFixed(1)).join(' ')} className="block w-full h-auto select-none"
+      style={{ maxHeight: 640, cursor: zoomable ? (drag.current?.moved ? 'grabbing' : 'grab') : undefined, touchAction: zoomable ? 'pan-y' : undefined }}
+      role="img" aria-label={`${geo.ko} 시군구 지도`} onMouseLeave={() => onHover(null)}
+      onPointerDown={zoomable ? e => {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return
+        drag.current = { x: e.clientX, y: e.clientY, vb: zv, moved: false }
+        moved.current = false
+      } : undefined}
+      onPointerMove={zoomable ? e => {
+        const d = drag.current
+        if (!d) return
+        const dx = e.clientX - d.x, dy = e.clientY - d.y
+        if (!d.moved && Math.hypot(dx, dy) < 4) return
+        d.moved = true
+        moved.current = true
+        const c = toSvg(0, 0)
+        const s = c?.k ?? 1
+        setZv(clampVB([d.vb[0] - dx * s, d.vb[1] - dy * s, d.vb[2], d.vb[3]], full))
+      } : undefined}
+      onPointerUp={zoomable ? () => { drag.current = null } : undefined}
+      onPointerLeave={zoomable ? () => { drag.current = null } : undefined}
+      // 끌고 놓은 건 클릭·더블클릭으로 치지 않음
+      onClickCapture={zoomable ? e => { if (moved.current) { e.stopPropagation(); e.preventDefault(); moved.current = false } } : undefined}
+      onDoubleClickCapture={zoomable ? e => { if (drag.current?.moved) e.stopPropagation() } : undefined}>
       {ctx.map(id => (
         <path key={id} d={units[id].d} fill="var(--neu)" opacity={0.45} stroke="var(--surface)" strokeWidth={0.6}
           vectorEffect="non-scaling-stroke" pointerEvents="none" />
@@ -145,6 +244,24 @@ export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, on
         )
       })}
     </svg>
+  )
+  if (!zoomable) return svgEl
+  const btn = 'w-7 h-7 flex items-center justify-center text-sm font-bold'
+  const btnStyle = { background: 'var(--surface)', color: 'var(--ink)', border: '1px solid var(--hairline-2)' }
+  return (
+    <div className="relative">
+      {svgEl}
+      <div className="absolute right-2 top-2 flex flex-col gap-1">
+        <button type="button" className={btn} style={btnStyle} onClick={() => zoomAt(1 / 1.5)} aria-label="확대" title="확대 (휠 위로)">+</button>
+        <button type="button" className={btn} style={btnStyle} onClick={() => zoomAt(1.5)} aria-label="축소" title="축소 (휠 아래로)">−</button>
+      </div>
+      <div className="absolute left-2 bottom-2 flex items-center gap-1.5 text-[10px]">
+        <button type="button" onClick={() => setZv(atFull ? initialVB(geo) : full)} className="px-2 py-1 font-semibold" style={btnStyle}>
+          {atFull ? '서울 주변 크게' : `${geo.ko} 전체 보기`}
+        </button>
+        <span className="px-1 py-0.5" style={{ background: 'var(--surface)', color: 'var(--ink-mute)' }}>휠로 확대·축소 · 끌어서 이동</span>
+      </div>
+    </div>
   )
 }
 

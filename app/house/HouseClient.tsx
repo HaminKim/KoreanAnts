@@ -14,7 +14,7 @@ import { type Layer, fmtNum, fmtPeriod, tfLabel } from '@/app/lib/macro'
 import MacroChart, { type ChartLayer, type MacroChartHandle, type ShadeBand } from '@/app/components/macro/MacroChart'
 import { Chip, Label, LayerLegend, PERIODS, Sparkline, newLayer, useIsMobile, useSeriesMap } from '@/app/components/macro/ui'
 import { LocalMap, LocalTip, PriceBlock, StatusBadge, childrenOf, localMetrics, localVal, p84Metric, unitData, useLocalFile } from './local'
-import { AptDetail, AptList, AptMap, aptMetrics, aptStatus, useAptFile } from './apts'
+import { type AptPick, AptBands, AptDetail, AptMap, aptMetrics, aptStatus, priceBands, useAptFile, useAptFiles } from './apts'
 
 const DEFAULT_LAYERS = ['KR_HPI_REAL', 'KR_HHCREDIT_GDP', 'KR_CALL']
 
@@ -169,23 +169,33 @@ function GuidePanel({ cat, api, onClose }: { cat: HouseCatalog; api: ApiId; onCl
 type View = { nid: string; fid: string; parent: string | null; apt?: string | null } | null   // null = 전국 · apt = 단지 지도로 들어간 맨 아래 단위
 const SEJONG_UID = '36110'
 
+// 지표 칩: 기본은 집값·고점 대비·1년 변화 3개만, 나머지(대출·연체·미분양·경매 등)는 + 안에
+// 깊이(전국 → 시도 → 시 → 구)가 바뀌어도 고른 지표를 유지 — 전국 id 를 시군구 id 로 맞춰 하나의 키로 기억
+const TO_LOCAL: Record<string, string> = { price_dd: 'p84_dd', price_yoy: 'p84_yoy', auction_12m: 'auc12', auction_yoy: 'aucYoy' }
+const canon = (id: string) => TO_LOCAL[id] ?? id
+const PRIMARY = ['p84', 'p84_dd', 'p84_yoy']
+const pickMetric = (ms: RegionMetric[], key: string) => ms.find(m => canon(m.id) === key) ?? ms[0]
+
 function MapSection({ cat, regions, geo, lidx, onGuide }: {
   cat: HouseCatalog; regions: Regions; geo: MapGeo; lidx: LocalIndex | null; onGuide: (a: ApiId) => void
 }) {
-  const [view, setView] = useState<View>(null)
-  const [mid, setMid] = useState(regions.metrics[0]?.id)
-  const [lmid, setLmid] = useState('p84')
+  const [view0, setView] = useState<View>(null)
+  const [mk, setMk] = useState('p84')
+  const [more, setMore] = useState(false)
   const [hover, setHover] = useState<string | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null)
   const [aidx, setAidx] = useState<AptIndex | null>(null)
-  const [aptSel, setAptSel] = useState<string | null>(null)
-  const [aptFocus, setAptFocus] = useState<{ seq: string; n: number } | null>(null)
+  const [aptSel, setAptSel] = useState<AptPick | null>(null)
+  const [aptFocus, setAptFocus] = useState<(AptPick & { n: number }) | null>(null)
+  const [band, setBand] = useState<number | null>(null)
+  const [openNb, setOpenNb] = useState<string[]>([])   // 단지 지도에서 펼친 인접 구
+  const [fitReq, setFitReq] = useState(0)
   const boxRef = useRef<HTMLDivElement>(null)
   const mobile = useIsMobile()
   useEffect(() => { loadAptIndex().then(setAidx).catch(() => setAidx(null)) }, [])
 
-  const metric = regions.metrics.find(m => m.id === mid) ?? regions.metrics[0]
+  const metric = pickMetric(regions.metrics, mk)
   const ids = Object.keys(regions.regions).filter(id => geo.regions[id])   // 레지스트리 순서 (서울 → 제주)
   const vals = useMemo(
     () => ids.map(id => regions.regions[id]?.values[metric.id]?.v).filter((v): v is number => v !== null && v !== undefined),
@@ -193,19 +203,38 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
   )
   const focus = selected ?? hover
 
-  const local = useLocalFile(view?.fid ?? null)
-  const apt = useAptFile(view?.apt ?? null)
+  const local = useLocalFile(view0?.fid ?? null)
+  const apt = useAptFile(view0?.apt ?? null)
+  // 인접 구로 넘어가면(다른 시도일 수도) parent 는 지역 파일을 받은 뒤 그 단위의 parent 로
+  const pu = view0?.apt ? local.geo?.units[view0.apt] : undefined
+  const view: View = view0 && pu && (pu.parent ?? null) !== view0.parent ? { ...view0, parent: pu.parent ?? null } : view0
   const lms = useMemo(
     () => (view?.apt ? aptMetrics(apt.file?.asOf ?? null) : localMetrics(local.data?.asOf ?? null)),
     [view?.apt, apt.file, local.data],
   )
-  const lmetric = lms.find(m => m.id === lmid) ?? lms[0]
+  const lmetric = pickMetric(lms, mk)
+  const nbIds = view?.apt ? aidx?.units[view.apt]?.nb ?? [] : []
+  const nbFiles = useAptFiles(nbIds)
+  // 가격대는 지금 구 + 펼친 인접 구 전체로 (펼치는 구가 바뀌면 고른 칸은 풀림)
+  const bandFiles = useMemo(() => (apt.file ? [apt.file, ...nbFiles.filter(f => openNb.includes(f.id))] : []), [apt.file, nbFiles, openNb])
+  const bands = useMemo(() => (bandFiles.length ? priceBands(bandFiles) : []), [bandFiles])
+  const toggleNb = (uid: string) => { setOpenNb(o => (o.includes(uid) ? o.filter(x => x !== uid) : [...o, uid])); setBand(null) }
+  const toggleAllNb = () => {
+    setOpenNb(o => (nbFiles.length && nbFiles.every(f => o.includes(f.id)) ? [] : nbFiles.map(f => f.id)))
+    setBand(null)
+    setFitReq(n => n + 1)
+  }
+  const bandSet = band !== null ? bands[band]?.seqs ?? null : null
+  const selFile = aptSel && apt.file ? (aptSel.uid === apt.file.id ? apt.file : nbFiles.find(f => f.id === aptSel.uid)) : undefined
 
   const zoomable = (nid: string) => !!lidx?.files[nid]
-  const go = (v: View) => { setView(v); setSelected(null); setHover(null); setPos(null); setAptSel(null); setAptFocus(null) }
+  const go = (v: View) => { setView(v); setSelected(null); setHover(null); setPos(null); setAptSel(null); setAptFocus(null); setBand(null); setOpenNb([]) }
   const hasApt = (uid: string) => !!aidx?.units[uid]
   const enterApt = (uid: string) => {
     if (!view || !hasApt(uid)) return false
+    // 경기 지도 안의 서울 구 → 서울 파일로 넘어가서 (위치 표시가 '서울 › 강남구' 가 되게)
+    const ext = lgeo?.units[uid]?.ext
+    if (ext) { go({ nid: ext, fid: ext, parent: null, apt: uid }); return true }
     go({ ...view, apt: uid })
     return true
   }
@@ -217,6 +246,12 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
     go({ nid, fid: f.file, parent })
   }
   const zoomLocal = (uid: string) => view && go({ ...view, parent: uid, apt: null })
+  // 인접 구로 이동 — 다른 시도(서울 ↔ 경기)면 지역 파일이 바뀌고, parent 는 그 파일을 받은 뒤 맞춤 (아래 effect)
+  const gotoApt = (uid: string) => {
+    const u = aidx?.units[uid]
+    if (!view || !u) return
+    go(u.fid === view.fid ? { ...view, parent: lgeo?.units[uid]?.parent ?? null, apt: uid } : { nid: u.fid, fid: u.fid, parent: null, apt: uid })
+  }
 
   const onMove = (e: React.MouseEvent) => {
     const r = boxRef.current?.getBoundingClientRect()
@@ -225,7 +260,10 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
 
   const lgeo = local.geo, ldata = local.data
   const area = view && lgeo && ldata ? ldata.units[view.parent ?? 'root'] : undefined
+  // 경기 지도는 서울을 같이 보여 주니까 순위 제목도 '서울·경기'
+  const extKo = !view?.parent && lgeo?.ext ? Object.keys(lgeo.ext).map(k => regions.regions[k]?.ko ?? k) : []
   const areaName = view ? (view.parent && lgeo ? lgeo.units[view.parent]?.name : lgeo?.ko ?? regions.regions[view.nid]?.ko) : null
+  const rankName = areaName && extKo.length ? [...extKo, areaName].join('·') : areaName
   const areaSt = area ? priceStatus(area.sum) : null
   const lids = view && lgeo
     ? Object.keys(lgeo.units).filter(k => (view.parent ? lgeo.units[k].parent === view.parent : lgeo.units[k].level === 2) && lgeo.units[k].d)
@@ -241,22 +279,39 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
       <SectionHead title="지역별 지도"
         desc={mobile ? '누르면 그 지역 집값 흐름이, 상세의 버튼으로 시군구·구까지 들어가요' : '누르면 그 지역 집값 흐름이, 더블클릭하면 시군구 → 구 지도로 들어가요'} />
 
-      {/* 지표 칩 */}
+      {/* 지표 칩 — 기본 3개 + (누르면) 나머지 */}
       <div className="mt-3 flex items-center gap-1.5 flex-wrap">
-        {view ? lms.map(m => (
-          <span key={m.id}><Chip on={m.id === lmetric.id} onClick={() => setLmid(m.id)} title={m.desc}>{m.short}</Chip></span>
-        )) : regions.metrics.map(m => {
-          const chip = (
-            <Chip on={m.id === metric.id} onClick={() => setMid(m.id)} title={m.available ? m.desc : undefined}>
-              {m.short}{!m.available && <span className="ml-1 opacity-70">· 키 필요</span>}
-            </Chip>
-          )
-          return m.available ? <span key={m.id}>{chip}</span> : (
-            <span key={m.id} onClickCapture={() => setMid(m.id)}>
-              <NeedKey cat={cat} api={m.need} onGuide={onGuide}>{chip}</NeedKey>
-            </span>
-          )
-        })}
+        {(() => {
+          const ms = view ? lms : regions.metrics
+          const cur = view ? lmetric : metric
+          const prim = PRIMARY.map(k => ms.find(m => canon(m.id) === k)).filter((m): m is RegionMetric => !!m)
+          const extra = ms.filter(m => !PRIMARY.includes(canon(m.id)))
+          const open = more || extra.some(m => m.id === cur.id)
+          const chip = (m: RegionMetric) => {
+            const c = (
+              <Chip on={m.id === cur.id} onClick={() => setMk(canon(m.id))} title={m.available ? m.desc : undefined}>
+                {m.short}{!m.available && <span className="ml-1 opacity-70">· 키 필요</span>}
+              </Chip>
+            )
+            return m.available ? <span key={m.id}>{c}</span> : (
+              <span key={m.id} onClickCapture={() => setMk(canon(m.id))}>
+                <NeedKey cat={cat} api={m.need} onGuide={onGuide}>{c}</NeedKey>
+              </span>
+            )
+          }
+          return <>
+            {prim.map(chip)}
+            {extra.length > 0 && <>
+              {open && <span className="mx-0.5 h-4 w-px" style={{ background: 'var(--hairline-2)' }} />}
+              {open && extra.map(chip)}
+              <button type="button" onClick={() => { if (open) { setMore(false); if (extra.some(m => m.id === cur.id)) setMk('p84') } else setMore(true) }}
+                title={open ? '추가 지표 접기' : extra.map(m => m.short).join(' · ')}
+                className="px-2 py-1 text-[11px] font-semibold" style={{ border: '1px dashed var(--btn-border)', color: 'var(--ink-2)' }}>
+                {open ? '− 접기' : `+ ${extra.length}`}
+              </button>
+            </>}
+          </>
+        })()}
       </div>
       <p className="mt-2 text-[11px] leading-relaxed max-w-2xl" style={{ color: 'var(--ink-mute)' }}>
         {view
@@ -343,7 +398,8 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
             </svg>
           ) : view.apt ? (
             apt.file ? (
-              <AptMap key={apt.file.id} file={apt.file} metric={lmetric} selected={aptSel} focusReq={aptFocus} onPick={setAptSel} />
+              <AptMap key={apt.file.id} file={apt.file} neighbors={nbFiles} open={openNb} fitReq={fitReq} metric={lmetric} selected={aptSel} focusReq={aptFocus}
+                band={bandSet} onPick={setAptSel} onOpen={uid => { if (!openNb.includes(uid)) toggleNb(uid) }} onGoto={gotoApt} />
             ) : (
               <div className="h-[360px] flex flex-col items-center justify-center gap-3 text-[11px]" style={{ color: 'var(--ink-mute)' }}>
                 {apt.err ? <>
@@ -353,7 +409,7 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
               </div>
             )
           ) : lgeo && ldata ? (
-            <LocalMap geo={lgeo} data={ldata} parent={view.parent} metric={lmetric} focus={focus}
+            <LocalMap key={`${lgeo.id}-${view.parent ?? ''}`} geo={lgeo} data={ldata} parent={view.parent} metric={lmetric} focus={focus}
               onHover={setHover} onPick={setSelected} onZoom={zoomLocal} onApt={enterApt} />
           ) : (
             <div className="h-[360px] flex flex-col items-center justify-center gap-3 text-[11px]" style={{ color: 'var(--ink-mute)' }}>
@@ -393,10 +449,12 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
           ) : view.apt ? (
             !apt.file ? (
               <div className="py-10 text-center text-[11px]" style={{ color: 'var(--ink-mute)' }}>{apt.err ? '–' : '불러오는 중…'}</div>
-            ) : aptSel ? (
-              <AptDetail file={apt.file} seq={aptSel} onClose={() => setAptSel(null)} />
+            ) : aptSel && selFile ? (
+              <AptDetail key={`${aptSel.uid}-${aptSel.seq}`} file={selFile} seq={aptSel.seq} onClose={() => setAptSel(null)} />
             ) : (
-              <AptList key={apt.file.id} file={apt.file} metric={lmetric} onPick={seq => { setAptSel(seq); setAptFocus(f => ({ seq, n: (f?.n ?? 0) + 1 })) }} />
+              <AptBands key={apt.file.id} file={apt.file} bands={bands} band={band} metric={lmetric}
+                neighbors={nbFiles} open={openNb} onToggleAll={toggleAllNb} onOpen={toggleNb} onBand={setBand} onGoto={gotoApt}
+                onPick={p => { setAptSel(p); setAptFocus(f => ({ ...p, n: (f?.n ?? 0) + 1 })) }} />
             )
           ) : !lgeo || !ldata ? (
             <div className="py-10 text-center text-[11px]" style={{ color: 'var(--ink-mute)' }}>{local.err ? '–' : '불러오는 중…'}</div>
@@ -407,7 +465,7 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
               onZoom={!view.parent && childrenOf(lgeo, selected).length ? () => zoomLocal(selected) : undefined}
               onApt={!childrenOf(lgeo, selected).length && hasApt(selected) ? () => enterApt(selected) : undefined} />
           ) : (
-            <RankList title={`${areaName} ${lmetric.label} 순위`} sub={`기준 ${fmtYm(lmetric.id === 'vol' ? area?.sum.volDate ?? lmetric.asOf : lmetric.asOf)} · 지역을 누르면 집값 흐름이 보여요`}
+            <RankList title={`${rankName} ${lmetric.label} 순위`} sub={`기준 ${fmtYm(lmetric.id === 'vol' ? area?.sum.volDate ?? lmetric.asOf : lmetric.asOf)} · 지역을 누르면 집값 흐름이 보여요`}
               metric={lmetric} onPick={setSelected}
               rows={lids.map(k => ({ id: k, name: lgeo.units[k].name, v: localVal(unitData(lgeo, ldata, k)?.sum, lmetric.id), emds: lgeo.units[k].emds }))} />
           )}

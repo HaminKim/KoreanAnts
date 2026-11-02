@@ -112,9 +112,13 @@ export interface LocalGeoUnit {
   bbox: [number, number, number, number]   // x, y, w, h
   kind?: 'area'           // 구가 없는 시를 나눈 생활권 (행정동을 합침)
   emds?: string[]         // 생활권에 들어간 행정동
+  ext?: string            // 둘러싼 다른 시도 지도에 같이 그린 단위 (경기 지도 안의 서울 구 → 'seoul')
 }
 
-export interface LocalGeo { id: string; ko: string; source: string; viewBox: [number, number, number, number]; units: Record<string, LocalGeoUnit> }
+export interface LocalGeo {
+  id: string; ko: string; source: string; viewBox: [number, number, number, number]; units: Record<string, LocalGeoUnit>
+  ext?: Record<string, Record<string, LocalGeoUnit>>   // 같은 좌표로 그린 다른 시도 (경기 지도의 서울)
+}
 
 export interface LocalIndex {
   generatedAt: string
@@ -151,7 +155,11 @@ export interface AptHist {
   q: string[]             // 흐름의 달 (분기 말 + 마지막 달)
   apts: Record<string, { s: number; v: (number | null)[]; t: [string, number, number, string, number][] }>   // t: 달, 일, 전용㎡, 층, 금액
 }
-export interface AptIndex { generatedAt: string; asOf: string; units: Record<string, { fid: string; n: number }> }
+export interface AptIndex {
+  generatedAt: string; asOf: string
+  // nm: 이름 · full: 시 포함 이름 · b: 범위 · nb: 경계를 맞댄 단위 (인접 구 보기)
+  units: Record<string, { fid: string; n: number; nm?: string; full?: string; b?: [[number, number], [number, number]]; nb?: string[] }>
+}
 // 수도권 전철 노선·역 (scripts/house/build_subway.py, OpenStreetMap)
 export interface SubwayStation { n: string; la: number; lo: number; c: string[] }
 export interface Subway { lines: { n: string; c: string; p: [number, number][][] }[]; stations: SubwayStation[] }

@@ -356,9 +356,34 @@ def main():
                 build_leaf(fid, uid, u, geo, codes, emds, df, apt_rows, end, qends, qlabels, index)
 
     save_xy(xy) if do_geo else None
+    add_neighbors(index)
     (OUT_DIR / "index.json").write_text(json.dumps(
         {"generatedAt": now(), "asOf": mstr(end), "units": index}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     log(f"  ✅ 단지 지도 {len(index)}개 단위 · 기준 {mstr(end)}")
+
+
+def add_neighbors(index, cell=0.001, min_shared=3):
+    """경계를 맞댄 단위 찾기 (인접 구 보기용). 경계 꼭짓점을 ~100m 칸에 넣고 칸을 3개 이상 같이 쓰면 이웃"""
+    cells = {}
+    for uid, v in index.items():
+        cs = set()
+        for ring in v.pop("_ring"):
+            for la, lo in ring:
+                cs.add((round(la / cell), round(lo / cell)))
+        cells[uid] = cs
+    grown = {uid: {(a + i, b + j) for a, b in cs for i in (-1, 0, 1) for j in (-1, 0, 1)} for uid, cs in cells.items()}
+    for uid, v in index.items():
+        (s0, w0), (n0, e0) = v["b"]
+        nb = []
+        for other, w in index.items():
+            if other == uid:
+                continue
+            (s1, w1), (n1, e1) = w["b"]
+            if s1 > n0 + 0.01 or n1 < s0 - 0.01 or w1 > e0 + 0.01 or e1 < w0 - 0.01:
+                continue
+            if len(cells[uid] & grown[other]) >= min_shared:
+                nb.append(other)
+        v["nb"] = sorted(nb)
 
 
 def build_leaf(fid, uid, u, geo, codes, emds, df, apt_rows, end, qends, qlabels, index):
@@ -424,7 +449,7 @@ def build_leaf(fid, uid, u, geo, codes, emds, df, apt_rows, end, qends, qlabels,
     )
     (OUT_DIR / f"{uid}.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     (OUT_DIR / f"{uid}_h.json").write_text(json.dumps({"q": qlabels, "apts": hist}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    index[uid] = dict(fid=fid, n=len(apts))
+    index[uid] = dict(fid=fid, n=len(apts), nm=u["name"], full=u["full"], b=out["bounds"], _ring=out["outline"])
     n_ap = sum(1 for a in apts if a.get("ap"))
     log(f"  ✅ {geo['ko']} {u['full']}: 동 {len(dongs)} · 단지 {len(apts)}" + (f" (좌표 대략 {n_ap})" if n_ap else "")
         + f" · {(OUT_DIR / f'{uid}.json').stat().st_size // 1024} KB")
