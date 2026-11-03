@@ -1,0 +1,86 @@
+{
+  "top": [
+    {
+      "name": "MODERNA INC",
+      "name_kr": "",
+      "ticker": "MRNA",
+      "file_ticker": "MODERNA INC",
+      "close": 232.65,
+      "price_change": 0.08633731789316404,
+      "net_buy_sum": 3833186,
+      "buy_score": 3,
+      "sell_score": 4,
+      "last_date": "2026-11-03",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    },
+    {
+      "name": "ELI LILLY & CO",
+      "name_kr": "일라이 릴리",
+      "ticker": "LLY",
+      "file_ticker": "ELI LILLY & CO",
+      "close": 1429.46,
+      "price_change": 0.10957075215400146,
+      "net_buy_sum": 4660386,
+      "buy_score": 2,
+      "sell_score": 2,
+      "last_date": "2026-11-03",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    }
+  ],
+  "bottom": [
+    {
+      "name": "MICROSOFT CORP",
+      "name_kr": "마이크로소프트",
+      "ticker": "MSFT",
+      "file_ticker": "MICROSOFT CORP",
+      "close": 508.56,
+      "price_change": -0.042277923202952844,
+      "net_buy_sum": -29515037,
+      "buy_score": 0,
+      "sell_score": 7,
+      "last_date": "2026-11-03",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    },
+    {
+      "name": "APPLE INC",
+      "name_kr": "애플",
+      "ticker": "AAPL",
+      "file_ticker": "APPLE INC",
+      "close": 327.05,
+      "price_change": -0.04880318762178976,
+      "net_buy_sum": -14552000,
+      "buy_score": 0,
+      "sell_score": 7,
+      "last_date": "2026-11-03",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    }
+  ],
+  "knife": [
+    {
+      "name": "BLOOM ENERGY CORP CL A",
+      "name_kr": "블룸 에너지",
+      "ticker": "BE",
+      "file_ticker": "BLOOM ENERGY CORP CL A",
+      "close": 214.48,
+      "price_change": -0.059628200631357514,
+      "net_buy_sum": 5034082,
+      "buy_score": 7,
+      "sell_score": 0,
+      "last_date": "2026-11-03",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    },
+    {
+      "name": "IRIS ENERGY LTD",
+      "name_kr": "아이렌",
+      "ticker": "IREN",
+      "file_ticker": "IRIS ENERGY LTD",
+      "close": 22.98,
+      "price_change": -0.2031900138696255,
+      "net_buy_sum": 13048863,
+      "buy_score": 6,
+      "sell_score": 0,
+      "last_date": "2026-11-03",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    }
+  ]
+}
