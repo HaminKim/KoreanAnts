@@ -151,7 +151,6 @@ export default function HomeClient() {
       <div className="flex items-end justify-between gap-2 pb-2 flex-wrap" style={{ borderBottom: '1px solid var(--ink)' }}>
         <div className="flex items-baseline gap-2 flex-wrap">
           <h2 className="text-sm font-bold" style={{ color: 'var(--ink)' }}>수급 랭킹</h2>
-          <span className="text-[11px]" style={{ color: 'var(--ink-mute)' }}>최근 {days}거래일 개인 {isBuy ? '순매수' : '순매도'} 합계</span>
         </div>
       </div>
 

@@ -105,10 +105,6 @@ export default function CumulativeChart() {
       <div className="mt-3">
         <Plot d={view.d} cum={view.cum} net={view.net} px={view.px} showEvents={showEv} />
       </div>
-      <p className="mt-2 text-[10px] leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
-        한국예탁결제원(Seibro) 일별 미국주식 결제 상위 50종목의 순매수 합을 쌓은 값이에요. 선택 기간의 첫날을 0으로 놓고 계산해요.
-        날짜는 결제일보다 2영업일 앞선 매매일 기준이에요. 점선·음영은 그 무렵 시장 사건이에요.
-      </p>
     </div>
   )
 }
@@ -126,13 +122,11 @@ function Plot({ d, cum, net, px, showEvents }: {
   const svgRef = useRef<SVGSVGElement>(null)
   const [w, setW] = useState(900)
   const [hi, setHi] = useState<number | null>(null)
-  const [touch, setTouch] = useState(false)
   useEffect(() => {
     const el = boxRef.current
     if (!el) return
     const ro = new ResizeObserver(([e]) => setW(Math.max(280, Math.round(e.contentRect.width))))
     ro.observe(el)
-    setTouch(window.matchMedia('(pointer: coarse)').matches)
     return () => ro.disconnect()
   }, [])
 
@@ -331,22 +325,18 @@ function Plot({ d, cum, net, px, showEvents }: {
 
   return (
     <div ref={boxRef} className="relative w-full select-none">
-      <div className="flex items-center justify-between gap-2 flex-wrap min-h-[26px] mb-1 text-[11px]" style={{ color: 'var(--ink-mute)' }}>
-        {zoomed ? (
+      {zoomed && (
+        <div className="flex items-center justify-between gap-2 flex-wrap mb-1 text-[11px]" style={{ color: 'var(--ink-mute)' }}>
           <span>
             <span className="mono">{fmtDate(d[i0])} ~ {fmtDate(d[i1])}</span> 순매수{' '}
             <b className="mono" style={{ color: tone(rangeNet) }}>{fmtUsd(rangeNet)}</b>
           </span>
-        ) : (
-          <span>{touch ? '두 손가락으로 벌리면 확대돼요' : 'Ctrl+휠로 확대·축소 · 확대하면 끌어서 옆 달로 이동'}</span>
-        )}
-        {zoomed && (
           <span className="flex items-center gap-1">
             <Chip onClick={() => { const c = (a + b) / 2, s = (b - a) * 1.6; setWin(c - s / 2, c + s / 2) }}>축소</Chip>
             <Chip onClick={() => setWin(0, n - 1)}>전체 보기</Chip>
           </span>
-        )}
-      </div>
+        </div>
+      )}
       <svg ref={svgRef} width="100%" viewBox={`0 0 ${w} ${H}`}
         style={{ display: 'block', touchAction: zoomed ? 'none' : 'pan-y', cursor: zoomed ? 'grab' : 'crosshair' }}
         onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}

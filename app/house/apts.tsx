@@ -556,7 +556,6 @@ export function AptBands({ file, bands, band, metric, neighbors, open, onToggleA
       <div className="text-xs font-bold" style={{ color: 'var(--ink)' }}>
         {file.full}{many ? ` + 인접 ${shown.length - 1}곳` : ''} 아파트 {pool.length}곳
       </div>
-      <div className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>실거래 기준 {fmtYm(file.asOf)} · 최근 5년 안에 거래된 아파트</div>
       {file.sum.p !== undefined && (
         <div className="mt-2 flex items-center gap-2 flex-wrap text-[11px]">
           <span style={{ color: 'var(--ink-mute)' }}>{file.name} 전체 84㎡ 시세</span>

@@ -6,7 +6,7 @@
 //    전체 보기 상태에선 한 손가락 세로 끌기는 페이지 스크롤로 넘김 (지도에 갇혀서 스크롤이 안 되는 일 방지)
 //  - 끌거나 오므린 뒤 손을 떼도 클릭(지역 선택)으로 치지 않음
 
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export type VB = [number, number, number, number]
 
@@ -131,8 +131,6 @@ export function useZoomPan(full: VB, init: VB, maxZoom: number) {
 export function ZoomControls({ zoomAt, atFull, onReset, resetLabel }: {
   zoomAt: (f: number) => void; atFull: boolean; onReset: () => void; resetLabel: string | null
 }) {
-  const touch = useSyncExternalStore(() => () => {}, () => window.matchMedia('(pointer: coarse)').matches, () => false)
-  const hint = touch ? '두 손가락으로 확대 · 끌어서 이동' : '휠로 확대·축소 · 끌어서 이동'
   const btn = 'w-8 h-8 flex items-center justify-center text-sm font-bold'
   const st = { background: 'var(--surface)', color: 'var(--ink)', border: '1px solid var(--hairline-2)' }
   return <>
@@ -144,7 +142,6 @@ export function ZoomControls({ zoomAt, atFull, onReset, resetLabel }: {
       {resetLabel && (
         <button type="button" onClick={onReset} className="px-2 py-1 font-semibold pointer-events-auto" style={st}>{resetLabel}</button>
       )}
-      <span className="px-1 py-0.5" style={{ background: 'var(--surface)', color: 'var(--ink-mute)' }}>{hint}</span>
     </div>
   </>
 }

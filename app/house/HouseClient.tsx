@@ -104,7 +104,6 @@ function KeyStatus({ cat, onGuide }: { cat: HouseCatalog; onGuide: (a: ApiId) =>
           )}
         </span>
       ))}
-      <span style={{ color: 'var(--ink-mute)' }}>흐린 항목은 API 키를 받으면 자동으로 채워져요</span>
     </div>
   )
 }
@@ -277,8 +276,7 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
 
   return (
     <section className="mt-8">
-      <SectionHead title="지역별 지도"
-        desc={mobile ? '누르면 그 지역 집값 흐름이, 상세의 버튼으로 시군구·구까지 들어가요' : '누르면 그 지역 집값 흐름이, 더블클릭하면 시군구 → 구 지도로 들어가요'} />
+      <SectionHead title="지역별 지도" />
 
       {/* 지표 칩 — 기본 3개 + (누르면) 나머지 */}
       <div className="mt-3 flex items-center gap-1.5 flex-wrap">
@@ -355,7 +353,6 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
                 {areaSt && <StatusBadge tone={areaSt.tone} label={areaSt.label} small />}
               </span>
             )}
-            {!view && <span style={{ color: 'var(--ink-mute)' }}>{mobile ? '지역을 누르세요' : '더블클릭 = 확대'}</span>}
           </div>
 
           {!view ? (
@@ -754,7 +751,7 @@ function NationalSection({ cat, onGuide }: { cat: HouseCatalog; onGuide: (a: Api
 
   return (
     <section className="mt-12">
-      <SectionHead title="전국 사이클" desc="카드를 누르면 아래 차트에 겹쳐 볼 수 있어요. 같은 시간축에 세로로 나열돼요" />
+      <SectionHead title="전국 사이클" />
 
       {cat.groups.map(g => {
         const items = cat.indicators.filter(i => i.group === g.id)
@@ -763,7 +760,6 @@ function NationalSection({ cat, onGuide }: { cat: HouseCatalog; onGuide: (a: Api
           <div key={g.id} className="mt-4">
             <div className="flex items-baseline gap-2">
               <span className="text-xs font-bold" style={{ color: 'var(--ink)' }}>{g.name}</span>
-              <span className="text-[10px]" style={{ color: 'var(--ink-mute)' }}>{g.desc}</span>
             </div>
             <div className="mt-1.5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
               {items.map(ind => <NationalCard key={ind.id} ind={ind} cat={cat} on={keys.includes(ind.main[0])} onToggle={toggle} onGuide={onGuide} />)}
@@ -846,11 +842,11 @@ function NationalCard({ ind, cat, on, onToggle, onGuide }: {
   return <div>{body}</div>
 }
 
-function SectionHead({ title, desc }: { title: string; desc: string }) {
+function SectionHead({ title, desc }: { title: string; desc?: string }) {
   return (
     <div className="flex items-baseline gap-2 pb-2 flex-wrap" style={{ borderBottom: '1px solid var(--ink)' }}>
       <h2 className="text-sm font-bold" style={{ color: 'var(--ink)' }}>{title}</h2>
-      <span className="text-[11px]" style={{ color: 'var(--ink-mute)' }}>{desc}</span>
+      {desc && <span className="text-[11px]" style={{ color: 'var(--ink-mute)' }}>{desc}</span>}
     </div>
   )
 }

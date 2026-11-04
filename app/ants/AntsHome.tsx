@@ -76,22 +76,22 @@ export default function AntsHome() {
         ))}
       </div>
 
-      <Section title="개인투자자 누적 순매수" desc="사면 위로, 팔면 아래로 쌓여요">
+      <Section title="개인투자자 누적 순매수">
         <CumulativeChart />
       </Section>
 
-      <Section title="섹터 랭킹" desc="대표 ETF 등락률">
+      <Section title="섹터 랭킹">
         <SectorGrid />
       </Section>
 
-      <Section title="5일 순매수 · 순매도 1위" desc="최근 5거래일 합계">
+      <Section title="5일 순매수 · 순매도 1위">
         <div className="grid grid-cols-2 gap-2">
           <TopCard item={hookItems[0]} side="netBuy" />
           <TopCard item={hookItems[1]} side="netSell" />
         </div>
       </Section>
 
-      <Section title="주가와 개인 수급" desc="최근 5거래일 주가 방향 × 개인 순매수 방향">
+      <Section title="주가와 개인 수급">
         <NomNomChart fire={nomData?.fire} top={nomData?.top} bottom={nomData?.bottom} knife={nomData?.knife} />
       </Section>
 
