@@ -1,44 +1,59 @@
 {
-  "top": [
+  "fire": [
+    {
+      "name": "MICROSOFT CORP",
+      "name_kr": "마이크로소프트",
+      "ticker": "MSFT",
+      "file_ticker": "MICROSOFT CORP",
+      "close": 550.19,
+      "price_change": 0.037820198438148545,
+      "net_buy_sum": -26257492,
+      "buy_score": 0,
+      "sell_score": 7,
+      "last_date": "2026-11-04",
+      "comment": "개미 털고 세력 떡상 중 🚀"
+    },
     {
       "name": "MODERNA INC",
       "name_kr": "",
       "ticker": "MRNA",
       "file_ticker": "MODERNA INC",
-      "close": 228.44,
-      "price_change": 0.06667911841613747,
-      "net_buy_sum": 577935,
-      "buy_score": 3,
+      "close": 249.18,
+      "price_change": 0.11860298078649675,
+      "net_buy_sum": -393666,
+      "buy_score": 2,
       "sell_score": 5,
-      "last_date": "2026-11-03",
-      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
-    },
+      "last_date": "2026-11-04",
+      "comment": "개미 털고 세력 떡상 중 🚀"
+    }
+  ],
+  "top": [
     {
       "name": "ELI LILLY & CO",
       "name_kr": "일라이 릴리",
       "ticker": "LLY",
       "file_ticker": "ELI LILLY & CO",
-      "close": 1409.38,
-      "price_change": 0.09398432042226201,
+      "close": 1426.84,
+      "price_change": 0.03868384654582505,
       "net_buy_sum": 4660386,
       "buy_score": 2,
-      "sell_score": 2,
-      "last_date": "2026-11-03",
+      "sell_score": 1,
+      "last_date": "2026-11-04",
       "comment": "고점 판독기 삐빅... 조심해 ⚠️"
     }
   ],
   "bottom": [
     {
-      "name": "APPLE INC",
-      "name_kr": "애플",
-      "ticker": "AAPL",
-      "file_ticker": "APPLE INC",
-      "close": 331.9,
-      "price_change": -0.034697379518948336,
-      "net_buy_sum": -21299151,
+      "name": "TESLA INC",
+      "name_kr": "테슬라",
+      "ticker": "TSLA",
+      "file_ticker": "TESLA INC",
+      "close": 382.12,
+      "price_change": -0.05251673692040666,
+      "net_buy_sum": -72825655,
       "buy_score": 0,
-      "sell_score": 8,
-      "last_date": "2026-11-03",
+      "sell_score": 7,
+      "last_date": "2026-11-04",
       "comment": "공포에 줍줍할 기회인가 💎"
     },
     {
@@ -46,40 +61,40 @@
       "name_kr": "팔란티어 테크놀로지스",
       "ticker": "PLTR",
       "file_ticker": "PALANTIR TECHNOLOGIES INC CL A",
-      "close": 175.4,
-      "price_change": -0.1087851227071795,
-      "net_buy_sum": -6325864,
-      "buy_score": 3,
+      "close": 172.07,
+      "price_change": -0.12396904592200385,
+      "net_buy_sum": -14753853,
+      "buy_score": 2,
       "sell_score": 5,
-      "last_date": "2026-11-03",
+      "last_date": "2026-11-04",
       "comment": "공포에 줍줍할 기회인가 💎"
     }
   ],
   "knife": [
     {
-      "name": "NVIDIA CORP",
-      "name_kr": "엔비디아",
-      "ticker": "NVDA",
-      "file_ticker": "NVIDIA CORP",
-      "close": 206.69,
-      "price_change": -0.04034729315628191,
-      "net_buy_sum": 17795925,
-      "buy_score": 7,
-      "sell_score": 1,
-      "last_date": "2026-11-03",
-      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
-    },
-    {
       "name": "IRIS ENERGY LTD",
       "name_kr": "아이렌",
       "ticker": "IREN",
       "file_ticker": "IRIS ENERGY LTD",
-      "close": 24.46,
-      "price_change": -0.15187239944521494,
-      "net_buy_sum": 16897311,
-      "buy_score": 7,
+      "close": 22.91,
+      "price_change": -0.12723809523809523,
+      "net_buy_sum": 11002198,
+      "buy_score": 6,
       "sell_score": 0,
-      "last_date": "2026-11-03",
+      "last_date": "2026-11-04",
+      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+    },
+    {
+      "name": "NVIDIA CORP",
+      "name_kr": "엔비디아",
+      "ticker": "NVDA",
+      "file_ticker": "NVIDIA CORP",
+      "close": 205.02,
+      "price_change": -0.04043807919123835,
+      "net_buy_sum": 10793232,
+      "buy_score": 6,
+      "sell_score": 1,
+      "last_date": "2026-11-04",
       "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     }
   ]
