@@ -9,6 +9,7 @@ import {
   fillOf, fmtRegion, fmtWon, fmtYm, loadLocal, loadLocalGeo, priceStatus, textOn, unpack,
 } from '@/app/lib/house'
 import { Chip, Sparkline } from '@/app/components/macro/ui'
+import { type VB, ZoomControls, clampVB, useZoomPan } from './zoomPan'
 
 // ─────────────────────────────────────────
 // 지표
@@ -92,21 +93,11 @@ export function childrenOf(geo: LocalGeo, uid: string): string[] {
 }
 
 // ─────────────────────────────────────────
-// 시군구 지도
-// 다른 시도를 같이 그린 지도(경기 + 서울)는 넓어서 확대·이동이 됨: 처음엔 서울 주변을 크게, 축소하면 경기 전체
-//   휠 = 확대/축소 · 끌기 = 이동 (끈 건 클릭으로 안 침) · 모서리 버튼 + − 전체
+// 시군구 지도 — 모든 단계에서 확대·이동 (휠·끌기, 폰은 두 손가락·끌기). 로직은 zoomPan.tsx
+// 다른 시도를 같이 그린 지도(경기 + 서울)는 처음엔 서울 주변을 크게, 축소하면 경기 전체
 // ─────────────────────────────────────────
-type VB = [number, number, number, number]
-const ZOOM_MAX = 5          // 전체 대비 최대 확대
-const ZOOM_INIT = 2.6       // 처음: 서울 범위의 이 배수만큼 보여 줌
-
-function clampVB(v: VB, full: VB): VB {
-  const [fx, fy, fw, fh] = full
-  const w = Math.min(fw, Math.max(fw / ZOOM_MAX, v[2])), h = w * fh / fw
-  const cx = Math.min(fx + fw - w / 2, Math.max(fx + w / 2, v[0] + v[2] / 2))
-  const cy = Math.min(fy + fh - h / 2, Math.max(fy + h / 2, v[1] + v[3] / 2))
-  return [cx - w / 2, cy - h / 2, w, h]
-}
+const ZOOM_MAX = 8          // 처음 화면 대비 최대 확대
+const ZOOM_INIT = 2.6       // 경기 + 서울: 서울 범위의 이 배수만큼 보여 줌
 
 function initialVB(geo: LocalGeo): VB {
   const full = geo.viewBox as VB
@@ -115,7 +106,7 @@ function initialVB(geo: LocalGeo): VB {
   const x0 = Math.min(...ext.map(u => u.bbox[0])), y0 = Math.min(...ext.map(u => u.bbox[1]))
   const x1 = Math.max(...ext.map(u => u.bbox[0] + u.bbox[2])), y1 = Math.max(...ext.map(u => u.bbox[1] + u.bbox[3]))
   const w = Math.max(x1 - x0, (y1 - y0) * full[2] / full[3]) * ZOOM_INIT
-  return clampVB([(x0 + x1) / 2 - w / 2, (y0 + y1) / 2 - w * full[3] / full[2] / 2, w, w * full[3] / full[2]], full)
+  return clampVB([(x0 + x1) / 2 - w / 2, (y0 + y1) / 2 - w * full[3] / full[2] / 2, w, w * full[3] / full[2]], full, ZOOM_MAX)
 }
 
 export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, onZoom, onApt }: {
@@ -131,136 +122,76 @@ export function LocalMap({ geo, data, parent, metric, focus, onHover, onPick, on
   const ctx = parent ? Object.keys(units).filter(k => units[k].level === 2 && k !== parent && units[k].d) : []
   const vals = ids.map(k => localVal(unitData(geo, data, k)?.sum, metric.id)).filter((v): v is number => v !== null)
 
-  // 확대: 상위 단위 bbox 를 기본 지도와 같은 비율로 넓혀서 화면 높이가 튀지 않게
+  // 확대 단계(parent): 상위 단위 bbox 를 기본 지도와 같은 비율로 넓혀서 화면 높이가 튀지 않게 → 그게 '전체'
   const [, , bw, bh] = geo.viewBox
-  let vb = geo.viewBox as number[]
-  if (parent && units[parent]) {
-    const [x, y, w0, h0] = units[parent].bbox
-    let w = w0 * 1.16, h = h0 * 1.16
-    if (w / h > bw / bh) h = w * bh / bw
-    else w = h * bw / bh
-    vb = [x + w0 / 2 - w / 2, y + h0 / 2 - h / 2, w, h]
-  }
-  // 확대 가능한 지도 (경기 + 서울 첫 화면)
-  const zoomable = !parent && Object.values(units).some(u => u.ext)
-  const full = geo.viewBox as VB
-  const [zv, setZv] = useState<VB>(() => initialVB(geo))
-  const svgRef = useRef<SVGSVGElement>(null)
-  const drag = useRef<{ x: number; y: number; vb: VB; moved: boolean } | null>(null)
-  const moved = useRef(false)
-  if (zoomable) vb = zv
-
-  // 화면 좌표 → 지도 좌표 (maxHeight 로 여백이 생겨도 맞게 CTM 으로)
-  const toSvg = (cx: number, cy: number) => {
-    const svg = svgRef.current, m = svg?.getScreenCTM()
-    if (!svg || !m) return null
-    const p = new DOMPoint(cx, cy).matrixTransform(m.inverse())
-    return { x: p.x, y: p.y, k: 1 / m.a }
-  }
-  const zoomAt = (f: number, cx?: number, cy?: number) => setZv(v => {
-    const c = cx !== undefined && cy !== undefined ? toSvg(cx, cy) : null
-    const mx = c ? c.x : v[0] + v[2] / 2, my = c ? c.y : v[1] + v[3] / 2
-    return clampVB([mx - (mx - v[0]) * f, my - (my - v[1]) * f, v[2] * f, v[3] * f], full)
-  })
-  // 휠은 페이지 스크롤을 막아야 해서 passive: false 로 직접 등록
-  useEffect(() => {
-    const svg = svgRef.current
-    if (!svg || !zoomable) return
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault()
-      zoomAt(e.deltaY > 0 ? 1.18 : 1 / 1.18, e.clientX, e.clientY)
+  const full = useMemo<VB>(() => {
+    if (parent && units[parent]) {
+      const [x, y, w0, h0] = units[parent].bbox
+      let w = w0 * 1.16, h = h0 * 1.16
+      if (w / h > bw / bh) h = w * bh / bw
+      else w = h * bw / bh
+      return [x + w0 / 2 - w / 2, y + h0 / 2 - h / 2, w, h]
     }
-    svg.addEventListener('wheel', onWheel, { passive: false })
-    return () => svg.removeEventListener('wheel', onWheel)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zoomable])
+    return geo.viewBox as VB
+  }, [geo, parent, units, bw, bh])
+  // 경기 + 서울 첫 화면만 처음부터 확대
+  const ext = !parent && Object.values(units).some(u => u.ext)
+  const init = useMemo(() => (ext ? initialVB(geo) : full), [ext, geo, full])
+  const zp = useZoomPan(full, init, ext ? ZOOM_MAX * (full[2] / init[2]) : ZOOM_MAX)
+  const vb = zp.vb
 
-  const k = vb[2] / bw   // 글자 크기 보정
+  const k = vb[2] / bw   // 글자 크기 보정 (확대하면 글자는 그대로, 작은 칸 이름이 보이기 시작)
   const fs = 10 * k
-  const atFull = zv[2] >= full[2] - 0.5
+  const atInit = Math.abs(vb[2] - init[2]) < init[2] * 0.01 && Math.abs(vb[0] - init[0]) < init[2] * 0.01 && Math.abs(vb[1] - init[1]) < init[2] * 0.01
 
-  const svgEl = (
-    <svg ref={svgRef} viewBox={vb.map(n => n.toFixed(1)).join(' ')} className="block w-full h-auto select-none"
-      style={{ maxHeight: 640, cursor: zoomable ? (drag.current?.moved ? 'grabbing' : 'grab') : undefined, touchAction: zoomable ? 'pan-y' : undefined }}
-      role="img" aria-label={`${geo.ko} 시군구 지도`} onMouseLeave={() => onHover(null)}
-      onPointerDown={zoomable ? e => {
-        if (e.pointerType !== 'mouse' || e.button !== 0) return
-        drag.current = { x: e.clientX, y: e.clientY, vb: zv, moved: false }
-        moved.current = false
-      } : undefined}
-      onPointerMove={zoomable ? e => {
-        const d = drag.current
-        if (!d) return
-        const dx = e.clientX - d.x, dy = e.clientY - d.y
-        if (!d.moved && Math.hypot(dx, dy) < 4) return
-        d.moved = true
-        moved.current = true
-        const c = toSvg(0, 0)
-        const s = c?.k ?? 1
-        setZv(clampVB([d.vb[0] - dx * s, d.vb[1] - dy * s, d.vb[2], d.vb[3]], full))
-      } : undefined}
-      onPointerUp={zoomable ? () => { drag.current = null } : undefined}
-      onPointerLeave={zoomable ? () => { drag.current = null } : undefined}
-      // 끌고 놓은 건 클릭·더블클릭으로 치지 않음
-      onClickCapture={zoomable ? e => { if (moved.current) { e.stopPropagation(); e.preventDefault(); moved.current = false } } : undefined}
-      onDoubleClickCapture={zoomable ? e => { if (drag.current?.moved) e.stopPropagation() } : undefined}>
-      {ctx.map(id => (
-        <path key={id} d={units[id].d} fill="var(--neu)" opacity={0.45} stroke="var(--surface)" strokeWidth={0.6}
-          vectorEffect="non-scaling-stroke" pointerEvents="none" />
-      ))}
-      {ids.map(id => {
-        const v = localVal(unitData(geo, data, id)?.sum, metric.id)
-        return (
-          <path key={id} d={units[id].d} fill={fillOf(metric, v, vals)}
-            stroke="var(--surface)" strokeWidth={0.7} strokeLinejoin="round" vectorEffect="non-scaling-stroke"
-            style={{ cursor: 'pointer', transition: 'fill .2s' }}
-            onMouseEnter={() => onHover(id)}
-            onClick={() => onPick(id)}
-            onDoubleClick={() => { if (!parent && childrenOf(geo, id).length) onZoom(id); else onApt?.(id) }} />
-        )
-      })}
-      {focus && units[focus] && ids.includes(focus) && (
-        <path d={units[focus].d} fill="none" stroke="var(--ink)" strokeWidth={1.8} vectorEffect="non-scaling-stroke" pointerEvents="none" />
-      )}
-      {ids.map(id => {
-        const u = units[id]
-        const v = localVal(unitData(geo, data, id)?.sum, metric.id)
-        const fill = fillOf(metric, v, vals)
-        const [, , w, h] = u.bbox
-        const name = u.name.replace(/\(.*\)$/, '')   // '신제주(노형·연동)' → '신제주'
-        // 칸보다 긴 글자는 생략 (마우스를 올리면 툴팁으로 보임)
-        const showName = name.length * fs * 0.95 <= w * 1.15 && h >= fs * 1.2
-        const showVal = showName && v !== null && h >= fs * 2.6 && w >= fs * 3.2
-        if (!showName) return null
-        return (
-          <g key={id} pointerEvents="none" transform={`translate(${u.label[0]},${u.label[1] - (showVal ? fs * 0.45 : 0)})`}>
-            <text textAnchor="middle" dominantBaseline="middle" fontSize={fs} fontWeight={700} fill={textOn(fill)}>{name}</text>
-            {showVal && (
-              <text y={fs * 1.15} textAnchor="middle" dominantBaseline="middle" fontSize={fs * 0.9} className="mono" fill={textOn(fill)}>
-                {fmtRegion(metric, v)}
-              </text>
-            )}
-          </g>
-        )
-      })}
-    </svg>
-  )
-  if (!zoomable) return svgEl
-  const btn = 'w-7 h-7 flex items-center justify-center text-sm font-bold'
-  const btnStyle = { background: 'var(--surface)', color: 'var(--ink)', border: '1px solid var(--hairline-2)' }
   return (
     <div className="relative">
-      {svgEl}
-      <div className="absolute right-2 top-2 flex flex-col gap-1">
-        <button type="button" className={btn} style={btnStyle} onClick={() => zoomAt(1 / 1.5)} aria-label="확대" title="확대 (휠 위로)">+</button>
-        <button type="button" className={btn} style={btnStyle} onClick={() => zoomAt(1.5)} aria-label="축소" title="축소 (휠 아래로)">−</button>
-      </div>
-      <div className="absolute left-2 bottom-2 flex items-center gap-1.5 text-[10px]">
-        <button type="button" onClick={() => setZv(atFull ? initialVB(geo) : full)} className="px-2 py-1 font-semibold" style={btnStyle}>
-          {atFull ? '서울 주변 크게' : `${geo.ko} 전체 보기`}
-        </button>
-        <span className="px-1 py-0.5" style={{ background: 'var(--surface)', color: 'var(--ink-mute)' }}>휠로 확대·축소 · 끌어서 이동</span>
-      </div>
+      <svg {...zp.svgProps} className="block w-full h-auto select-none"
+        style={{ ...zp.svgProps.style, maxHeight: 640 }}
+        role="img" aria-label={`${geo.ko} 시군구 지도`} onMouseLeave={() => onHover(null)}>
+        {ctx.map(id => (
+          <path key={id} d={units[id].d} fill="var(--neu)" opacity={0.45} stroke="var(--surface)" strokeWidth={0.6}
+            vectorEffect="non-scaling-stroke" pointerEvents="none" />
+        ))}
+        {ids.map(id => {
+          const v = localVal(unitData(geo, data, id)?.sum, metric.id)
+          return (
+            <path key={id} d={units[id].d} fill={fillOf(metric, v, vals)}
+              stroke="var(--surface)" strokeWidth={0.7} strokeLinejoin="round" vectorEffect="non-scaling-stroke"
+              style={{ cursor: 'pointer', transition: 'fill .2s' }}
+              onMouseEnter={() => onHover(id)}
+              onClick={() => onPick(id)}
+              onDoubleClick={() => { if (!parent && childrenOf(geo, id).length) onZoom(id); else onApt?.(id) }} />
+          )
+        })}
+        {focus && units[focus] && ids.includes(focus) && (
+          <path d={units[focus].d} fill="none" stroke="var(--ink)" strokeWidth={1.8} vectorEffect="non-scaling-stroke" pointerEvents="none" />
+        )}
+        {ids.map(id => {
+          const u = units[id]
+          const v = localVal(unitData(geo, data, id)?.sum, metric.id)
+          const fill = fillOf(metric, v, vals)
+          const [, , w, h] = u.bbox
+          const name = u.name.replace(/\(.*\)$/, '')   // '신제주(노형·연동)' → '신제주'
+          // 칸보다 긴 글자는 생략 (마우스를 올리면 툴팁으로 보임)
+          const showName = name.length * fs * 0.95 <= w * 1.15 && h >= fs * 1.2
+          const showVal = showName && v !== null && h >= fs * 2.6 && w >= fs * 3.2
+          if (!showName) return null
+          return (
+            <g key={id} pointerEvents="none" transform={`translate(${u.label[0]},${u.label[1] - (showVal ? fs * 0.45 : 0)})`}>
+              <text textAnchor="middle" dominantBaseline="middle" fontSize={fs} fontWeight={700} fill={textOn(fill)}>{name}</text>
+              {showVal && (
+                <text y={fs * 1.15} textAnchor="middle" dominantBaseline="middle" fontSize={fs * 0.9} className="mono" fill={textOn(fill)}>
+                  {fmtRegion(metric, v)}
+                </text>
+              )}
+            </g>
+          )
+        })}
+      </svg>
+      <ZoomControls zoomAt={zp.zoomAt} atFull={zp.atFull}
+        onReset={() => zp.setVb(ext && !zp.atFull ? full : init)}
+        resetLabel={ext ? (zp.atFull ? '서울 주변 크게' : `${geo.ko} 전체 보기`) : atInit ? null : '처음 화면'} />
     </div>
   )
 }

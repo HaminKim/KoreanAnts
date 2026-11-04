@@ -13,6 +13,7 @@ import {
 import { type Layer, fmtNum, fmtPeriod, tfLabel } from '@/app/lib/macro'
 import MacroChart, { type ChartLayer, type MacroChartHandle, type ShadeBand } from '@/app/components/macro/MacroChart'
 import { Chip, Label, LayerLegend, PERIODS, Sparkline, newLayer, useIsMobile, useSeriesMap } from '@/app/components/macro/ui'
+import { type VB, ZoomControls, useZoomPan } from './zoomPan'
 import { LocalMap, LocalTip, PriceBlock, StatusBadge, childrenOf, localMetrics, localVal, p84Metric, unitData, useLocalFile } from './local'
 import { type AptPick, AptBands, AptDetail, AptMap, aptMetrics, aptStatus, priceBands, useAptFile, useAptFiles } from './apts'
 
@@ -358,44 +359,8 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
           </div>
 
           {!view ? (
-            <svg viewBox={geo.viewBox.join(' ')} className="block w-full h-auto select-none" role="img" aria-label="대한민국 시도 지도">
-              {ids.map(id => {
-                const r = regions.regions[id]
-                const v = r?.values[metric.id]?.v
-                const fill = metric.available ? fillOf(metric, v, vals) : 'var(--neu)'
-                const on = focus === id
-                return (
-                  <path key={id} d={geo.regions[id].d} fill={fill}
-                    stroke={on ? 'var(--ink)' : 'var(--surface)'} strokeWidth={on ? 1.6 : 0.7} strokeLinejoin="round"
-                    style={{ cursor: 'pointer', transition: 'fill .2s' }}
-                    onMouseEnter={() => setHover(id)}
-                    onClick={() => {
-                      setSelected(id)
-                      if (!metric.available) onGuide(metric.need)
-                    }}
-                    onDoubleClick={() => zoomNation(id)} />
-                )
-              })}
-              {/* 선택 지역 테두리를 맨 위에 다시 그림 */}
-              {focus && geo.regions[focus] && (
-                <path d={geo.regions[focus].d} fill="none" stroke="var(--ink)" strokeWidth={1.8} pointerEvents="none" />
-              )}
-              {ids.map(id => {
-                const r = regions.regions[id]
-                const [x, y] = geo.regions[id].label
-                const v = r?.values[metric.id]?.v
-                const fill = metric.available ? fillOf(metric, v, vals) : 'var(--neu)'
-                const small = id === 'sejong'
-                return (
-                  <g key={id} pointerEvents="none" transform={`translate(${x},${y})`}>
-                    <text textAnchor="middle" fontSize={small ? 9 : 11} fontWeight={700} fill={textOn(fill)}>{r?.ko}</text>
-                    {metric.available && v !== undefined && v !== null && !small && (
-                      <text y={12} textAnchor="middle" fontSize={9.5} className="mono" fill={textOn(fill)}>{fmtRegion(metric, v)}</text>
-                    )}
-                  </g>
-                )
-              })}
-            </svg>
+            <NationMap geo={geo} ids={ids} regions={regions} metric={metric} vals={vals} focus={focus}
+              onHover={setHover} onPick={id => { setSelected(id); if (!metric.available) onGuide(metric.need) }} onZoom={zoomNation} />
           ) : view.apt ? (
             apt.file ? (
               <AptMap key={apt.file.id} file={apt.file} neighbors={nbFiles} open={openNb} fitReq={fitReq} metric={lmetric} selected={aptSel} focusReq={aptFocus}
@@ -476,6 +441,54 @@ function MapSection({ cat, regions, geo, lidx, onGuide }: {
 }
 
 /** 하위 단위 이름: 일반구면 '구', 행정동을 묶은 단위면 '생활권' */
+// 전국 시도 지도 — 시군구 지도와 같은 확대·이동 (zoomPan.tsx). 글자는 확대해도 화면에서 같은 크기
+function NationMap({ geo, ids, regions, metric, vals, focus, onHover, onPick, onZoom }: {
+  geo: MapGeo; ids: string[]; regions: Regions; metric: RegionMetric; vals: number[]; focus: string | null
+  onHover: (id: string) => void; onPick: (id: string) => void; onZoom: (id: string) => void
+}) {
+  const full = geo.viewBox as VB
+  const zp = useZoomPan(full, full, 6)
+  const k = zp.k
+  return (
+    <div className="relative">
+      <svg {...zp.svgProps} className="block w-full h-auto select-none" role="img" aria-label="대한민국 시도 지도">
+        {ids.map(id => {
+          const v = regions.regions[id]?.values[metric.id]?.v
+          const fill = metric.available ? fillOf(metric, v, vals) : 'var(--neu)'
+          return (
+            <path key={id} d={geo.regions[id].d} fill={fill}
+              stroke="var(--surface)" strokeWidth={0.7} strokeLinejoin="round" vectorEffect="non-scaling-stroke"
+              style={{ cursor: 'pointer', transition: 'fill .2s' }}
+              onMouseEnter={() => onHover(id)}
+              onClick={() => onPick(id)}
+              onDoubleClick={() => onZoom(id)} />
+          )
+        })}
+        {/* 선택 지역 테두리를 맨 위에 다시 그림 */}
+        {focus && geo.regions[focus] && (
+          <path d={geo.regions[focus].d} fill="none" stroke="var(--ink)" strokeWidth={1.8} vectorEffect="non-scaling-stroke" pointerEvents="none" />
+        )}
+        {ids.map(id => {
+          const r = regions.regions[id]
+          const [x, y] = geo.regions[id].label
+          const v = r?.values[metric.id]?.v
+          const fill = metric.available ? fillOf(metric, v, vals) : 'var(--neu)'
+          const small = id === 'sejong' && k > 0.45   // 세종은 확대하면 값까지
+          return (
+            <g key={id} pointerEvents="none" transform={`translate(${x},${y}) scale(${k})`}>
+              <text textAnchor="middle" fontSize={small ? 9 : 11} fontWeight={700} fill={textOn(fill)}>{r?.ko}</text>
+              {metric.available && v !== undefined && v !== null && !small && (
+                <text y={12} textAnchor="middle" fontSize={9.5} className="mono" fill={textOn(fill)}>{fmtRegion(metric, v)}</text>
+              )}
+            </g>
+          )
+        })}
+      </svg>
+      <ZoomControls zoomAt={zp.zoomAt} atFull={zp.atFull} onReset={() => zp.setVb(full)} resetLabel={zp.atFull ? null : '전국 보기'} />
+    </div>
+  )
+}
+
 function childLabel(geo: LocalGeo, uid: string) {
   return childrenOf(geo, uid).some(k => geo.units[k].kind === 'area') ? '생활권' : '구'
 }
