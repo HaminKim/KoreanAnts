@@ -22437,13 +22437,6 @@
   ],
   "BRK-B": [
     {
-      "d": "2023-11-04",
-      "actual": 4.96,
-      "estimate": 4.93,
-      "surp": 0.62,
-      "revenue": null
-    },
-    {
       "d": "2024-02-24",
       "actual": 3.92,
       "estimate": 3.79,
@@ -22519,6 +22512,13 @@
       "estimate": 5.13,
       "surp": 17.4,
       "revenue": 117.885
+    },
+    {
+      "d": "2026-11-07",
+      "actual": 5.94,
+      "estimate": 6.14,
+      "surp": -3.21,
+      "revenue": null
     }
   ],
   "AU": [
