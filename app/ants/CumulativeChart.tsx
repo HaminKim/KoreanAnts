@@ -61,11 +61,14 @@ export default function CumulativeChart() {
       i0 = Math.max(0, data.d.findIndex(d => d >= cutoff))
     }
     const base = i0 > 0 ? data.cum[i0 - 1] : 0
-    const d = data.d.slice(i0)
+    let d = data.d.slice(i0)
     const net = data.net.slice(i0)
     const cum = data.cum.slice(i0).map(v => v - base)
     let px: (number | null)[] | null = null
     if (overlay && spx) {
+      // 순매수는 Seibro T+2 라 며칠 늦음 → S&P 500 은 그 뒤 거래일까지 이어서 그림 (누적선·막대는 마지막 집계일에서 멈춤)
+      const lastFlow = d[d.length - 1]
+      d = [...d, ...spx.d.filter(x => x > lastFlow)]
       const m = new Map(spx.d.map((x, i) => [x, spx.v[i]]))
       let last: number | null = null
       px = d.map(x => { const v = m.get(x); if (v !== undefined) last = v; return last })
@@ -91,7 +94,7 @@ export default function CumulativeChart() {
             {fmtUsd(total)}
           </div>
           <div className="text-xs" style={{ color: 'var(--ink-mute)' }}>
-            마지막 날 {fmtDate(view.d[view.d.length - 1])}{' '}
+            마지막 날 {fmtDate(view.d[view.cum.length - 1])}{' '}
             <span className="mono font-semibold" style={{ color: lastNet >= 0 ? 'var(--up-text)' : 'var(--down-text)' }}>{fmtUsd(lastNet)}</span>
           </div>
         </div>
@@ -130,7 +133,8 @@ function Plot({ d, cum, net, px, showEvents }: {
     return () => ro.disconnect()
   }, [])
 
-  const n = cum.length
+  const n = d.length        // x축 (S&P 500 겹쳐보기면 순매수 집계일 뒤로 늘어남)
+  const nc = cum.length     // 순매수가 있는 구간
   const [win, setWinState] = useState<Win>([0, n - 1])
   const winRef = useRef(win)
   const MIN_SPAN = Math.min(n - 1, 10)
@@ -162,20 +166,22 @@ function Plot({ d, cum, net, px, showEvents }: {
 
   // 보이는 구간 기준으로 세로 범위 (확대하면 그 구간이 꽉 차게)
   const visC = cum.slice(i0, i1 + 1)
+  if (!visC.length) visC.push(cum[nc - 1])
   const cMin = Math.min(...visC, ...(zoomed ? [] : [0])), cMax = Math.max(...visC, ...(zoomed ? [] : [0]))
   const cPad = (cMax - cMin) * 0.06 || Math.abs(cMax) * 0.05 || 1
   const y = (v: number) => PAD.t + (1 - (v - (cMin - cPad)) / (cMax - cMin + 2 * cPad)) * (H1 - PAD.t)
 
-  const nAbs = Math.max(...net.slice(i0, i1 + 1).map(Math.abs)) || 1
+  const nAbs = Math.max(0, ...net.slice(i0, i1 + 1).map(Math.abs)) || 1
   const yb0 = H1 + GAP + H2 / 2
   const yb = (v: number) => yb0 - (v / nAbs) * (H2 / 2)
   const per = iw / (b - a + 1)
   const bw = Math.max(1, per - (per > 4 ? Math.min(3, per * 0.25) : 0.3))
 
   const idx = Array.from({ length: i1 - i0 + 1 }, (_, k) => i0 + k)
-  const path = idx.map((i, k) => `${k ? 'L' : 'M'}${x(i).toFixed(1)},${y(cum[i]).toFixed(1)}`).join('')
+  const idxC = idx.filter(i => i < nc)
+  const path = idxC.map((i, k) => `${k ? 'L' : 'M'}${x(i).toFixed(1)},${y(cum[i]).toFixed(1)}`).join('')
   const yArea = y(Math.min(Math.max(0, cMin - cPad), cMax + cPad))
-  const area = `${path}L${x(i1).toFixed(1)},${yArea.toFixed(1)}L${x(i0).toFixed(1)},${yArea.toFixed(1)}Z`
+  const area = idxC.length ? `${path}L${x(idxC[idxC.length - 1]).toFixed(1)},${yArea.toFixed(1)}L${x(idxC[0]).toFixed(1)},${yArea.toFixed(1)}Z` : ''
 
   let pxPath = ''
   if (px) {
@@ -386,10 +392,10 @@ function Plot({ d, cum, net, px, showEvents }: {
           {pxPath && <path d={pxPath} fill="none" stroke="var(--ink-mute)" strokeWidth={1.3} opacity={0.45} />}
           <path d={area} fill="var(--accent)" opacity={0.08} />
           <path d={path} fill="none" stroke="var(--ink)" strokeWidth={1.9} strokeLinejoin="round" />
-          {i1 === n - 1 && <circle cx={x(n - 1)} cy={y(cum[n - 1])} r={3.5} fill={tone(cum[n - 1])} />}
+          {i0 <= nc - 1 && i1 >= nc - 1 && <circle cx={x(nc - 1)} cy={y(cum[nc - 1])} r={3.5} fill={tone(cum[nc - 1])} />}
 
           {/* 그날 순매수 막대 */}
-          {idx.map(i => (
+          {idxC.map(i => (
             <rect key={i} x={x(i) - bw / 2} width={bw} y={net[i] >= 0 ? yb(net[i]) : yb0} height={Math.max(0.5, Math.abs(yb(net[i]) - yb0))}
               fill={tone(net[i])} opacity={hi === null || hi === i ? 0.85 : 0.35} />
           ))}
@@ -404,12 +410,12 @@ function Plot({ d, cum, net, px, showEvents }: {
         {hi !== null && (
           <g pointerEvents="none">
             <line x1={x(hi)} x2={x(hi)} y1={PAD.t} y2={H1 + GAP + H2} stroke="var(--ink-2)" strokeDasharray="2 2" />
-            <circle cx={x(hi)} cy={y(cum[hi])} r={3.5} fill="var(--surface)" stroke="var(--ink)" strokeWidth={1.5} />
+            {hi < nc && <circle cx={x(hi)} cy={y(cum[hi])} r={3.5} fill="var(--surface)" stroke="var(--ink)" strokeWidth={1.5} />}
           </g>
         )}
       </svg>
 
-      {zoomed && <Overview cum={cum} win={[a, b]} w={w} pad={PAD} onMove={setWin} />}
+      {zoomed && <Overview cum={cum} n={n} win={[a, b]} w={w} pad={PAD} onMove={setWin} />}
 
       {hi !== null && (
         <div className="absolute px-2.5 py-1.5 text-[11px] leading-snug pointer-events-none max-w-[240px]"
@@ -420,8 +426,10 @@ function Plot({ d, cum, net, px, showEvents }: {
             background: 'var(--surface)', border: '1px solid var(--hairline-2)', color: 'var(--ink)',
           }}>
           <div className="mono font-semibold">{fmtDate(d[hi])}</div>
-          <div>누적 <span className="mono font-bold" style={{ color: tone(cum[hi]) }}>{fmtUsd(cum[hi])}</span></div>
-          <div>그날 <span className="mono" style={{ color: tone(net[hi]) }}>{fmtUsd(net[hi])}</span></div>
+          {hi < nc ? (<>
+            <div>누적 <span className="mono font-bold" style={{ color: tone(cum[hi]) }}>{fmtUsd(cum[hi])}</span></div>
+            <div>그날 <span className="mono" style={{ color: tone(net[hi]) }}>{fmtUsd(net[hi])}</span></div>
+          </>) : <div style={{ color: 'var(--ink-mute)' }}>순매수 집계 전 (Seibro 2영업일 뒤 공시)</div>}
           {px && px[hi] !== null && <div style={{ color: 'var(--ink-mute)' }}>S&amp;P 500 <span className="mono">{px[hi]!.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span></div>}
           {hiEvents.map(e => (
             <div key={e.date + e.name} className="mt-1 pt-1" style={{ borderTop: '1px solid var(--hairline)' }}>
@@ -439,11 +447,10 @@ function Plot({ d, cum, net, px, showEvents }: {
 }
 
 /** 확대했을 때 아래에 보이는 전체 흐름 + 지금 보는 구간. 구간을 끌면 이동, 바깥을 누르면 그리로 */
-function Overview({ cum, win, w, pad, onMove }: {
-  cum: number[]; win: Win; w: number; pad: { l: number; r: number }; onMove: (a: number, b: number) => void
+function Overview({ cum, n, win, w, pad, onMove }: {
+  cum: number[]; n: number; win: Win; w: number; pad: { l: number; r: number }; onMove: (a: number, b: number) => void
 }) {
   const H = 34
-  const n = cum.length
   const iw = w - pad.l - pad.r
   const x = (i: number) => pad.l + (i / (n - 1)) * iw
   const mn = Math.min(...cum), mx = Math.max(...cum), sp = mx - mn || 1
