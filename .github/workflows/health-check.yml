@@ -1,0 +1,44 @@
+name: Health Check (매일 점검 · 재실행 · 메일 보고)
+
+# 매일 11:00 KST: 자동 작업 3개와 데이터·사이트를 점검하고,
+# 문제가 있으면 해당 작업을 1번 다시 돌린 뒤 결과를 메일로 보낸다.
+# 내용은 scripts/health/check.py 참고.
+# Secrets: GMAIL_USER (보내는 Gmail 주소), GMAIL_APP_PASSWORD (Gmail 앱 비밀번호), MAIL_TO (선택, 없으면 GMAIL_USER)
+on:
+  schedule:
+    - cron: "0 2 * * *"   # 11:00 KST (UTC 02:00)
+  workflow_dispatch: {}
+
+permissions:
+  actions: write      # 실패한 작업 다시 돌리기
+  contents: read
+
+concurrency:
+  group: health-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      # 레포가 커서 점검 스크립트만 받음 (데이터는 API 로 읽음)
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: scripts/health
+          sparse-checkout-cone-mode: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install requests
+
+      - name: Check, retry, report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+        run: python scripts/health/check.py
