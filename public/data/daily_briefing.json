@@ -1,11 +1,11 @@
 {
-  "date": "2026-11-08",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-11-09",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,7 +13,7 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 4532002145.0,
+      "value": 1625259378.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -22,34 +22,34 @@
       "ticker": "GOOGL",
       "name": "",
       "raw_name": "ALPHABET INC CL A",
-      "value": 665467231.0,
+      "value": 497059526.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 604944956.0,
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 220222864.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "TQQQ",
+      "ticker": "QLD",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 471708974.0,
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 160925516.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "QLD",
+      "ticker": "",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 370387083.0,
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 113227290.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
