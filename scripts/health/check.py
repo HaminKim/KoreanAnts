@@ -39,7 +39,34 @@ API = f"https://api.github.com/repos/{REPO}"
 KST = timezone(timedelta(hours=9))
 DRY = "--dry-run" in sys.argv
 
-S = requests.Session()
+# ── 폭주 방지 ──
+# 1) 작업마다 하루 1번만 재실행 (20시간 안에 이 점검이 이미 돌렸으면 건너뜀 → 점검을 여러 번 돌려도 재실행은 1번)
+# 2) 재실행한 작업은 결과와 상관없이 다시 안 돌림 (실패 → 재실행 → 실패 로 끝, 반복 없음)
+# 3) 매크로는 가벼운 재실행(light): 하루 한도 있는 국토부 실거래·경매·지오코더 단계는 건너뜀
+# 4) GitHub API 호출은 점검 1번에 최대 API_BUDGET 번 (GITHUB_TOKEN 한도 시간당 1000), 넘으면 재실행 멈추고 보고만
+# 5) 기다리는 시간 상한: 작업당 40분, 배포 반영 15분, 최악 110분 < 워크플로 timeout 120분 (메일 전에 안 잘리게)
+API_BUDGET = 400
+POLL_SEC = 60
+RETRY_COOLDOWN_H = 20
+DISPATCH_INPUTS = {"macro-sync.yml": {"light": "true"}}
+
+
+class Budget(Exception):
+    pass
+
+
+class CountingSession(requests.Session):
+    calls = 0
+
+    def request(self, method, url, *a, **kw):
+        if str(url).startswith(API):
+            CountingSession.calls += 1
+            if CountingSession.calls > API_BUDGET:
+                raise Budget(f"GitHub API {API_BUDGET}번 상한 도달")
+        return super().request(method, url, *a, **kw)
+
+
+S = CountingSession()
 S.headers["Accept"] = "application/vnd.github+json"
 if os.environ.get("GITHUB_TOKEN"):
     S.headers["Authorization"] = f"Bearer {os.environ['GITHUB_TOKEN']}"
@@ -99,9 +126,23 @@ def error_tail(run: dict, n: int = 25) -> str:
         return f"(로그를 못 가져옴: {e})"
 
 
-def dispatch_and_wait(wf: str, timeout_min: int = 60) -> dict | None:
+def recently_retried(wf: str) -> dict | None:
+    """이 점검(github-actions[bot])이 최근 RETRY_COOLDOWN_H 시간 안에 이미 다시 돌린 실행"""
+    since = now() - timedelta(hours=RETRY_COOLDOWN_H)
+    for r in runs(wf, event="workflow_dispatch"):
+        if iso(r["created_at"]) < since:
+            break
+        if (r.get("triggering_actor") or {}).get("login") == "github-actions[bot]":
+            return r
+    return None
+
+
+def dispatch_and_wait(wf: str, timeout_min: int = 40) -> dict | None:
     started = now()
-    r = S.post(f"{API}/actions/workflows/{wf}/dispatches", json={"ref": "main"}, timeout=30)
+    body = {"ref": "main"}
+    if wf in DISPATCH_INPUTS:
+        body["inputs"] = DISPATCH_INPUTS[wf]
+    r = S.post(f"{API}/actions/workflows/{wf}/dispatches", json=body, timeout=30)
     if r.status_code != 204:
         log(f"  ✗ {wf} 재실행 요청 실패: {r.status_code} {r.text[:200]}")
         return None
@@ -109,7 +150,7 @@ def dispatch_and_wait(wf: str, timeout_min: int = 60) -> dict | None:
     run = None
     deadline = time.time() + timeout_min * 60
     while time.time() < deadline:
-        time.sleep(20)
+        time.sleep(POLL_SEC)
         if run is None:
             cand = [x for x in runs(wf, event="workflow_dispatch") if iso(x["created_at"]) >= started - timedelta(seconds=30)]
             run = cand[-1] if cand else None
@@ -264,25 +305,43 @@ def main():
         log(("✅" if x["ok"] else "❌"), x["name"], "-", x["detail"])
 
     retried: list[str] = []
+    skipped: list[str] = []
     if not DRY:
-        todo = []
-        for x in first:
-            if not x["ok"] and x.get("wf") and x["wf"] not in todo and x["wf"] != "deploy-daily.yml":
-                todo.append(x["wf"])
-        for wf in todo:
-            r = dispatch_and_wait(wf)
-            retried.append(f"{WORKFLOWS[wf]} → {r['conclusion'] if r else '시작 못 함'}" + (f" ({r['html_url']})" if r else ""))
-        need_deploy = bool(todo) or any(not x["ok"] and x.get("wf") == "deploy-daily.yml" for x in first)
-        if need_deploy:
-            r = dispatch_and_wait("deploy-daily.yml", 15)
-            retried.append(f"예약 배포 → {r['conclusion'] if r else '시작 못 함'}")
-            log("  … Vercel 빌드 기다림 (최대 15분)")
-            for _ in range(15):
-                time.sleep(60)
-                if all(x["ok"] for x in check_site()):
-                    break
+        try:
+            want = []
+            for x in first:
+                if not x["ok"] and x.get("wf") and x["wf"] not in want and x["wf"] != "deploy-daily.yml":
+                    want.append(x["wf"])
+            deploy_lag = any(not x["ok"] and x.get("wf") == "deploy-daily.yml" for x in first)
 
-    final = check_all() if retried else first
+            todo = []
+            for wf in want:
+                prev = recently_retried(wf)
+                if prev:
+                    skipped.append(f"{WORKFLOWS[wf]}: {kst(iso(prev['created_at']))} 에 이미 재실행함 ({prev.get('conclusion') or prev['status']}) — 오늘은 더 안 돌림")
+                else:
+                    todo.append(wf)
+            for wf in todo:
+                r = dispatch_and_wait(wf)
+                retried.append(f"{WORKFLOWS[wf]} → {r['conclusion'] if r else '시작 못 함'}" + (f" ({r['html_url']})" if r else ""))
+
+            if todo or deploy_lag:
+                prev = None if todo else recently_retried("deploy-daily.yml")
+                if prev:
+                    skipped.append(f"예약 배포: {kst(iso(prev['created_at']))} 에 이미 재실행함 — 오늘은 더 안 돌림")
+                else:
+                    r = dispatch_and_wait("deploy-daily.yml", 15)
+                    retried.append(f"예약 배포 → {r['conclusion'] if r else '시작 못 함'}")
+                    log("  … Vercel 빌드 기다림 (최대 15분)")
+                    for _ in range(15):
+                        time.sleep(60)
+                        if all(x["ok"] for x in check_site()):
+                            break
+        except Budget as e:
+            skipped.append(f"재실행 중단: {e}")
+            log(f"⚠️ {e}")
+
+    final = check_all() if retried and CountingSession.calls < API_BUDGET - 60 else first
     bad = [x for x in final if not x["ok"]]
 
     # 보고서
@@ -290,6 +349,8 @@ def main():
     status = "정상" if not bad else f"문제 {len(bad)}건"
     subject = f"[REANT] {d:%m/%d} 점검: {status}" + (" (재실행함)" if retried else "")
     lines = [f"REANT 매일 점검 — {d:%Y-%m-%d %H:%M} KST", ""]
+    if skipped:
+        lines += ["■ 재실행 안 함 (폭주 방지)"] + [f"  - {x}" for x in skipped] + [""]
     if retried:
         lines += ["■ 다시 돌린 작업"] + [f"  - {x}" for x in retried] + [""]
         fixed = [x["name"] for x in first if not x["ok"] and any(y["name"] == x["name"] and y["ok"] for y in final)]
@@ -306,6 +367,7 @@ def main():
     if bad:
         lines += ["", "→ 재실행으로도 안 된 항목이에요. Claude Code 에 이 메일 내용을 붙여서 원인 확인을 요청하세요."]
     body = "\n".join(lines)
+    body += f"\n\n(GitHub API {CountingSession.calls}/{API_BUDGET}번 사용)"
     log("\n" + subject + "\n" + body)
 
     if summ := os.environ.get("GITHUB_STEP_SUMMARY"):

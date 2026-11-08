@@ -7,7 +7,12 @@ on:
     # 2. 23:40 KST (UTC 14:40) -> 미국 08:30/10:00 ET 경제지표 발표 이후: FRED 신규 발표 반영
     - cron: "10 22 * * *"
     - cron: "40 14 * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      light:
+        description: '가벼운 재실행 (하루 한도 있는 국토부 실거래·경매·지오코더는 건너뜀) — health-check 가 씀'
+        type: boolean
+        default: false
   # renewal 브랜치에서는 데이터 커밋 없이 API 키 동작만 확인
   push:
     branches: [renewal]
@@ -56,7 +61,7 @@ jobs:
 
       # 경매 신청 (등기정보광장) — 올해치만 다시 받음. build_house 가 이 RAW 로 전국 카드·시도 지도를 만듦
       - name: Fetch Korea auction filings
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && !inputs.light
         continue-on-error: true
         run: python scripts/house/build_auction.py --fetch-only
 
@@ -75,13 +80,13 @@ jobs:
       # 생활권(구 없는 시) 집값 — 국토부 실거래가. 최근 3개월 + 빠진 달만 받음, 최근 달부터
       # 하루 한도(개발계정 1만)를 최대한 씀: 07:10 실행이 9000 까지, 23:40 실행은 남은 만큼 (한도 걸리면 알아서 멈춤)
       - name: Build Korea living-area prices
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && !inputs.light
         continue-on-error: true
         run: python scripts/house/build_trades.py --max-calls 9000
 
       # 수도권 단지별 지도 (구 안의 행정동·단지 시세) — 위 실거래 RAW 로 계산, 새 단지만 좌표 찾기
       - name: Build capital-area apartment maps
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && !inputs.light
         continue-on-error: true
         run: python scripts/house/build_apts.py --geocode
 
