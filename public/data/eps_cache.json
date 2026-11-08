@@ -596,8 +596,8 @@
     {
       "d": "2026-11-04",
       "actual": 0.69,
-      "estimate": 0.67,
-      "surp": 2.48,
+      "estimate": 0.66,
+      "surp": 4.27,
       "revenue": 1.006
     }
   ],
@@ -2316,8 +2316,8 @@
     {
       "d": "2026-11-05",
       "actual": 1.35,
-      "estimate": -0.79,
-      "surp": 270.89,
+      "estimate": -0.77,
+      "surp": 274.42,
       "revenue": null
     }
   ],
@@ -13887,16 +13887,16 @@
   "GEV": [
     {
       "d": "2024-04-25",
-      "actual": -0.41,
-      "estimate": -0.22,
-      "surp": -82.8,
+      "actual": -0.47,
+      "estimate": -0.13,
+      "surp": -254.72,
       "revenue": null
     },
     {
       "d": "2024-07-24",
-      "actual": 1.02,
-      "estimate": 0.74,
-      "surp": 38.98,
+      "actual": 4.65,
+      "estimate": 0.82,
+      "surp": 468.84,
       "revenue": null
     },
     {
@@ -13908,9 +13908,9 @@
     },
     {
       "d": "2025-01-22",
-      "actual": 1.33,
-      "estimate": 2.37,
-      "surp": -43.95,
+      "actual": 1.73,
+      "estimate": 2.49,
+      "surp": -30.6,
       "revenue": null
     },
     {
@@ -13936,16 +13936,16 @@
     },
     {
       "d": "2026-01-28",
-      "actual": 12.91,
-      "estimate": 3.14,
-      "surp": 310.91,
+      "actual": 13.39,
+      "estimate": 3.22,
+      "surp": 316.08,
       "revenue": 10.956
     },
     {
       "d": "2026-04-22",
-      "actual": 2.01,
-      "estimate": 1.67,
-      "surp": 20.38,
+      "actual": 17.44,
+      "estimate": 2.0,
+      "surp": 771.56,
       "revenue": 9.338
     },
     {
