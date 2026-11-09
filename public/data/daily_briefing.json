@@ -1,7 +1,7 @@
 {
-  "date": "2026-11-09",
-  "day_of_week": "Monday",
-  "theme_code": "THEME_WEEKLY_TREND",
+  "date": "2026-11-10",
+  "day_of_week": "Tuesday",
+  "theme_code": "THEME_PANIC_SELL",
   "meta_info": {
     "period_days": 5,
     "total_count": 5,
@@ -10,48 +10,48 @@
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
+      "ticker": "TSLA",
       "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1625259378.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
+      "raw_name": "TESLA INC",
+      "value": -242526537.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "LITE",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 497059526.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
+      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
+      "value": -131065777.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "TQQQ",
+      "ticker": "MRVL",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 220222864.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
+      "raw_name": "MARVELL TECHNOLOGY INC",
+      "value": -85827597.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
     },
     {
       "rank": 4,
-      "ticker": "QLD",
+      "ticker": "",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 160925516.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 4위"
+      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
+      "value": -75026014.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
     },
     {
       "rank": 5,
-      "ticker": "",
-      "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 113227290.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 5위"
+      "ticker": "NET",
+      "name": "NET",
+      "raw_name": "CLOUDFLARE INC",
+      "value": -73135675.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 5위"
     }
   ]
 }
