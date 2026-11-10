@@ -1,57 +1,66 @@
 {
-  "date": "2026-11-10",
-  "day_of_week": "Tuesday",
-  "theme_code": "THEME_PANIC_SELL",
+  "date": "2026-11-11",
+  "day_of_week": "Wednesday",
+  "theme_code": "THEME_VS_MATCH",
   "meta_info": {
-    "period_days": 5,
-    "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "period_days": 10,
+    "total_count": 6,
+    "source_desc": "최근 10일간 데이터"
   },
   "items": [
+    {
+      "rank": 1,
+      "ticker": "SOXL",
+      "name": "",
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 1235447770.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
+    },
+    {
+      "rank": 2,
+      "ticker": "GOOGL",
+      "name": "",
+      "raw_name": "ALPHABET INC CL A",
+      "value": 675070273.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
+    },
+    {
+      "rank": 3,
+      "ticker": "TQQQ",
+      "name": "",
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 330403085.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
+    },
     {
       "rank": 1,
       "ticker": "TSLA",
       "name": "",
       "raw_name": "TESLA INC",
-      "value": -242526537.0,
+      "value": -388829211.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "LITE",
+      "ticker": "SGOV",
       "name": "",
-      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": -131065777.0,
+      "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
+      "value": -86700482.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "MRVL",
+      "ticker": "TSLL",
       "name": "",
-      "raw_name": "MARVELL TECHNOLOGY INC",
-      "value": -85827597.0,
+      "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
+      "value": -85197980.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
-    },
-    {
-      "rank": 4,
-      "ticker": "",
-      "name": "",
-      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
-      "value": -75026014.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
-    },
-    {
-      "rank": 5,
-      "ticker": "NET",
-      "name": "NET",
-      "raw_name": "CLOUDFLARE INC",
-      "value": -73135675.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
     }
   ]
 }

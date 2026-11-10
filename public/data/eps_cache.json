@@ -5411,9 +5411,9 @@
     },
     {
       "d": "2026-11-09",
-      "actual": 1.28,
-      "estimate": -0.33,
-      "surp": 492.93,
+      "actual": -0.55,
+      "estimate": -0.1,
+      "surp": -447.3,
       "revenue": null
     }
   ],
@@ -5677,13 +5677,6 @@
   ],
   "TDG": [
     {
-      "d": "2023-11-09",
-      "actual": 8.03,
-      "estimate": 7.63,
-      "surp": 5.18,
-      "revenue": null
-    },
-    {
       "d": "2024-02-08",
       "actual": 7.16,
       "estimate": 6.4,
@@ -5759,6 +5752,13 @@
       "estimate": 10.28,
       "surp": 5.71,
       "revenue": 2.741
+    },
+    {
+      "d": "2026-11-10",
+      "actual": 12.44,
+      "estimate": 12.21,
+      "surp": 1.89,
+      "revenue": null
     }
   ],
   "RUN": [
@@ -6015,7 +6015,7 @@
       "d": "2026-11-04",
       "actual": 3.57,
       "estimate": 3.38,
-      "surp": 5.62,
+      "surp": 5.63,
       "revenue": 7.156
     }
   ],
@@ -10983,13 +10983,6 @@
   ],
   "QBTS": [
     {
-      "d": "2023-11-09",
-      "actual": -0.14,
-      "estimate": -0.12,
-      "surp": -18.14,
-      "revenue": null
-    },
-    {
       "d": "2024-03-28",
       "actual": -0.09,
       "estimate": -0.08,
@@ -11065,6 +11058,13 @@
       "estimate": -0.09,
       "surp": -42.19,
       "revenue": 0.003
+    },
+    {
+      "d": "2026-11-10",
+      "actual": -0.13,
+      "estimate": -0.1,
+      "surp": -30.0,
+      "revenue": null
     }
   ],
   "MO": [
@@ -15427,13 +15427,6 @@
   ],
   "QUBT": [
     {
-      "d": "2023-11-13",
-      "actual": -0.11,
-      "estimate": -0.1,
-      "surp": -10.0,
-      "revenue": null
-    },
-    {
       "d": "2024-04-01",
       "actual": -0.09,
       "estimate": -0.1,
@@ -15509,6 +15502,13 @@
       "estimate": -0.05,
       "surp": 15.99,
       "revenue": 0.006
+    },
+    {
+      "d": "2026-11-09",
+      "actual": -0.06,
+      "estimate": -0.06,
+      "surp": -8.0,
+      "revenue": null
     }
   ],
   "IBM": [
@@ -22351,13 +22351,6 @@
   ],
   "EXK": [
     {
-      "d": "2023-03-02",
-      "actual": 0.04,
-      "estimate": 0.08,
-      "surp": -49.19,
-      "revenue": null
-    },
-    {
       "d": "2023-05-10",
       "actual": 0.05,
       "estimate": 0.03,
@@ -22433,6 +22426,13 @@
       "estimate": 0.13,
       "surp": 18.79,
       "revenue": 0.212
+    },
+    {
+      "d": "2026-11-09",
+      "actual": 0.14,
+      "estimate": 0.08,
+      "surp": 64.9,
+      "revenue": null
     }
   ],
   "BRK-B": [
@@ -25484,8 +25484,8 @@
     {
       "d": "2026-11-02",
       "actual": 2.1,
-      "estimate": 1.99,
-      "surp": 5.78,
+      "estimate": 1.98,
+      "surp": 5.8,
       "revenue": 114.477
     }
   ],
@@ -29103,13 +29103,6 @@
   ],
   "HIVE": [
     {
-      "d": "2023-11-09",
-      "actual": -0.29,
-      "estimate": -0.19,
-      "surp": -48.72,
-      "revenue": null
-    },
-    {
       "d": "2024-02-11",
       "actual": -0.08,
       "estimate": -0.23,
@@ -29185,6 +29178,13 @@
       "estimate": -0.11,
       "surp": -71.55,
       "revenue": 0.079
+    },
+    {
+      "d": "2026-11-09",
+      "actual": -0.15,
+      "estimate": -0.1,
+      "surp": -47.4,
+      "revenue": null
     }
   ],
   "SWKS": [
@@ -29558,15 +29558,15 @@
     {
       "d": "2024-08-01",
       "actual": 0.66,
-      "estimate": 0.61,
-      "surp": 8.2,
+      "estimate": 0.6,
+      "surp": 9.29,
       "revenue": null
     },
     {
       "d": "2024-10-31",
       "actual": 0.77,
-      "estimate": 0.65,
-      "surp": 19.01,
+      "estimate": 0.58,
+      "surp": 32.76,
       "revenue": null
     },
     {
@@ -36001,13 +36001,6 @@
   ],
   "MVST": [
     {
-      "d": "2023-11-09",
-      "actual": -0.03,
-      "estimate": -0.05,
-      "surp": 40.0,
-      "revenue": null
-    },
-    {
       "d": "2024-04-01",
       "actual": -0.04,
       "estimate": -0.03,
@@ -36083,6 +36076,13 @@
       "estimate": null,
       "surp": null,
       "revenue": 0.087
+    },
+    {
+      "d": "2026-11-09",
+      "actual": -0.2,
+      "estimate": 0.02,
+      "surp": -1100.0,
+      "revenue": null
     }
   ],
   "SVM": [
