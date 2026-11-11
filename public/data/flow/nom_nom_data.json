@@ -1,85 +1,100 @@
 {
-  "top": [
+  "fire": [
     {
-      "name": "IONQ INC. CL.A DL- 0001",
-      "name_kr": "",
-      "ticker": "IONQ",
-      "file_ticker": "IONQ INC",
-      "close": 34.99,
-      "price_change": 0.1844955991875424,
-      "net_buy_sum": 18436064,
-      "buy_score": 7,
-      "sell_score": 1,
-      "last_date": "2026-11-10",
-      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
-    },
-    {
-      "name": "ADVANCED MICRO DEVICES INC",
-      "name_kr": "AMD",
-      "ticker": "AMD",
-      "file_ticker": "ADVANCED MICRO DEVICES INC",
-      "close": 515.21,
-      "price_change": 0.054073407258889615,
-      "net_buy_sum": 19621114,
-      "buy_score": 3,
-      "sell_score": 5,
-      "last_date": "2026-11-10",
-      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
-    }
-  ],
-  "bottom": [
-    {
-      "name": "MICROSOFT CORP",
-      "name_kr": "마이크로소프트",
-      "ticker": "MSFT",
-      "file_ticker": "MICROSOFT CORP",
-      "close": 533.16,
-      "price_change": -0.04073407700611729,
-      "net_buy_sum": -32631762,
-      "buy_score": 0,
-      "sell_score": 8,
-      "last_date": "2026-11-10",
-      "comment": "공포에 줍줍할 기회인가 💎"
+      "name": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "name_kr": "브로드컴",
+      "ticker": "AVGO",
+      "file_ticker": "BROADCOM INC EXOF 005644980 SG9999014823",
+      "close": 351.39,
+      "price_change": 0.20533049771893122,
+      "net_buy_sum": -4286694,
+      "buy_score": 1,
+      "sell_score": 6,
+      "last_date": "2026-11-11",
+      "comment": "개미 털고 세력 떡상 중 🚀"
     },
     {
       "name": "MICRON TECHNOLOGY INC",
       "name_kr": "마이크론 테크놀로지",
       "ticker": "MU",
       "file_ticker": "MICRON TECHNOLOGY INC",
-      "close": 725.11,
-      "price_change": -0.08817574789683488,
-      "net_buy_sum": -66102193,
-      "buy_score": 2,
+      "close": 775.96,
+      "price_change": 0.1821630433126648,
+      "net_buy_sum": -63345861,
+      "buy_score": 1,
       "sell_score": 6,
-      "last_date": "2026-11-10",
-      "comment": "공포에 줍줍할 기회인가 💎"
+      "last_date": "2026-11-11",
+      "comment": "개미 털고 세력 떡상 중 🚀"
     }
   ],
-  "knife": [
+  "top": [
     {
       "name": "IRIS ENERGY LTD",
       "name_kr": "아이렌",
       "ticker": "IREN",
       "file_ticker": "IRIS ENERGY LTD",
-      "close": 19.73,
-      "price_change": -0.09120221096269002,
-      "net_buy_sum": 15489511,
-      "buy_score": 8,
+      "close": 21.27,
+      "price_change": 0.17970049916805314,
+      "net_buy_sum": 11261008,
+      "buy_score": 7,
       "sell_score": 0,
-      "last_date": "2026-11-10",
-      "comment": "물타기하다 익사한다... 도망쳐! 🩸"
+      "last_date": "2026-11-11",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
     },
+    {
+      "name": "IONQ INC. CL.A DL- 0001",
+      "name_kr": "",
+      "ticker": "IONQ",
+      "file_ticker": "IONQ INC",
+      "close": 35.29,
+      "price_change": 0.3352251229663261,
+      "net_buy_sum": 10275811,
+      "buy_score": 6,
+      "sell_score": 1,
+      "last_date": "2026-11-11",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    }
+  ],
+  "bottom": [
+    {
+      "name": "ATLASSIAN CORP",
+      "name_kr": "",
+      "ticker": "TEAM",
+      "file_ticker": "ATLASSIAN CORP",
+      "close": 152.06,
+      "price_change": -0.17038572753559927,
+      "net_buy_sum": -39856205,
+      "buy_score": 0,
+      "sell_score": 3,
+      "last_date": "2026-11-11",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    },
+    {
+      "name": "MICROSTRATEGY INC CL A",
+      "name_kr": "",
+      "ticker": "MSTR",
+      "file_ticker": "MICROSTRATEGY INC CL A",
+      "close": 123.13,
+      "price_change": -0.047718484145398414,
+      "net_buy_sum": -4763584,
+      "buy_score": 1,
+      "sell_score": 2,
+      "last_date": "2026-11-11",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    }
+  ],
+  "knife": [
     {
       "name": "NVIDIA CORP",
       "name_kr": "엔비디아",
       "ticker": "NVDA",
       "file_ticker": "NVIDIA CORP",
-      "close": 168.89,
-      "price_change": -0.15609853595163148,
-      "net_buy_sum": 39615086,
-      "buy_score": 7,
+      "close": 174.42,
+      "price_change": -0.039537444933920744,
+      "net_buy_sum": 25024368,
+      "buy_score": 6,
       "sell_score": 1,
-      "last_date": "2026-11-10",
+      "last_date": "2026-11-11",
       "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     }
   ]
