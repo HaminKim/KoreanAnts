@@ -5,8 +5,8 @@
 점검
   1. 워크플로 3개(매매흐름 수집·매크로/부동산·예약 배포)의 최근 24시간 실행 결과
   2. 데이터가 제때 들어왔는지 (작업이 '성공'이어도 continue-on-error 로 조용히 실패할 수 있어서)
-     - 매매흐름 원본: 오늘 전 마지막 한국 영업일까지
-     - 개미지수 누적: 원본 마지막 날 − 2영업일 (Seibro T+2)
+     - 매매흐름 원본: 오늘 전 마지막 Seibro 데이터가 있는 날까지 (한국 공휴일 포함, 미국 결제 없던 날 다음 날 제외)
+     - 개미지수 누적: 원본 마지막 날 → 미국 거래일 (scripts/us_calendar.py)
      - 매크로·부동산·S&P: 26시간 안에 다시 만들어졌는지
   3. 실제 사이트(reant.kr)가 열리고, 레포 데이터가 배포됐는지
 재시도
@@ -28,6 +28,9 @@ import smtplib
 import sys
 import time
 from datetime import date, datetime, timedelta, timezone
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from us_calendar import has_seibro_data, trade_date  # noqa: E402
 from email.mime.text import MIMEText
 from pathlib import Path
 
@@ -173,22 +176,6 @@ def repo_text(rel: str) -> str:
     return r.text.lstrip("﻿")
 
 
-def kr_holidays() -> set[date]:
-    src = repo_text("scraper/find_missing_days.py")
-    for node in ast.parse(src).body:
-        if isinstance(node, ast.Assign) and any(getattr(t, "id", "") == "HOLIDAYS" for t in node.targets):
-            return {date.fromisoformat(d) for d in ast.literal_eval(node.value)}
-    return set()
-
-
-def prev_bday(d: date, n: int = 1, holidays: set[date] = frozenset()) -> date:
-    while n:
-        d -= timedelta(days=1)
-        if d.weekday() < 5 and d not in holidays:
-            n -= 1
-    return d
-
-
 def read_json(rel: str):
     return json.loads(repo_text(rel))
 
@@ -202,13 +189,18 @@ def check_data() -> list[dict]:
     rows = csv.reader(repo_text("processed/all_data_clean.csv").splitlines())
     last = max(r[0] for r in rows if r and re.match(r"\d{4}-\d{2}-\d{2}$", r[0]))
     last_d = date.fromisoformat(last)
-    want = prev_bday(today, 1, kr_holidays())
+    want = today - timedelta(days=1)          # Seibro 는 당일 기준 1일 전까지, 미국 결제 없던 날 다음 날은 데이터 없음
+    while not has_seibro_data(want):
+        want -= timedelta(days=1)
     out.append(dict(name="매매흐름 원본(Seibro)", ok=last_d >= want, wf="daily-sync.yml",
                     detail=f"마지막 {last} / 기대 {want}"))
 
-    # 개미지수 누적 (원본 − 2영업일, generate_ant_cumulative 는 휴일 없이 BusinessDay)
+    # 개미지수 누적 (원본 Seibro 날짜 → 미국 거래일, scripts/us_calendar.py)
     ac = read_json("public/data/flow/ant_cumulative.json")["asOf"]
-    want_ac = prev_bday(last_d, 2).isoformat()
+    d = last_d
+    while trade_date(d) is None:
+        d -= timedelta(days=1)
+    want_ac = trade_date(d).isoformat()
     out.append(dict(name="개미지수 누적 순매수", ok=ac == want_ac, wf="daily-sync.yml",
                     detail=f"asOf {ac} / 기대 {want_ac}"))
 

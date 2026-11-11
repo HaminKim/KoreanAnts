@@ -3,27 +3,28 @@
 processed/all_data_clean.csv (Seibro 일별 결제 상위 50종목) 의 날짜별 순매수 합을 최근 2년 누적.
 → public/data/flow/ant_cumulative.json
 
-- 날짜는 process_flow_data 와 같게 결제일 기준 -2 영업일 (Seibro T+2)
-- 미국 채권 휴장 다음날처럼 종목이 몇 개 안 잡힌 날은 합계가 왜곡되므로 제외
+- 날짜는 process_flow_data 와 같게 Seibro 날짜 → 미국 거래일 (us_calendar.trade_date, 미국 휴장일 반영)
+- 미국 결제가 없던 날 다음 Seibro 날짜(몇 종목·거의 0)와 종목이 몇 개 안 잡힌 날은 합계가 왜곡되므로 제외
 """
 import json
 import os
 
 import pandas as pd
-from pandas.tseries.offsets import BusinessDay
+
+from us_calendar import to_trade_dates
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(BASE_DIR, '..', 'processed', 'all_data_clean.csv')
 OUT_PATH = os.path.join(BASE_DIR, '..', 'public', 'data', 'flow', 'ant_cumulative.json')
 
-DATE_OFFSET = 2
 YEARS = 2
 MIN_STOCKS = 10
 
 
 def main():
     df = pd.read_csv(CSV_PATH, encoding='utf-8-sig')
-    df['날짜'] = pd.to_datetime(df['날짜']) - BusinessDay(n=DATE_OFFSET)
+    df['날짜'] = to_trade_dates(df['날짜'])
+    df = df.dropna(subset=['날짜'])
 
     g = df.groupby('날짜')
     daily = pd.DataFrame({'net': g['순매수'].sum(), 'n': g.size()})

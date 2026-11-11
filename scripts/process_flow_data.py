@@ -8,7 +8,7 @@ import json
 import os
 import time
 from datetime import datetime
-from pandas.tseries.offsets import BusinessDay 
+from us_calendar import to_trade_dates
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from price_utils import fix_last_close
 
@@ -28,7 +28,6 @@ MA_MAP = {
     'MA20': 'ma20'    
 }
 
-DATE_OFFSET = 2
 MAX_WORKERS = 4 
 # =========================================================
 
@@ -183,8 +182,10 @@ def main():
         df_all.rename(columns=rename_map, inplace=True)
 
         df_all['date'] = pd.to_datetime(df_all['date'])
-        print(f"⚡ 날짜 보정: 결제일 기준 -{DATE_OFFSET} 영업일 적용 중...")
-        df_all['date'] = df_all['date'] - BusinessDay(n=DATE_OFFSET)
+        # Seibro 날짜 → 미국 거래일 (미국 휴장일 반영, 결제 없던 날 다음 날짜는 버림). scripts/us_calendar.py 참고
+        print("⚡ 날짜 보정: Seibro 날짜 → 미국 거래일 (us_calendar)")
+        df_all['date'] = to_trade_dates(df_all['date'])
+        df_all = df_all.dropna(subset=['date'])
 
         grouped = df_all.groupby('name')
         total_groups = len(grouped)
