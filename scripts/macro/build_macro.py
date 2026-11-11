@@ -172,6 +172,35 @@ def _monthly_fred(sid):
     return s
 
 
+# 원천에서 발표되지 않은 달 (2025-10 CPI: 연방정부 셧다운으로 BLS 미발표)
+GAP_MONTHS = {"CPIAUCSL": ["2025-10-01"], "CPILFESL": ["2025-10-01"]}
+
+
+def gap_fill(s, key):
+    """YoY 계산용 보간. 최신 달의 YoY 기준월(12개월 전)이 빈 달일 때만 앞뒤 달 기하평균으로 채운 사본을 반환 (A).
+    다음 달 값이 들어와 최신 YoY 를 보간 없이 계산할 수 있게 되면 자동으로 보간 안 함 (B) → (s, None).
+    RAW·level·MoM 은 건드리지 않음."""
+    gaps = [pd.Timestamp(g) for g in GAP_MONTHS.get(key, []) if pd.Timestamp(g) not in s.index]
+    if not gaps or s.index[-1] - pd.DateOffset(months=12) not in gaps:
+        return s, None
+    f = s.copy()
+    for g in gaps:
+        a, b = g - pd.DateOffset(months=1), g + pd.DateOffset(months=1)
+        if a in s.index and b in s.index:
+            f.loc[g] = math.sqrt(s[a] * s[b])
+    return f.sort_index(), gaps
+
+
+def gap_note(key, filled):
+    gaps = GAP_MONTHS.get(key)
+    if not gaps:
+        return None
+    ym = ", ".join(f"{g[:4]}년 {int(g[5:7])}월" for g in gaps)
+    if filled:
+        return f"{ym} 값은 미국 정부 셧다운으로 발표되지 않아 앞뒤 달의 중간값으로 추정해 YoY 를 계산했어요 (그 달과 1년 뒤 같은 달 YoY 는 추정치)"
+    return f"{ym} 값은 미국 정부 셧다운으로 발표되지 않아 그 달과 1년 뒤 같은 달의 YoY 는 비어 있어요"
+
+
 def fetch_derived(sid):
     """계산 시리즈. REAL10Y_EST = 월평균 10년물(GS10) − CPI YoY
                    HHDEBT_DPI  = 가계부채(CMDEBT, 백만 $) ÷ 명목 가처분소득(DPI, 십억 $ 연율) × 100"""
@@ -183,7 +212,8 @@ def fetch_derived(sid):
     if sid == "REAL10Y_EST":
         gs10 = _monthly_fred("GS10")
         cpi, meta = fetch_fred("CPIAUCSL")   # 이미 월초 날짜의 월별 시리즈
-        yoy = (cpi / cpi.shift(12) - 1) * 100
+        cpi, _ = gap_fill(cpi, "CPIAUCSL")
+        yoy = derive(cpi, "M", "yoy")         # 날짜 기준 (빈 달이 있어도 같은 달끼리 비교)
         return (gs10 - yoy).dropna(), {"url": "https://fred.stlouisfed.org/series/GS10", "updated": meta.get("updated")}
     raise ValueError(sid)
 
@@ -315,7 +345,8 @@ def build_series(key):
         except Exception as e:  # noqa: BLE001
             log(f"  ⚠️ {key}: 이어붙이기 실패 → 원 시리즈만 사용 ({type(e).__name__})")
 
-    frame = {tf: derive(per, obs_freq, tf) for tf in sp["tf"]}
+    per_yoy, filled = gap_fill(per, key) if obs_freq == "M" else (per, None)
+    frame = {tf: derive(per_yoy if tf == "yoy" else per, obs_freq, tf) for tf in sp["tf"]}
     df = pd.DataFrame(frame)
     df = df[df.index >= START]
     df = df.dropna(how="all")
@@ -359,6 +390,7 @@ def build_series(key):
         "since": sp.get("since"),
         "spliceNote": (f"{spliced_before[:4]}년 {int(spliced_before[5:7])}월 이전은 월별 {sp['backfill'][0]} − {sp['backfill'][1].split(':')[0]} 로 이어붙인 값이에요"
                        if spliced_before else None),
+        "gapNote": gap_note(key, filled),
         "updated": meta.get("updated"),
         "fetchedAt": now,
         "pubDate": pub_date,
@@ -396,6 +428,13 @@ def series_summary(key):
     js = json.loads(p.read_text(encoding="utf-8"))
     tf0 = js["tf"][0]
     date, val, prev = last_two(js["d"], js[tf0])
+    # 대표 변환(tf0)이 최신 달에 비어 있으면 (예: 1년 전 달 미발표로 YoY 불가) 최신 달 값이 있는 다음 변환으로 (B)
+    if js["d"] and date and date < js["d"][-1]:
+        for tf in js["tf"][1:]:
+            if js[tf] and js[tf][-1] is not None:
+                tf0 = tf
+                date, val, prev = last_two(js["d"], js[tf])
+                break
     cutoff = (pd.Timestamp.today() - pd.DateOffset(years=SPARK_YEARS)).strftime("%Y-%m-%d")
     spark = [[d, v] for d, v in zip(js["d"], js[tf0]) if d >= cutoff and v is not None]
     if len(spark) > 130:  # 월 단위 10년 ≈ 120점
@@ -407,7 +446,7 @@ def series_summary(key):
         "first": js["d"][0] if js["d"] else None, "rawLast": js["rawLast"], "partialLast": js["partialLast"],
         "updated": js["updated"], "fetchedAt": js["fetchedAt"],
         "pubDate": js.get("pubDate"), "next": js.get("next") or [],
-        "since": js.get("since"), "spliceNote": js.get("spliceNote"),
+        "since": js.get("since"), "spliceNote": js.get("spliceNote"), "gapNote": js.get("gapNote"),
         "latest": {"tf": tf0, "date": date, "value": val, "prev": prev},
         "spark": spark,
     }

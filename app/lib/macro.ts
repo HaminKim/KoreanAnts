@@ -23,6 +23,7 @@ export interface SeriesSummary {
   next?: string[]              // FRED 발표 예정일 (미국 날짜)
   since?: string | null        // 늦게 시작하는 이유
   spliceNote?: string | null   // 과거 구간 이어붙이기 설명
+  gapNote?: string | null      // 원천 미발표 달 안내 (예: 2025-10 CPI 셧다운)
   latest: { tf: Tf; date: string | null; value: number | null; prev: number | null }
   spark: [string, number][]
 }

@@ -319,6 +319,7 @@ export function DataNotes({ cat, keys }: { cat: Catalog; keys: string[] }) {
     const y = Number((s.first ?? cat.start).slice(0, 4))
     if (y > startYear) notes.push({ key: k, text: `${s.label}: ${y}년부터 있어요${s.since ? ` — ${s.since}` : ''}` })
     if (s.spliceNote) notes.push({ key: k + ':s', text: `${s.label}: ${s.spliceNote}` })
+    if (s.gapNote) notes.push({ key: k + ':g', text: `${s.label}: ${s.gapNote}` })
   }
   if (!notes.length) return null
   return (
