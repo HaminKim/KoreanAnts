@@ -1,46 +1,19 @@
 {
-  "date": "2026-11-11",
-  "day_of_week": "Wednesday",
-  "theme_code": "THEME_VS_MATCH",
+  "date": "2026-11-12",
+  "day_of_week": "Thursday",
+  "theme_code": "THEME_MID_SELL",
   "meta_info": {
     "period_days": 10,
-    "total_count": 6,
+    "total_count": 5,
     "source_desc": "최근 10일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "SOXL",
-      "name": "",
-      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1178269256.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 1위"
-    },
-    {
-      "rank": 2,
-      "ticker": "GOOGL",
-      "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 676692454.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 2위"
-    },
-    {
-      "rank": 3,
-      "ticker": "TQQQ",
-      "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 418685556.0,
-      "type": "NET_BUY",
-      "desc_key": "매수 3위"
-    },
-    {
-      "rank": 1,
       "ticker": "TSLA",
       "name": "",
       "raw_name": "TESLA INC",
-      "value": -377925951.0,
+      "value": -341607163.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -49,18 +22,36 @@
       "ticker": "SGOV",
       "name": "",
       "raw_name": "ISHARES 0-3 MONTH TREASURY BOND ETF",
-      "value": -92578283.0,
+      "value": -85356917.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
+      "ticker": "MSFT",
+      "name": "",
+      "raw_name": "MICROSOFT CORP",
+      "value": -79793783.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 3위"
+    },
+    {
+      "rank": 4,
+      "ticker": "NET",
+      "name": "NET",
+      "raw_name": "CLOUDFLARE INC",
+      "value": -73135675.0,
+      "type": "NET_SELL",
+      "desc_key": "매도 4위"
+    },
+    {
+      "rank": 5,
       "ticker": "TSLL",
       "name": "",
       "raw_name": "DIREXION DAILY TSLA BULL 2X SHARES",
-      "value": -85197980.0,
+      "value": -66734752.0,
       "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "desc_key": "매도 5위"
     }
   ]
 }
