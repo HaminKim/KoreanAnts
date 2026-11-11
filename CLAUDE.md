@@ -68,8 +68,10 @@ GitHub `HaminKim/KoreanAnts` (**공개 레포** — 비밀값·개인 정보는 
 ## 매매 흐름 데이터 파이프라인
 - `scraper/` (구 reant_streamlit 레포를 subtree 로 통합) 가 Seibro(예탁결제원)를 Selenium 으로 스크랩
 - `.github/workflows/daily-sync.yml` 이 하루 여러 번: 누락일 탐지(`scraper/find_missing_days.py`) → 날짜별 다운로드 → `combine_data.py` → `clean_and_enrich.py` → `public/data/**` JSON 재생성·커밋
-- flow JSON 날짜는 원본 CSV 보다 영업일 2일 전으로 표시 (Seibro T+2 공시) — 정상
-- 미국 채권 휴장 다음날 Seibro 1행 데이터는 신경 쓰지 않음 (사용자 지시)
+- flow·개미지수 날짜 = Seibro 날짜 → 미국 거래일 (`scripts/us_calendar.py`, 2026-11-11 Seibro 실측으로 확정. 평소엔 −2 평일과 같음)
+  - Seibro 날짜 D = 미국 결제일(T+1) 다음 평일. 한국 공휴일에도 데이터 있음 → 수집에서 건너뛰지 않음
+  - 미국 결제 휴일(증시 휴장일 + 콜럼버스·재향군인의 날) 다음 평일은 Seibro '데이터 없음' → 받지 않고, 예전 파일의 몇 종목·0 근처 값은 버림
+  - 콜럼버스·재향군인의 날 뒤 Seibro 하루치엔 미국 이틀치가 합쳐짐 → 뒤쪽 거래일로 표시
 
 ## UI 원칙
 - 데이터 로드 실패 시 "데이터 없음" 화면 금지 → localStorage 캐시로 폴백 (워치리스트 KR/US)
