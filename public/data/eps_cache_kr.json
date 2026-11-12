@@ -12714,6 +12714,13 @@
       "estimate": null,
       "surp": null,
       "revenue": 2123.2
+    },
+    {
+      "d": "2026-09-30",
+      "actual": 5055.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": 1030.2
     }
   ],
   "000990.KS": [
@@ -16265,7 +16272,7 @@
     },
     {
       "d": "2026-03-31",
-      "actual": -91.0,
+      "actual": 399.0,
       "estimate": 119.0,
       "surp": -176.48,
       "revenue": 45784.8
@@ -18585,13 +18592,6 @@
   ],
   "042660.KS": [
     {
-      "d": "2023-05-15",
-      "actual": -1180.0,
-      "estimate": -428.0,
-      "surp": -175.87,
-      "revenue": null
-    },
-    {
       "d": "2023-08-14",
       "actual": -1595.0,
       "estimate": 303.0,
@@ -18679,7 +18679,7 @@
       "d": "2025-11-12",
       "actual": 737.0,
       "estimate": 680.0,
-      "surp": 8.42,
+      "surp": 8.44,
       "revenue": 30233.6
     },
     {
@@ -18723,6 +18723,13 @@
       "estimate": 1402.0,
       "surp": 35.08,
       "revenue": 54431.7
+    },
+    {
+      "d": "2026-11-11",
+      "actual": 474.0,
+      "estimate": 1336.0,
+      "surp": -64.56,
+      "revenue": null
     }
   ],
   "117580.KS": [
@@ -26865,8 +26872,8 @@
     {
       "d": "2025-11-14",
       "actual": 11981.0,
-      "estimate": 14775.0,
-      "surp": -18.91,
+      "estimate": 13746.0,
+      "surp": -12.84,
       "revenue": 51138.5
     },
     {
@@ -29431,6 +29438,13 @@
       "estimate": null,
       "surp": null,
       "revenue": 414.5
+    },
+    {
+      "d": "2026-09-30",
+      "actual": -458.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": 386.5
     }
   ],
   "241560.KS": [
