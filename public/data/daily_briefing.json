@@ -1,11 +1,11 @@
 {
-  "date": "2026-11-13",
-  "day_of_week": "Friday",
-  "theme_code": "THEME_HOT_FRIDAY",
+  "date": "2026-11-14",
+  "day_of_week": "Saturday",
+  "theme_code": "THEME_WEEKEND_TOTAL",
   "meta_info": {
-    "period_days": 5,
+    "period_days": 20,
     "total_count": 5,
-    "source_desc": "최근 5일간 데이터"
+    "source_desc": "최근 20일간 데이터"
   },
   "items": [
     {
@@ -13,43 +13,43 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 440267307.0,
+      "value": 2245203019.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "TQQQ",
+      "ticker": "GOOGL",
       "name": "",
-      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 284037280.0,
+      "raw_name": "ALPHABET INC CL A",
+      "value": 734690703.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "QLD",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "PROSHARES ULTRA QQQ ETF",
-      "value": 195933128.0,
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 700370029.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "QQQM",
+      "ticker": "",
       "name": "",
-      "raw_name": "INVESCO NASDAQ 100 ETF",
-      "value": 102419279.0,
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 624886075.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "VOO",
+      "ticker": "QLD",
       "name": "",
-      "raw_name": "VANGUARD SP 500 ETF SPLR 39326002188 US9229084135",
-      "value": 92079500.0,
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 508985328.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
