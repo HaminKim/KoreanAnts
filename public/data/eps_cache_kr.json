@@ -12559,21 +12559,21 @@
     },
     {
       "d": "2025-03-31",
-      "actual": 881.0,
+      "actual": 1165.0,
       "estimate": null,
       "surp": null,
       "revenue": 166425.9
     },
     {
       "d": "2025-06-30",
-      "actual": 792.0,
+      "actual": 1047.0,
       "estimate": null,
       "surp": null,
       "revenue": 192422.4
     },
     {
       "d": "2025-09-30",
-      "actual": 3974.0,
+      "actual": 5254.0,
       "estimate": null,
       "surp": null,
       "revenue": 177866.2
@@ -12587,14 +12587,14 @@
     },
     {
       "d": "2026-03-31",
-      "actual": 1569.0,
+      "actual": 2074.0,
       "estimate": null,
       "surp": null,
       "revenue": 214514.1
     },
     {
       "d": "2026-06-30",
-      "actual": 4812.0,
+      "actual": 6362.0,
       "estimate": null,
       "surp": null,
       "revenue": 286378.5
@@ -18592,13 +18592,6 @@
   ],
   "042660.KS": [
     {
-      "d": "2023-08-14",
-      "actual": -1595.0,
-      "estimate": 303.0,
-      "surp": -625.65,
-      "revenue": null
-    },
-    {
       "d": "2024-05-13",
       "actual": 140.0,
       "estimate": -175.0,
@@ -18723,6 +18716,13 @@
       "estimate": 1402.0,
       "surp": 35.08,
       "revenue": 54431.7
+    },
+    {
+      "d": "2026-09-30",
+      "actual": 455.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": null
     },
     {
       "d": "2026-11-11",
@@ -20497,21 +20497,21 @@
       "actual": -81.0,
       "estimate": null,
       "surp": null,
-      "revenue": 7762.3
+      "revenue": 5269.8
     },
     {
       "d": "2025-09-30",
-      "actual": -1950.0,
+      "actual": -5715.0,
       "estimate": null,
       "surp": null,
-      "revenue": 8451.1
+      "revenue": 4763.8
     },
     {
       "d": "2025-12-31",
       "actual": null,
       "estimate": null,
       "surp": null,
-      "revenue": -5600.5
+      "revenue": 4672.9
     },
     {
       "d": "2026-03-31",
@@ -20522,10 +20522,10 @@
     },
     {
       "d": "2026-06-30",
-      "actual": 2593.0,
+      "actual": 3373.0,
       "estimate": null,
       "surp": null,
-      "revenue": 10231.8
+      "revenue": 5350.1
     }
   ],
   "090430.KS": [
@@ -25251,13 +25251,6 @@
   ],
   "015760.KS": [
     {
-      "d": "2023-11-14",
-      "actual": 1237.0,
-      "estimate": 1355.0,
-      "surp": -8.72,
-      "revenue": null
-    },
-    {
       "d": "2024-03-18",
       "actual": 1921.0,
       "estimate": -158.0,
@@ -25336,7 +25329,7 @@
     },
     {
       "d": "2025-09-30",
-      "actual": 5850.0,
+      "actual": 5851.0,
       "estimate": null,
       "surp": null,
       "revenue": 275723.8
@@ -25389,6 +25382,13 @@
       "estimate": 1599.0,
       "surp": -73.99,
       "revenue": 219188.5
+    },
+    {
+      "d": "2026-09-30",
+      "actual": 1304.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": 268520.0
     }
   ],
   "054780.KQ": [
@@ -29365,8 +29365,8 @@
     {
       "d": "2025-03-19",
       "actual": 44.0,
-      "estimate": 297.0,
-      "surp": -85.19,
+      "estimate": 112.0,
+      "surp": -60.85,
       "revenue": 513.1
     },
     {
@@ -29395,7 +29395,7 @@
       "actual": -365.0,
       "estimate": -66.0,
       "surp": -450.21,
-      "revenue": 385.7
+      "revenue": 501.5
     },
     {
       "d": "2025-09-30",
@@ -32547,6 +32547,13 @@
       "estimate": 904.0,
       "surp": 15.6,
       "revenue": 6373.8
+    },
+    {
+      "d": "2026-09-30",
+      "actual": 1079.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": 6376.0
     }
   ],
   "067280.KQ": [
@@ -34886,6 +34893,13 @@
       "estimate": null,
       "surp": null,
       "revenue": 419.5
+    },
+    {
+      "d": "2026-09-30",
+      "actual": 381.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": 438.0
     }
   ],
   "122900.KQ": [
@@ -35525,6 +35539,13 @@
       "estimate": null,
       "surp": null,
       "revenue": 108.4
+    },
+    {
+      "d": "2026-09-30",
+      "actual": -129.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": 208.2
     }
   ],
   "265520.KQ": [
@@ -39004,6 +39025,13 @@
       "estimate": null,
       "surp": null,
       "revenue": 4337.4
+    },
+    {
+      "d": "2026-09-30",
+      "actual": 848.0,
+      "estimate": null,
+      "surp": null,
+      "revenue": 4358.0
     }
   ],
   "396690.KS": [
