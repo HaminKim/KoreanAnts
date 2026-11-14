@@ -28171,13 +28171,6 @@
   ],
   "SGML": [
     {
-      "d": "2023-11-13",
-      "actual": 0.33,
-      "estimate": 0.54,
-      "surp": -39.38,
-      "revenue": null
-    },
-    {
       "d": "2024-04-30",
       "actual": -0.08,
       "estimate": 0.35,
@@ -28253,6 +28246,13 @@
       "estimate": 0.23,
       "surp": -108.7,
       "revenue": 0.055
+    },
+    {
+      "d": "2026-11-13",
+      "actual": -0.23,
+      "estimate": 0.08,
+      "surp": -373.71,
+      "revenue": null
     }
   ],
   "WDAY": [
