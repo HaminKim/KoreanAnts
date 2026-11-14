@@ -3222,7 +3222,7 @@
       "actual": -0.05,
       "estimate": -0.07,
       "surp": 35.57,
-      "revenue": 0.026
+      "revenue": null
     },
     {
       "d": "2025-08-14",
@@ -3264,7 +3264,7 @@
       "actual": 0.08,
       "estimate": -0.05,
       "surp": 250.01,
-      "revenue": null
+      "revenue": 0.027
     }
   ],
   "LIN": [
@@ -3480,14 +3480,14 @@
       "actual": 0.41,
       "estimate": 0.48,
       "surp": -15.23,
-      "revenue": 9.456
+      "revenue": null
     },
     {
       "d": "2025-07-29",
       "actual": 0.5,
       "estimate": 0.65,
       "surp": -22.49,
-      "revenue": 9.456
+      "revenue": 9.569
     },
     {
       "d": "2025-10-29",
@@ -3522,7 +3522,7 @@
       "actual": 0.8,
       "estimate": 0.71,
       "surp": 13.35,
-      "revenue": null
+      "revenue": 9.141
     }
   ],
   "GE": [
@@ -9760,7 +9760,7 @@
       "actual": 0.11,
       "estimate": 0.12,
       "surp": -1.2,
-      "revenue": 2.51
+      "revenue": null
     },
     {
       "d": "2025-08-14",
@@ -9802,7 +9802,7 @@
       "actual": 0.22,
       "estimate": 0.22,
       "surp": 0.32,
-      "revenue": null
+      "revenue": 4.03
     }
   ],
   "ADBE": [
@@ -12563,7 +12563,7 @@
       "actual": -0.02,
       "estimate": -0.04,
       "surp": 49.25,
-      "revenue": 0.0
+      "revenue": null
     },
     {
       "d": "2025-08-14",
@@ -12605,7 +12605,7 @@
       "actual": -0.04,
       "estimate": -0.03,
       "surp": -39.0,
-      "revenue": null
+      "revenue": 0.0
     }
   ],
   "UNH": [
@@ -14362,14 +14362,14 @@
       "actual": 2.45,
       "estimate": 2.12,
       "surp": 15.77,
-      "revenue": 2.144
+      "revenue": null
     },
     {
       "d": "2025-08-06",
       "actual": 2.82,
       "estimate": 2.67,
       "surp": 5.66,
-      "revenue": 2.144
+      "revenue": 2.316
     },
     {
       "d": "2025-11-06",
@@ -14404,7 +14404,7 @@
       "actual": 3.88,
       "estimate": 3.69,
       "surp": 5.05,
-      "revenue": null
+      "revenue": 2.332
     }
   ],
   "BRKR": [
@@ -35373,14 +35373,14 @@
       "actual": 0.82,
       "estimate": 0.8,
       "surp": 2.62,
-      "revenue": 6.052
+      "revenue": null
     },
     {
       "d": "2025-07-29",
       "actual": 1.05,
       "estimate": 1.01,
       "surp": 3.63,
-      "revenue": 6.052
+      "revenue": 6.442
     },
     {
       "d": "2025-11-05",
@@ -35415,7 +35415,7 @@
       "actual": 1.66,
       "estimate": 1.59,
       "surp": 4.64,
-      "revenue": null
+      "revenue": 7.113
     }
   ],
   "DDOG": [
