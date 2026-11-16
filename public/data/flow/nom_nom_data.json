@@ -1,85 +1,29 @@
 {
-  "fire": [
-    {
-      "name": "BROADCOM INC EXOF 005644980 SG9999014823",
-      "name_kr": "브로드컴",
-      "ticker": "AVGO",
-      "file_ticker": "BROADCOM INC EXOF 005644980 SG9999014823",
-      "close": 347.01,
-      "price_change": 0.08617127832728175,
-      "net_buy_sum": -7413532,
-      "buy_score": 1,
-      "sell_score": 6,
-      "last_date": "2026-11-13",
-      "comment": "개미 털고 세력 떡상 중 🚀"
-    },
-    {
-      "name": "TESLA INC",
-      "name_kr": "테슬라",
-      "ticker": "TSLA",
-      "file_ticker": "TESLA INC",
-      "close": 390.22,
-      "price_change": 0.03219150905964824,
-      "net_buy_sum": -48459184,
-      "buy_score": 1,
-      "sell_score": 6,
-      "last_date": "2026-11-13",
-      "comment": "개미 털고 세력 떡상 중 🚀"
-    }
-  ],
-  "top": [
-    {
-      "name": "ADVANCED MICRO DEVICES INC",
-      "name_kr": "AMD",
-      "ticker": "AMD",
-      "file_ticker": "ADVANCED MICRO DEVICES INC",
-      "close": 534.06,
-      "price_change": 0.050100279208777306,
-      "net_buy_sum": 48777171,
-      "buy_score": 4,
-      "sell_score": 3,
-      "last_date": "2026-11-13",
-      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
-    },
-    {
-      "name": "MICRON TECHNOLOGY INC",
-      "name_kr": "마이크론 테크놀로지",
-      "ticker": "MU",
-      "file_ticker": "MICRON TECHNOLOGY INC",
-      "close": 778.31,
-      "price_change": 0.06159721748618969,
-      "net_buy_sum": 31563153,
-      "buy_score": 3,
-      "sell_score": 4,
-      "last_date": "2026-11-13",
-      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
-    }
-  ],
   "bottom": [
-    {
-      "name": "MICROSOFT CORP",
-      "name_kr": "마이크로소프트",
-      "ticker": "MSFT",
-      "file_ticker": "MICROSOFT CORP",
-      "close": 523.88,
-      "price_change": -0.039069665064749175,
-      "net_buy_sum": -9805809,
-      "buy_score": 0,
-      "sell_score": 7,
-      "last_date": "2026-11-13",
-      "comment": "공포에 줍줍할 기회인가 💎"
-    },
     {
       "name": "MICROSTRATEGY INC CL A",
       "name_kr": "",
       "ticker": "MSTR",
       "file_ticker": "MICROSTRATEGY INC CL A",
-      "close": 111.62,
-      "price_change": -0.11123497093717652,
-      "net_buy_sum": -2012863,
+      "close": 103.41,
+      "price_change": -0.1458660279177335,
+      "net_buy_sum": -9153481,
       "buy_score": 0,
-      "sell_score": 4,
-      "last_date": "2026-11-13",
+      "sell_score": 5,
+      "last_date": "2026-11-16",
+      "comment": "공포에 줍줍할 기회인가 💎"
+    },
+    {
+      "name": "IONQ INC. CL.A DL- 0001",
+      "name_kr": "",
+      "ticker": "IONQ",
+      "file_ticker": "IONQ INC. CL.A DL- 0001",
+      "close": 26.63,
+      "price_change": -0.238925407259217,
+      "net_buy_sum": -2430156,
+      "buy_score": 4,
+      "sell_score": 3,
+      "last_date": "2026-11-16",
       "comment": "공포에 줍줍할 기회인가 💎"
     }
   ],
@@ -89,12 +33,12 @@
       "name_kr": "아이렌",
       "ticker": "IREN",
       "file_ticker": "IRIS ENERGY LTD",
-      "close": 18.17,
-      "price_change": -0.1513311536665109,
-      "net_buy_sum": 8166782,
+      "close": 16.37,
+      "price_change": -0.17029903699949311,
+      "net_buy_sum": 17876610,
       "buy_score": 7,
       "sell_score": 0,
-      "last_date": "2026-11-13",
+      "last_date": "2026-11-16",
       "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     },
     {
@@ -102,12 +46,12 @@
       "name_kr": "엔비디아",
       "ticker": "NVDA",
       "file_ticker": "NVIDIA CORP",
-      "close": 162.85,
-      "price_change": -0.08854312419544408,
-      "net_buy_sum": 294721331,
+      "close": 159.28,
+      "price_change": -0.05690094144117465,
+      "net_buy_sum": 348912980,
       "buy_score": 6,
       "sell_score": 1,
-      "last_date": "2026-11-13",
+      "last_date": "2026-11-16",
       "comment": "물타기하다 익사한다... 도망쳐! 🩸"
     }
   ]
