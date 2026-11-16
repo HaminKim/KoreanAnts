@@ -3787,15 +3787,15 @@
     {
       "d": "2024-02-22",
       "actual": 0.55,
-      "estimate": -0.99,
-      "surp": 155.57,
+      "estimate": -0.98,
+      "surp": 156.29,
       "revenue": null
     },
     {
       "d": "2024-05-02",
       "actual": -3.07,
-      "estimate": -3.57,
-      "surp": 14.06,
+      "estimate": -3.55,
+      "surp": 13.57,
       "revenue": null
     },
     {
@@ -3808,43 +3808,43 @@
     {
       "d": "2024-11-07",
       "actual": 0.03,
-      "estimate": -1.94,
+      "estimate": -1.93,
       "surp": 101.55,
       "revenue": null
     },
     {
       "d": "2025-02-14",
       "actual": -2.91,
-      "estimate": -2.73,
-      "surp": -6.65,
+      "estimate": -2.76,
+      "surp": -5.44,
       "revenue": null
     },
     {
       "d": "2025-05-01",
       "actual": -2.52,
-      "estimate": -3.11,
-      "surp": 18.89,
+      "estimate": -3.18,
+      "surp": 20.69,
       "revenue": null
     },
     {
       "d": "2025-08-01",
       "actual": -2.13,
-      "estimate": -3.0,
-      "surp": 28.96,
+      "estimate": -2.97,
+      "surp": 28.28,
       "revenue": 1.002
     },
     {
       "d": "2025-11-06",
       "actual": -0.51,
-      "estimate": -2.16,
-      "surp": 76.42,
+      "estimate": -2.18,
+      "surp": 76.6,
       "revenue": 1.002
     },
     {
       "d": "2026-02-13",
       "actual": -2.11,
-      "estimate": -2.64,
-      "surp": 20.18,
+      "estimate": -2.6,
+      "surp": 18.88,
       "revenue": 0.389
     },
     {
@@ -9277,8 +9277,8 @@
     {
       "d": "2026-08-05",
       "actual": 2.4,
-      "estimate": 1.85,
-      "surp": 29.8,
+      "estimate": 1.86,
+      "surp": 28.99,
       "revenue": 8.065
     },
     {
@@ -11693,9 +11693,9 @@
     },
     {
       "d": "2024-07-23",
-      "actual": 7.11,
-      "estimate": 6.45,
-      "surp": 10.28,
+      "actual": 6.85,
+      "estimate": 6.46,
+      "surp": 6.04,
       "revenue": null
     },
     {
@@ -11736,8 +11736,8 @@
     {
       "d": "2026-01-29",
       "actual": 5.8,
-      "estimate": 5.75,
-      "surp": 0.94,
+      "estimate": 5.96,
+      "surp": -2.71,
       "revenue": 20.321
     },
     {
@@ -33924,7 +33924,7 @@
       "d": "2025-10-16",
       "actual": 1.22,
       "estimate": 1.12,
-      "surp": 9.02,
+      "surp": 8.46,
       "revenue": 7.3
     },
     {
