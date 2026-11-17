@@ -12108,13 +12108,6 @@
   ],
   "DIS": [
     {
-      "d": "2023-11-08",
-      "actual": 0.82,
-      "estimate": 0.71,
-      "surp": 15.11,
-      "revenue": null
-    },
-    {
       "d": "2024-02-07",
       "actual": 1.22,
       "estimate": 1.03,
@@ -12190,6 +12183,13 @@
       "estimate": 1.85,
       "surp": 11.09,
       "revenue": 25.248
+    },
+    {
+      "d": "2026-11-17",
+      "actual": 1.77,
+      "estimate": 1.68,
+      "surp": 5.43,
+      "revenue": null
     }
   ],
   "VLO": [
@@ -20473,13 +20473,6 @@
   ],
   "HD": [
     {
-      "d": "2023-11-14",
-      "actual": 3.81,
-      "estimate": 3.76,
-      "surp": 1.35,
-      "revenue": null
-    },
-    {
       "d": "2024-02-20",
       "actual": 2.82,
       "estimate": 2.77,
@@ -20555,6 +20548,13 @@
       "estimate": 4.73,
       "surp": 3.97,
       "revenue": 47.861
+    },
+    {
+      "d": "2026-11-17",
+      "actual": 3.86,
+      "estimate": 3.84,
+      "surp": 0.57,
+      "revenue": null
     }
   ],
   "AEP": [
@@ -32989,13 +32989,6 @@
   ],
   "PARA": [
     {
-      "d": "2023-08-07",
-      "actual": 0.1,
-      "estimate": -0.02,
-      "surp": 670.45,
-      "revenue": null
-    },
-    {
       "d": "2023-11-02",
       "actual": 0.3,
       "estimate": 0.1,
@@ -33071,6 +33064,13 @@
       "estimate": -29.2,
       "surp": 29.58,
       "revenue": 0.002
+    },
+    {
+      "d": "2026-11-16",
+      "actual": -10.46,
+      "estimate": -12.2,
+      "surp": 14.3,
+      "revenue": null
     }
   ],
   "HALO": [
@@ -36624,13 +36624,6 @@
   ],
   "RCAT": [
     {
-      "d": "2023-03-07",
-      "actual": -0.1,
-      "estimate": -0.09,
-      "surp": -11.11,
-      "revenue": null
-    },
-    {
       "d": "2023-07-27",
       "actual": -0.21,
       "estimate": -0.06,
@@ -36706,6 +36699,13 @@
       "estimate": -0.17,
       "surp": -34.94,
       "revenue": 0.02
+    },
+    {
+      "d": "2026-11-16",
+      "actual": -0.24,
+      "estimate": -0.18,
+      "surp": -33.22,
+      "revenue": null
     }
   ],
   "ADM": [
