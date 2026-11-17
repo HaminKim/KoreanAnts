@@ -13808,7 +13808,7 @@
       "d": "2026-11-05",
       "actual": 0.38,
       "estimate": 0.34,
-      "surp": 10.61,
+      "surp": 11.03,
       "revenue": 0.783
     }
   ],
@@ -34513,14 +34513,14 @@
       "actual": 0.37,
       "estimate": 0.25,
       "surp": 46.67,
-      "revenue": 0.205
+      "revenue": null
     },
     {
       "d": "2025-08-06",
       "actual": 0.32,
       "estimate": 0.32,
       "surp": null,
-      "revenue": 0.205
+      "revenue": 0.211
     },
     {
       "d": "2025-11-04",
@@ -34555,7 +34555,7 @@
       "actual": 0.81,
       "estimate": 0.72,
       "surp": 12.5,
-      "revenue": null
+      "revenue": 0.272
     }
   ],
   "GPC": [
