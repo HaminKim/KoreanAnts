@@ -13,16 +13,16 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1560073004.0,
+      "value": 1242009677.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 540466900.0,
+      "raw_name": "NVIDIA CORP",
+      "value": 515321157.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
@@ -31,7 +31,7 @@
       "ticker": "TQQQ",
       "name": "",
       "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 463678837.0,
+      "value": 478025595.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
@@ -40,7 +40,7 @@
       "ticker": "TSLA",
       "name": "",
       "raw_name": "TESLA INC",
-      "value": -337663200.0,
+      "value": -323806883.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
@@ -49,16 +49,16 @@
       "ticker": "LITE",
       "name": "",
       "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": -119667474.0,
+      "value": -118861539.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "MSFT",
-      "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -81846980.0,
+      "ticker": "TEAM",
+      "name": "TEAM",
+      "raw_name": "ATLASSIAN CORP",
+      "value": -66500981.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
     }
