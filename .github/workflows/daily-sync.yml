@@ -10,6 +10,10 @@ on:
     # 3. 10:00 KST (UTC 01:00) -> US 애프터장 최종 마감 (Day End)
     - cron: "0 16,21,1 * * *"
 
+    # 1-b. 03:17 · 05:17 KST (UTC 18:17, 20:17) -> 01:00 실행이 밀리거나 놓쳤을 때 재시도
+    #      (새 날짜를 받으면 바로 배포 → 아침 8:50 전에 사이트 반영. 정각을 피해 지연을 줄임)
+    - cron: "17 18,20 * * *"
+
     # 4. 09:00 KST (UTC 00:00) -> 한국장 시작 (KR Market Open)
     - cron: "0 0 * * *"
 
@@ -187,6 +191,8 @@ jobs:
       # 8. 최종 결과물(JSON) 업로드
       - name: Commit and push JSONs
         if: always()
+        env:
+          DOWNLOADED: ${{ steps.dl.outputs.downloaded }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -200,8 +206,13 @@ jobs:
             exit 0
           fi
 
-          # 커밋
-          git commit -m "chore(data): update daily JSONs & Sector & Briefing"
+          # 커밋 — Seibro 새 날짜를 받은 실행이면 [deploy] 를 붙여 바로 배포
+          # (평소엔 deploy-daily.yml 이 몰아서 배포. 새 날짜는 하루 1번이라 배포 수 부담 적음)
+          MSG="chore(data): update daily JSONs & Sector & Briefing"
+          if [ "${DOWNLOADED:-0}" -gt 0 ] 2>/dev/null; then
+            MSG="$MSG [deploy]"
+          fi
+          git commit -m "$MSG"
 
           # ✨ [필수] 충돌 나면 '로봇 데이터'를 우선시함!
           git pull --rebase -Xtheirs origin main
