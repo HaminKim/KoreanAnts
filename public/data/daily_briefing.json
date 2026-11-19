@@ -1,57 +1,57 @@
 {
-  "date": "2026-11-19",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-11-20",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -293111260.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "NVIDIA CORP",
+      "value": 486846129.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "LITE",
+      "ticker": "",
       "name": "",
-      "raw_name": "LUMENTUM HOLDINGS INC SOFF 39520207144 US46612J5074",
-      "value": -114058919.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 181496292.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -77437545.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 144147338.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "MSFT",
+      "ticker": "",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -67402287.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "DIREX DAI SEMI BE 3X ETF-USD SPLR 2642142633002 US25461H5726",
+      "value": 87476824.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "TEAM",
-      "name": "TEAM",
-      "raw_name": "ATLASSIAN CORP",
-      "value": -66500981.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "ticker": "QLD",
+      "name": "",
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 71810463.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
