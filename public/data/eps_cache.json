@@ -10104,14 +10104,14 @@
       "actual": 0.05,
       "estimate": 0.07,
       "surp": -31.82,
-      "revenue": 0.144
+      "revenue": null
     },
     {
       "d": "2025-08-05",
       "actual": 0.19,
       "estimate": 0.14,
       "surp": 39.02,
-      "revenue": 0.144
+      "revenue": 0.159
     },
     {
       "d": "2025-11-21",
@@ -10146,7 +10146,7 @@
       "actual": 0.28,
       "estimate": 0.11,
       "surp": 150.74,
-      "revenue": null
+      "revenue": 0.167
     }
   ],
   "NEE": [
@@ -15824,14 +15824,14 @@
       "actual": 0.8,
       "estimate": 0.77,
       "surp": 3.59,
-      "revenue": 2.536
+      "revenue": null
     },
     {
       "d": "2025-08-18",
       "actual": 0.95,
       "estimate": 0.89,
       "surp": 7.31,
-      "revenue": 2.536
+      "revenue": 2.474
     },
     {
       "d": "2025-11-19",
@@ -15866,7 +15866,7 @@
       "actual": 1.05,
       "estimate": 0.97,
       "surp": 8.21,
-      "revenue": null
+      "revenue": 3.445
     }
   ],
   "LDOS": [
@@ -23436,14 +23436,14 @@
       "actual": 2.69,
       "estimate": 2.83,
       "surp": -4.86,
-      "revenue": 3.023
+      "revenue": null
     },
     {
       "d": "2025-07-31",
       "actual": 3.09,
       "estimate": 2.99,
       "surp": 3.23,
-      "revenue": 3.023
+      "revenue": 3.167
     },
     {
       "d": "2025-11-06",
@@ -23478,7 +23478,7 @@
       "actual": 3.61,
       "estimate": 3.61,
       "surp": -0.02,
-      "revenue": null
+      "revenue": 3.556
     }
   ],
   "LRCX": [
@@ -26662,14 +26662,14 @@
       "actual": 11.65,
       "estimate": 10.91,
       "surp": 6.77,
-      "revenue": 3.831
+      "revenue": null
     },
     {
       "d": "2025-08-21",
       "actual": 2.75,
       "estimate": 2.66,
       "surp": 3.4,
-      "revenue": 3.831
+      "revenue": 3.885
     },
     {
       "d": "2025-11-20",
@@ -26704,7 +26704,7 @@
       "actual": 2.91,
       "estimate": 2.65,
       "surp": 9.91,
-      "revenue": null
+      "revenue": 4.354
     }
   ],
   "SPGI": [
@@ -36663,7 +36663,7 @@
       "actual": -0.27,
       "estimate": -0.1,
       "surp": -170.0,
-      "revenue": 0.003
+      "revenue": null
     },
     {
       "d": "2025-08-14",
@@ -36705,7 +36705,7 @@
       "actual": -0.24,
       "estimate": -0.18,
       "surp": -33.22,
-      "revenue": null
+      "revenue": 0.012
     }
   ],
   "ADM": [
