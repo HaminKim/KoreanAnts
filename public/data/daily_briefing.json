@@ -1,11 +1,11 @@
 {
-  "date": "2026-11-22",
-  "day_of_week": "Sunday",
-  "theme_code": "THEME_WEEKEND_BUY",
+  "date": "2026-11-23",
+  "day_of_week": "Monday",
+  "theme_code": "THEME_WEEKLY_TREND",
   "meta_info": {
-    "period_days": 20,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 20일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
@@ -13,25 +13,25 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 1722141416.0,
+      "value": 758684056.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
     {
       "rank": 2,
-      "ticker": "GOOGL",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "ALPHABET INC CL A",
-      "value": 795291207.0,
+      "raw_name": "NVIDIA CORP",
+      "value": 334655441.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "NVDA",
+      "ticker": "",
       "name": "",
-      "raw_name": "NVIDIA CORP",
-      "value": 720633761.0,
+      "raw_name": "SPACE EXPLORATION TECHN-CL A",
+      "value": 116351455.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
@@ -40,16 +40,16 @@
       "ticker": "TQQQ",
       "name": "",
       "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 666530338.0,
+      "value": 97207787.0,
       "type": "NET_BUY",
       "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "",
+      "ticker": "IONQ",
       "name": "",
-      "raw_name": "SPACE EXPLORATION TECHN-CL A",
-      "value": 585469582.0,
+      "raw_name": "IONQ INC. CL.A DL- 0001",
+      "value": 65296504.0,
       "type": "NET_BUY",
       "desc_key": "매수 5위"
     }
