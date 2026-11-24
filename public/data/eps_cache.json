@@ -5849,13 +5849,6 @@
   ],
   "FLNC": [
     {
-      "d": "2023-11-28",
-      "actual": 0.03,
-      "estimate": -0.06,
-      "surp": 156.25,
-      "revenue": null
-    },
-    {
       "d": "2024-02-07",
       "actual": -0.08,
       "estimate": -0.15,
@@ -5931,6 +5924,13 @@
       "estimate": 0.01,
       "surp": -1997.66,
       "revenue": 0.65
+    },
+    {
+      "d": "2026-11-23",
+      "actual": -0.68,
+      "estimate": -0.61,
+      "surp": -12.96,
+      "revenue": null
     }
   ],
   "MCD": [
@@ -20512,14 +20512,14 @@
       "actual": 3.56,
       "estimate": 3.59,
       "surp": -0.81,
-      "revenue": 45.277
+      "revenue": null
     },
     {
       "d": "2025-08-19",
       "actual": 4.68,
       "estimate": 4.69,
       "surp": -0.31,
-      "revenue": 45.277
+      "revenue": 41.352
     },
     {
       "d": "2025-11-18",
@@ -20554,7 +20554,7 @@
       "actual": 3.86,
       "estimate": 3.84,
       "surp": 0.57,
-      "revenue": null
+      "revenue": 43.398
     }
   ],
   "AEP": [
@@ -26702,8 +26702,8 @@
     {
       "d": "2026-11-19",
       "actual": 2.91,
-      "estimate": 2.65,
-      "surp": 9.91,
+      "estimate": 2.46,
+      "surp": 18.17,
       "revenue": 4.354
     }
   ],
@@ -33028,14 +33028,14 @@
       "actual": -337764.0,
       "estimate": -1600000.0,
       "surp": 78.89,
-      "revenue": 0.003
+      "revenue": null
     },
     {
       "d": "2025-05-15",
       "actual": -21960.0,
       "estimate": -24000.0,
       "surp": 8.5,
-      "revenue": 0.003
+      "revenue": null
     },
     {
       "d": "2025-08-14",
@@ -33063,14 +33063,14 @@
       "actual": -2056.2,
       "estimate": -2920.0,
       "surp": 29.58,
-      "revenue": 0.002
+      "revenue": 0.005
     },
     {
       "d": "2026-11-16",
       "actual": -1045.57,
       "estimate": -1220.0,
       "surp": 14.3,
-      "revenue": null
+      "revenue": 0.005
     }
   ],
   "HALO": [
