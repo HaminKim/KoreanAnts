@@ -13,7 +13,7 @@
       "ticker": "SOXL",
       "name": "",
       "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
-      "value": 825879554.0,
+      "value": 792924462.0,
       "type": "NET_BUY",
       "desc_key": "매수 1위"
     },
@@ -22,7 +22,7 @@
       "ticker": "NVDA",
       "name": "",
       "raw_name": "NVIDIA CORP",
-      "value": 691604937.0,
+      "value": 716601506.0,
       "type": "NET_BUY",
       "desc_key": "매수 2위"
     },
@@ -31,7 +31,7 @@
       "ticker": "TQQQ",
       "name": "",
       "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
-      "value": 382461261.0,
+      "value": 426008849.0,
       "type": "NET_BUY",
       "desc_key": "매수 3위"
     },
@@ -40,25 +40,25 @@
       "ticker": "TSLA",
       "name": "",
       "raw_name": "TESLA INC",
-      "value": -191233594.0,
+      "value": -153214058.0,
       "type": "NET_SELL",
       "desc_key": "매도 1위"
     },
     {
       "rank": 2,
-      "ticker": "MSFT",
+      "ticker": "",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -80798236.0,
+      "raw_name": "MERCK N CO INC",
+      "value": -83960947.0,
       "type": "NET_SELL",
       "desc_key": "매도 2위"
     },
     {
       "rank": 3,
-      "ticker": "MU",
+      "ticker": "MSFT",
       "name": "",
-      "raw_name": "MICRON TECHNOLOGY INC",
-      "value": -76883176.0,
+      "raw_name": "MICROSOFT CORP",
+      "value": -77129511.0,
       "type": "NET_SELL",
       "desc_key": "매도 3위"
     }
