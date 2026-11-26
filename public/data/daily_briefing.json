@@ -1,57 +1,57 @@
 {
-  "date": "2026-11-26",
-  "day_of_week": "Thursday",
-  "theme_code": "THEME_MID_SELL",
+  "date": "2026-11-27",
+  "day_of_week": "Friday",
+  "theme_code": "THEME_HOT_FRIDAY",
   "meta_info": {
-    "period_days": 10,
+    "period_days": 5,
     "total_count": 5,
-    "source_desc": "최근 10일간 데이터"
+    "source_desc": "최근 5일간 데이터"
   },
   "items": [
     {
       "rank": 1,
-      "ticker": "TSLA",
+      "ticker": "SOXL",
       "name": "",
-      "raw_name": "TESLA INC",
-      "value": -167123966.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 1위"
+      "raw_name": "DIREXION DAILY SEMICONDUCTORS BULL 3X SHS ETF",
+      "value": 634765676.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 1위"
     },
     {
       "rank": 2,
       "ticker": "",
       "name": "",
-      "raw_name": "MERCK N CO INC",
-      "value": -118228750.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 2위"
+      "raw_name": "ANTHROPIC PBC-CL A",
+      "value": 251682562.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 2위"
     },
     {
       "rank": 3,
-      "ticker": "MSFT",
+      "ticker": "NVDA",
       "name": "",
-      "raw_name": "MICROSOFT CORP",
-      "value": -78531949.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 3위"
+      "raw_name": "NVIDIA CORP",
+      "value": 231251861.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 3위"
     },
     {
       "rank": 4,
-      "ticker": "BE",
+      "ticker": "TQQQ",
       "name": "",
-      "raw_name": "BLOOM ENERGY CORP CL A",
-      "value": -49006560.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 4위"
+      "raw_name": "PROSHARES ULTRAPRO QQQ ETF",
+      "value": 183563186.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 4위"
     },
     {
       "rank": 5,
-      "ticker": "CLS",
+      "ticker": "QLD",
       "name": "",
-      "raw_name": "CELESTICA INC COM NPV EXOF 959276693 CA15101Q1081",
-      "value": -48701154.0,
-      "type": "NET_SELL",
-      "desc_key": "매도 5위"
+      "raw_name": "PROSHARES ULTRA QQQ ETF",
+      "value": 127308560.0,
+      "type": "NET_BUY",
+      "desc_key": "매수 5위"
     }
   ]
 }
