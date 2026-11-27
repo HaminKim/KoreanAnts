@@ -2,7 +2,7 @@
 
 // 한국 개인투자자 미국주식 누적 순매수 — 순매수가 이어지면 선이 위로 쌓이고, 순매도가 이어지면 내려간다.
 //  - 위: 누적선 (선택 기간 시작 = 0), 아래: 그날 순매수 막대
-//  - S&P 500 겹쳐보기는 흐리게 (비강조 ≤ 0.1 원칙보다 조금 진하게 — 선이라 너무 흐리면 안 보임)
+//  - S&P 500 · 나스닥100 겹쳐보기 (한 번에 하나) 는 흐리게 (비강조 ≤ 0.1 원칙보다 조금 진하게 — 선이라 너무 흐리면 안 보임)
 //  - 확대: Ctrl+휠(트랙패드 오므리기) · 폰은 두 손가락. 확대하면 차트를 끌어 옆으로 이동, 아래에 전체 흐름 막대(끌어서 이동)
 //  - 사건 표시: ./events.ts (매크로 EVENTS 급 + 중간급)
 
@@ -18,6 +18,9 @@ const RANGES = [
   { id: '3M', months: 3 }, { id: '6M', months: 6 }, { id: '1Y', months: 12 }, { id: '2Y', months: null },
 ] as const
 type RangeId = (typeof RANGES)[number]['id']
+// 겹쳐볼 지수 (landing.json, macro-sync 가 매일 갱신). 서학개미는 빅테크 비중이 커서 나스닥100 이 잘 맞음
+const INDEXES = [{ id: 'SPX', label: 'S&P 500' }, { id: 'NDX', label: '나스닥100' }] as const
+type IndexId = (typeof INDEXES)[number]['id']
 
 export function fmtUsd(v: number, sign = true) {
   const a = Math.abs(v)
@@ -30,9 +33,9 @@ const fmtDate = (d: string) => `${d.slice(0, 4)}.${d.slice(5, 7)}.${d.slice(8, 1
 export default function CumulativeChart() {
   const [data, setData] = useState<CumData | null>(null)
   const [err, setErr] = useState(false)
-  const [spx, setSpx] = useState<Landing['index']['SPX'] | null>(null)
+  const [idx, setIdx] = useState<Landing['index'] | null>(null)
   const [range, setRange] = useState<RangeId>('2Y')
-  const [overlay, setOverlay] = useState(false)
+  const [overlay, setOverlay] = useState<IndexId | null>(null)
   const [showEv, setShowEv] = useState(true)
 
   useEffect(() => {
@@ -46,9 +49,9 @@ export default function CumulativeChart() {
   }, [])
 
   useEffect(() => {
-    if (!overlay || spx) return
-    fetch('/data/market/landing.json').then(r => r.json()).then((js: Landing) => setSpx(js.index.SPX)).catch(() => {})
-  }, [overlay, spx])
+    if (!overlay || idx) return
+    fetch('/data/market/landing.json', { cache: 'no-cache' }).then(r => r.json()).then((js: Landing) => setIdx(js.index)).catch(() => {})
+  }, [overlay, idx])
 
   const view = useMemo(() => {
     if (!data || data.d.length < 3) return null
@@ -65,8 +68,9 @@ export default function CumulativeChart() {
     const net = data.net.slice(i0)
     const cum = data.cum.slice(i0).map(v => v - base)
     let px: (number | null)[] | null = null
-    if (overlay && spx) {
-      // 순매수는 Seibro T+2 라 며칠 늦음 → S&P 500 은 그 뒤 거래일까지 이어서 그림 (누적선·막대는 마지막 집계일에서 멈춤)
+    const spx = overlay && idx ? idx[overlay] : null
+    if (spx) {
+      // 순매수는 Seibro T+2 라 며칠 늦음 → 지수는 그 뒤 거래일까지 이어서 그림 (누적선·막대는 마지막 집계일에서 멈춤)
       const lastFlow = d[d.length - 1]
       d = [...d, ...spx.d.filter(x => x > lastFlow)]
       const m = new Map(spx.d.map((x, i) => [x, spx.v[i]]))
@@ -74,7 +78,7 @@ export default function CumulativeChart() {
       px = d.map(x => { const v = m.get(x); if (v !== undefined) last = v; return last })
     }
     return { d, net, cum, px }
-  }, [data, range, overlay, spx])
+  }, [data, range, overlay, idx])
 
   if (err && !data) return <p className="text-sm py-16 text-center" style={{ color: 'var(--ink-mute)' }}>누적 순매수 데이터를 불러오지 못했습니다.</p>
   if (!view) return <div className="h-[380px] animate-pulse" style={{ background: 'var(--plane)' }} />
@@ -101,12 +105,14 @@ export default function CumulativeChart() {
         <div className="flex items-center gap-1">
           {RANGES.map(r => <Chip key={r.id} on={range === r.id} onClick={() => setRange(r.id)}>{r.id}</Chip>)}
           <span className="w-2" />
-          <Chip on={overlay} onClick={() => setOverlay(o => !o)}>S&amp;P 500</Chip>
+          {INDEXES.map(ix => (
+            <Chip key={ix.id} on={overlay === ix.id} onClick={() => setOverlay(o => (o === ix.id ? null : ix.id))}>{ix.label}</Chip>
+          ))}
           <Chip on={showEv} onClick={() => setShowEv(o => !o)}>사건</Chip>
         </div>
       </div>
       <div className="mt-3">
-        <Plot d={view.d} cum={view.cum} net={view.net} px={view.px} showEvents={showEv} />
+        <Plot d={view.d} cum={view.cum} net={view.net} px={view.px} pxLabel={INDEXES.find(ix => ix.id === overlay)?.label ?? ''} showEvents={showEv} />
       </div>
     </div>
   )
@@ -118,8 +124,8 @@ type Win = [number, number]   // 보이는 구간 (인덱스, 소수 허용)
 type Gesture = { win: Win; cx: number; dist: number; moved: boolean; mode: 'move' | 'scrub' }
 type Placed = AntEvent & { s: number; t: number }
 
-function Plot({ d, cum, net, px, showEvents }: {
-  d: string[]; cum: number[]; net: number[]; px: (number | null)[] | null; showEvents: boolean
+function Plot({ d, cum, net, px, pxLabel, showEvents }: {
+  d: string[]; cum: number[]; net: number[]; px: (number | null)[] | null; pxLabel: string; showEvents: boolean
 }) {
   const boxRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
@@ -430,7 +436,7 @@ function Plot({ d, cum, net, px, showEvents }: {
             <div>누적 <span className="mono font-bold" style={{ color: tone(cum[hi]) }}>{fmtUsd(cum[hi])}</span></div>
             <div>그날 <span className="mono" style={{ color: tone(net[hi]) }}>{fmtUsd(net[hi])}</span></div>
           </>) : <div style={{ color: 'var(--ink-mute)' }}>순매수 집계 전 (Seibro 2영업일 뒤 공시)</div>}
-          {px && px[hi] !== null && <div style={{ color: 'var(--ink-mute)' }}>S&amp;P 500 <span className="mono">{px[hi]!.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span></div>}
+          {px && px[hi] !== null && <div style={{ color: 'var(--ink-mute)' }}>{pxLabel} <span className="mono">{px[hi]!.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span></div>}
           {hiEvents.map(e => (
             <div key={e.date + e.name} className="mt-1 pt-1" style={{ borderTop: '1px solid var(--hairline)' }}>
               <b>{e.name}</b>{' '}
