@@ -10,9 +10,13 @@ on:
     # 3. 10:00 KST (UTC 01:00) -> US 애프터장 최종 마감 (Day End)
     - cron: "0 16,21,1 * * *"
 
-    # 1-b. 03:17 · 05:17 KST (UTC 18:17, 20:17) -> 01:00 실행이 밀리거나 놓쳤을 때 재시도
-    #      (새 날짜를 받으면 바로 배포 → 아침 8:50 전에 사이트 반영. 정각을 피해 지연을 줄임)
-    - cron: "17 18,20 * * *"
+    # 1-b. 03:07 · 04:47 · 06:27 KST (UTC 18:07, 19:47, 21:27) -> Seibro 새 날짜 받기 (아침 8시 전 반영)
+    #      Seibro 는 전날치를 새벽 3시~7시 반쯤 올림 (2026-11 실측). GitHub 이 예약 실행을 자주 빼먹어서
+    #      여러 번 걸어 두고, 03~07시에 시작한 실행은 데이터가 올라올 때까지 10분마다 다시 확인하며 07:45 까지 기다림.
+    #      새 날짜를 받으면 [deploy] 로 바로 배포. 정각을 피해 지연을 줄임
+    - cron: "7 18 * * *"
+    - cron: "47 19 * * *"
+    - cron: "27 21 * * *"
 
     # 4. 09:00 KST (UTC 00:00) -> 한국장 시작 (KR Market Open)
     - cron: "0 0 * * *"
@@ -24,9 +28,15 @@ on:
 permissions:
   contents: write
 
+# 새벽 대기 실행과 겹치지 않게 한 번에 하나씩 (뒤 실행은 기다렸다가 돎)
+concurrency:
+  group: daily-sync
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 330
     
     # ✨ [핵심] 서버 시간을 한국 시간(KST)으로 고정
     env:
@@ -71,20 +81,40 @@ jobs:
 
           echo "받을 날짜:"; echo "$TARGETS"
 
+          # 03~07시(KST)에 시작한 예약 실행은 못 받은 날짜를 10분마다 다시 시도하며 07:45 까지 기다림
+          DEADLINE=0
+          HOUR=$(date +%H)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$HOUR" -ge 3 ] && [ "$HOUR" -lt 8 ]; then
+            DEADLINE=$(date -d "today 07:45" +%s)
+            echo "⏳ 새벽 대기 모드: 07:45 KST 까지 10분마다 재시도"
+          fi
+
           downloaded=0
           hard_fail=0
-          for YMD in $TARGETS; do
-            echo ""
-            echo "👉 $YMD"
-            set +e
-            python scraper/downloader.py "$YMD"
-            rc=$?
-            set -e
-            case "$rc" in
-              0) echo "  ✅ 저장됨"; downloaded=$((downloaded+1)) ;;
-              2) echo "  ↷ 데이터 없음 — 다음 실행에서 재시도" ;;
-              *) echo "  ✗ 기술적 실패 (rc=$rc)"; hard_fail=1 ;;
-            esac
+          PENDING="$TARGETS"
+          while :; do
+            LEFT=""
+            hard_fail=0
+            for YMD in $PENDING; do
+              echo ""
+              echo "👉 $YMD ($(date +%H:%M) KST)"
+              set +e
+              python scraper/downloader.py "$YMD"
+              rc=$?
+              set -e
+              case "$rc" in
+                0) echo "  ✅ 저장됨 ($(date +%H:%M) KST)"; downloaded=$((downloaded+1)) ;;
+                2) echo "  ↷ 데이터 없음"; LEFT="$LEFT $YMD" ;;
+                *) echo "  ✗ 기술적 실패 (rc=$rc)"; hard_fail=1; LEFT="$LEFT $YMD" ;;
+              esac
+            done
+            PENDING="$LEFT"
+            # 다 받았거나, 하나라도 새로 받았으면(바로 배포, 나머지는 다음 실행) 또는 시간이 다 됐으면 끝
+            if [ -z "${PENDING// /}" ] || [ "$downloaded" -gt 0 ] || [ $(( $(date +%s) + 600 )) -gt "$DEADLINE" ]; then
+              break
+            fi
+            echo "⏳ 아직 못 받은 날짜:$PENDING → 10분 뒤 다시"
+            sleep 600
           done
 
           echo ""
