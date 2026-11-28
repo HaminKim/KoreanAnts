@@ -29,19 +29,6 @@
   ],
   "top": [
     {
-      "name": "IONQ INC. CL.A DL- 0001",
-      "name_kr": "",
-      "ticker": "IONQ",
-      "file_ticker": "IONQ INC. CL.A DL- 0001",
-      "close": 24.97,
-      "price_change": 0.20511583011583012,
-      "net_buy_sum": 11094466,
-      "buy_score": 8,
-      "sell_score": 0,
-      "last_date": "2026-11-27",
-      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
-    },
-    {
       "name": "NVIDIA CORP",
       "name_kr": "엔비디아",
       "ticker": "NVDA",
@@ -51,6 +38,19 @@
       "net_buy_sum": 49016470,
       "buy_score": 7,
       "sell_score": 1,
+      "last_date": "2026-11-27",
+      "comment": "고점 판독기 삐빅... 조심해 ⚠️"
+    },
+    {
+      "name": "IRIS ENERGY LTD",
+      "name_kr": "아이렌",
+      "ticker": "IREN",
+      "file_ticker": "IRIS ENERGY LTD",
+      "close": 13.61,
+      "price_change": 0.1514382402707275,
+      "net_buy_sum": 22211352,
+      "buy_score": 7,
+      "sell_score": 0,
       "last_date": "2026-11-27",
       "comment": "고점 판독기 삐빅... 조심해 ⚠️"
     }
